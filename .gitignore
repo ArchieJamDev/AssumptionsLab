@@ -1,67 +1,15 @@
-# =============================================================================
-# AssumptionsLab - Git Ignore
-# =============================================================================
-
-# -------- jamovi --------
+# Archivos y carpetas de compilación de Jamovi / R
 *.jmo
-
-# -------- Build --------
 build/
 dist/
-bin/
-
-# -------- R --------
+.Rproj.user/
 .Rhistory
 .RData
-# -------- Backups --------
-*.bak
-*.backup
-*.old
-*_bak.*
-*_backup.*.Ruserdata
-.Rproj.user/
-.Rproj
-
-# -------- Linux --------
-*~
-*.swp
-*.swo
-
-# -------- Windows --------
-Thumbs.db
-Desktop.ini
-
-# -------- macOS --------
-.DS_Store
-
-# -------- Logs --------
-*.log
-
-# -------- Temporary --------
-tmp/
-temp/
-
-# -------- Backups --------
-*.bak
-*.backup
-*.old
-*_bak.*
-*_backup.*
-
-# -------- IDE --------
-.vscode/
-.idea/
-
-# -------- Compiled --------
-*.o
-*.so
-*.dll
-*.a
-
-# -------- Python --------
-__pycache__/
-*.pyc
-
-# -------- Misc --------
+.Ruserdata
+*.Rcheck/
 .cache/
+Rplots.pdf
 
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
