@@ -1,0 +1,292 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: logCheck
+title: Logistic Regression
+menuTitle: Logistic Regression
+menuGroup: Assumption Lab
+menuSubgroup: Regression
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+  # The binary outcome the logistic regression model predicts (coded as a
+  # two-level factor).
+  # ES: El desenlace binario que predice el modelo de regresión logística
+  # (codificado como un factor de dos niveles).
+  - name: dep
+    title: Dependent Variable (binary)
+    type: Variable
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+
+  # Numeric predictors of the logit. Feed the linearity-in-the-logit
+  # (Box-Tidwell) and multicollinearity diagnostics, which only apply to
+  # numeric predictors.
+  # ES: Predictores numéricos del logit. Alimentan los diagnósticos de
+  # linealidad en el logit (Box-Tidwell) y multicolinealidad, que solo
+  # aplican a predictores numéricos.
+  - name: covs
+    title: Numeric Predictors
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    default: null
+
+  # Categorical predictors of the logit.
+  # ES: Predictores categóricos del logit.
+  - name: factors
+    title: Categorical Predictors
+    type: Variables
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+    default: null
+
+  # Selects which language's text bank (see texts.R) is used to render
+  # every guide, interpretation, and table/column title in the report.
+  # ES: Selecciona qué banco de textos (ver texts.R) se usa para renderizar
+  # cada guía, interpretación y título de tabla/columna en el informe.
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+
+  # Master switch for the whole diagnostic-plots block. Unchecking it
+  # produces a text-only report.
+  # ES: Interruptor maestro para todo el bloque de gráficos diagnósticos.
+  # Desmarcarlo produce un informe solo de texto.
+  - name: showPlots
+    title: Show Plots (uncheck for text-only report)
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: linearity in the logit — controls the empirical-logit-vs-predictor plot.
+  # ES: Área: linealidad en el logit — controla el gráfico de logit empírico vs
+  # predictor.
+  # -----------------------------------------------------------------------------
+  - name: linShowPlots
+    title: Show Linearity Plots
+    type: Bool
+    default: true
+
+  # Optional fitted curve overlaid on the empirical-logit plot (none/linear/
+  # LOESS), to help judge whether the logit relationship is approximately
+  # linear beyond the raw empirical-logit points.
+  # ES: Curva ajustada opcional superpuesta en el gráfico de logit empírico
+  # (ninguno/lineal/LOESS), para ayudar a juzgar si la relación en el logit
+  # es aproximadamente lineal más allá de los puntos crudos de logit
+  # empírico.
+  - name: linSmoother
+    title: Fit on the Empirical Logit
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: Linear Line
+        name: linear
+      - title: LOESS
+        name: loess
+    default: none
+
+  # Number of groups the numeric predictor is binned into to compute the
+  # empirical logit (log-odds of the observed proportion per bin). Too few
+  # bins hides curvature; too many makes each bin's proportion unstable.
+  # ES: Número de grupos en que se agrupa el predictor numérico para
+  # calcular el logit empírico (log-odds de la proporción observada por
+  # grupo). Muy pocos grupos oculta la curvatura; demasiados hace que la
+  # proporción de cada grupo sea inestable.
+  - name: linBins
+    title: Number of Groups (bins) for the Empirical Logit
+    type: Number
+    min: 4
+    max: 20
+    default: 8
+
+  # -----------------------------------------------------------------------------
+  # Area: goodness of fit / calibration — controls the predicted-probability-vs-
+  # observed-proportion plot.
+  # ES: Área: bondad de ajuste / calibración — controla el gráfico de
+  # probabilidad predicha vs proporción observada.
+  # -----------------------------------------------------------------------------
+  # Master switch for the calibration plot.
+  # ES: Interruptor maestro para el gráfico de calibración.
+  - name: caliShowPlots
+    title: Show Calibration Plots
+    type: Bool
+    default: true
+
+  # Number of probability deciles (or other quantile groups) used to bin
+  # predicted probabilities against the observed proportion in each group.
+  # ES: Número de deciles de probabilidad (u otros grupos de cuantiles)
+  # usados para agrupar las probabilidades predichas frente a la
+  # proporción observada en cada grupo.
+  - name: caliBins
+    title: Number of Groups (deciles) for Calibration
+    type: Number
+    min: 4
+    max: 20
+    default: 10
+
+  # Adds the 45-degree "perfect calibration" reference line (predicted =
+  # observed) to the calibration plot, so deviations are visible at a
+  # glance rather than requiring a mental comparison.
+  # ES: Agrega la línea de referencia de "calibración perfecta" a 45
+  # grados (predicho = observado) al gráfico de calibración, para que las
+  # desviaciones sean visibles de un vistazo en vez de requerir una
+  # comparación mental.
+  - name: caliRefLine
+    title: Perfect Calibration Reference Line
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: discrimination — controls the ROC curve / AUC plot.
+  # ES: Área: discriminación — controla el gráfico de curva ROC / AUC.
+  # -----------------------------------------------------------------------------
+  - name: rocShowPlots
+    title: Show Discrimination Plots
+    type: Bool
+    default: true
+
+  # Adds the diagonal chance-level reference line (AUC = 0.5) to the ROC
+  # plot, the baseline every model should clearly outperform.
+  # ES: Agrega la línea de referencia diagonal de nivel de azar (AUC = 0.5)
+  # al gráfico ROC, la línea base que todo modelo debería superar
+  # claramente.
+  - name: rocRefLine
+    title: Reference Line (chance)
+    type: Bool
+    default: true
+
+  # Prints the numeric AUC value directly on the ROC plot, so the reader
+  # does not need to cross-reference the discrimination table.
+  # ES: Imprime el valor numérico de AUC directamente en el gráfico ROC,
+  # para que el lector no necesite consultar la tabla de discriminación.
+  - name: rocShowAUCLabel
+    title: Show AUC Label on Plot
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: influence — controls the Cook's D per-case plot.
+  # ES: Área: influencia — controla el gráfico de Cook's D por caso.
+  # -----------------------------------------------------------------------------
+  - name: influenceShowPlots
+    title: Show Influence Plots
+    type: Bool
+    default: true
+
+  # Which cases get a text label on the Cook's D plot: none, cases
+  # exceeding the Cook's D or leverage threshold, cases with a high
+  # studentized residual, or simply the top 5 most influential cases.
+  # Affects only plot labeling, never which cases are flagged in the
+  # influence table itself.
+  # ES: Qué casos reciben una etiqueta de texto en el gráfico de Cook's D:
+  # ninguno, casos que superan el umbral de Cook's D o leverage, casos con
+  # residuo studentizado alto, o simplemente los 5 casos más influyentes.
+  # Afecta solo el etiquetado del gráfico, nunca qué casos se marcan en la
+  # tabla de influencia misma.
+  - name: influenceLabelMode
+    title: Label Cases
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: High Cook's D
+        name: cooks
+      - title: High Leverage
+        name: leverage
+      - title: High Studentized Residual
+        name: studres
+      - title: Top 5 Influence
+        name: top5
+    default: top5
+
+  # Draws the numeric Cook's D screening threshold as a horizontal
+  # reference line on the plot.
+  # ES: Dibuja el umbral numérico de cribado de Cook's D como una línea de
+  # referencia horizontal en el gráfico.
+  - name: influenceShowThreshold
+    title: Show Threshold Line
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # General style — cosmetic options applied across every diagnostic plot.
+  # ES: Estilo general — opciones estéticas aplicadas a cada gráfico diagnóstico.
+  # -----------------------------------------------------------------------------
+  # Overall color/line style (clean academic look, black & white for print,
+  # high contrast for accessibility, or full color). Purely cosmetic; does
+  # not affect any computed value.
+  # ES: Estilo de color/línea general (estilo académico limpio, blanco y
+  # negro para impresión, alto contraste por accesibilidad, o full color).
+  # Es puramente estético; no afecta ningún valor calculado.
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - title: Clean Academic
+        name: clean
+      - title: Black and White
+        name: bw
+      - title: High Contrast
+        name: contrast
+      - title: Full color
+        name: fullColor
+    default: clean
+
+  # The categorical color palette used to distinguish categories/groups
+  # (e.g. predictor levels), decoupled from plotStyle. Includes a
+  # colorblind-safe option for accessibility.
+  # ES: La paleta de color categórica usada para distinguir categorías/
+  # grupos (p. ej. niveles de un predictor), desacoplada de plotStyle.
+  # Incluye una opción apta para daltonismo por accesibilidad.
+  - name: plotPalette
+    title: Color Palette for Categories/Groups
+    type: List
+    options:
+      - title: Blue-Orange (default)
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: High Contrast (accessible)
+        name: colorblind
+    default: blueOrange

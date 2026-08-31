@@ -1,0 +1,137 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: groupCheck
+title: Independent Groups
+menuTitle: Independent Groups
+menuGroup: Assumption Lab
+menuSubgroup: Group Comparison
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+  - name: dep
+    title: Dependent Variable
+    type: Variable
+  - name: group
+    title: Group Variable
+    type: Variable
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+  - name: alt
+    title: Alternative Hypothesis
+    type: List
+    options:
+      - title: Different
+        name: notequal
+      - title: Group 1 Higher
+        name: onegreater
+      - title: Group 2 Higher
+        name: twogreater
+    default: notequal
+  - name: varEq
+    title: Assume Equal Variances
+    type: Bool
+    default: true
+  - name: showDistributionPlot
+    title: Show Distribution by Group
+    type: Bool
+    default: false
+  - name: addViolinPlot
+    title: Add Violin Plot
+    type: Bool
+    default: false
+  - name: showJitterPoints
+    title: Show Individual Data
+    type: Bool
+    default: false
+  - name: showMeanMarker
+    title: Mark Mean
+    type: Bool
+    default: true
+  - name: showQQPlots
+    title: Show Q-Q Plots
+    type: Bool
+    default: false
+  - name: qqShowBand
+    title: Show Confidence Band
+    type: Bool
+    default: true
+  - name: qqFlagOutliers
+    title: Highlight Extreme Cases (|z| > 2.5)
+    type: Bool
+    default: true
+  - name: showNormalCurvePlots
+    title: Show Observed vs. Theoretical Normal Curve
+    type: Bool
+    default: false
+  - name: curveBandwidth
+    title: Curve Smoothing (bandwidth)
+    type: Number
+    default: 1
+    min: 0.3
+    max: 3
+    description: Multiplier for the density estimate's bandwidth (adjust in density()); lower values show more detail, higher values smooth more.
+  - name: curveShowRug
+    title: Show Individual Values (rug)
+    type: Bool
+    default: false
+  - name: distColorByGroup
+    title: Color by Group
+    type: Bool
+    default: true
+  - name: plotPalette
+    title: Color Palette by Group
+    type: List
+    options:
+      - title: Blue/Orange
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: Colorblind-Friendly
+        name: colorblind
+    default: blueOrange
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - name: clean
+        title: Clean Academic
+      - name: bw
+        title: Black and White
+      - name: contrast
+        title: High Contrast
+      - name: fullColor
+        title: Full color
+    default: clean

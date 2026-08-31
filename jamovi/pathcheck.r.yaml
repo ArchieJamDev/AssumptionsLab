@@ -1,0 +1,595 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: pathCheck
+title: Path Analysis & Structural Validation
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Análisis de Rutas
+    type: Html
+
+  - name: modelSummary
+    title: Modelo actual
+    type: Table
+    rows: 1
+    columns:
+      - name: nVars
+        title: Variables
+        type: integer
+      - name: nRelations
+        title: Relaciones
+        type: integer
+      - name: nEndog
+        title: Variables endógenas
+        type: integer
+      - name: nExog
+        title: Variables exógenas
+        type: integer
+      - name: nCases
+        title: Casos completos
+        type: integer
+      - name: casesPerRelation
+        title: Casos por relación
+        type: number
+
+  - name: specifiedModel
+    title: Modelo especificado
+    type: Table
+    rows: 0
+    columns:
+      - name: dependent
+        title: Variable dependiente
+        type: text
+      - name: predictors
+        title: Predictores
+        type: text
+
+  - name: modelStructureGuide
+    title: Estructura del Modelo
+    type: Html
+    visible: (showExogenous || showEndogenous)
+
+  - name: exogenousTable
+    title: Variables Exógenas del Modelo
+    type: Table
+    rows: 0
+    visible: (showExogenous)
+    columns:
+      - name: variable
+        title: Variable
+        type: text
+      - name: outgoingPaths
+        title: Rutas salientes
+        type: integer
+
+  - name: endogenousTable
+    title: Variables Endógenas del Modelo
+    type: Table
+    rows: 0
+    visible: (showEndogenous)
+    columns:
+      - name: variable
+        title: Variable
+        type: text
+      - name: incomingPaths
+        title: Predictores directos
+        type: integer
+
+  - name: validationSummary
+    title: Validación Metodológica del Modelo
+    type: Table
+    rows: 0
+    columns:
+      - name: check
+        title: Validación
+        type: text
+      - name: status
+        title: Estado
+        type: text
+      - name: details
+        title: Detalles
+        type: text
+
+  - name: pathDiagram
+    title: Diagrama de Ruta (Path Diagram SVG)
+    type: Image
+    width: 600
+    height: 400
+    renderFun: .plotPathDiagram
+    visible: (showDiagram)
+
+  - name: outlierGuide
+    title: Valores Atípicos Multivariados
+    type: Html
+    visible: (isFinalized)
+
+  - name: outlierTable
+    title: Diagnóstico de Casos Atípicos
+    type: Table
+    rows: 0
+    visible: (isFinalized)
+    columns:
+      - name: case
+        title: Caso
+        type: integer
+      - name: d2
+        title: D² Mahalanobis
+        type: number
+      - name: pD2
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: leverage
+        title: Leverage
+        type: number
+      - name: cooksD
+        title: Distancia de Cook
+        type: number
+      - name: criteria
+        title: Criterios activados
+        type: text
+
+  - name: equationsGuide
+    title: Diseño del Modelo
+    type: Html
+    visible: (isFinalized)
+
+  - name: pathCoefficients
+    title: Coeficientes de Ruta (Path Coefficients)
+    type: Table
+    rows: 0
+    visible: (isFinalized && showCoeffs)
+    columns:
+      - name: dep
+        title: Variable Endógena
+        type: text
+      - name: pred
+        title: Predictor
+        type: text
+      - name: est
+        title: Est.
+        type: number
+      - name: se
+        title: E.E.
+        type: number
+      - name: t
+        title: t
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: beta
+        title: Beta Est.
+        type: number
+
+  - name: coefficientsInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized && showCoeffs)
+
+  - name: rSquaredTable
+    title: Varianza Explicada (R²)
+    type: Table
+    rows: 0
+    visible: (isFinalized && showR2)
+    columns:
+      - name: var
+        title: Variable Endógena
+        type: text
+      - name: r2
+        title: R²
+        type: number
+      - name: adjR2
+        title: R² Ajustado
+        type: number
+
+  - name: residualCovarianceGuide
+    title: Covarianzas Residuales
+    type: Html
+    visible: (isFinalized && showCovs)
+
+  - name: residualCovarianceTable
+    title: Covarianzas Residuales entre Variables Endógenas
+    type: Table
+    rows: 0
+    visible: (isFinalized && showCovs)
+    columns:
+      - name: var1
+        title: Variable 1
+        type: text
+      - name: var2
+        title: Variable 2
+        type: text
+      - name: covariance
+        title: Covarianza
+        type: number
+      - name: correlation
+        title: Correlación
+        type: number
+
+  - name: residualPlots
+    title: Diagnóstico de Residuos por Ecuación
+    type: Image
+    width: 700
+    height: 350
+    renderFun: .plotResidualHistograms
+    visible: (isFinalized && showResiduals)
+
+  - name: normalityGuide
+    title: Normalidad de Residuos
+    type: Html
+    visible: (isFinalized && showResiduals)
+
+  - name: residualNormality
+    title: Normalidad de Residuos por Ecuación
+    type: Table
+    rows: 0
+    visible: (isFinalized && showResiduals)
+    columns:
+      - name: dep
+        title: Variable Dependiente
+        type: text
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: normalityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized && showResiduals)
+
+  - name: homoscedasticityGuide
+    title: Homoscedasticidad
+    type: Html
+    visible: (isFinalized)
+
+  - name: homoscedasticity
+    title: Homoscedasticidad por Ecuación
+    type: Table
+    rows: 0
+    visible: (isFinalized)
+    columns:
+      - name: dep
+        title: Variable Dependiente
+        type: text
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: df
+        title: gl
+        type: text
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: homoscedasticityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized)
+
+  - name: multicollinearityGuide
+    title: Multicolinealidad
+    type: Html
+    visible: (isFinalized)
+
+  - name: multicollinearity
+    title: Multicolinealidad por Ecuación
+    type: Table
+    rows: 0
+    visible: (isFinalized)
+    columns:
+      - name: dep
+        title: Variable Dependiente
+        type: text
+      - name: diagnostic
+        title: Diagnóstico
+        type: text
+      - name: item
+        title: Elemento
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+
+  - name: multicollinearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized)
+
+  - name: mardiaGuide
+    title: Normalidad Multivariada (Mardia)
+    type: Html
+    visible: (isFinalized)
+
+  - name: mardiaTable
+    title: Prueba de Normalidad Multivariada de Mardia
+    type: Table
+    rows: 0
+    visible: (isFinalized)
+    columns:
+      - name: measure
+        title: Medida
+        type: text
+      - name: value
+        title: Coeficiente
+        type: number
+      - name: statistic
+        title: Estadístico
+        type: number
+      - name: df
+        title: gl
+        type: text
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: mardiaInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized)
+
+  - name: correlationMatrixGuide
+    title: Matriz de Correlaciones
+    type: Html
+    visible: (isFinalized && showCorrs)
+
+  - name: pearsonMatrixTable
+    title: Matriz de Correlaciones de Pearson (formato APA 7)
+    type: Table
+    rows: 0
+    visible: (isFinalized && showCorrs)
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: dcorMatrixTable
+    title: Matriz de Correlación de Distancia (dCor, formato APA 7)
+    type: Table
+    rows: 0
+    visible: (isFinalized && showCorrs)
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: correlationMatrixNote
+    title: ' '
+    type: Html
+    visible: (isFinalized && showCorrs)
+
+  - name: correlationComparisonGuide
+    title: Análisis de Discordancia Pearson / dCor / Entropía Copular
+    type: Html
+    visible: (isFinalized && showCorrs)
+
+  - name: correlationComparisonTable
+    title: Pares con Diferencia Notable entre Pearson y dCor
+    type: Table
+    rows: 0
+    visible: (isFinalized && showCorrs)
+    columns:
+      - name: var1
+        title: Variable 1
+        type: text
+      - name: var2
+        title: Variable 2
+        type: text
+      - name: pearson
+        title: Pearson r
+        type: text
+      - name: dcor
+        title: dCor
+        type: text
+      - name: gap
+        title: Brecha (dCor − |r|)
+        type: number
+      - name: ce
+        title: Entropía Copular
+        type: number
+      - name: ceP
+        title: p (CE)
+        type: number
+        format: zto,pvalue
+      - name: ceSig
+        title: Sig. (CE)
+        type: text
+      - name: flag
+        title: Diferencia notable
+        type: text
+
+  - name: correlationComparisonInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized && showCorrs)
+
+  - name: crossEntropyGuide
+    title: Independencia por Entropía Copular
+    type: Html
+    visible: (isFinalized && showCorrs)
+
+  - name: crossEntropyTable
+    title: Prueba de Independencia por Entropía Copular
+    type: Table
+    rows: 0
+    visible: (isFinalized && showCorrs)
+    columns:
+      - name: var1
+        title: Variable 1
+        type: text
+      - name: var2
+        title: Variable 2
+        type: text
+      - name: connected
+        title: Conectadas en el modelo
+        type: text
+      - name: ce
+        title: Entropía Copular
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: crossEntropyInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized && showCorrs)
+
+  - name: indirectEffectsGuide
+    title: Efectos Directos, Indirectos y Totales
+    type: Html
+    visible: (isFinalized)
+
+  - name: indirectEffectsTable
+    title: Efectos Directos, Indirectos y Totales (Mediación Simple)
+    type: Table
+    rows: 0
+    visible: (isFinalized)
+    columns:
+      - name: x
+        title: Predictor (X)
+        type: text
+      - name: m
+        title: Mediador (M)
+        type: text
+      - name: y
+        title: Variable Dependiente (Y)
+        type: text
+      - name: directBeta
+        title: Efecto Directo (β)
+        type: number
+      - name: indirectBeta
+        title: Efecto Indirecto (β)
+        type: number
+      - name: totalBeta
+        title: Efecto Total (β)
+        type: number
+      - name: sobelZ
+        title: z de Sobel
+        type: number
+      - name: sobelP
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: sobelPSig
+        title: Sig.
+        type: text
+
+  - name: indirectEffectsInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized)
+
+  - name: sampleSizeGuide
+    title: Adecuación del Tamaño de Muestra
+    type: Html
+    visible: (isFinalized)
+
+  - name: sampleSizeTable
+    title: Valoración del Tamaño de Muestra según la Complejidad del Modelo
+    type: Table
+    rows: 0
+    visible: (isFinalized)
+    columns:
+      - name: criterion
+        title: Criterio (autor)
+        type: text
+      - name: rule
+        title: Regla
+        type: text
+      - name: required
+        title: N requerido
+        type: number
+      - name: actual
+        title: N actual
+        type: integer
+      - name: status
+        title: Estado
+        type: text
+
+  - name: sampleSizeInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (isFinalized)
+
+  - name: modelDiagnosticConclusionGuide
+    title: Conclusión Diagnóstica del Modelo
+    type: Html
+    visible: (isFinalized)
+
+  - name: modelDiagnosticConclusionTable
+    title: Resumen de Diagnósticos del Modelo
+    type: Table
+    rows: 0
+    visible: (isFinalized)
+    columns:
+      - name: area
+        title: Área Diagnóstica
+        type: text
+      - name: status
+        title: Estado
+        type: text
+      - name: detail
+        title: Detalle
+        type: text
+
+  - name: modelDiagnosticConclusionInterpretation
+    title: Veredicto General
+    type: Html
+    visible: (isFinalized)

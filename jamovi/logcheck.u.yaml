@@ -1,0 +1,115 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+title: Logistic Regression
+name: logCheck
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Dependent Variable (binary)
+        children:
+          - type: VariablesListBox
+            name: dep
+            maxItemCount: 1
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Numeric Predictors
+        children:
+          - type: VariablesListBox
+            name: covs
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Categorical Predictors
+        children:
+          - type: VariablesListBox
+            name: factors
+            isTarget: true
+  - type: CollapseBox
+    label: Report Language
+    collapsed: false
+    children:
+      - type: ComboBox
+        name: reportLang
+  - type: CollapseBox
+    label: Diagnostic Plots
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: showPlots
+  - type: CollapseBox
+    label: 'Plots: Linearity in the Logit'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: linShowPlots
+      - type: ComboBox
+        name: linSmoother
+      - type: TextBox
+        name: linBins
+        format: number
+  - type: CollapseBox
+    label: 'Plots: Goodness of Fit / Calibration'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: caliShowPlots
+      - type: TextBox
+        name: caliBins
+        format: number
+      - type: CheckBox
+        name: caliRefLine
+  - type: CollapseBox
+    label: 'Plots: Discrimination'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: rocShowPlots
+      - type: CheckBox
+        name: rocRefLine
+      - type: CheckBox
+        name: rocShowAUCLabel
+  - type: CollapseBox
+    label: 'Plots: Influence'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: influenceShowPlots
+      - type: ComboBox
+        name: influenceLabelMode
+      - type: CheckBox
+        name: influenceShowThreshold
+  - type: CollapseBox
+    label: General Plot Style
+    collapsed: true
+    children:
+      - type: ComboBox
+        name: plotStyle
+      - type: ComboBox
+        name: plotPalette

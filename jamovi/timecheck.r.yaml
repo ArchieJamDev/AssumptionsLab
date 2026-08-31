@@ -1,0 +1,171 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Jamovi Results Specification - Series Temporales
+# -----------------------------------------------------------------------------
+name: timeCheck
+title: Series Temporales
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Series Temporales
+    type: Html
+
+  - name: modelProfile
+    title: Perfil metodológico del modelo
+    type: Table
+    rows: 0
+    columns:
+      - name: element
+        title: Elemento
+        type: text
+      - name: value
+        title: Valor
+        type: text
+
+  - name: modelDescription
+    title: Sobre este modelo
+    type: Html
+
+  - name: conditionsMatrix
+    title: Supuestos y condiciones a evaluar
+    type: Table
+    rows: 0
+    columns:
+      - name: area
+        title: Área
+        type: text
+      - name: condition
+        title: Supuesto / condición
+        type: text
+      - name: diagnostic
+        title: Diagnóstico
+        type: text
+
+  - name: decisionsMatrix
+    title: Función metodológica y decisión asociada
+    type: Table
+    rows: 0
+    columns:
+      - name: area
+        title: Área
+        type: text
+      - name: condition
+        title: Supuesto / condición
+        type: text
+      - name: role
+        title: Función metodológica
+        type: text
+      - name: decision
+        title: Decisión asociada
+        type: text
+
+  - name: runNotice
+    title: Aviso
+    type: Html
+    visible: false
+
+  - name: seriesPlot
+    title: Serie(s) temporal(es)
+    type: Image
+    width: 700
+    height: 280
+    renderFun: .plotSeries
+    visible: false
+
+  - name: diagnosticsResults
+    title: Resultados de las pruebas
+    type: Table
+    rows: 0
+    columns:
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: pvalue
+        title: p
+        type: text
+      - name: evidence
+        title: Evidencia
+        type: text
+
+  - name: acfPlot
+    title: Autocorrelación (ACF)
+    type: Image
+    width: 460
+    height: 260
+    renderFun: .plotAcf
+    visible: false
+
+  - name: pacfPlot
+    title: Autocorrelación parcial (PACF)
+    type: Image
+    width: 460
+    height: 260
+    renderFun: .plotPacf
+    visible: false
+
+  - name: residualsPlot
+    title: Residuos en el tiempo
+    type: Image
+    width: 700
+    height: 260
+    renderFun: .plotResiduals
+    visible: false
+
+  - name: volatilityPlot
+    title: Volatilidad condicional estimada
+    type: Image
+    width: 700
+    height: 260
+    renderFun: .plotVolatility
+    visible: false
+
+  - name: interpretation
+    title: Lectura metodológica
+    type: Html
+
+  - name: foundations
+    title: Fundamentos metodológicos y referencias
+    type: Html
+
+  - name: diagnosticsActions
+    title: Acción metodológica recomendada
+    type: Table
+    rows: 0
+    columns:
+      - name: test
+        title: Prueba
+        type: text
+      - name: action
+        title: Acción recomendada
+        type: text
+
+  - name: implementationNotes
+    title: Alcance de esta versión
+    type: Html

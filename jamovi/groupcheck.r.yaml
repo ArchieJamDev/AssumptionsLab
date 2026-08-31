@@ -1,0 +1,276 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: groupCheck
+title: Grupos independientes
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Grupos independientes
+    type: Html
+
+  - name: design
+    title: Design summary
+    type: Table
+    columns:
+      - name: item
+        title: Item
+        type: text
+      - name: value
+        title: Value
+        type: text
+
+  - name: descriptives
+    title: Descriptive statistics by group
+    type: Table
+    columns:
+      - name: group
+        title: Group
+        type: text
+      - name: n
+        title: n
+        type: integer
+      - name: missing
+        title: Missing
+        type: integer
+      - name: mean
+        title: M
+        type: number
+      - name: sd
+        title: SD
+        type: number
+      - name: median
+        title: Mdn
+        type: number
+      - name: min
+        title: Min
+        type: number
+      - name: max
+        title: Max
+        type: number
+
+  - name: distributionPlot
+    title: Distribution of the analyzed variable by group
+    type: Image
+    width: 620
+    height: 520
+    renderFun: .plotGroupDistribution
+
+  - name: distributionPlotGuide
+    title: Distribution plot guide
+    type: Html
+
+  - name: outliers
+    title: Outlier screening by group
+    type: Table
+    columns:
+      - name: group
+        title: Group
+        type: text
+      - name: n
+        title: n
+        type: integer
+      - name: q1
+        title: Q1
+        type: number
+      - name: q3
+        title: Q3
+        type: number
+      - name: iqr
+        title: IQR
+        type: number
+      - name: lower
+        title: Lower limit
+        type: number
+      - name: upper
+        title: Upper limit
+        type: number
+      - name: outliers
+        title: Outliers
+        type: integer
+      - name: extreme
+        title: Extreme
+        type: integer
+
+  - name: caseDiagnostics
+    title: Case diagnostics
+    type: Table
+    columns:
+      - name: case
+        title: Case
+        type: integer
+      - name: group
+        title: Group
+        type: text
+      - name: value
+        title: Value
+        type: number
+      - name: cookD
+        title: Cook's D
+        type: number
+      - name: cookFlag
+        title: Cook alert
+        type: text
+      - name: mahalD2
+        title: Mahalanobis D²
+        type: number
+      - name: mahalP
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: mahalSig
+        title: Sig.
+        type: text
+      - name: mahalFlag
+        title: Distance alert
+        type: text
+
+  - name: caseDiagnosticsGuide
+    title: Case diagnostics guide
+    type: Html
+
+  - name: caseDiagnosticsInterpretation
+    title: Applied interpretation of case diagnostics
+    type: Html
+
+  - name: normality
+    title: Normality tests by group
+    type: Table
+    columns:
+      - name: group
+        title: Group
+        type: text
+      - name: test
+        title: Test
+        type: text
+      - name: n
+        title: n
+        type: integer
+      - name: statistic
+        title: Statistic
+        type: text
+      - name: value
+        title: Value
+        type: text
+      - name: p
+        title: p
+        type: text
+      - name: pSig
+        title: Sig.
+        type: text
+      - name: decision
+        title: Interpretation
+        type: text
+
+
+  - name: normalityGuide
+    title: Normality interpretation guide
+    type: Html
+
+
+
+  - name: qqNormalityPlot
+    title: 'Normality Q-Q plots: global and by group'
+    type: Image
+    width: 620
+    height: 720
+    renderFun: .plotGroupQQNormality
+
+  - name: qqNormalityGuide
+    title: Visual normality guide
+    type: Html
+
+  - name: normalCurvePlot
+    title: 'Observed distribution vs theoretical normal: global and by group'
+    type: Image
+    width: 620
+    height: 720
+    renderFun: .plotGroupNormalCurve
+
+  - name: normalCurveGuide
+    title: Visual distribution guide
+    type: Html
+  - name: normalitySummary
+    title: Normality decision summary
+    type: Table
+    columns:
+      - name: group
+        title: Group
+        type: text
+      - name: significant
+        title: Significant tests
+        type: integer
+      - name: conclusion
+        title: Conclusion
+        type: text
+
+  - name: normalitySummaryInterpretation
+    title: Interpretación aplicada de normalidad
+    type: Html
+  - name: homogeneity
+    title: Homogeneity of variances
+    type: Table
+    columns:
+      - name: test
+        title: Test
+        type: text
+      - name: statistic
+        title: Statistic
+        type: text
+      - name: value
+        title: Value
+        type: text
+      - name: df1
+        title: df1
+        type: integer
+      - name: df2
+        title: df2
+        type: integer
+      - name: p
+        title: p
+        type: text
+      - name: pSig
+        title: Sig.
+        type: text
+      - name: decision
+        title: Interpretation
+        type: text
+
+  - name: homogeneityGuide
+    title: Variance interpretation guide
+    type: Html
+
+  - name: homogeneityInterpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: executiveSummary
+    title: Conclusión Metodológica
+    type: Html
+
+  - name: notes
+    title: Notas y recomendación
+    type: Html

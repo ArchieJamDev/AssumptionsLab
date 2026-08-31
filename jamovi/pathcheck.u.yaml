@@ -1,0 +1,147 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+title: Path Analysis & Structural Validation
+name: pathCheck
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: true
+    children:
+      - type: TargetLayoutBox
+        label: Model Variables
+        children:
+          - type: VariablesListBox
+            name: vars
+            isTarget: true
+      - type: TargetLayoutBox
+        label: 'Path Relationships (predictor → dependent)'
+        children:
+          - type: ListBox
+            name: relations
+            isTarget: true
+            columns:
+              - name: i1
+                template:
+                  type: VariableLabel
+              - name: i2
+                template:
+                  type: VariableLabel
+
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: CheckBox
+        name: isFinalized
+        label: Finalize Model
+
+  - type: CollapseBox
+    label: Report Language
+    collapsed: false
+    children:
+      - type: ComboBox
+        name: reportLang
+
+  - type: CollapseBox
+    label: 'Plots: Path Diagram'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: showDiagram
+      - type: Label
+        label: Paths
+      - type: ComboBox
+        name: diagramEdgeLabel
+      - type: Label
+        label: Show
+      - type: CheckBox
+        name: diagramShowErrors
+      - type: CheckBox
+        name: diagramOffsetLabels
+      - type: Label
+        label: Layout
+      - type: ComboBox
+        name: diagramLayout
+      - type: ComboBox
+        name: diagramRotate
+      - type: Label
+        label: Nodes
+      - type: ComboBox
+        name: diagramNodeSize
+      - type: ComboBox
+        name: diagramShape
+      - type: ComboBox
+        name: diagramAbbreviate
+
+  - type: CollapseBox
+    label: 'Plots: Residuals'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: showResiduals
+      - type: ComboBox
+        name: residBinMethod
+      - type: CheckBox
+        name: residShowNormalCurve
+      - type: CheckBox
+        name: residFlagOutliers
+
+  - type: CollapseBox
+    label: General Plot Style
+    collapsed: true
+    children:
+      - type: ComboBox
+        name: plotStyle
+      - type: ComboBox
+        name: plotPalette
+
+  - type: CollapseBox
+    label: Options
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: showCoeffs
+      - type: CheckBox
+        name: showR2
+      - type: CheckBox
+        name: showCorrs
+      - type: CheckBox
+        name: showCovs
+      - type: CheckBox
+        name: showExogenous
+      - type: CheckBox
+        name: showEndogenous
+
+  - type: CollapseBox
+    label: 'Permutation Tests (dCor / Copula Entropy)'
+    collapsed: true
+    children:
+      - type: TextBox
+        name: permutations
+        format: number
+      - type: TextBox
+        name: permutationSeed
+        format: number

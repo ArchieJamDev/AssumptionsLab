@@ -1,0 +1,64 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+title: Related Groups
+name: relatedCheck
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    suggested:
+      - continuous
+    children:
+      - type: TargetLayoutBox
+        label: Related Measurements
+        children:
+          - type: VariablesListBox
+            name: measures
+            isTarget: true
+  - type: CollapseBox
+    label: Report Language
+    collapsed: false
+    children:
+      - type: ComboBox
+        name: reportLang
+  - type: CollapseBox
+    label: Diagnostic Plots
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: showProfilePlot
+      - type: CheckBox
+        name: showDifferencePlots
+      - type: CheckBox
+        name: showNormalityPlots
+  - type: CollapseBox
+    label: General Plot Style
+    collapsed: true
+    children:
+      - type: ComboBox
+        name: plotStyle
+      - type: ComboBox
+        name: plotPalette

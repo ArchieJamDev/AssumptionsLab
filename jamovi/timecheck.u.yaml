@@ -1,0 +1,101 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Jamovi UI Layout Specification - Series Temporales
+# -----------------------------------------------------------------------------
+name: timeCheck
+title: Time Series
+jus: '3.0'
+
+children:
+  - type: VariableSupplier
+    persistentItems: true
+    children:
+      - type: TargetLayoutBox
+        label: Time series
+        children:
+          - type: VariablesListBox
+            name: series
+            isTarget: true
+            suggested:
+              - continuous
+            permitted:
+              - numeric
+      - type: TargetLayoutBox
+        label: External Variables
+        children:
+          - type: VariablesListBox
+            name: exogenous
+            isTarget: true
+            suggested:
+              - continuous
+            permitted:
+              - numeric
+      - type: TargetLayoutBox
+        label: Date Variable
+        children:
+          - type: VariablesListBox
+            name: dateVar
+            isTarget: true
+            maxItemCount: 1
+            suggested:
+              - nominal
+              - continuous
+            permitted:
+              - factor
+              - numeric
+
+  - type: CollapseBox
+    label: Time series model
+    collapsed: false
+    children:
+      - type: ComboBox
+        name: model
+      - type: TextBox
+        name: frequency
+        format: number
+
+  - type: CollapseBox
+    label: Report Language
+    collapsed: false
+    children:
+      - type: LayoutBox
+        margin: normal
+        children:
+          - type: ComboBox
+            name: reportLang
+            stretchFactor: 0
+      - type: Label
+        label: 'Statistical symbols remain in international format: n, p, ACF, PACF, ADF, KPSS, PP, etc.'
+  - type: CollapseBox
+    label: Plots
+    collapsed: false
+    children:
+      - type: CheckBox
+        name: showPlots
+      - type: ComboBox
+        name: plotStyle
+      - type: ComboBox
+        name: plotPalette

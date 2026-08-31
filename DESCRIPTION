@@ -1,0 +1,29 @@
+Package: AssumptionsLab
+Title: Assumption Lab for Statistical Analysis
+Version: 1.0.0
+Authors@R: person("Arquímedes", "Chacón", email = "arquimedeschacon@gmail.com", role = c("aut", "cre"))
+Description: A comprehensive module for checking statistical assumptions in jamovi.
+License: GPL-3
+Depends:
+    R (>= 4.3.0)
+Imports:
+    jmvcore,
+    R6,
+    ggplot2,
+    car,
+    lmtest,
+    nortest,
+    sandwich,
+    copent,
+    reshape2,
+    forecast,
+    tseries,
+    urca,
+    vars,
+    strucchange,
+    rugarch
+Suggests:
+    pROC,
+    ResourceSelection
+Encoding: UTF-8
+

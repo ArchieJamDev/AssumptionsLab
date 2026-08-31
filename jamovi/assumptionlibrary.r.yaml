@@ -1,0 +1,69 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: assumptionLibrary
+title: Biblioteca de Supuestos
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Biblioteca de Supuestos
+    type: Html
+
+  - name: normality
+    title: Normalidad
+    type: Html
+
+  - name: homoscedasticity
+    title: Homocedasticidad / Homogeneidad de varianzas
+    type: Html
+
+  - name: linearity
+    title: Linealidad
+    type: Html
+
+  - name: independence
+    title: Independencia
+    type: Html
+
+  - name: multicollinearity
+    title: Multicolinealidad
+    type: Html
+
+  - name: influence
+    title: Casos atípicos e influencia
+    type: Html
+
+  - name: sphericity
+    title: Esfericidad
+    type: Html
+
+  - name: robust
+    title: Transformaciones y alternativas robustas
+    type: Html
+
+  - name: notes
+    title: Uso de esta biblioteca
+    type: Html

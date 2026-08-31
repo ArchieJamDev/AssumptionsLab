@@ -1,0 +1,554 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: regCheck
+title: Regresión simple y múltiple
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Regresión simple y múltiple
+    type: Html
+
+  - name: designGuide
+    title: Modelo de regresión
+    type: Html
+
+  - name: modelSummary
+    title: Resumen del modelo
+    type: Table
+    columns:
+      - name: item
+        title: Elemento
+        type: text
+      - name: value
+        title: Valor
+        type: text
+
+  - name: missingSummary
+    title: Resumen de datos faltantes
+    type: Table
+    columns:
+      - name: item
+        title: Elemento
+        type: text
+      - name: value
+        title: Valor
+        type: text
+
+  - name: linearityGuide
+    title: Linealidad
+    type: Html
+
+  - name: linearityPredictor
+    title: Linealidad por predictor numérico
+    type: Table
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: dependent
+        title: Variable dependiente
+        type: text
+      - name: test
+        title: Prueba / criterio
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: linearityModel
+    title: Linealidad global del modelo
+    type: Table
+    columns:
+      - name: scope
+        title: Alcance
+        type: text
+      - name: dependent
+        title: Variable dependiente
+        type: text
+      - name: test
+        title: Prueba / criterio
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: linearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: correlationMatrixGuide
+    title: Matriz de correlaciones
+    type: Html
+    visible: false
+
+  - name: pearsonMatrixTable
+    title: Matriz de correlaciones de Pearson (formato APA 7)
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: dcorMatrixTable
+    title: Matriz de correlación de distancia (dCor, formato APA 7)
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: correlationMatrixNote
+    title: ' '
+    type: Html
+    visible: false
+
+  - name: correlationComparisonGuide
+    title: Análisis de discordancia Pearson / dCor / entropía copular
+    type: Html
+    visible: false
+
+  - name: correlationComparisonTable
+    title: Pares con diferencia notable entre Pearson y dCor
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var1
+        title: Variable 1
+        type: text
+      - name: var2
+        title: Variable 2
+        type: text
+      - name: pearson
+        title: Pearson r
+        type: text
+      - name: dcor
+        title: dCor
+        type: text
+      - name: gap
+        title: Brecha (dCor − |r|)
+        type: number
+      - name: ce
+        title: Entropía copular
+        type: number
+      - name: ceP
+        title: p (CE)
+        type: number
+        format: zto,pvalue
+      - name: ceSig
+        title: Sig. (CE)
+        type: text
+      - name: flag
+        title: Diferencia notable
+        type: text
+
+  - name: correlationComparisonInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: false
+
+  - name: correlationIndividualPlot
+    title: Relación por par (Pearson / dCor)
+    type: Image
+    width: 620
+    height: 380
+    renderFun: .plotCorrelationIndividual
+    visible: false
+
+  - name: correlationIndividualGuide
+    title: 'Guía: Relación por par (Pearson / dCor)'
+    type: Html
+    visible: false
+
+  - name: correlationComparativePlot
+    title: Comparación de Pearson, dCor y entropía copular entre pares
+    type: Image
+    width: 620
+    height: 380
+    renderFun: .plotCorrelationComparative
+    visible: false
+
+  - name: correlationComparativeGuide
+    title: 'Guía: Comparación de Pearson, dCor y entropía copular'
+    type: Html
+    visible: false
+
+  - name: diagnosticPlotsGuide
+    title: Gráficos diagnósticos de regresión
+    type: Html
+
+  - name: residualsFittedPlot
+    title: Residuos vs valores ajustados
+    type: Image
+    width: 560
+    height: 315
+    renderFun: .plotResidualsFitted
+
+  - name: residualsFittedGuide
+    title: 'Guía: Residuos vs valores ajustados'
+    type: Html
+
+  - name: observedPredictedPlot
+    title: Valores observados vs predichos
+    type: Image
+    width: 560
+    height: 315
+    renderFun: .plotObservedPredicted
+
+  - name: observedPredictedGuide
+    title: 'Guía: Valores observados vs predichos'
+    type: Html
+
+  - name: predictorEffectsPlot
+    title: Efectos visuales de predictores numéricos sobre la dependiente
+    type: Image
+    width: 620
+    height: 350
+    renderFun: .plotPredictorEffects
+
+
+  - name: predictorEffectsGuide
+    title: 'Guía: Efectos visuales de predictores numéricos'
+    type: Html
+
+  - name: residualNormalityGuide
+    title: Normalidad de residuos
+    type: Html
+
+  - name: residualNormality
+    title: Normalidad de residuos
+    type: Table
+    columns:
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: residualNormalityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: qqResidualsPlot
+    title: Q-Q plot de residuos
+    type: Image
+    width: 560
+    height: 310
+    renderFun: .plotQQResiduals
+
+  - name: qqResidualsGuide
+    title: 'Guía: Q-Q plot de residuos'
+    type: Html
+
+  - name: residualHistogramPlot
+    title: Histograma de residuos
+    type: Image
+    width: 560
+    height: 300
+    renderFun: .plotResidualHistogram
+
+  - name: residualHistogramGuide
+    title: 'Guía: Histograma de residuos'
+    type: Html
+
+  - name: residualNormalCurvePlot
+    title: Distribución observada de residuos vs curva normal teórica
+    type: Image
+    width: 560
+    height: 315
+    renderFun: .plotResidualNormalCurve
+
+
+  - name: residualNormalCurveGuide
+    title: 'Guía: Distribución observada vs normal teórica'
+    type: Html
+
+  - name: homoscedasticityGuide
+    title: Homoscedasticidad y heterocedasticidad
+    type: Html
+
+  - name: homoscedasticity
+    title: Homoscedasticidad y heterocedasticidad
+    type: Table
+    columns:
+      - name: family
+        title: Familia
+        type: text
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: df
+        title: df
+        type: integer
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: homoscedasticityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+
+  - name: scaleLocationPlot
+    title: Scale-location plot
+    type: Image
+    width: 560
+    height: 315
+    renderFun: .plotScaleLocation
+
+  - name: scaleLocationGuide
+    title: 'Guía: Scale-location plot'
+    type: Html
+
+  - name: independenceGuide
+    title: Independencia de errores
+    type: Html
+
+  - name: independence
+    title: Independencia de errores
+    type: Table
+    columns:
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: text
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: independenceInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: multicollinearityGuide
+    title: Multicolinealidad
+    type: Html
+    visible: false
+
+  - name: multicollinearity
+    title: Multicolinealidad
+    type: Table
+    visible: false
+    columns:
+      - name: diagnostic
+        title: Diagnóstico
+        type: text
+      - name: item
+        title: Elemento
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+
+  - name: multicollinearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: false
+
+  - name: influenceGuide
+    title: Casos atípicos e influyentes
+    type: Html
+
+  - name: influence
+    title: Casos atípicos e influyentes
+    type: Table
+    columns:
+      - name: case
+        title: Caso
+        type: integer
+      - name: fitted
+        title: Ajustado
+        type: number
+      - name: residual
+        title: Residuo
+        type: number
+      - name: studResidual
+        title: Residuo studentizado
+        type: number
+      - name: leverage
+        title: Leverage
+        type: number
+      - name: cooksD
+        title: Cook's D
+        type: number
+      - name: dffits
+        title: DFFITS
+        type: number
+      - name: criteria
+        title: Criterios activados
+        type: text
+
+  - name: influenceInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: numericBoxplotsPlot
+    title: Boxplots de la variable dependiente y predictores numéricos
+    type: Image
+    width: 620
+    height: 360
+    renderFun: .plotNumericBoxplots
+
+  - name: numericBoxplotsGuide
+    title: 'Guía: Boxplots de variables numéricas'
+    type: Html
+
+  - name: residualsLeveragePlot
+    title: Residuos studentizados vs leverage
+    type: Image
+    width: 600
+    height: 350
+    renderFun: .plotResidualsLeverage
+
+  - name: residualsLeverageGuide
+    title: 'Guía: Residuos studentizados vs leverage'
+    type: Html
+
+  - name: cooksDPlot
+    title: Cook's D por caso
+    type: Image
+    width: 560
+    height: 300
+    renderFun: .plotCooksD
+
+  - name: cooksDGuide
+    title: "Guía: Cook's D por caso"
+    type: Html
+
+  - name: transformationsGuide
+    title: Transformaciones exploratorias
+    type: Html
+
+  - name: transformationNormality
+    title: Normalidad de residuos por transformación
+    type: Table
+    columns:
+      - name: criterion
+        title: Criterio / prueba
+        type: text
+      - name: original
+        title: Original
+        type: text
+      - name: logTrans
+        title: log(Y)
+        type: text
+      - name: sqrtTrans
+        title: sqrt(Y)
+        type: text
+      - name: inverseTrans
+        title: 1/Y
+        type: text
+
+
+  - name: transformationFit
+    title: Ajuste y varianza residual por transformación
+    type: Table
+    columns:
+      - name: criterion
+        title: Criterio / prueba
+        type: text
+      - name: original
+        title: Original
+        type: text
+      - name: logTrans
+        title: log(Y)
+        type: text
+      - name: sqrtTrans
+        title: sqrt(Y)
+        type: text
+      - name: inverseTrans
+        title: 1/Y
+        type: text
+
+
+  - name: robustOptionsGuide
+    title: Opciones robustas y de remuestreo
+    type: Html
+
+  - name: robustOptionsText
+    title: Interpretación metodológica de opciones robustas
+    type: Html
+
+  - name: notes
+    title: Notas y recomendación
+    type: Html

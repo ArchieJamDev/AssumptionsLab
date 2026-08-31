@@ -1,0 +1,67 @@
+# =============================================================================
+# AssumptionsLab - Git Ignore
+# =============================================================================
+
+# -------- jamovi --------
+*.jmo
+
+# -------- Build --------
+build/
+dist/
+bin/
+
+# -------- R --------
+.Rhistory
+.RData
+# -------- Backups --------
+*.bak
+*.backup
+*.old
+*_bak.*
+*_backup.*.Ruserdata
+.Rproj.user/
+.Rproj
+
+# -------- Linux --------
+*~
+*.swp
+*.swo
+
+# -------- Windows --------
+Thumbs.db
+Desktop.ini
+
+# -------- macOS --------
+.DS_Store
+
+# -------- Logs --------
+*.log
+
+# -------- Temporary --------
+tmp/
+temp/
+
+# -------- Backups --------
+*.bak
+*.backup
+*.old
+*_bak.*
+*_backup.*
+
+# -------- IDE --------
+.vscode/
+.idea/
+
+# -------- Compiled --------
+*.o
+*.so
+*.dll
+*.a
+
+# -------- Python --------
+__pycache__/
+*.pyc
+
+# -------- Misc --------
+.cache/
+

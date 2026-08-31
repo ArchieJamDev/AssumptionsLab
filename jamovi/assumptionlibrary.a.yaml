@@ -1,0 +1,66 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: assumptionLibrary
+title: Assumption Library / Biblioteca de Supuestos
+menuTitle: Assumption Library / Biblioteca de Supuestos
+menuGroup: Assumption Lab
+menuSubgroup: Methodological Guide / Guía Metodológica
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+  - name: category
+    title: Category / Categoría
+    type: List
+    options:
+      - title: All Categories / Todas las categorías
+        name: all
+      - title: Normality / Normalidad
+        name: normality
+      - title: Homoscedasticity / Homogeneity / Homocedasticidad / Homogeneidad
+        name: homoscedasticity
+      - title: Linearity / Linealidad
+        name: linearity
+      - title: Independence / Independencia
+        name: independence
+      - title: Multicollinearity / Multicolinealidad
+        name: multicollinearity
+      - title: Outliers and Influence / Casos atípicos e influencia
+        name: influence
+      - title: Sphericity / Esfericidad
+        name: sphericity
+      - title: Transformations and Robust Alternatives / Transformaciones y alternativas robustas
+        name: robust
+    default: all
+  - name: reportLang
+    title: Report Language / Idioma del reporte
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en

@@ -1,0 +1,379 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: logCheck
+title: Regresión logística
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Introducción
+    type: Html
+
+  - name: designGuide
+    title: Diseño del modelo
+    type: Html
+
+  - name: design
+    title: Resumen del diseño
+    type: Table
+    columns:
+      - name: element
+        title: Elemento
+        type: text
+      - name: value
+        title: Valor
+        type: text
+
+  - name: separationGuide
+    title: Separación completa
+    type: Html
+
+  - name: separation
+    title: Separación completa
+    type: Table
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: type
+        title: Tipo
+        type: text
+      - name: coefficient
+        title: Coeficiente
+        type: number
+        format: decimal
+
+  - name: separationInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: linearityGuide
+    title: Linealidad en el logit
+    type: Html
+
+  - name: linearity
+    title: Linealidad en el logit (Box-Tidwell)
+    type: Table
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: number
+        format: decimal
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: linearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: linearityPlot
+    title: Logit empírico vs predictor
+    type: Image
+    requiresData: true
+    width: 560
+    height: 340
+    renderFun: .plotLinearity
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - plotStyle
+      - plotPalette
+      - linSmoother
+      - linBins
+      - reportLang
+
+  - name: goodnessOfFitGuide
+    title: Bondad de ajuste
+    type: Html
+
+  - name: goodnessOfFit
+    title: Bondad de ajuste
+    type: Table
+    columns:
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: number
+        format: decimal
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: goodnessOfFitInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: calibrationPlot
+    title: Calibración por deciles de probabilidad
+    type: Image
+    requiresData: true
+    width: 560
+    height: 340
+    renderFun: .plotCalibration
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - plotStyle
+      - plotPalette
+      - caliBins
+      - caliRefLine
+      - reportLang
+
+  - name: discriminationGuide
+    title: Discriminación
+    type: Html
+
+  - name: discrimination
+    title: Discriminación
+    type: Table
+    columns:
+      - name: metric
+        title: Métrica
+        type: text
+      - name: value
+        title: Valor
+        type: number
+        format: decimal
+
+  - name: discriminationInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: discriminationPlot
+    title: Curva ROC
+    type: Image
+    requiresData: true
+    width: 460
+    height: 460
+    renderFun: .plotROC
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - plotStyle
+      - plotPalette
+      - rocRefLine
+      - rocShowAUCLabel
+      - reportLang
+
+  - name: multicollinearityGuide
+    title: Multicolinealidad
+    type: Html
+    visible: false
+
+  - name: multicollinearity
+    title: Multicolinealidad
+    type: Table
+    visible: false
+    columns:
+      - name: diagnostic
+        title: Diagnóstico
+        type: text
+      - name: item
+        title: Elemento
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+
+  - name: multicollinearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: false
+
+  - name: correlationMatrixGuide
+    title: Matriz de correlaciones
+    type: Html
+    visible: false
+
+  - name: pearsonMatrixTable
+    title: Matriz de correlaciones de Pearson (formato APA 7)
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: dcorMatrixTable
+    title: Matriz de correlación de distancia (dCor, formato APA 7)
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: correlationMatrixNote
+    title: ' '
+    type: Html
+    visible: false
+
+  - name: correlationComparisonGuide
+    title: Análisis de discordancia Pearson / dCor / entropía copular
+    type: Html
+    visible: false
+
+  - name: correlationComparisonTable
+    title: Pares con diferencia notable entre Pearson y dCor
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var1
+        title: Variable 1
+        type: text
+      - name: var2
+        title: Variable 2
+        type: text
+      - name: pearson
+        title: Pearson r
+        type: text
+      - name: dcor
+        title: dCor
+        type: text
+      - name: gap
+        title: Brecha (dCor − |r|)
+        type: number
+      - name: ce
+        title: Entropía copular
+        type: number
+      - name: ceP
+        title: p (CE)
+        type: number
+        format: zto,pvalue
+      - name: ceSig
+        title: Sig. (CE)
+        type: text
+      - name: flag
+        title: Diferencia notable
+        type: text
+
+  - name: correlationComparisonInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: false
+
+  - name: influenceGuide
+    title: Casos influyentes
+    type: Html
+
+  - name: influence
+    title: Casos influyentes
+    type: Table
+    columns:
+      - name: case
+        title: Caso
+        type: integer
+      - name: cooksD
+        title: Cook's D
+        type: number
+        format: decimal
+      - name: leverage
+        title: Leverage
+        type: number
+        format: decimal
+
+  - name: influenceInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: influencePlot
+    title: Cook's D por caso
+    type: Image
+    requiresData: true
+    width: 560
+    height: 320
+    renderFun: .plotInfluence
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - plotStyle
+      - plotPalette
+      - influenceLabelMode
+      - influenceShowThreshold
+      - reportLang
+
+  - name: oddsRatiosGuide
+    title: Odds Ratios
+    type: Html
+
+  - name: oddsRatios
+    title: Odds Ratios
+    type: Table
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: or
+        title: OR
+        type: number
+        format: decimal
+      - name: ciLower
+        title: IC 95% inferior
+        type: number
+        format: decimal
+      - name: ciUpper
+        title: IC 95% superior
+        type: number
+        format: decimal
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: oddsRatiosInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: notes
+    title: Notas y recomendación
+    type: Html

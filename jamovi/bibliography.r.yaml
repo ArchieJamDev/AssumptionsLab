@@ -1,0 +1,49 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: bibliography
+title: Bibliografía
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Bibliografía
+    type: Html
+
+  - name: references
+    title: Referencias en formato APA 7.ª edición
+    type: Html
+
+  - name: notes
+    title: Notes / Notas
+    type: Html
+
+  - name: citationsTable
+    title: Citations / Citaciones
+    type: Html
+
+  - name: biblioSummary
+    title: Bibliometric Summary / Resumen bibliométrico
+    type: Html

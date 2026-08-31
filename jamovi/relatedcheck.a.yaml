@@ -1,0 +1,135 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: relatedCheck
+title: Related Groups
+menuTitle: Related Groups
+menuGroup: Assumption Lab
+menuSubgroup: Group Comparison
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+  # The set of related (repeated/paired) numeric measurements to compare —
+  # two measurements run a paired t-test/Wilcoxon; more than two run a
+  # repeated-measures ANOVA/Friedman comparison instead.
+  # ES: El conjunto de mediciones numéricas relacionadas (repetidas/
+  # pareadas) a comparar — dos mediciones corren una t pareada/Wilcoxon;
+  # más de dos corren en cambio una comparación por ANOVA de medidas
+  # repetidas/Friedman.
+  - name: measures
+    title: Related Measurements
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    default: null
+  # Selects which language's text bank (see texts.R) is used to render
+  # every guide, interpretation, and table/column title in the report.
+  # ES: Selecciona qué banco de textos (ver texts.R) se usa para renderizar
+  # cada guía, interpretación y título de tabla/columna en el informe.
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+  # Master switch for the profile plot (one line per subject across every
+  # measurement) — shows whether subjects move together or diverge across
+  # occasions, beyond what the paired-difference summary alone conveys.
+  # ES: Interruptor maestro para el gráfico de perfil (una línea por
+  # sujeto a través de cada medición) — muestra si los sujetos se mueven
+  # juntos o divergen entre ocasiones, más allá de lo que transmite por sí
+  # solo el resumen de diferencias pareadas.
+  - name: showProfilePlot
+    title: Profile Plot by Measurement
+    type: Bool
+    default: false
+
+  # Master switch for the paired-difference distribution plot (one panel
+  # per pairwise comparison).
+  # ES: Interruptor maestro para el gráfico de distribución de diferencias
+  # pareadas (un panel por comparación).
+  - name: showDifferencePlots
+    title: Paired Differences Plots
+    type: Bool
+    default: false
+
+  # Master switch for the normality plots (Q-Q and observed-vs-normal
+  # density) of the paired differences.
+  # ES: Interruptor maestro para los gráficos de normalidad (Q-Q y
+  # densidad observada vs normal) de las diferencias pareadas.
+  - name: showNormalityPlots
+    title: Normality Plots
+    type: Bool
+    default: false
+
+  # Overall color/line style applied to every diagnostic plot (clean
+  # academic look, black & white for print, high contrast for
+  # accessibility, or full color). Purely cosmetic; does not affect any
+  # computed value.
+  # ES: Estilo de color/línea general aplicado a cada gráfico diagnóstico
+  # (estilo académico limpio, blanco y negro para impresión, alto
+  # contraste por accesibilidad, o full color). Es puramente estético; no
+  # afecta ningún valor calculado.
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - title: Clean Academic
+        name: clean
+      - title: Black and White
+        name: bw
+      - title: High Contrast
+        name: contrast
+      - title: Full color
+        name: fullColor
+    default: clean
+
+  # The categorical color palette used to distinguish measurement
+  # occasions in the profile plot and comparisons in the paired-
+  # differences plot, decoupled from plotStyle. Includes a
+  # colorblind-safe option for accessibility.
+  # ES: La paleta de color categórica usada para distinguir ocasiones de
+  # medición en el gráfico de perfil y comparaciones en el gráfico de
+  # diferencias pareadas, desacoplada de plotStyle. Incluye una opción
+  # apta para daltonismo por accesibilidad.
+  - name: plotPalette
+    title: Color Palette by Measurement
+    type: List
+    options:
+      - title: Blue-Orange (default)
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: High Contrast (accessible)
+        name: colorblind
+    default: blueOrange

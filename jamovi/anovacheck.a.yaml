@@ -1,0 +1,260 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: anovaCheck
+title: ANOVA/ANCOVA
+menuTitle: ANOVA/ANCOVA
+menuGroup: Assumption Lab
+menuSubgroup: Group Comparison
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+
+  # The single numeric outcome the ANOVA/ANCOVA model predicts.
+  # ES: El único desenlace numérico que predice el modelo ANOVA/ANCOVA.
+  - name: dep
+    title: Dependent Variable
+    type: Variable
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+
+  # Optional continuous predictors that turn the design into an ANCOVA.
+  # Present (non-empty) => the module additionally runs covariate-specific
+  # diagnostics: homogeneity of regression slopes, covariate linearity, and
+  # multicollinearity among covariates.
+  # ES: Predictores continuos opcionales que convierten el diseño en un
+  # ANCOVA. Si están presentes (no vacíos), el módulo corre además
+  # diagnósticos específicos de covariables: homogeneidad de pendientes de
+  # regresión, linealidad de covariables y multicolinealidad entre
+  # covariables.
+  - name: covs
+    title: Covariates
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    default: null
+
+  # The grouping variable(s) that define the ANOVA/ANCOVA cells being
+  # compared.
+  # ES: La(s) variable(s) de agrupación que definen las celdas de
+  # ANOVA/ANCOVA que se comparan.
+  - name: factors
+    title: Factors
+    type: Variables
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+    default: null
+
+  # Selects which language's text bank (see texts.R) is used to render
+  # every guide, interpretation, and table/column title in the report.
+  # ES: Selecciona qué banco de textos (ver texts.R) se usa para renderizar
+  # cada guía, interpretación y título de tabla/columna en el informe.
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+
+  # Master switch for the whole diagnostic-plots block. Unchecking it
+  # produces a text-only report (useful for a quick methodological read,
+  # or when plots are not needed for the target audience).
+  # ES: Interruptor maestro para todo el bloque de gráficos diagnósticos.
+  # Desmarcarlo produce un informe solo de texto (útil para una lectura
+  # metodológica rápida, o cuando los gráficos no son necesarios para el
+  # público objetivo).
+  - name: showPlots
+    title: Show Diagnostic Plots
+    type: Bool
+    default: true
+
+  # Which subset of diagnostic plots is rendered when showPlots is on:
+  # basic (group boxplots + residuals-vs-fitted), normality (adds Q-Q +
+  # histogram + normal-curve overlay), influence (adds leverage + Cook's D),
+  # or complete (all of the above). Lets the user scope the report to the
+  # diagnostic area they actually need instead of always paying the cost
+  # of every plot.
+  # ES: Qué subconjunto de gráficos diagnósticos se renderiza cuando
+  # showPlots está activo: básico (boxplots por grupo + residuos vs
+  # ajustados), normalidad (agrega Q-Q + histograma + curva normal
+  # superpuesta), influencia (agrega leverage + Cook's D), o completo
+  # (todos los anteriores). Permite acotar el informe al área diagnóstica
+  # que realmente se necesita en vez de pagar siempre el costo de cada
+  # gráfico.
+  - name: plotSet
+    title: Plot Set
+    type: List
+    options:
+      - title: Basic
+        name: basic
+      - title: Normality
+        name: normality
+      - title: Influence
+        name: influence
+      - title: Complete
+        name: complete
+    default: complete
+
+  # -----------------------------------------------------------------------------
+  # Area: model fit — controls the residuals-vs-fitted plot.
+  # ES: Área: ajuste del modelo — controla el gráfico de residuos vs
+  # ajustados.
+  # -----------------------------------------------------------------------------
+  # Optional fitted curve overlaid on the residuals-vs-fitted plot (none/
+  # LOESS/linear). Default is "none": an unsolicited smoother can visually
+  # suggest a pattern in residuals that is not actually there in small or
+  # noisy samples, so it is opt-in rather than on by default.
+  # ES: Curva ajustada opcional superpuesta en el gráfico de residuos vs
+  # ajustados (ninguno/LOESS/lineal). El valor por defecto es "ninguno":
+  # un suavizado no solicitado puede sugerir visualmente un patrón en los
+  # residuos que en realidad no está ahí en muestras pequeñas o ruidosas,
+  # por lo que es opcional en vez de estar activo por defecto.
+  - name: residSmoother
+    title: Smoothing
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: LOESS
+        name: loess
+      - title: Linear Line
+        name: linear
+    default: none
+
+  # Adds a confidence band around the smoother above, so the user can judge
+  # whether an apparent curve is within sampling variation or a real signal.
+  # ES: Agrega una banda de confianza alrededor del suavizado de arriba,
+  # para que el usuario pueda juzgar si una curva aparente está dentro de la
+  # variación muestral o es una señal real.
+  - name: residShowBand
+    title: Smoothing Confidence Band
+    type: Bool
+    default: false
+
+  # Draws a horizontal reference line at residual = 0, the value a
+  # perfectly well-specified model would sit on.
+  # ES: Dibuja una línea de referencia horizontal en residuo = 0, el valor
+  # sobre el que se ubicaría un modelo perfectamente bien especificado.
+  - name: residRefLine
+    title: Zero Reference Line
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: influence — controls the leverage and Cook's D plots.
+  # ES: Área: influencia — controla los gráficos de leverage y Cook's D.
+  # -----------------------------------------------------------------------------
+  # Which cases get a text label on the influence plots (leverage/Cook's D):
+  # none, cases exceeding the Cook's D or leverage threshold, cases with a
+  # high studentized residual, or simply the top 5 most influential cases.
+  # Affects only plot labeling, never which cases are flagged in the
+  # influence table itself.
+  # ES: Qué casos reciben una etiqueta de texto en los gráficos de
+  # influencia (leverage/Cook's D): ninguno, casos que superan el umbral
+  # de Cook's D o leverage, casos con residuo studentizado alto, o
+  # simplemente los 5 casos más influyentes. Afecta solo el etiquetado del
+  # gráfico, nunca qué casos se marcan en la tabla de influencia misma.
+  - name: influenceLabelMode
+    title: Label Cases
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: High Cook's D
+        name: cooks
+      - title: High Leverage
+        name: leverage
+      - title: High Studentized Residual
+        name: studres
+      - title: Top 5 Influence
+        name: top5
+    default: top5
+
+  # Draws the numeric screening threshold (leverage or Cook's D, depending
+  # on the plot) as a reference line, so the cutoff used in the table is
+  # visible directly on the plot.
+  # ES: Dibuja el umbral numérico de cribado (leverage o Cook's D, según el
+  # gráfico) como línea de referencia, para que el corte usado en la tabla
+  # sea visible directamente en el gráfico.
+  - name: influenceShowThreshold
+    title: Show Threshold Line
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # General style — cosmetic options applied across every diagnostic plot.
+  # ES: Estilo general — opciones estéticas aplicadas a cada gráfico diagnóstico.
+  # -----------------------------------------------------------------------------
+  # Overall color/line style applied to every diagnostic plot (clean
+  # academic look, black & white for print, high contrast for accessibility,
+  # or full color). Purely cosmetic; does not affect any computed value.
+  # ES: Estilo de color/línea general aplicado a cada gráfico diagnóstico
+  # (estilo académico limpio, blanco y negro para impresión, alto
+  # contraste por accesibilidad, o full color). Es puramente estético; no
+  # afecta ningún valor calculado.
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - title: Clean Academic
+        name: clean
+      - title: Black and White
+        name: bw
+      - title: High Contrast
+        name: contrast
+      - title: Full color
+        name: fullColor
+    default: clean
+
+  # The categorical color palette used to distinguish groups/factor levels
+  # (e.g. the group boxplots), decoupled from plotStyle. Includes a
+  # colorblind-safe option for accessibility.
+  # ES: La paleta de color categórica usada para distinguir grupos/niveles
+  # de factor (p. ej. los boxplots por grupo), desacoplada de plotStyle.
+  # Incluye una opción apta para daltonismo por accesibilidad.
+  - name: plotPalette
+    title: Color Palette by Group
+    type: List
+    options:
+      - title: Blue-Orange (default)
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: High Contrast (accessible)
+        name: colorblind
+    default: blueOrange

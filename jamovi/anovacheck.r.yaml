@@ -1,0 +1,463 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: anovaCheck
+title: ANOVA/ANCOVA
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: ANOVA/ANCOVA
+    type: Html
+
+  - name: designGuide
+    title: Diseño del modelo
+    type: Html
+
+  - name: designSummary
+    title: Resumen del diseño
+    type: Table
+    columns:
+      - name: item
+        title: Elemento
+        type: text
+      - name: value
+        title: Valor
+        type: text
+
+  - name: cellSummary
+    title: Tamaño de celdas y balance
+    type: Table
+    columns:
+      - name: cell
+        title: Celda / grupo
+        type: text
+      - name: n
+        title: n
+        type: integer
+      - name: mean
+        title: M
+        type: number
+      - name: sd
+        title: SD
+        type: number
+      - name: variance
+        title: Varianza
+        type: number
+
+  - name: designInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: diagnosticPlotsGuide
+    title: Gráficos diagnósticos de ANOVA/ANCOVA
+    type: Html
+
+  - name: groupBoxplotsPlot
+    title: Variable dependiente por grupo
+    type: Image
+    width: 600
+    height: 340
+    renderFun: .plotGroupBoxplots
+
+  - name: groupBoxplotsGuide
+    title: 'Guía: Variable dependiente por grupo'
+    type: Html
+
+  - name: residualNormalityGuide
+    title: Normalidad de residuos
+    type: Html
+
+  - name: residualNormality
+    title: Normalidad de residuos
+    type: Table
+    columns:
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: residualNormalityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: residualsFittedPlot
+    title: Residuos vs valores ajustados
+    type: Image
+    width: 560
+    height: 315
+    renderFun: .plotResidualsFitted
+
+  - name: residualsFittedGuide
+    title: 'Guía: Residuos vs valores ajustados'
+    type: Html
+
+  - name: qqResidualsPlot
+    title: Q-Q plot de residuos
+    type: Image
+    width: 560
+    height: 310
+    renderFun: .plotQQResiduals
+
+  - name: qqResidualsGuide
+    title: 'Guía: Q-Q plot de residuos'
+    type: Html
+
+  - name: residualHistogramPlot
+    title: Histograma de residuos
+    type: Image
+    width: 560
+    height: 300
+    renderFun: .plotResidualHistogram
+
+  - name: residualHistogramGuide
+    title: 'Guía: Histograma de residuos'
+    type: Html
+
+  - name: residualNormalCurvePlot
+    title: Distribución observada de residuos vs curva normal teórica
+    type: Image
+    width: 560
+    height: 315
+    renderFun: .plotResidualNormalCurve
+
+  - name: residualNormalCurveGuide
+    title: 'Guía: Distribución observada vs normal teórica'
+    type: Html
+
+  - name: varianceGuide
+    title: Homogeneidad de varianzas
+    type: Html
+
+  - name: varianceTests
+    title: Homogeneidad de varianzas entre grupos
+    type: Table
+    columns:
+      - name: family
+        title: Familia
+        type: text
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: df
+        title: df
+        type: integer
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: varianceInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: slopesGuide
+    title: Homogeneidad de pendientes
+    type: Html
+    visible: (covs)
+
+  - name: slopesTests
+    title: Homogeneidad de pendientes en ANCOVA
+    type: Table
+    visible: (covs)
+    columns:
+      - name: factor
+        title: Factor
+        type: text
+      - name: covariate
+        title: Covariable
+        type: text
+      - name: interaction
+        title: Interacción
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: slopesInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (covs)
+
+  - name: covariateLinearityGuide
+    title: Linealidad de covariables
+    type: Html
+    visible: (covs)
+
+  - name: covariateLinearity
+    title: Linealidad de covariables
+    type: Table
+    visible: (covs)
+    columns:
+      - name: covariate
+        title: Covariable
+        type: text
+      - name: dependent
+        title: Variable dependiente
+        type: text
+      - name: test
+        title: Prueba / criterio
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: covariateLinearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (covs)
+
+  - name: multicollinearityGuide
+    title: Multicolinealidad
+    type: Html
+    visible: (covs)
+
+  - name: multicollinearity
+    title: Multicolinealidad
+    type: Table
+    visible: (covs)
+    columns:
+      - name: diagnostic
+        title: Diagnóstico
+        type: text
+      - name: item
+        title: Elemento
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+
+  - name: multicollinearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (covs)
+
+  - name: correlationMatrixGuide
+    title: Matriz de correlaciones
+    type: Html
+    visible: (covs)
+
+  - name: pearsonMatrixTable
+    title: Matriz de correlaciones de Pearson (formato APA 7)
+    type: Table
+    visible: (covs)
+    rows: 0
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: dcorMatrixTable
+    title: Matriz de correlación de distancia (dCor, formato APA 7)
+    type: Table
+    visible: (covs)
+    rows: 0
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: correlationMatrixNote
+    title: ' '
+    type: Html
+    visible: (covs)
+
+  - name: correlationComparisonGuide
+    title: Análisis de discordancia Pearson / dCor / entropía copular
+    type: Html
+    visible: (covs)
+
+  - name: correlationComparisonTable
+    title: Pares con diferencia notable entre Pearson y dCor
+    type: Table
+    visible: (covs)
+    rows: 0
+    columns:
+      - name: var1
+        title: Variable 1
+        type: text
+      - name: var2
+        title: Variable 2
+        type: text
+      - name: pearson
+        title: Pearson r
+        type: text
+      - name: dcor
+        title: dCor
+        type: text
+      - name: gap
+        title: Brecha (dCor − |r|)
+        type: number
+      - name: ce
+        title: Entropía copular
+        type: number
+      - name: ceP
+        title: p (CE)
+        type: number
+        format: zto,pvalue
+      - name: ceSig
+        title: Sig. (CE)
+        type: text
+      - name: flag
+        title: Diferencia notable
+        type: text
+
+  - name: correlationComparisonInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: (covs)
+
+  - name: influenceGuide
+    title: Casos atípicos e influyentes
+    type: Html
+
+  - name: influence
+    title: Casos atípicos e influyentes
+    type: Table
+    columns:
+      - name: case
+        title: Caso
+        type: integer
+      - name: fitted
+        title: Ajustado
+        type: number
+      - name: residual
+        title: Residuo
+        type: number
+      - name: studResidual
+        title: Residuo studentizado
+        type: number
+      - name: leverage
+        title: Leverage
+        type: number
+      - name: cooksD
+        title: Cook's D
+        type: number
+      - name: dffits
+        title: DFFITS
+        type: number
+      - name: criteria
+        title: Criterios activados
+        type: text
+
+  - name: influenceInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: residualsLeveragePlot
+    title: Residuos studentizados vs leverage
+    type: Image
+    width: 600
+    height: 350
+    renderFun: .plotResidualsLeverage
+
+  - name: residualsLeverageGuide
+    title: 'Guía: Residuos studentizados vs leverage'
+    type: Html
+
+  - name: cooksDPlot
+    title: Cook's D por caso
+    type: Image
+    width: 560
+    height: 300
+    renderFun: .plotCooksD
+
+  - name: cooksDGuide
+    title: "Guía: Cook's D por caso"
+    type: Html
+
+  - name: independenceGuide
+    title: Independencia del diseño
+    type: Html
+
+  - name: alternativesGuide
+    title: Alternativas metodológicas
+    type: Html
+
+  - name: alternatives
+    title: Alternativas metodológicas
+    type: Table
+    columns:
+      - name: problem
+        title: Problema detectado
+        type: text
+      - name: evidence
+        title: Evidencia
+        type: text
+      - name: suggestion
+        title: Opción sugerida
+        type: text
+
+  - name: alternativesWhen
+    title: ""
+    type: Html
+
+  - name: notes
+    title: Notas y recomendación
+    type: Html

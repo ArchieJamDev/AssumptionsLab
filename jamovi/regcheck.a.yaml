@@ -1,0 +1,400 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: regCheck
+title: Simple and Multiple Regression
+menuTitle: Simple and Multiple Regression
+menuGroup: Assumption Lab
+menuSubgroup: Regression
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+
+  # The single numeric outcome the regression model predicts.
+  # ES: El único desenlace numérico que predice el modelo de regresión.
+  - name: dep
+    title: Dependent Variable
+    type: Variable
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+
+  # Numeric predictors. Feed the linearity-per-predictor, homoscedasticity,
+  # multicollinearity, and Pearson/dCor/copula-entropy diagnostics, which
+  # only apply to numeric variables.
+  # ES: Predictores numéricos. Alimentan los diagnósticos de linealidad por
+  # predictor, homoscedasticidad, multicolinealidad y Pearson/dCor/entropía
+  # copular, que solo aplican a variables numéricas.
+  - name: covs
+    title: Numeric Predictors
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    default: null
+
+  # Categorical predictors.
+  # ES: Predictores categóricos.
+  - name: factors
+    title: Categorical Predictors
+    type: Variables
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+    default: null
+
+  # Selects which language's text bank (see texts.R) is used to render
+  # every guide, interpretation, and table/column title in the report.
+  # ES: Selecciona qué banco de textos (ver texts.R) se usa para renderizar
+  # cada guía, interpretación y título de tabla/columna en el informe.
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+
+  # Master switch for the whole diagnostic-plots block. Unchecking it
+  # produces a text-only report.
+  # ES: Interruptor maestro para todo el bloque de gráficos diagnósticos.
+  # Desmarcarlo produce un informe solo de texto.
+  - name: showPlots
+    title: Show Plots (uncheck for text-only report)
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: linearity — controls the per-predictor and predictor-effects plots.
+  # ES: Área: linealidad — controla los gráficos por predictor y de efectos de
+  # predictores.
+  # -----------------------------------------------------------------------------
+  - name: linShowPlots
+    title: Show Linearity Plots
+    type: Bool
+    default: true
+
+  # Optional fitted curve overlaid on the residuals-vs-predictor plots (none/
+  # LOESS/linear). Default is "none": an unsolicited smoother can visually
+  # suggest a pattern that is not actually there in small or noisy samples,
+  # so it is opt-in rather than on by default.
+  # ES: Curva ajustada opcional superpuesta en los gráficos de residuos vs
+  # predictor (ninguno/LOESS/lineal). El valor por defecto es "ninguno": un
+  # suavizado no solicitado puede sugerir visualmente un patrón que en
+  # realidad no está ahí en muestras pequeñas o ruidosas, por lo que es
+  # opcional en vez de estar activo por defecto.
+  - name: linSmoother
+    title: Smoothing
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: LOESS
+        name: loess
+      - title: Linear Line
+        name: linear
+    default: none
+
+  # Adds a confidence band around the smoother above, so the user can judge
+  # whether an apparent curve is within sampling variation or a real signal.
+  # ES: Agrega una banda de confianza alrededor del suavizado de arriba,
+  # para que el usuario pueda juzgar si una curva aparente está dentro de la
+  # variación muestral o es una señal real.
+  - name: linShowBand
+    title: Smoothing Confidence Band
+    type: Bool
+    default: false
+
+  # Draws a horizontal reference line at residual = 0, the value a perfectly
+  # linear fit would sit on.
+  # ES: Dibuja una línea de referencia horizontal en residuo = 0, el valor
+  # sobre el que se ubicaría un ajuste perfectamente lineal.
+  - name: linRefLine
+    title: Zero Reference Line
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: normality — controls the Q-Q plot and residual histogram.
+  # ES: Área: normalidad — controla el gráfico Q-Q y el histograma de residuos.
+  # -----------------------------------------------------------------------------
+  - name: normShowPlots
+    title: Show Normality Plots
+    type: Bool
+    default: true
+
+  # Overlays a normal-theory pointwise confidence envelope on the Q-Q plot,
+  # so the user can judge whether a departure from the reference line is
+  # larger than expected sampling variation, not just eyeball it.
+  # ES: Superpone una banda de confianza puntual de teoría normal en el
+  # gráfico Q-Q, para que el usuario pueda juzgar si una desviación de la
+  # línea de referencia es mayor que la variación muestral esperada, y no
+  # solo estimarla a ojo.
+  - name: normQQBand
+    title: Q-Q Plot Confidence Band
+    type: Bool
+    default: true
+
+  # Method used to choose the number of histogram bins for the residual
+  # histogram (automatic Sturges' rule, Scott's rule, or Freedman-Diaconis).
+  # Different rules can reveal or hide distributional features depending on
+  # sample size and skew.
+  # ES: Método usado para elegir el número de bins del histograma de
+  # residuos (regla automática de Sturges, regla de Scott, o
+  # Freedman-Diaconis). Reglas distintas pueden revelar u ocultar rasgos
+  # distribucionales según el tamaño de muestra y la asimetría.
+  - name: normHistBins
+    title: Histogram Binning Method
+    type: List
+    options:
+      - title: Automatic (Sturges)
+        name: sturges
+      - title: Scott
+        name: scott
+      - title: Freedman-Diaconis
+        name: fd
+    default: sturges
+
+  # Overlays a correctly-scaled theoretical normal curve on the residual
+  # histogram, as a direct visual reference for the observed shape.
+  # ES: Superpone una curva normal teórica correctamente escalada sobre el
+  # histograma de residuos, como referencia visual directa para la forma
+  # observada.
+  - name: normCurveOverlay
+    title: Overlay Theoretical Normal Curve on Histogram
+    type: Bool
+    default: true
+
+  # Highlights, with a distinct marker, any residual whose standardized
+  # value exceeds |z| > 2.5 — a quick visual cross-check against the
+  # numeric outlier/influence tables.
+  # ES: Resalta, con un marcador distinto, cualquier residuo cuyo valor
+  # estandarizado supere |z| > 2.5 — un chequeo visual rápido cruzado con
+  # las tablas numéricas de atípicos/influencia.
+  - name: normFlagOutliers
+    title: Flag Extreme Residuals (|z| > 2.5)
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: homoscedasticity — controls the scale-location plot.
+  # ES: Área: homoscedasticidad — controla el gráfico scale-location.
+  # -----------------------------------------------------------------------------
+  - name: homoShowPlots
+    title: Show Homoscedasticity Plots
+    type: Bool
+    default: true
+
+  # Optional fitted curve overlaid on the scale-location plot (none/LOESS/
+  # linear), same rationale as linSmoother: opt-in, off by default, to
+  # avoid visually suggesting a variance trend that may not be real.
+  # ES: Curva ajustada opcional superpuesta en el gráfico scale-location
+  # (ninguno/LOESS/lineal), misma justificación que linSmoother: opcional,
+  # apagada por defecto, para evitar sugerir visualmente una tendencia de
+  # varianza que puede no ser real.
+  - name: homoSmoother
+    title: Smoothing
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: LOESS
+        name: loess
+      - title: Linear Line
+        name: linear
+    default: none
+
+  # Adds a confidence band around the smoother above.
+  # ES: Agrega una banda de confianza alrededor del suavizado de arriba.
+  - name: homoShowBand
+    title: Smoothing Confidence Band
+    type: Bool
+    default: false
+
+  # -----------------------------------------------------------------------------
+  # Area: correlations (Pearson / dCor / copula entropy) — controls the
+  # individual-pair and comparative-pairs plots.
+  # ES: Área: correlaciones (Pearson / dCor / entropía copular) — controla los
+  # gráficos individual por par y comparativo entre pares.
+  # -----------------------------------------------------------------------------
+  # Master switch for the per-pair scatter plot (one panel per numeric
+  # variable pair).
+  # ES: Interruptor maestro para el gráfico de dispersión por par (un panel
+  # por par de variables numéricas).
+  - name: corrShowIndividual
+    title: Individual Scatter Plot by Pair
+    type: Bool
+    default: true
+
+  # Master switch for the comparative plot that shows every pair's Pearson
+  # r and dCor together, to spot linear/non-linear discordance at a glance
+  # across the whole variable set rather than one pair at a time.
+  # ES: Interruptor maestro para el gráfico comparativo que muestra la r de
+  # Pearson y el dCor de cada par juntos, para detectar discordancia
+  # lineal/no lineal de un vistazo en todo el conjunto de variables en vez
+  # de par por par.
+  - name: corrShowComparative
+    title: Pairwise Comparison Plot
+    type: Bool
+    default: true
+
+  # Overlays a linear fit and a LOESS smoother on each individual-pair
+  # scatter panel, so a linear/non-linear discordance is visible directly
+  # on the scatter, not only in the comparative plot or the numeric table.
+  # ES: Superpone un ajuste lineal y un suavizado LOESS en cada panel de
+  # dispersión individual por par, para que una discordancia lineal/no
+  # lineal sea visible directamente en la dispersión, no solo en el
+  # gráfico comparativo o la tabla numérica.
+  - name: corrIndividualFit
+    title: Show Linear Fit and Smoothing in the Individual Plot
+    type: Bool
+    default: true
+
+  # Visual style of the comparative plot: dumbbell (a line connecting each
+  # pair's Pearson r and dCor, showing the gap directly) or grouped bars
+  # (Pearson r and dCor as adjacent bars per pair).
+  # ES: Estilo visual del gráfico comparativo: dumbbell (una línea que
+  # conecta la r de Pearson y el dCor de cada par, mostrando la brecha
+  # directamente) o barras agrupadas (r de Pearson y dCor como barras
+  # adyacentes por par).
+  - name: corrComparativeStyle
+    title: Comparison Plot Style
+    type: List
+    options:
+      - title: Dumbbell (Pearson vs dCor connected)
+        name: dumbbell
+      - title: Grouped Bars
+        name: bar
+    default: dumbbell
+
+  # Highlights, in both the individual and comparative plots, any pair
+  # whose dCor is notably larger than its Pearson |r| (gap > .10) — the
+  # same pairs flagged in the discordance-analysis table.
+  # ES: Resalta, tanto en el gráfico individual como en el comparativo,
+  # cualquier par cuyo dCor sea notablemente mayor que su |r| de Pearson
+  # (brecha > .10) — los mismos pares señalados en la tabla de análisis de
+  # discordancia.
+  - name: corrHighlightDiscordant
+    title: Highlight Pairs with Notable Pearson/dCor Difference
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: influence — controls the residuals-vs-leverage and Cook's D plots.
+  # ES: Área: influencia — controla los gráficos de residuos vs leverage y
+  # Cook's D.
+  # -----------------------------------------------------------------------------
+  - name: influenceShowPlots
+    title: Show Influence Plots
+    type: Bool
+    default: true
+
+  # Which cases get a text label on the influence plots: none, cases
+  # exceeding the Cook's D or leverage threshold, cases with a high
+  # studentized residual, or simply the top 5 most influential cases.
+  # Affects only plot labeling, never which cases are flagged in the
+  # influence table itself.
+  # ES: Qué casos reciben una etiqueta de texto en los gráficos de
+  # influencia: ninguno, casos que superan el umbral de Cook's D o
+  # leverage, casos con residuo studentizado alto, o simplemente los 5
+  # casos más influyentes. Afecta solo el etiquetado del gráfico, nunca
+  # qué casos se marcan en la tabla de influencia misma.
+  - name: influenceLabelMode
+    title: Label Cases
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: High Cook's D
+        name: cooks
+      - title: High Leverage
+        name: leverage
+      - title: High Studentized Residual
+        name: studres
+      - title: Top 5 Influence
+        name: top5
+    default: top5
+
+  # Draws the numeric screening threshold (leverage or Cook's D, depending
+  # on the plot) as a reference line, so the cutoff used in the table is
+  # visible directly on the plot.
+  # ES: Dibuja el umbral numérico de cribado (leverage o Cook's D, según el
+  # gráfico) como línea de referencia, para que el corte usado en la tabla
+  # sea visible directamente en el gráfico.
+  - name: influenceShowThreshold
+    title: Show Threshold Line
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # General style — cosmetic options applied across every diagnostic plot.
+  # ES: Estilo general — opciones estéticas aplicadas a cada gráfico diagnóstico.
+  # -----------------------------------------------------------------------------
+  # Overall color/line style (clean academic look, black & white for print,
+  # high contrast for accessibility, or full color). Purely cosmetic; does
+  # not affect any computed value.
+  # ES: Estilo de color/línea general (estilo académico limpio, blanco y
+  # negro para impresión, alto contraste por accesibilidad, o full color).
+  # Es puramente estético; no afecta ningún valor calculado.
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - title: Clean Academic
+        name: clean
+      - title: Black and White
+        name: bw
+      - title: High Contrast
+        name: contrast
+      - title: Full color
+        name: fullColor
+    default: clean
+
+  # The categorical color palette used to distinguish categories/groups
+  # (e.g. factor levels), decoupled from plotStyle. Includes a
+  # colorblind-safe option for accessibility.
+  # ES: La paleta de color categórica usada para distinguir categorías/
+  # grupos (p. ej. niveles de un factor), desacoplada de plotStyle. Incluye
+  # una opción apta para daltonismo por accesibilidad.
+  - name: plotPalette
+    title: Color Palette for Categories/Groups
+    type: List
+    options:
+      - title: Blue-Orange (default)
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: High Contrast (accessible)
+        name: colorblind
+    default: blueOrange

@@ -1,0 +1,55 @@
+cff-version: 1.2.0
+
+title: "AssumptionsLab"
+
+message: >
+  If you use AssumptionsLab in your research,
+  please cite the software using the metadata below.
+
+type: software
+
+authors:
+  - family-names: "Chacón Chacón"
+    given-names: "Arquimedes de León"
+    affiliation: "iMetric"
+    email: "304847229+ArchieJamDev@users.noreply.github.com"
+    orcid: "https://orcid.org/0000-0002-7014-7513"
+
+repository-code: "https://github.com/imetriclab/AssumptionsLab"
+
+license: "GPL-3.0-only"
+
+version: "0.1.0"
+
+date-released: "2026-08-05"
+
+abstract: >
+  AssumptionsLab is an open-source Jamovi module designed
+  to evaluate statistical assumptions while providing
+  evidence-based methodological guidance, interpretation,
+  and educational support for researchers, students, and practitioners.
+
+keywords:
+  - Jamovi
+  - Statistics
+  - Statistical Assumptions
+  - Research Methods
+  - Methodology
+  - Regression
+  - ANOVA
+  - SEM
+  - Data Analysis
+  - Open Science
+  - Evidence-Based Practice
+  - Statistical Education
+
+language: en
+
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "Chacón Chacón"
+      given-names: "Arquimedes de León"
+  title: "AssumptionsLab"
+  version: "0.1.0"
+  year: 2026

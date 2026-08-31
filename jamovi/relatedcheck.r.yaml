@@ -1,0 +1,407 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: relatedCheck
+title: Grupos relacionados
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Grupos relacionados
+    type: Html
+
+  - name: designGuide
+    title: Diseño de grupos relacionados
+    type: Html
+
+  - name: designSummary
+    title: Resumen del diseño
+    type: Table
+    columns:
+      - name: item
+        title: Elemento
+        type: text
+      - name: value
+        title: Valor
+        type: text
+
+  - name: descriptiveSummary
+    title: Descriptivos por medición
+    type: Table
+    columns:
+      - name: measure
+        title: Medición
+        type: text
+      - name: n
+        title: n
+        type: integer
+      - name: mean
+        title: M
+        type: number
+      - name: sd
+        title: SD
+        type: number
+      - name: median
+        title: Mdn
+        type: number
+      - name: min
+        title: Min
+        type: number
+      - name: max
+        title: Max
+        type: number
+      - name: missing
+        title: Faltantes
+        type: integer
+
+  - name: profilePlot
+    title: Perfil de mediciones relacionadas
+    type: Image
+    requiresData: true
+    width: 560
+    height: 315
+    renderFun: .plotProfile
+    visible: (showProfilePlot)
+    clearWith:
+      - measures
+      - showProfilePlot
+      - plotStyle
+      - plotPalette
+      - reportLang
+
+  - name: differencePlot
+    title: Distribución de diferencias pareadas
+    type: Image
+    requiresData: true
+    width: 560
+    height: 315
+    renderFun: .plotDifferences
+    visible: (showDifferencePlots)
+    clearWith:
+      - measures
+      - showDifferencePlots
+      - plotStyle
+      - plotPalette
+      - reportLang
+
+  - name: normalityPlot
+    title: Q-Q plots de diferencias pareadas
+    type: Image
+    requiresData: true
+    width: 620
+    height: 360
+    renderFun: .plotNormality
+    visible: (showNormalityPlots)
+    clearWith:
+      - measures
+      - showNormalityPlots
+      - plotStyle
+      - reportLang
+
+
+  - name: normalCurvePlot
+    title: Distribución observada vs normal teórica
+    type: Image
+    requiresData: true
+    width: 620
+    height: 360
+    renderFun: .plotNormalCurve
+    visible: (showNormalityPlots)
+    clearWith:
+      - measures
+      - showNormalityPlots
+      - plotStyle
+      - reportLang
+
+
+  - name: differenceGuide
+    title: Diferencias pareadas
+    type: Html
+
+  - name: differenceSummary
+    title: Resumen de diferencias pareadas
+    type: Table
+    columns:
+      - name: comparison
+        title: Comparación
+        type: text
+      - name: n
+        title: n
+        type: integer
+      - name: meanDiff
+        title: M diferencia
+        type: number
+      - name: sdDiff
+        title: SD diferencia
+        type: number
+      - name: medianDiff
+        title: Mdn diferencia
+        type: number
+      - name: minDiff
+        title: Min
+        type: number
+      - name: maxDiff
+        title: Max
+        type: number
+
+  - name: normalityGuide
+    title: Normalidad de diferencias/residuos
+    type: Html
+
+  - name: normality
+    title: Normalidad de diferencias/residuos
+    type: Table
+    columns:
+      - name: scope
+        title: Alcance
+        type: text
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: normalitySummary
+    title: Resumen de normalidad por comparación
+    type: Table
+    columns:
+      - name: comparison
+        title: Comparación
+        type: text
+      - name: tests
+        title: Pruebas válidas
+        type: integer
+      - name: significant
+        title: Pruebas significativas
+        type: integer
+      - name: interpretation
+        title: Interpretación
+        type: text
+
+  - name: normalityRecommendation
+    title: Recomendación
+    type: Html
+  - name: normalityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: symmetryGuide
+    title: Simetría de diferencias
+    type: Html
+
+  - name: symmetry
+    title: Simetría de diferencias
+    type: Table
+    columns:
+      - name: comparison
+        title: Comparación
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: symmetryInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: sphericityGuide
+    title: Esfericidad
+    type: Html
+    visible: false
+
+  - name: sphericity
+    title: Esfericidad y correcciones
+    type: Table
+    visible: false
+    columns:
+      - name: diagnostic
+        title: Diagnóstico
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+      - name: df
+        title: df
+        type: integer
+      - name: p
+        title: p
+        type: text
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: sphericityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: false
+
+  - name: correlationMatrixGuide
+    title: Matriz de correlaciones
+    type: Html
+    visible: false
+
+  - name: pearsonMatrixTable
+    title: Matriz de correlaciones de Pearson (formato APA 7)
+    type: Table
+    visible: false
+    rows: 0
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: dcorMatrixTable
+    title: Matriz de correlación de distancia (dCor, formato APA 7)
+    type: Table
+    visible: false
+    rows: 0
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: correlationMatrixNote
+    title: ' '
+    type: Html
+    visible: false
+
+  - name: correlationComparisonGuide
+    title: Análisis de discordancia Pearson / dCor / entropía copular
+    type: Html
+    visible: false
+
+  - name: correlationComparisonTable
+    title: Pares con diferencia notable entre Pearson y dCor
+    type: Table
+    visible: false
+    rows: 0
+    columns:
+      - name: var1
+        title: Variable 1
+        type: text
+      - name: var2
+        title: Variable 2
+        type: text
+      - name: pearson
+        title: Pearson r
+        type: text
+      - name: dcor
+        title: dCor
+        type: text
+      - name: gap
+        title: Brecha (dCor − |r|)
+        type: number
+      - name: ce
+        title: Entropía copular
+        type: number
+      - name: ceP
+        title: p (CE)
+        type: number
+        format: zto,pvalue
+      - name: ceSig
+        title: Sig. (CE)
+        type: text
+      - name: flag
+        title: Diferencia notable
+        type: text
+
+  - name: correlationComparisonInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: false
+
+  - name: outliersGuide
+    title: Casos atípicos en diferencias
+    type: Html
+
+  - name: outliers
+    title: Casos atípicos en diferencias
+    type: Table
+    columns:
+      - name: case
+        title: Caso
+        type: integer
+      - name: comparison
+        title: Comparación
+        type: text
+      - name: difference
+        title: Diferencia
+        type: number
+      - name: criterion
+        title: Criterio activado
+        type: text
+
+  - name: outliersInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: methodGuide
+    title: Selección de prueba
+    type: Html
+
+  - name: methodOptions
+    title: Opciones metodológicas
+    type: Table
+    columns:
+      - name: design
+        title: Diseño
+        type: text
+      - name: evidence
+        title: Evidencia
+        type: text
+      - name: suggestion
+        title: Prueba sugerida
+        type: text
+
+  - name: methodWhen
+    title: ""
+    type: Html
+  - name: notes
+    title: Notas y recomendación
+    type: Html

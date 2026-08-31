@@ -1,0 +1,225 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Jamovi Analysis Specification - Series Temporales
+# -----------------------------------------------------------------------------
+name: timeCheck
+title: Time Series
+jas: '1.2'
+version: '1.0.0'
+menuGroup: Assumption Lab
+menuSubgroup: Time Series
+menuTitle: Time Series
+
+options:
+  - name: data
+    type: Data
+
+  # The numeric variable(s) representing the time series to evaluate.
+  # Univariate models (ARIMA, SARIMA, ETS, GARCH) use a single series;
+  # multivariate models (VAR, VECM) allow several.
+  # ES: La(s) variable(s) numérica(s) que representan la(s) serie(s)
+  # temporal(es) a evaluar. Los modelos univariados (ARIMA, SARIMA, ETS,
+  # GARCH) usan una sola serie; los modelos multivariados (VAR, VECM)
+  # admiten varias.
+  - name: series
+    title: Time series
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    description: >-
+      Select the numeric variable(s) representing the time series to
+      evaluate. Univariate models (ARIMA, SARIMA, ETS, GARCH) use a
+      single series; multivariate models (VAR, VECM) allow several.
+
+  # Optional variable with the date or timestamp of each observation,
+  # used only to label the plots' horizontal axis. It is not required:
+  # if none is selected, Time Series assumes regularly spaced
+  # observations following row order and the declared periodicity, and
+  # labels the axis with the observation index (1, 2, 3, ...). This
+  # variable is not used to check for gaps or irregularities in the time
+  # spacing.
+  # ES: Variable opcional con la fecha o marca temporal de cada
+  # observación, usada únicamente para rotular el eje horizontal de los
+  # gráficos. No es obligatoria: si no se selecciona, Series Temporales
+  # asume observaciones regularmente espaciadas según el orden de las
+  # filas y la periodicidad declarada, y rotula el eje con el índice de
+  # observación (1, 2, 3, ...). Esta variable no se usa para verificar
+  # huecos o irregularidades en el espaciado temporal.
+  - name: dateVar
+    title: Date (optional)
+    type: Variable
+    suggested:
+      - nominal
+      - continuous
+    permitted:
+      - factor
+      - numeric
+    description: >-
+      Optional variable with the date or timestamp of each observation,
+      used only to label the plots' horizontal axis. It is not
+      required: if none is selected, Time Series assumes regularly
+      spaced observations following row order and the declared
+      periodicity, and labels the axis with the observation index (1,
+      2, 3, ...). This variable is not used to check for gaps or
+      irregularities in the time spacing.
+
+  # External numeric variables to include as model regressors (ARIMAX
+  # if the model is ARIMA, SARIMAX if it is SARIMA). Does not apply to
+  # ETS, VAR, VECM, or GARCH. If left empty, the model is fit without
+  # external regressors, as standard ARIMA/SARIMA.
+  # ES: Variables numéricas externas a incluir como regresores del
+  # modelo (ARIMAX si el modelo es ARIMA, SARIMAX si es SARIMA). No
+  # aplica a ETS, VAR, VECM ni GARCH. Si se dejan vacías, el modelo se
+  # ajusta sin regresores externos, como ARIMA/SARIMA estándar.
+  - name: exogenous
+    title: External Variables
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    description: >-
+      External numeric variables to include as model regressors
+      (ARIMAX if the model is ARIMA, SARIMAX if it is SARIMA). Does not
+      apply to ETS, VAR, VECM, or GARCH. If left empty, the model is
+      fit without external regressors, as standard ARIMA/SARIMA.
+
+  # Selects the time-series modeling approach, to display the relevant
+  # statistical and methodological conditions and to run the minimum
+  # recommended set of diagnostics for that model.
+  # ES: Selecciona el enfoque de modelado temporal, para mostrar las
+  # condiciones estadísticas y metodológicas relevantes y ejecutar el
+  # conjunto mínimo de diagnósticos recomendado para ese modelo.
+  - name: model
+    title: Time series model
+    type: List
+    options:
+      - title: ARIMA
+        name: arima
+      - title: SARIMA
+        name: sarima
+      - title: ETS / Exponential Smoothing
+        name: ets
+      - title: VAR
+        name: var
+      - title: VECM
+        name: vecm
+      - title: GARCH
+        name: garch
+    default: sarima
+    description: >-
+      Select the time-series modeling approach to display the relevant
+      statistical and methodological conditions, and to run the
+      minimum recommended set of diagnostics for that model.
+
+  # Number of observations per seasonal cycle (12 = monthly, 4 =
+  # quarterly, 7 = daily with a weekly cycle, 1 = no seasonality). Used
+  # for seasonal tests and differencing in SARIMA and ETS.
+  # ES: Número de observaciones por ciclo estacional (12 = mensual, 4 =
+  # trimestral, 7 = diario con ciclo semanal, 1 = sin estacionalidad).
+  # Se usa para las pruebas y diferenciaciones estacionales en SARIMA y
+  # ETS.
+  - name: frequency
+    title: Periodicity (seasonal frequency)
+    type: Number
+    min: 1
+    default: 12
+    description: >-
+      Number of observations per seasonal cycle (12 = monthly, 4 =
+      quarterly, 7 = daily with a weekly cycle, 1 = no seasonality).
+      Used for seasonal tests and differencing in SARIMA and ETS.
+
+  # Selects which language's text bank (see texts.R) is used to render
+  # every guide, interpretation, and table/column title in the report.
+  # ES: Selecciona qué banco de textos (ver texts.R) se usa para
+  # renderizar cada guía, interpretación y título de tabla/columna en el
+  # informe.
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+
+  - name: showPlots
+    title: Show Plots (uncheck for text-only report)
+    type: Bool
+    default: true
+
+  # Visual style of the plots (background, line type): clean academic,
+  # black and white for print, high contrast for accessibility, or full
+  # color. Purely cosmetic; does not affect any computed value.
+  # ES: Estilo visual de los gráficos (fondo, tipo de línea): académico
+  # limpio, blanco y negro para impresión, alto contraste por
+  # accesibilidad, o full color. Es puramente estético; no afecta ningún
+  # valor calculado.
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - title: Clean Academic
+        name: clean
+      - title: Black and White
+        name: bw
+      - title: High Contrast
+        name: contrast
+      - title: Full color
+        name: fullColor
+    default: clean
+    description: >-
+      Visual style of the plots (background, line type): clean
+      academic, black and white for print, high contrast for
+      accessibility, or full color. Purely cosmetic; does not affect
+      any computed value.
+
+  # Palette used to distinguish several series in the same plot (for
+  # example, the variables of a VAR/VECM). Includes a colorblind-safe
+  # option for accessibility.
+  # ES: Paleta usada para distinguir varias series en un mismo gráfico
+  # (por ejemplo, las variables de un VAR/VECM). Incluye una opción apta
+  # para daltonismo por accesibilidad.
+  - name: plotPalette
+    title: Color Palette for Series/Groups
+    type: List
+    options:
+      - title: Blue-Orange (default)
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: High Contrast (accessible)
+        name: colorblind
+    default: blueOrange
+    description: >-
+      Palette used to distinguish several series in the same plot (for
+      example, the variables of a VAR/VECM). Includes a colorblind-safe
+      option for accessibility.

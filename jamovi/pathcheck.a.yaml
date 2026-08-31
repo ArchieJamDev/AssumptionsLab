@@ -1,0 +1,321 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: pathCheck
+title: Path Analysis & Structural Validation
+jas: '1.2'
+version: '1.0.0'
+menuGroup: Assumption Lab
+menuSubgroup: Path Analysis
+menuTitle: Path Analysis
+
+options:
+  - name: data
+    type: Data
+
+  # The observed variables that will be part of the Path Analysis model.
+  # ES: Las variables observadas que formarán parte del modelo de Path
+  # Analysis.
+  - name: vars
+    title: Model Variables
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    description: Select the observed variables that will be part of the Path Analysis model.
+
+  # One relationship per path in the model. In each row, the first
+  # variable is the predictor and the second is the dependent variable
+  # (predictor → dependent). A dependent variable with several predictors
+  # is specified with several rows sharing the same second variable.
+  # ES: Una relación por cada ruta del modelo. En cada fila, la primera
+  # variable es el predictor y la segunda es la variable dependiente
+  # (predictor → dependiente). Una variable dependiente con varios
+  # predictores se especifica con varias filas que comparten la misma
+  # segunda variable.
+  - name: relations
+    title: Path Relationships
+    type: Pairs
+    permitted:
+      - numeric
+    description: >-
+      Add one relationship for each path in the model. In each row, the
+      first variable is the predictor and the second is the dependent
+      variable (predictor → dependent). A dependent variable with several
+      predictors is specified with several rows sharing the same second
+      variable.
+
+  # Locks the specification and enables assumption validation and
+  # estimation. While unchecked, the model remains under construction.
+  # ES: Bloquea la especificación y habilita la validación de supuestos y
+  # la estimación. Mientras esté desmarcado, el modelo permanece en
+  # construcción.
+  - name: isFinalized
+    title: Finalize Model
+    type: Bool
+    default: false
+    description: >-
+      Locks the specification and enables assumption validation and
+      estimation. While unchecked, the model remains under construction.
+
+  - name: showCoeffs
+    title: Show Coefficients
+    type: Bool
+    default: true
+
+  - name: showR2
+    title: Show R²
+    type: Bool
+    default: true
+
+  - name: showCorrs
+    title: Show Correlations
+    type: Bool
+    default: false
+
+  - name: showCovs
+    title: Show Covariances
+    type: Bool
+    default: false
+
+  - name: showResiduals
+    title: Show Residuals
+    type: Bool
+    default: false
+
+  - name: showExogenous
+    title: Show Exogenous Variables
+    type: Bool
+    default: true
+
+  - name: showEndogenous
+    title: Show Endogenous Variables
+    type: Bool
+    default: true
+
+  # Number of permutations used for the dCor and copula entropy p-value.
+  # Higher values give the p-value finer resolution (the minimum
+  # attainable is 1/(B+1)) at the cost of more computation time; 999 is
+  # reasonable for exploration, 4999 or more for final results.
+  # ES: Número de permutaciones usadas para el valor p de dCor y de
+  # entropía copular. Valores mayores dan mayor resolución al p (el
+  # mínimo alcanzable es 1/(B+1)) a costa de más tiempo de cómputo; 999
+  # es razonable para exploración, 4999 o más para resultados finales.
+  - name: permutations
+    title: Permutations (dCor / Copula Entropy)
+    type: Number
+    default: 999
+    min: 199
+    max: 9999
+    description: >-
+      Number of permutations used for the dCor and copula entropy
+      p-value. Higher values give the p-value finer resolution (the
+      minimum attainable is 1/(B+1)) at the cost of more computation
+      time; 999 is reasonable for exploration, 4999 or more for final
+      results.
+
+  # Seed used for the permutation tests, for reproducibility.
+  # ES: Semilla usada para las pruebas de permutación, por
+  # reproducibilidad.
+  - name: permutationSeed
+    title: Permutation Seed
+    type: Number
+    default: 2026
+    min: 1
+    max: 999999
+    description: Seed used for the permutation tests, for reproducibility.
+
+  - name: residBinMethod
+    title: Histogram Binning Method
+    type: List
+    options:
+      - title: Automatic (Sturges)
+        name: sturges
+      - title: Scott
+        name: scott
+      - title: Freedman-Diaconis
+        name: fd
+    default: sturges
+
+  - name: residShowNormalCurve
+    title: Overlay Theoretical Normal Curve
+    type: Bool
+    default: true
+
+  - name: residFlagOutliers
+    title: Flag Extreme Residuals (|z| > 2.5)
+    type: Bool
+    default: true
+
+  - name: plotPalette
+    title: Color Palette by Equation
+    type: List
+    options:
+      - title: Blue/Orange
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: Colorblind-Friendly
+        name: colorblind
+    default: blueOrange
+
+  # Selects which language's text bank (see texts.R) is used to render
+  # every guide, interpretation, and table/column title in the report.
+  # ES: Selecciona qué banco de textos (ver texts.R) se usa para renderizar
+  # cada guía, interpretación y título de tabla/columna en el informe.
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - title: Clean Academic
+        name: clean
+      - title: Black and White
+        name: bw
+      - title: High Contrast
+        name: contrast
+      - title: Full color
+        name: fullColor
+    default: clean
+
+  - name: showDiagram
+    title: Show Path Diagram
+    type: Bool
+    default: true
+
+  - name: diagramEdgeLabel
+    title: Paths
+    type: List
+    options:
+      - title: Coefficients (unstandardized)
+        name: coef
+      - title: Betas (standardized)
+        name: beta
+      - title: Labels (a, b, c...)
+        name: labels
+      - title: None
+        name: none
+    default: coef
+
+  # Shows, for each endogenous variable, a small error term (e) with an
+  # incoming arrow, along with the unexplained variance (1 - R²).
+  # ES: Muestra, para cada variable endógena, un pequeño término de
+  # error (e) con una flecha entrante, junto con la varianza no
+  # explicada (1 - R²).
+  - name: diagramShowErrors
+    title: Residuals
+    type: Bool
+    default: false
+    description: >-
+      Shows, for each endogenous variable, a small error term (e) with
+      an incoming arrow, along with the unexplained variance (1 - R²).
+
+  # Offsets each path's label to one side of the arrow instead of
+  # centering it on the line.
+  # ES: Desplaza la etiqueta de cada ruta a un costado de la flecha en
+  # vez de centrarla sobre la línea.
+  - name: diagramOffsetLabels
+    title: Offset Labels
+    type: Bool
+    default: false
+    description: Offsets each path's label to one side of the arrow instead of centering it on the line.
+
+  - name: diagramLayout
+    title: 'Layout: Type'
+    type: List
+    options:
+      - title: Hierarchical (mediation-type)
+        name: hierarchical
+      - title: Circular
+        name: circular
+      - title: Spring
+        name: spring
+    default: hierarchical
+
+  # Only applies to the hierarchical layout; controls which end the
+  # exogenous variables are placed at.
+  # ES: Solo aplica al diseño jerárquico; controla en qué extremo se
+  # ubican las variables exógenas.
+  - name: diagramRotate
+    title: 'Layout: Rotate'
+    type: List
+    options:
+      - title: Exogenous on the Left
+        name: exogLeft
+      - title: Exogenous Above
+        name: exogTop
+      - title: Exogenous on the Right
+        name: exogRight
+      - title: Exogenous Below
+        name: exogBottom
+    default: exogLeft
+    description: Only applies to the hierarchical layout; controls which end the exogenous variables are placed at.
+
+  - name: diagramNodeSize
+    title: 'Nodes: Size'
+    type: List
+    options:
+      - title: Small
+        name: small
+      - title: Medium
+        name: medium
+      - title: Large
+        name: large
+    default: medium
+
+  - name: diagramShape
+    title: 'Nodes: Shapes'
+    type: List
+    options:
+      - title: Ellipses
+        name: ellipse
+      - title: Rectangles
+        name: rectangle
+      - title: Circles
+        name: circle
+    default: ellipse
+
+  - name: diagramAbbreviate
+    title: 'Nodes: Abbreviate'
+    type: List
+    options:
+      - title: No Abbreviation
+        name: none
+      - title: Abbreviate to 8 Characters
+        name: abbrev8
+      - title: Abbreviate to 4 Characters
+        name: abbrev4
+    default: none
