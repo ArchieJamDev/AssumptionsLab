@@ -13,3 +13,8 @@ Rplots.pdf
 # Archivos del sistema operativo
 .DS_Store
 Thumbs.db
+
+# Scripts locales de desarrollo y compilación
+actualizar.sh
+compilar_modulo.sh
+Dockerfile.jamovi-build
