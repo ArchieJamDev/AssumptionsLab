@@ -1,0 +1,13 @@
+{
+  "title": "AssumptionsLab: A Jamovi Module for Statistical Assumptions",
+  "creators": [
+    {
+      "name": "Chacón Chacón, Arquímedes De León",
+      "orcid": "0000-0002-7014-7513",
+      "affiliation": "iMetric"
+    }
+  ],
+  "description": "An open-source Jamovi module designed to evaluate statistical assumptions while providing evidence-based methodological guidance.",
+  "license": "gpl-3.0",
+  "upload_type": "software"
+}

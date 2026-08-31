@@ -1,7 +1,7 @@
 Package: AssumptionsLab
 Title: Assumption Lab for Statistical Analysis
 Version: 1.0.0
-Authors@R: person("Arquímedes", "Chacón", email = "arquimedeschacon@gmail.com", role = c("aut", "cre"))
+Authors@R: person("Arquímedes De León", "Chacón Chacón", email = "arquimedeschacon@gmail.com", role = c("aut", "cre"))
 Description: A comprehensive module for checking statistical assumptions in jamovi.
 License: GPL-3
 Depends:
