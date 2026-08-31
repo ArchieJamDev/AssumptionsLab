@@ -276,8 +276,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                 self$results$notes$setTitle(title = tr("Notes and recommendation", "Notas y recomendación"))
 
-                self$results$analysisReferences$setTitle(title = tr("How to cite AssumptionsLab", "Cómo citar AssumptionsLab"))
-
                 set_col_title(self$results$design, "item", tr("Item", "Elemento"))
                 set_col_title(self$results$design, "value", tr("Value", "Valor"))
 
@@ -1786,8 +1784,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             # BEGIN AL_FINAL_TITLES_AND_REFERENCE
             translate_titles_and_columns()
-
-            self$results$analysisReferences$setVisible(FALSE)
             # END AL_FINAL_TITLES_AND_REFERENCE
 
         },
