@@ -28,7 +28,7 @@ jobs:
 
       - name: Instalar jmvtools y dependencias del módulo
         run: |
-          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://r-project.org')"
+          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
           Rscript -e "remotes::install_github('jamovi/jmvtools', upgrade = 'never')"
           Rscript -e "remotes::install_deps(dependencies = TRUE, upgrade = 'never')"
 
