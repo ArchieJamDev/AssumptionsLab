@@ -29,6 +29,6 @@ jobs:
       - name: Instalar herramientas y verificar módulo jamovi
         run: |
           Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
-          Rscript -e "remotes::install_github('jamovi/jmvtools', upgrade = 'never')"
+          Rscript -e "install.packages('jmvtools', repos = c('https://repo.jamovi.org', 'https://cloud.r-project.org'))"
           Rscript -e "remotes::install_deps(dependencies = TRUE, upgrade = 'never')"
           Rscript -e "jmvtools::check()"
