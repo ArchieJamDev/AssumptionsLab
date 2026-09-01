@@ -26,7 +26,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
 
-            - name: Instalar jmvtools y dependencias del módulo
+      - name: Instalar jmvtools y dependencias del módulo
         run: |
           Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://r-project.org')"
           Rscript -e "remotes::install_github('jamovi/jmvtools', upgrade = 'never')"
