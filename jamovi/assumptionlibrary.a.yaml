@@ -23,40 +23,40 @@
 # -----------------------------------------------------------------------------
 
 name: assumptionLibrary
-title: Assumption Library / Biblioteca de Supuestos
-menuTitle: Assumption Library / Biblioteca de Supuestos
+title: Assumption Library
+menuTitle: Assumption Library
 menuGroup: Assumption Lab
-menuSubgroup: Methodological Guide / Guía Metodológica
+menuSubgroup: Methodological Guide
 version: '1.0.0'
 jas: '1.2'
 options:
   - name: data
     type: Data
   - name: category
-    title: Category / Categoría
+    title: Category
     type: List
     options:
-      - title: All Categories / Todas las categorías
+      - title: All Categories
         name: all
-      - title: Normality / Normalidad
+      - title: Normality
         name: normality
-      - title: Homoscedasticity / Homogeneity / Homocedasticidad / Homogeneidad
+      - title: Homoscedasticity / Homogeneity
         name: homoscedasticity
-      - title: Linearity / Linealidad
+      - title: Linearity
         name: linearity
-      - title: Independence / Independencia
+      - title: Independence
         name: independence
-      - title: Multicollinearity / Multicolinealidad
+      - title: Multicollinearity
         name: multicollinearity
-      - title: Outliers and Influence / Casos atípicos e influencia
+      - title: Outliers and Influence
         name: influence
-      - title: Sphericity / Esfericidad
+      - title: Sphericity
         name: sphericity
-      - title: Transformations and Robust Alternatives / Transformaciones y alternativas robustas
+      - title: Transformations and Robust Alternatives
         name: robust
     default: all
   - name: reportLang
-    title: Report Language / Idioma del reporte
+    title: Report Language
     type: List
     options:
       - title: English

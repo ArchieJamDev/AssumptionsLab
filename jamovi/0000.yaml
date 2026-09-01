@@ -7,19 +7,19 @@ usesNative: false
 minApp: 1.0.8
 icon: assets/assumptionslab-icon.png
 analyses:
-  - title: Assumption Library / Biblioteca de Supuestos
+  - title: Assumption Library
     name: assumptionLibrary
     ns: AssumptionsLab
     menuGroup: Assumption Lab
-    menuSubgroup: Methodological Guide / Guía Metodológica
-    menuTitle: Assumption Library / Biblioteca de Supuestos
+    menuSubgroup: Methodological Guide
+    menuTitle: Assumption Library
     category: analyses
-  - title: Bibliography / Bibliografía
+  - title: Bibliography
     name: bibliography
     ns: AssumptionsLab
     menuGroup: Assumption Lab
-    menuSubgroup: Methodological Guide / Guía Metodológica
-    menuTitle: Bibliography / Bibliografía
+    menuSubgroup: Methodological Guide
+    menuTitle: Bibliography
     category: analyses
   - title: Independent Groups
     name: groupCheck

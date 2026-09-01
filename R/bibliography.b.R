@@ -943,7 +943,15 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             # Resumen bibliometrico (tabla al final de Bibliography)
             # ------------------------------------------------------------
             ref_type_label <- function(rt, lang) {
-                if (lang == "es") {
+                .al_tr(lang,
+                    switch(rt,
+                        seminal = "Original/seminal",
+                        methodological = "Methodological",
+                        review = "Review/comparison",
+                        application = "Application",
+                        book = "Reference book",
+                        rt
+                    ),
                     switch(rt,
                         seminal = "Original/seminal",
                         methodological = "Metodol\u00f3gica",
@@ -952,21 +960,12 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                         book = "Libro de referencia",
                         rt
                     )
-                } else {
-                    switch(rt,
-                        seminal = "Original/seminal",
-                        methodological = "Methodological",
-                        review = "Review/comparison",
-                        application = "Application",
-                        book = "Reference book",
-                        rt
-                    )
-                }
+                )
             }
 
             yesno <- function(x, lang) {
-                if (is.na(x)) return(if (lang == "es") "pendiente" else "pending")
-                if (isTRUE(x)) (if (lang == "es") "S\u00ed" else "Yes") else (if (lang == "es") "No" else "No")
+                if (is.na(x)) return(.al_tr(lang, "pending", "pendiente"))
+                if (isTRUE(x)) .al_tr(lang, "Yes", "S\u00ed") else "No"
             }
 
             # ------------------------------------------------------------
@@ -1083,12 +1082,12 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
             build_citations_table <- function(lang) {
-                ref_hdr    <- if (lang == "es") "Referencia"       else "Reference"
-                cites_hdr  <- if (lang == "es") "Citaciones"       else "Citations"
-                source_hdr <- if (lang == "es") "Fuente"           else "Source"
-                other_hdr  <- if (lang == "es") "Otras fuentes"    else "Other sources"
-                type_hdr   <- if (lang == "es") "Tipo de referencia" else "Reference type"
-                pending    <- if (lang == "es") "Pendiente"        else "Pending"
+                ref_hdr    <- .al_tr(lang, "Reference", "Referencia")
+                cites_hdr  <- .al_tr(lang, "Citations", "Citaciones")
+                source_hdr <- .al_tr(lang, "Source", "Fuente")
+                other_hdr  <- .al_tr(lang, "Other sources", "Otras fuentes")
+                type_hdr   <- .al_tr(lang, "Reference type", "Tipo de referencia")
+                pending    <- .al_tr(lang, "Pending", "Pendiente")
 
                 td_left   <- 'style="text-align: left; padding: 6px 10px;"'
                 td_center <- 'style="text-align: center; padding: 6px 10px;"'
@@ -1129,8 +1128,8 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     )
                 }, character(1))
 
-                table_label <- if (lang == "es") "Tabla 1" else "Table 1"
-                title_txt <- if (lang == "es") "Citaciones" else "Citations"
+                table_label <- .al_tr(lang, "Table 1", "Tabla 1")
+                title_txt <- .al_tr(lang, "Citations", "Citaciones")
                 overall_title_txt <- if (lang == "es") {
                     "Perfil bibliom\u00e9trico e impacto de la literatura utilizada"
                 } else {
@@ -1146,7 +1145,7 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 } else {
                     "Article-Level Citation Metrics"
                 }
-                note_label <- if (lang == "es") "Nota." else "Note."
+                note_label <- .al_tr(lang, "Note.", "Nota.")
                 intro_txt <- if (lang == "es") {
                     paste0(
                         "<p>El n\u00famero de citaciones de cada referencia se reporta como el valor ",
@@ -1205,11 +1204,11 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
             build_biblio_table <- function(lang) {
-                venue_hdr   <- if (lang == "es") "Revista"                        else "Journal"
+                venue_hdr   <- .al_tr(lang, "Journal", "Revista")
                 scopus_hdr  <- "Scopus"
                 wos_hdr     <- "Web of Science"
-                other_hdr   <- if (lang == "es") "Otras indexaciones relevantes" else "Other relevant indexes"
-                quart_hdr   <- if (lang == "es") "Cuartil"                       else "Quartile"
+                other_hdr   <- .al_tr(lang, "Other relevant indexes", "Otras indexaciones relevantes")
+                quart_hdr   <- .al_tr(lang, "Quartile", "Cuartil")
 
                 # Journals only: books have no bibliographic indexing data
                 # (Scopus/WoS/quartile are attributes of periodicals, not
@@ -1253,14 +1252,14 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     )
                 }, character(1))
 
-                table_label <- if (lang == "es") "Tabla 2" else "Table 2"
-                title_txt <- if (lang == "es") "Resumen bibliom\u00e9trico" else "Bibliometric Summary"
+                table_label <- .al_tr(lang, "Table 2", "Tabla 2")
+                title_txt <- .al_tr(lang, "Bibliometric Summary", "Resumen bibliom\u00e9trico")
                 section_title_txt <- if (lang == "es") {
                     "M\u00e9tricas de calidad y divulgaci\u00f3n a nivel de revista"
                 } else {
                     "Journal-Level Quality and Dissemination Metrics"
                 }
-                note_label <- if (lang == "es") "Nota." else "Note."
+                note_label <- .al_tr(lang, "Note.", "Nota.")
                 intro_txt <- if (lang == "es") {
                     paste0(
                         "<p>Esta tabla describe, para cada revista en la que se public\u00f3 al menos ",
@@ -1400,7 +1399,7 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
             page_style <- 'style="max-width: 700px; line-height: 1; text-align: justify;"'
 
-            title_txt <- if (lang == "es") "Bibliograf\u00eda metodol\u00f3gica" else "Methodological bibliography"
+            title_txt <- .al_tr(lang, "Methodological bibliography", "Bibliograf\u00eda metodol\u00f3gica")
 
             intro <- if (lang == "es") {
                 paste0(
@@ -1428,13 +1427,13 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
             topic_label <- switch(
                 topic,
-                all = ifelse(lang == "es", "Todas las referencias", "All references"),
-                assumptions = ifelse(lang == "es", "Supuestos estad\u00edsticos", "Statistical assumptions"),
-                normality = ifelse(lang == "es", "Normalidad", "Normality"),
-                homoscedasticity = ifelse(lang == "es", "Homogeneidad / Homocedasticidad", "Homogeneity / Homoscedasticity"),
-                regression = ifelse(lang == "es", "Linealidad y regresi\u00f3n", "Linearity and regression"),
-                related = ifelse(lang == "es", "Grupos relacionados", "Related groups"),
-                robust = ifelse(lang == "es", "M\u00e9todos robustos y alternativas", "Robust methods and alternatives"),
+                all = .al_tr(lang, "All references", "Todas las referencias"),
+                assumptions = .al_tr(lang, "Statistical assumptions", "Supuestos estad\u00edsticos"),
+                normality = .al_tr(lang, "Normality", "Normalidad"),
+                homoscedasticity = .al_tr(lang, "Homogeneity / Homoscedasticity", "Homogeneidad / Homocedasticidad"),
+                regression = .al_tr(lang, "Linearity and regression", "Linealidad y regresi\u00f3n"),
+                related = .al_tr(lang, "Related groups", "Grupos relacionados"),
+                robust = .al_tr(lang, "Robust methods and alternatives", "M\u00e9todos robustos y alternativas"),
                 topic
             )
 
@@ -1461,7 +1460,7 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 ref_lines <- vapply(selected, format_ref, character(1))
                 refs <- paste0(
                     '<div ', page_style, '>',
-                    "<p><b>", if (lang == "es") "Tema seleccionado: " else "Selected topic: ", esc(topic_label), "</b></p>",
+                    "<p><b>", .al_tr(lang, "Selected topic: ", "Tema seleccionado: "), esc(topic_label), "</b></p>",
                     paste(ref_lines, collapse = ""),
                     "</div>"
                 )

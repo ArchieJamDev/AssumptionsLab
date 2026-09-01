@@ -131,7 +131,7 @@ assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cl
                 weightsSupport = 'auto')
         }))
 
-#' Assumption Library / Biblioteca de Supuestos
+#' Assumption Library
 #'
 #' 
 #' @param data .

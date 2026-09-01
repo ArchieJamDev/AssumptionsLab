@@ -106,7 +106,7 @@ bibliographyBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 weightsSupport = 'auto')
         }))
 
-#' Bibliography / Bibliografía
+#' Bibliography
 #'
 #' 
 #' @param data .

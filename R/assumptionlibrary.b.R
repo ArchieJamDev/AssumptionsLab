@@ -81,9 +81,12 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
             # -----------------------------------------------------------------------------
             lang <- .al_normalize_lang(self$options$reportLang)
 
-            tr <- function(en, es) {
-                if (identical(lang, "es")) es else en
-            }
+            # Delegates to the shared .al_tr() (shared-helpers.R) instead of
+            # reimplementing the same en/es selection logic locally.
+            # ES: Delega en la función compartida .al_tr() (shared-
+            # helpers.R) en vez de reimplementar localmente la misma
+            # lógica de selección en/es.
+            tr <- function(en, es = NULL) .al_tr(lang, en, es)
 
             txt <- function(key) {
                 .al_text(lang, "library", key)

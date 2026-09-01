@@ -1,38 +1,38 @@
 name: bibliography
-title: Bibliography / Bibliografía
-menuTitle: Bibliography / Bibliografía
+title: Bibliography
+menuTitle: Bibliography
 menuGroup: Assumption Lab
-menuSubgroup: Methodological Guide / Guía Metodológica
+menuSubgroup: Methodological Guide
 version: '1.0.0'
 jas: '1.2'
 options:
   - name: data
     type: Data
   - name: topic
-    title: Theme / Tema
+    title: Theme
     type: List
     options:
-      - title: All References / Todas las referencias
+      - title: All References
         name: all
-      - title: Statistical Assumptions / Supuestos estadísticos
+      - title: Statistical Assumptions
         name: assumptions
-      - title: Normality / Normalidad
+      - title: Normality
         name: normality
-      - title: Homogeneity / Homoscedasticity / Homogeneidad / Homocedasticidad
+      - title: Homogeneity / Homoscedasticity
         name: homoscedasticity
-      - title: Linearity and Regression / Linealidad y regresión
+      - title: Linearity and Regression
         name: regression
-      - title: Path Analysis / Análisis de Ruta
+      - title: Path Analysis
         name: path
-      - title: Related Groups / Grupos relacionados
+      - title: Related Groups
         name: related
-      - title: Time Series / Series temporales
+      - title: Time Series
         name: time_series
-      - title: Robust Methods and Alternatives / Métodos robustos y alternativas
+      - title: Robust Methods and Alternatives
         name: robust
     default: all
   - name: reportLang
-    title: Report Language / Idioma del reporte
+    title: Report Language
     type: List
     options:
       - title: English
