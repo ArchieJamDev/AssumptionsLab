@@ -525,6 +525,127 @@
 }
 
 # -----------------------------------------------------------------------------
+# .al_dcor_stat(x, y)
+#
+# Distance correlation (Szekely et al., 2007) between two numeric vectors,
+# via the standard double-centered distance-matrix formula. Returns NA_real_
+# (not 0) when the statistic is undefined for the pair (e.g. a constant
+# variable, zero distance-variance denominator) or when n < 4.
+#
+# Verified byte-identical (after whitespace/name normalization) across
+# anovaCheck, logCheck, regCheck, and relatedCheck - consolidated here per
+# Archie's "prioritize shared functions" instruction (Sep 2026). pathCheck
+# has its own private$.dCorTest() with a different interface (its own
+# B/seed options wired at the call site) and is left untouched.
+#
+# ES: Correlacion de distancia (Szekely et al., 2007) entre dos vectores
+# numericos, con la formula estandar de matrices de distancia doblemente
+# centradas. Devuelve NA_real_ (no 0) cuando el estadistico queda
+# indefinido para el par (p. ej. una variable constante, denominador de
+# varianza de distancia cero) o cuando n < 4.
+#
+# Verificada identica byte a byte (tras normalizar espacios/nombres) en
+# anovaCheck, logCheck, regCheck y relatedCheck - consolidada aqui por la
+# instruccion de Archie de "priorizar funciones compartidas" (sep 2026).
+# pathCheck tiene su propio private$.dCorTest() con una interfaz distinta
+# (sus propias opciones de B/semilla fijadas en el sitio de la llamada) y
+# se deja intacto.
+# -----------------------------------------------------------------------------
+.al_dcor_stat <- function(x, y) {
+    ok <- is.finite(x) & is.finite(y)
+    x <- x[ok]; y <- y[ok]
+    n <- length(x)
+    if (n < 4) return(NA_real_)
+
+    ax <- as.matrix(stats::dist(x))
+    by <- as.matrix(stats::dist(y))
+
+    a_row <- rowMeans(ax); a_col <- colMeans(ax); a_grand <- mean(ax)
+    b_row <- rowMeans(by); b_col <- colMeans(by); b_grand <- mean(by)
+
+    A <- ax - outer(a_row, a_col, "+") + a_grand
+    Bm <- by - outer(b_row, b_col, "+") + b_grand
+
+    dcov2 <- mean(A * Bm)
+    dvarx2 <- mean(A * A)
+    dvary2 <- mean(Bm * Bm)
+
+    denom <- sqrt(dvarx2 * dvary2)
+    if (!is.finite(denom) || denom <= 0) return(NA_real_)
+
+    sqrt(max(0, dcov2) / denom)
+}
+
+# -----------------------------------------------------------------------------
+# .al_dcor_test(x, y, B = 199, seed = 20260704)
+#
+# Permutation p-value for .al_dcor_stat(), consolidating each module's local
+# dcor_pvalue(). Same fixed default B/seed as the 4 modules being
+# consolidated (regCheck, logCheck, anovaCheck, relatedCheck all hardcoded
+# reps=199/seed=20260704 identically) - preserved here rather than changed,
+# per the no-behavior-change rule. pathCheck is untouched (own B/seed from
+# user-facing options, wired at its own call sites).
+#
+# ES: Valor p por permutacion para .al_dcor_stat(), consolidando el
+# dcor_pvalue() local de cada modulo. Mismo B/semilla fijos por defecto que
+# los 4 modulos consolidados (regCheck, logCheck, anovaCheck, relatedCheck
+# tenian reps=199/semilla=20260704 hardcodeados de forma identica) -
+# preservados aqui en vez de cambiados, por la regla de no cambiar
+# comportamiento. pathCheck queda intacto (su propio B/semilla desde
+# opciones de usuario, fijadas en sus propios sitios de llamada).
+# -----------------------------------------------------------------------------
+.al_dcor_test <- function(x, y, B = 199, seed = 20260704) {
+    ok <- is.finite(x) & is.finite(y)
+    x <- x[ok]; y <- y[ok]
+    if (length(x) < 4) return(list(dcor = NA_real_, p = NA_real_))
+
+    obs <- .al_dcor_stat(x, y)
+    if (is.na(obs)) return(list(dcor = NA_real_, p = NA_real_))
+
+    set.seed(seed)
+    perm <- vapply(seq_len(B), function(k) .al_dcor_stat(x, sample(y)), numeric(1))
+
+    p <- (1 + sum(perm >= obs, na.rm = TRUE)) / (1 + B)
+    list(dcor = obs, p = p)
+}
+
+# -----------------------------------------------------------------------------
+# .al_permutation_note(lang, B, seed)
+#
+# Bilingual method-transparency sentence for the dCor/CE permutation tests:
+# states B, seed, and the minimum achievable p at that resolution (floor =
+# 1/(B+1)), so a p printed at the floor is read as "p <= floor" (Monte
+# Carlo), not as an exact value. Added per Archie's request (Sep 2026) to
+# extend to relatedCheck/logCheck/anovaCheck/regCheck the transparency
+# pathCheck already had. pathCheck keeps its own inline version untouched,
+# since its B/seed are user-configurable and its sentence additionally
+# invites raising B for a final report - not applicable to these 4
+# modules, where B/seed are fixed and not exposed as options.
+#
+# ES: Oracion bilingue de transparencia metodologica para las pruebas de
+# permutacion de dCor/CE: indica B, semilla y el p minimo alcanzable a esa
+# resolucion (piso = 1/(B+1)), para que un p impreso en el piso se lea
+# como "p <= piso" (Monte Carlo), no como un valor exacto. Agregada por
+# pedido de Archie (sep 2026) para extender a relatedCheck/logCheck/
+# anovaCheck/regCheck la transparencia que pathCheck ya tenia. pathCheck
+# conserva su propia version inline sin tocar, ya que su B/semilla son
+# configurables por el usuario y su oracion invita ademas a subir B para
+# un informe final - no aplica a estos 4 modulos, donde B/semilla son
+# fijos y no estan expuestos como opciones.
+# -----------------------------------------------------------------------------
+.al_permutation_note <- function(lang, B, seed) {
+    floor_p <- 1 / (B + 1)
+    floor_p_str <- sub("^0", "", sprintf("%.3f", floor_p))
+    .al_tr(
+        lang,
+        sprintf("Method: dCor and CE p-values are obtained by permutation (B = %d permutations, seed = %d). The minimum achievable p at this resolution is %s; a p equal to this value should be read as p \u2264 %s (Monte Carlo), not as an exact value.",
+                B, seed, floor_p_str, floor_p_str),
+        sprintf("M\u00e9todo: los valores p de dCor y CE se obtienen por permutaci\u00f3n (B = %d permutaciones, semilla = %d). El p m\u00ednimo alcanzable con esta resoluci\u00f3n es %s; un p igual a este valor debe leerse como p \u2264 %s (Monte Carlo), no como un valor exacto.",
+                B, seed, floor_p_str, floor_p_str)
+    )
+}
+
+# -----------------------------------------------------------------------------
 # .al_dcor_na_note(lang)
 #
 # Bilingual clarifying sentence for correlation-matrix notes: explains that a

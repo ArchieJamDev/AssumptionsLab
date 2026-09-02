@@ -521,58 +521,19 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 sub("^0", "", sprintf("%.3f", p))
             }
 
-            dcor_stat <- function(x, y) {
-                ok <- is.finite(x) & is.finite(y)
-                x <- x[ok]; y <- y[ok]
-                n <- length(x)
-                if (n < 4) return(NA_real_)
-
-                ax <- as.matrix(stats::dist(x))
-                by <- as.matrix(stats::dist(y))
-
-                a_row <- rowMeans(ax); a_col <- colMeans(ax); a_grand <- mean(ax)
-                b_row <- rowMeans(by); b_col <- colMeans(by); b_grand <- mean(by)
-
-                A <- ax - outer(a_row, a_col, "+") + a_grand
-                Bm <- by - outer(b_row, b_col, "+") + b_grand
-
-                dcov2 <- mean(A * Bm)
-                dvarx2 <- mean(A * A)
-                dvary2 <- mean(Bm * Bm)
-
-                denom <- sqrt(dvarx2 * dvary2)
-                # NA (not 0): an invalid/zero distance-variance denominator
-                # means dCor is undefined for this pair (e.g. a constant
-                # variable), not that dependence was measured as exactly
-                # zero. Unified suite-wide per Archie's decision, Aug 2026 -
-                # matches what logCheck/relatedCheck already did.
-                # ES: NA (no 0): un denominador de varianza de distancia
-                # inválido/cero significa que dCor no está definido para ese
-                # par (p. ej. una variable constante), no que la dependencia
-                # se midió como exactamente cero. Unificado en toda la
-                # suite - coincide con lo que logCheck/relatedCheck ya
-                # hacían.
-                if (!is.finite(denom) || denom <= 0) return(NA_real_)
-
-                sqrt(max(0, dcov2) / denom)
-            }
-
-            dcor_pvalue <- function(x, y, reps = 199) {
-                ok <- is.finite(x) & is.finite(y)
-                x <- x[ok]; y <- y[ok]
-                n <- length(x)
-                if (n < 4) return(NA_real_)
-
-                obs <- dcor_stat(x, y)
-                if (is.na(obs)) return(NA_real_)
-
-                set.seed(20260704)
-                perm <- vapply(seq_len(reps), function(k) {
-                    dcor_stat(x, sample(y))
-                }, numeric(1))
-
-                (1 + sum(perm >= obs, na.rm = TRUE)) / (1 + reps)
-            }
+            # dcor_stat()/dcor_pvalue(): byte-identical (after
+            # whitespace/name normalization) in every module that has them
+            # (anovaCheck, logCheck, regCheck, relatedCheck), consolidated
+            # in shared-helpers.R (.al_dcor_stat/.al_dcor_test), same
+            # pattern already used for copentTest below. Fixed B=199/
+            # seed=20260704 preserved unchanged.
+            # ES: idénticas (tras normalizar espacios/nombres) en todos los
+            # módulos que las tienen, consolidadas en shared-helpers.R
+            # (.al_dcor_stat/.al_dcor_test), mismo patrón ya usado para
+            # copentTest más abajo. B=199/semilla=20260704 fijos,
+            # preservados sin cambio.
+            dcor_stat <- .al_dcor_stat
+            dcor_pvalue <- function(x, y) .al_dcor_test(x, y)$p
 
             # copentTest(): byte-identical in every module that has it,
             # consolidated in shared-helpers.R (.al_copent_test).
@@ -1833,7 +1794,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     tr(
                         "Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10. The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence.",
                         "Se señalan en la tabla \"Pares con diferencia notable entre Pearson y dCor\" los pares con una brecha (dCor menos |r| de Pearson) mayor a .10. El resultado de la prueba de entropía copular (CE, copent()) para el mismo par se muestra al lado como una segunda línea de evidencia libre de supuestos distribucionales."
-                    )
+                    ),
+                    .al_permutation_note(lang, 199, 20260704)
                 ))
 
                 compTable <- self$results$correlationComparisonTable

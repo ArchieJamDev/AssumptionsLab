@@ -8,7 +8,6 @@ Depends:
     R (>= 4.3.0)
 Imports:
     jmvcore,
-    R6,
     ggplot2,
     car,
     lmtest,
@@ -21,9 +20,7 @@ Imports:
     urca,
     vars,
     strucchange,
-    rugarch
-Suggests:
+    rugarch,
     pROC,
     ResourceSelection
 Encoding: UTF-8
-

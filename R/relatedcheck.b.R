@@ -1447,33 +1447,28 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             ))
 
             {
-                dcor_stat <- function(x, y) {
-                    ok <- is.finite(x) & is.finite(y)
-                    x <- x[ok]; y <- y[ok]
-                    n <- length(x)
-                    if (n < 4) return(NA_real_)
-                    distX <- as.matrix(stats::dist(x)); distY <- as.matrix(stats::dist(y))
-                    A <- distX - outer(rowMeans(distX), colMeans(distX), "+") + mean(distX)
-                    B <- distY - outer(rowMeans(distY), colMeans(distY), "+") + mean(distY)
-                    dcov2 <- mean(A * B)
-                    dvarX <- mean(A * A)
-                    dvarY <- mean(B * B)
-                    denom <- sqrt(dvarX * dvarY)
-                    if (is.na(denom) || denom <= 0) return(NA_real_)
-                    sqrt(max(dcov2, 0)) / sqrt(denom)
-                }
-
-                dcor_pvalue <- function(x, y, reps = 199) {
-                    ok <- is.finite(x) & is.finite(y)
-                    x <- x[ok]; y <- y[ok]
-                    n <- length(x)
-                    if (n < 4) return(NA_real_)
-                    obs <- dcor_stat(x, y)
-                    if (is.na(obs)) return(NA_real_)
-                    set.seed(20260704)
-                    perm <- vapply(seq_len(reps), function(k) dcor_stat(x, sample(y)), numeric(1))
-                    (1 + sum(perm >= obs, na.rm = TRUE)) / (1 + reps)
-                }
+                # dcor_stat()/dcor_pvalue(): equivalent to every other
+                # module's version (regCheck/anovaCheck/logCheck),
+                # consolidated in shared-helpers.R (.al_dcor_stat/
+                # .al_dcor_test), same pattern already used for copentTest
+                # below. Fixed B=199/seed=20260704 preserved unchanged. The
+                # shared version's denom guard (!is.finite(denom)) is
+                # marginally more defensive than this module's previous
+                # is.na(denom) check (also catches an infinite
+                # denominator, not just NaN) - no change for any realistic
+                # finite input.
+                # ES: equivalentes a la versión de los demás módulos
+                # (regCheck/anovaCheck/logCheck), consolidadas en
+                # shared-helpers.R (.al_dcor_stat/.al_dcor_test), mismo
+                # patrón ya usado para copentTest más abajo. B=199/
+                # semilla=20260704 fijos, preservados sin cambio. La
+                # guarda de denominador compartida (!is.finite(denom)) es
+                # marginalmente más defensiva que la anterior is.na(denom)
+                # de este módulo (también detecta un denominador
+                # infinito, no solo NaN) - sin cambio para ninguna entrada
+                # finita realista.
+                dcor_stat <- .al_dcor_stat
+                dcor_pvalue <- function(x, y) .al_dcor_test(x, y)$p
 
                 # copentTest(): byte-identical in every module that has it,
                 # consolidated in shared-helpers.R (.al_copent_test).
@@ -1566,6 +1561,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             "Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10. The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence.",
                             "Se señalan en la tabla \"Pares con diferencia notable entre Pearson y dCor\" los pares con una brecha (dCor menos |r| de Pearson) mayor a .10. El resultado de la prueba de entropía copular (CE, copent()) para el mismo par se muestra al lado como una segunda línea de evidencia libre de supuestos distribucionales."
                         ),
+                        .al_permutation_note(lang, 199, 20260704),
                         sep = "\n\n"
                     ))
                 ))
