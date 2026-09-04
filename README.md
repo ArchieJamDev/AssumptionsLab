@@ -162,6 +162,6 @@ The development of AssumptionsLab is driven by the objective of improving method
 
 **Status:** Active Development
 
-Version: Pre-release
+Version: 1.5.0
 
 Copyright © 2026 Arquimedes de León Chacón

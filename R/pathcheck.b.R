@@ -246,11 +246,11 @@ pathCheckClass <- R6::R6Class(
         .dCor = function(x, y) {
             x <- as.numeric(x); y <- as.numeric(y)
             n <- length(x)
-            a <- as.matrix(stats::dist(x))
-            b <- as.matrix(stats::dist(y))
-            ra <- rowMeans(a); rb <- rowMeans(b)
-            A <- a - matrix(ra, n, n) - matrix(ra, n, n, byrow = TRUE) + mean(a)
-            B <- b - matrix(rb, n, n) - matrix(rb, n, n, byrow = TRUE) + mean(b)
+            distMatrixX <- as.matrix(stats::dist(x))
+            distMatrixY <- as.matrix(stats::dist(y))
+            ra <- rowMeans(distMatrixX); rb <- rowMeans(distMatrixY)
+            A <- distMatrixX - matrix(ra, n, n) - matrix(ra, n, n, byrow = TRUE) + mean(distMatrixX)
+            B <- distMatrixY - matrix(rb, n, n) - matrix(rb, n, n, byrow = TRUE) + mean(distMatrixY)
             dcov2  <- mean(A * B)
             dvarX2 <- mean(A * A)
             dvarY2 <- mean(B * B)
@@ -1208,8 +1208,8 @@ pathCheckClass <- R6::R6Class(
                     others <- X_no_intercept[, -j, drop = FALSE]
 
                     vif <- tryCatch({
-                        aux <- stats::lm(target ~ others)
-                        1 / (1 - summary(aux)$r.squared)
+                        auxiliaryVifModel <- stats::lm(target ~ others)
+                        1 / (1 - summary(auxiliaryVifModel)$r.squared)
                     }, error = function(e) NA_real_)
 
                     tol <- if (is.na(vif)) NA_real_ else 1 / vif
@@ -2086,14 +2086,15 @@ pathCheckClass <- R6::R6Class(
                         }
                     }
                     x0 <- posX[e$pred]; y0 <- posY[e$pred]
-                    x1 <- posX[e$dep];  y1 <- posY[e$dep]
-                    dx <- x1 - x0; dy <- y1 - y0
+                    depNodeX <- posX[e$dep]
+                    depNodeY <- posY[e$dep]
+                    dx <- depNodeX - x0; dy <- depNodeY - y0
                     dist <- max(sqrt(dx^2 + dy^2), 1e-4)
                     ux <- dx / dist; uy <- dy / dist
                     margin <- mean(c(rx, ry)) * 1.05
                     data.frame(
                         x = x0 + ux * margin, y = y0 + uy * margin,
-                        xend = x1 - ux * margin, yend = y1 - uy * margin,
+                        xend = depNodeX - ux * margin, yend = depNodeY - uy * margin,
                         label = label, sig = sig,
                         perpX = -uy, perpY = ux,
                         stringsAsFactors = FALSE

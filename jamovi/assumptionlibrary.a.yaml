@@ -52,6 +52,8 @@ options:
         name: influence
       - title: Sphericity
         name: sphericity
+      - title: Proportional Odds
+        name: proportionalOdds
       - title: Transformations and Robust Alternatives
         name: robust
     default: all

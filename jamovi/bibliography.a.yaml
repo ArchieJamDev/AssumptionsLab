@@ -1,3 +1,27 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
 name: bibliography
 title: Bibliography
 menuTitle: Bibliography
@@ -6,8 +30,24 @@ menuSubgroup: Methodological Guide
 version: '1.0.0'
 jas: '1.2'
 options:
+  # Required anchor dataset. Bibliography is a reference browser, not a
+  # data analysis: it never reads any variable from this dataset, but
+  # jamovi requires every analysis to be attached to one before it will run.
+  # ES: Conjunto de datos ancla requerido. Bibliography es un explorador de
+  # referencias, no un análisis de datos: nunca lee ninguna variable de este
+  # conjunto, pero jamovi exige que todo análisis esté vinculado a uno para
+  # poder ejecutarse.
   - name: data
     type: Data
+
+  # Selects which methodological topic the curated reference database
+  # (refs_db in R/bibliography.b.R) is filtered to before rendering. Each
+  # entry in that database is tagged with one or more topics; "all" skips
+  # filtering.
+  # ES: Selecciona el tema metodológico según el cual se filtra la base de
+  # datos curada de referencias (refs_db en R/bibliography.b.R) antes de
+  # renderizarla. Cada entrada de esa base está etiquetada con uno o más
+  # temas; "all" omite el filtrado.
   - name: topic
     title: Theme
     type: List
@@ -31,6 +71,18 @@ options:
       - title: Robust Methods and Alternatives
         name: robust
     default: all
+
+  # Selects which language's text bank is used to render the introduction,
+  # topic labels, and table headings in the report. This only affects
+  # language, never the citation style: AssumptionsLab always cites in
+  # APA 7th edition and there is no citation-style selector anywhere in the
+  # interface (see CODE_STYLE.md §21 / DEVELOPER_GUIDE.md).
+  # ES: Selecciona qué banco de textos se usa para renderizar la
+  # introducción, las etiquetas de tema y los encabezados de tabla en el
+  # informe. Esto solo afecta el idioma, nunca el estilo de citación:
+  # AssumptionsLab siempre cita en APA 7.ª edición y no existe un selector
+  # de estilo de citación en ninguna parte de la interfaz (ver
+  # CODE_STYLE.md §21 / DEVELOPER_GUIDE.md).
   - name: reportLang
     title: Report Language
     type: List

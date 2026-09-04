@@ -1,0 +1,210 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: multCheck
+title: Multinomial Logistic Regression
+menuTitle: Multinomial Logistic Regression
+menuGroup: Assumption Lab
+menuSubgroup: Regression
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+
+  # The unordered outcome (3+ nominal categories) the multinomial-logit
+  # model predicts. The REFERENCE category is always the factor's FIRST
+  # level - there is no separate reference-level selector here, exactly
+  # like logCheck's binary "event" level; reorder levels in jamovi's own
+  # variable editor if a different reference is needed. A 2-level nominal
+  # variable is technically accepted by nnet::multinom() but logCheck
+  # (binary logistic) is the right tool for that case and gives richer
+  # binary-specific diagnostics (ROC/AUC, Hosmer-Lemeshow, single-OR
+  # table) - a warning is shown if only 2 levels are detected.
+  # ES: El desenlace no ordenado (3+ categorías nominales) que predice el
+  # modelo logit multinomial. La categoría de REFERENCIA es siempre el
+  # PRIMER nivel del factor - no hay un selector de nivel de referencia
+  # separado aquí, igual que el "evento" binario de logCheck; reordene
+  # los niveles en el editor de variables de jamovi si necesita otra
+  # referencia. Una variable nominal de 2 niveles es técnicamente
+  # aceptada por nnet::multinom() pero logCheck (logística binaria) es la
+  # herramienta correcta para ese caso y da diagnósticos binarios más
+  # ricos (ROC/AUC, Hosmer-Lemeshow, tabla de un solo OR) - se muestra una
+  # advertencia si solo se detectan 2 niveles.
+  - name: dep
+    title: Dependent Variable (nominal, 3+ levels)
+    type: Variable
+    suggested:
+      - nominal
+    permitted:
+      - factor
+
+  # Numeric predictors of the multinomial logit. Feed the linearity
+  # (log-odds LR test) and multicollinearity diagnostics, which only
+  # apply to numeric predictors.
+  # ES: Predictores numéricos del logit multinomial. Alimentan los
+  # diagnósticos de linealidad (prueba LR en el log-odds) y
+  # multicolinealidad, que solo aplican a predictores numéricos.
+  - name: covs
+    title: Numeric Predictors
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    default: null
+
+  # Categorical predictors of the multinomial logit.
+  # ES: Predictores categóricos del logit multinomial.
+  - name: factors
+    title: Categorical Predictors
+    type: Variables
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+    default: null
+
+  # Selects which language is used to render every guide, interpretation,
+  # and table/column title in the report (inline tr() calls throughout
+  # multcheck.b.R, matching ordCheck's newer convention rather than
+  # logCheck's older texts.R-lookup style).
+  # ES: Selecciona qué idioma se usa para renderizar cada guía,
+  # interpretación y título de tabla/columna en el informe (llamadas
+  # tr() en línea a lo largo de multcheck.b.R, siguiendo la convención
+  # más nueva de ordCheck en vez del estilo más antiguo de logCheck
+  # basado en texts.R).
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+
+  # Master switch for the whole diagnostic-plots block. Unchecking it
+  # produces a text-only report.
+  # ES: Interruptor maestro para todo el bloque de gráficos diagnósticos.
+  # Desmarcarlo produce un informe solo de texto.
+  - name: showPlots
+    title: Show Plots (uncheck for text-only report)
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: linearity in the multinomial logit — controls the empirical-logit-
+  # vs-predictor plot. Because the outcome is unordered with 3+ categories,
+  # this plot (like the LR test itself) compares each non-reference category
+  # against the reference category, one facet per predictor x category pair.
+  # ES: Área: linealidad en el logit multinomial — controla el gráfico de
+  # logit empírico vs predictor. Como el desenlace no está ordenado y tiene
+  # 3+ categorías, este gráfico (igual que la prueba LR) compara cada
+  # categoría no-referencia contra la categoría de referencia, con un panel
+  # por combinación de predictor y categoría.
+  # -----------------------------------------------------------------------------
+  - name: linShowPlots
+    title: Show Linearity Plots
+    type: Bool
+    default: true
+
+  - name: linSmoother
+    title: Fit on the Empirical Logit
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: Linear Line
+        name: linear
+      - title: LOESS
+        name: loess
+    default: none
+
+  - name: linBins
+    title: Number of Groups (bins) for the Empirical Logit
+    type: Number
+    min: 4
+    max: 20
+    default: 8
+
+  # -----------------------------------------------------------------------------
+  # Area: influence — controls the per-case Pearson-residual plot.
+  # ES: Área: influencia — controla el gráfico de residuos de Pearson por
+  # caso.
+  # -----------------------------------------------------------------------------
+  - name: influenceShowPlots
+    title: Show Influence Plots
+    type: Bool
+    default: true
+
+  - name: influenceLabelMode
+    title: Label Cases
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: High Residual
+        name: highresid
+      - title: Top 5 Influence
+        name: top5
+    default: top5
+
+  - name: influenceShowThreshold
+    title: Show Threshold Line
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # General style — cosmetic options applied across every diagnostic plot.
+  # ES: Estilo general — opciones estéticas aplicadas a cada gráfico diagnóstico.
+  # -----------------------------------------------------------------------------
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - title: Clean Academic
+        name: clean
+      - title: Black and White
+        name: bw
+      - title: High Contrast
+        name: contrast
+      - title: Full color
+        name: fullColor
+    default: clean
+
+  - name: plotPalette
+    title: Color Palette for Categories/Groups
+    type: List
+    options:
+      - title: Blue-Orange (default)
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: High Contrast (accessible)
+        name: colorblind
+    default: blueOrange

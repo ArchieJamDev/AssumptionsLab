@@ -1364,7 +1364,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             ))
 
             # ------------------------------------------------------------
-            # Matrices de correlaciones (Pearson y dCor, formato APA 7)
+            # Correlation matrices (Pearson and dCor, APA 7 format).
+            # ES: Matrices de correlaciones (Pearson y dCor, formato APA 7).
             # ------------------------------------------------------------
 
             self$results$correlationMatrixGuide$setContent(html_guide(tr("Correlation Matrix", "Matriz de Correlaciones"), "regression", "correlationMatrixGuide"))
@@ -2297,7 +2298,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             ))
 
             # ------------------------------------------------------------
-            # Casos atípicos e influyentes
+            # Outlying and influential cases.
+            # ES: Casos atípicos e influyentes.
             # ------------------------------------------------------------
 
             n <- n_used
@@ -2389,11 +2391,13 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ------------------------------------------------------------
 
             # ------------------------------------------------------------
-            # Visibilidad de gráficos según el conjunto seleccionado
+            # Plot visibility according to the selected plot set.
+            # ES: Visibilidad de gráficos según el conjunto seleccionado.
             # ------------------------------------------------------------
 
             # ------------------------------------------------------------
-            # Visibilidad de gráficos por área
+            # Plot visibility per diagnostic area.
+            # ES: Visibilidad de gráficos por área.
             # ------------------------------------------------------------
 
             lin_show <- tryCatch(isTRUE(self$options$linShowPlots), error = function(e) TRUE)

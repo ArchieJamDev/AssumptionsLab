@@ -60,6 +60,10 @@ items:
     title: Esfericidad
     type: Html
 
+  - name: proportionalOdds
+    title: Momios Proporcionales
+    type: Html
+
   - name: robust
     title: Transformaciones y alternativas robustas
     type: Html

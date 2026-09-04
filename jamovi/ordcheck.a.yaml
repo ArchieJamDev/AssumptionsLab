@@ -1,0 +1,199 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: ordCheck
+title: Ordinal Logistic Regression
+menuTitle: Ordinal Logistic Regression
+menuGroup: Assumption Lab
+menuSubgroup: Regression
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+
+  # The ordered outcome (3+ ordered categories) the proportional-odds
+  # model predicts. Must be an ordinal variable (jamovi imports it as an
+  # ordered factor); a 2-level ordinal variable is technically accepted by
+  # MASS::polr() but logCheck (binary logistic) is the right tool for
+  # that case and gives richer binary-specific diagnostics (ROC/AUC,
+  # Hosmer-Lemeshow, odds ratios) - a warning is shown if only 2 levels
+  # are detected.
+  # ES: El desenlace ordenado (3+ categorías ordenadas) que predice el
+  # modelo de momios proporcionales. Debe ser una variable ordinal
+  # (jamovi la importa como factor ordenado); una variable ordinal de 2
+  # niveles es técnicamente aceptada por MASS::polr() pero logCheck
+  # (logística binaria) es la herramienta correcta para ese caso y da
+  # diagnósticos binarios más ricos (ROC/AUC, Hosmer-Lemeshow, odds
+  # ratios) - se muestra una advertencia si solo se detectan 2 niveles.
+  - name: dep
+    title: Dependent Variable (ordinal, 3+ levels)
+    type: Variable
+    suggested:
+      - ordinal
+    permitted:
+      - factor
+
+  # Numeric predictors of the cumulative logit. Feed the linearity (Box-
+  # Tidwell-style) and multicollinearity diagnostics, which only apply to
+  # numeric predictors.
+  # ES: Predictores numéricos del logit acumulativo. Alimentan los
+  # diagnósticos de linealidad (estilo Box-Tidwell) y multicolinealidad,
+  # que solo aplican a predictores numéricos.
+  - name: covs
+    title: Numeric Predictors
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    default: null
+
+  # Categorical predictors of the cumulative logit.
+  # ES: Predictores categóricos del logit acumulativo.
+  - name: factors
+    title: Categorical Predictors
+    type: Variables
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+    default: null
+
+  # Selects which language's text bank (see texts.R) is used to render
+  # every guide, interpretation, and table/column title in the report.
+  # ES: Selecciona qué banco de textos (ver texts.R) se usa para renderizar
+  # cada guía, interpretación y título de tabla/columna en el informe.
+  - name: reportLang
+    title: Report Language
+    type: List
+    options:
+      - title: English
+        name: en
+      - title: Español
+        name: es
+    default: en
+
+  # Master switch for the whole diagnostic-plots block. Unchecking it
+  # produces a text-only report.
+  # ES: Interruptor maestro para todo el bloque de gráficos diagnósticos.
+  # Desmarcarlo produce un informe solo de texto.
+  - name: showPlots
+    title: Show Plots (uncheck for text-only report)
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: linearity in the cumulative logit — controls the empirical-logit-
+  # vs-predictor plot (built from the linear predictor at the model's
+  # midpoint cutpoint, the closest ordinal analogue of the binary
+  # empirical logit).
+  # ES: Área: linealidad en el logit acumulativo — controla el gráfico de
+  # logit empírico vs predictor (construido con el predictor lineal en el
+  # punto de corte central del modelo, el análogo ordinal más cercano al
+  # logit empírico binario).
+  # -----------------------------------------------------------------------------
+  - name: linShowPlots
+    title: Show Linearity Plots
+    type: Bool
+    default: true
+
+  - name: linSmoother
+    title: Fit on the Empirical Logit
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: Linear Line
+        name: linear
+      - title: LOESS
+        name: loess
+    default: none
+
+  - name: linBins
+    title: Number of Groups (bins) for the Empirical Logit
+    type: Number
+    min: 4
+    max: 20
+    default: 8
+
+  # -----------------------------------------------------------------------------
+  # Area: influence — controls the per-case Pearson-residual plot.
+  # ES: Área: influencia — controla el gráfico de residuos de Pearson por
+  # caso.
+  # -----------------------------------------------------------------------------
+  - name: influenceShowPlots
+    title: Show Influence Plots
+    type: Bool
+    default: true
+
+  - name: influenceLabelMode
+    title: Label Cases
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: High Residual
+        name: highresid
+      - title: Top 5 Influence
+        name: top5
+    default: top5
+
+  - name: influenceShowThreshold
+    title: Show Threshold Line
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # General style — cosmetic options applied across every diagnostic plot.
+  # ES: Estilo general — opciones estéticas aplicadas a cada gráfico diagnóstico.
+  # -----------------------------------------------------------------------------
+  - name: plotStyle
+    title: Plot Style
+    type: List
+    options:
+      - title: Clean Academic
+        name: clean
+      - title: Black and White
+        name: bw
+      - title: High Contrast
+        name: contrast
+      - title: Full color
+        name: fullColor
+    default: clean
+
+  - name: plotPalette
+    title: Color Palette for Categories/Groups
+    type: List
+    options:
+      - title: Blue-Orange (default)
+        name: blueOrange
+      - title: Viridis
+        name: viridis
+      - title: Grayscale
+        name: greyscale
+      - title: High Contrast (accessible)
+        name: colorblind
+    default: blueOrange

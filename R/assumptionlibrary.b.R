@@ -124,6 +124,7 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
                       "Outliers and Influential Cases",
                       "Casos atípicos e influencia"),
                     c("sphericity", "Sphericity", "Esfericidad"),
+                    c("proportionalOdds", "Proportional Odds", "Momios proporcionales"),
                     c("robust",
                       "Transformations and Robust Alternatives",
                       "Transformaciones y alternativas robustas"),
@@ -448,6 +449,17 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
                 '</div>'
             ))
 
+            self$results$proportionalOdds$setContent(paste0(
+                '<div style="max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;">',
+                paste0(
+                    .al_title_html(txt("proportionalOddsPart1")[1]),
+                    .al_body(txt("proportionalOddsPart1")[-1]),
+                    .al_table(txt("proportionalOddsTableHeaders"), txt("proportionalOddsTableRows")),
+                    .al_body(txt("proportionalOddsPart2")[-1])
+                ),
+                '</div>'
+            ))
+
             self$results$robust$setContent(paste0(
                 '<div style="max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;">',
                 paste0(
@@ -466,6 +478,7 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
             hide_if_needed(self$results$multicollinearity, "multicollinearity")
             hide_if_needed(self$results$influence, "influence")
             hide_if_needed(self$results$sphericity, "sphericity")
+            hide_if_needed(self$results$proportionalOdds, "proportionalOdds")
             hide_if_needed(self$results$robust, "robust")
 
             self$results$notes$setContent(.al_render(txt("notes")))

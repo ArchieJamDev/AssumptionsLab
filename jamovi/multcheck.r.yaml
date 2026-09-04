@@ -1,0 +1,432 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: multCheck
+title: Regresión logística multinomial
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Introducción
+    type: Html
+
+  - name: designGuide
+    title: Diseño del modelo
+    type: Html
+
+  - name: design
+    title: Resumen del diseño
+    type: Table
+    columns:
+      - name: element
+        title: Elemento
+        type: text
+      - name: value
+        title: Valor
+        type: text
+
+  - name: categoryDistribution
+    title: Distribución por categoría
+    type: Table
+    rows: 0
+    columns:
+      - name: category
+        title: Categoría
+        type: text
+      - name: n
+        title: n
+        type: integer
+      - name: proportion
+        title: Proporción
+        type: number
+        format: pc
+
+  - name: separationGuide
+    title: Separación completa
+    type: Html
+
+  - name: separation
+    title: Separación completa
+    type: Table
+    rows: 0
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: category
+        title: Categoría
+        type: text
+      - name: type
+        title: Tipo
+        type: text
+      - name: coefficient
+        title: Coeficiente
+        type: number
+        format: decimal
+
+  - name: separationInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: linearityGuide
+    title: Linealidad en el logit multinomial
+    type: Html
+
+  - name: linearity
+    title: Linealidad en el logit multinomial (prueba LR)
+    type: Table
+    rows: 0
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: chiSq
+        title: X²
+        type: number
+        format: decimal
+      - name: df
+        title: gl
+        type: integer
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: linearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: linearityPlot
+    title: Logit empírico vs predictor
+    type: Image
+    requiresData: true
+    width: 640
+    height: 400
+    renderFun: .plotLinearity
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - plotStyle
+      - plotPalette
+      - linSmoother
+      - linBins
+      - reportLang
+
+  - name: iiaGuide
+    title: Independencia de alternativas irrelevantes (IIA)
+    type: Html
+
+  - name: iia
+    title: Prueba de Hausman-McFadden (IIA)
+    type: Table
+    rows: 0
+    columns:
+      - name: category
+        title: Categoría omitida
+        type: text
+      - name: chiSq
+        title: X²
+        type: number
+        format: decimal
+      - name: df
+        title: gl
+        type: integer
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+      - name: note
+        title: Nota
+        type: text
+
+  - name: iiaInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: goodnessOfFitGuide
+    title: Bondad de ajuste
+    type: Html
+
+  - name: goodnessOfFit
+    title: Bondad de ajuste
+    type: Table
+    rows: 0
+    columns:
+      - name: test
+        title: Prueba
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: number
+        format: decimal
+      - name: df
+        title: gl
+        type: integer
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: goodnessOfFitInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: discriminationGuide
+    title: Pseudo-R²
+    type: Html
+
+  - name: discrimination
+    title: Pseudo-R²
+    type: Table
+    columns:
+      - name: metric
+        title: Métrica
+        type: text
+      - name: value
+        title: Valor
+        type: number
+        format: decimal
+
+  - name: discriminationInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: classificationGuide
+    title: Tabla de clasificación
+    type: Html
+
+  - name: classification
+    title: Observado vs. predicho
+    type: Table
+    rows: 0
+    columns:
+      - name: observed
+        title: Observado
+        type: text
+
+  - name: classificationInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: multicollinearityGuide
+    title: Multicolinealidad
+    type: Html
+    visible: false
+
+  - name: multicollinearity
+    title: Multicolinealidad
+    type: Table
+    visible: false
+    columns:
+      - name: diagnostic
+        title: Diagnóstico
+        type: text
+      - name: item
+        title: Elemento
+        type: text
+      - name: statistic
+        title: Estadístico
+        type: text
+      - name: value
+        title: Valor
+        type: number
+
+  - name: multicollinearityInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: false
+
+  - name: correlationMatrixGuide
+    title: Matriz de correlaciones (predictores numéricos)
+    type: Html
+    visible: false
+
+  - name: pearsonMatrixTable
+    title: Matriz de correlaciones de Pearson (formato APA 7)
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: dcorMatrixTable
+    title: Matriz de correlación de distancia (dCor, formato APA 7)
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var
+        title: Variable
+        type: text
+
+  - name: correlationMatrixNote
+    title: ' '
+    type: Html
+    visible: false
+
+  - name: correlationComparisonGuide
+    title: Análisis de discordancia Pearson / dCor / entropía copular
+    type: Html
+    visible: false
+
+  - name: correlationComparisonTable
+    title: Pares con diferencia notable entre Pearson y dCor
+    type: Table
+    rows: 0
+    visible: false
+    columns:
+      - name: var1
+        title: Variable 1
+        type: text
+      - name: var2
+        title: Variable 2
+        type: text
+      - name: pearson
+        title: Pearson r
+        type: text
+      - name: dcor
+        title: dCor
+        type: text
+      - name: gap
+        title: Brecha (dCor − |r|)
+        type: number
+      - name: ce
+        title: Entropía copular
+        type: number
+      - name: ceP
+        title: p (CE)
+        type: number
+        format: zto,pvalue
+      - name: ceSig
+        title: Sig. (CE)
+        type: text
+      - name: flag
+        title: Diferencia notable
+        type: text
+
+  - name: correlationComparisonInterpretation
+    title: Interpretación Aplicada
+    type: Html
+    visible: false
+
+  - name: influenceGuide
+    title: Casos influyentes
+    type: Html
+
+  - name: influence
+    title: Casos influyentes
+    type: Table
+    rows: 0
+    columns:
+      - name: case
+        title: Caso
+        type: integer
+      - name: observed
+        title: Categoría observada
+        type: text
+      - name: pearsonStat
+        title: Estadístico de Pearson
+        type: number
+        format: decimal
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+
+  - name: influenceInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: influencePlot
+    title: Residuo de Pearson por caso
+    type: Image
+    requiresData: true
+    width: 560
+    height: 320
+    renderFun: .plotInfluence
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - plotStyle
+      - plotPalette
+      - influenceLabelMode
+      - influenceShowThreshold
+      - reportLang
+
+  - name: coefficientsGuide
+    title: Coeficientes y odds ratios (por categoría)
+    type: Html
+
+  - name: coefficients
+    title: Coeficientes y odds ratios
+    type: Table
+    rows: 0
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: category
+        title: Categoría
+        type: text
+      - name: or
+        title: OR
+        type: number
+        format: decimal
+      - name: ciLower
+        title: IC 95% inferior
+        type: number
+        format: decimal
+      - name: ciUpper
+        title: IC 95% superior
+        type: number
+        format: decimal
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: coefficientsInterpretation
+    title: Interpretación Aplicada
+    type: Html
+
+  - name: notes
+    title: Notas y recomendación
+    type: Html

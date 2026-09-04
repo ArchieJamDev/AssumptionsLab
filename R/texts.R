@@ -1393,6 +1393,101 @@ es = list(
              "asuma esfericidad, según el diseño del estudio."
          ),
 
+         # ---- proportionalOdds: ordCheck's parallel-lines assumption, added
+         # Sep 2026 alongside ordCheck. New library category, not a
+         # subsection of an existing one - modeled directly on the
+         # "sphericity" precedent above (a narrow assumption tied to one
+         # specific model family, not a cross-cutting concept). See
+         # /areas/assumptionslab-ordinal-multinomial.md for the decision
+         # record.
+         # ES: proportionalOdds: el supuesto de líneas paralelas de
+         # ordCheck, agregado en sep 2026 junto con ordCheck. Categoría
+         # nueva de la biblioteca, no una subsección de una existente -
+         # modelada directamente sobre el precedente de "sphericity" de
+         # arriba (un supuesto angosto ligado a una familia de modelo
+         # específica, no un concepto transversal).
+         proportionalOddsPart1 = c(
+             "Momios proporcionales",
+             "",
+             "Qué evalúa:",
+             "El modelo de momios proporcionales asume que el efecto de cada predictor",
+             "sobre el desenlace ordinal tiene la misma magnitud en todos los puntos de",
+             "corte entre categorías (el supuesto de \"líneas paralelas\"). La prueba de",
+             "Brant (1990) es el chequeo estándar.",
+             "",
+             "Dónde se usa en AssumptionsLab:",
+             "ordCheck (regresión logística ordinal).",
+             "",
+             "No aplica a regresión logística binaria (logCheck) ni a regresión",
+             "multinomial (mlogCheck), porque ninguna de las dos tiene múltiples puntos",
+             "de corte cuyas pendientes deban compararse entre sí.",
+             "",
+             "Por qué importa:",
+             "Si se viola, un único odds ratio reportado por predictor representa mal su",
+             "efecto real: lo subestima en algunos puntos de corte y lo sobrestima en",
+             "otros, y puede llevar a conclusiones sustantivas equivocadas sobre entre",
+             "qué categorías realmente discrimina un predictor."
+         ),
+         proportionalOddsTableHeaders = c("Diagnóstico / alternativa", "Qué hace", "Cuándo usarlo", "Principal limitación"),
+         proportionalOddsTableRows = list(
+             c("Prueba de Brant", "Contrasta si el coeficiente de cada predictor es igual en todos los puntos de corte",
+               "Como chequeo inicial tras ajustar el modelo, antes de interpretar un único OR por predictor",
+               "Poder limitado en muestras pequeñas o categorías escasas; un resultado no significativo no es prueba fuerte de proporcionalidad"),
+             c("Modelo de momios parcialmente proporcionales", "Deja variar por punto de corte solo los predictores señalados por Brant, y fija el resto con un único coeficiente",
+               "Cuando Brant señala uno o dos predictores puntuales, no el ómnibus completo",
+               "Menos estandarizado en software estadístico; la interpretación se complica al mezclar efectos constantes y variables"),
+             c("Modelo multinomial (mlogCheck)", "Abandona el supuesto de proporcionalidad tratando cada categoría como nominal",
+               "Cuando la violación es generalizada (ómnibus significativo, varios predictores afectados)",
+               "Pierde la eficiencia de aprovechar el orden de las categorías; hay que estimar más parámetros"),
+             c("Reportar efectos por punto de corte", "Ajusta logits binarios separados en cada punto de corte y reporta un OR distinto para cada uno",
+               "Como alternativa transparente cuando solo interesa documentar el patrón, no forzar un modelo único",
+               "No hay un único modelo conjunto que resuma el efecto; las comparaciones entre puntos de corte pierden algo de eficiencia estadística")
+         ),
+         proportionalOddsPart2 = c(
+             "",
+             "",
+             "Brant — qué evalúa y limitaciones:",
+             "Contrasta H0: el coeficiente de cada predictor es igual en todos los puntos",
+             "de corte (momios proporcionales), frente a H1: al menos un punto de corte",
+             "difiere (Brant, 1990). Compara los coeficientes de logits binarios",
+             "separados ajustados en cada punto de corte contra el coeficiente único que",
+             "reporta el modelo de momios proporcionales. Tiene poder limitado en",
+             "muestras pequeñas o con categorías escasas.",
+             "",
+             "Modelo de momios parcialmente proporcionales — qué hace y cuándo usarlo:",
+             "Permite que el coeficiente de un predictor específico varíe entre puntos de",
+             "corte, mientras el resto de los predictores mantiene un único coeficiente",
+             "constante. Es la opción más quirúrgica cuando Brant señala uno o dos",
+             "predictores puntuales en vez de una violación generalizada.",
+             "",
+             "Modelo multinomial — qué hace y cuándo usarlo:",
+             "Trata cada categoría del desenlace como nominal, sin asumir ningún orden ni",
+             "ninguna relación de proporcionalidad entre coeficientes. Es la alternativa",
+             "más segura cuando la prueba ómnibus de Brant es significativa y afecta a",
+             "varios predictores a la vez, al costo de no aprovechar la información de",
+             "orden entre categorías.",
+             "",
+             "Reportar efectos por punto de corte — qué hace y cuándo usarlo:",
+             "En vez de forzar un modelo único, se ajustan logits binarios independientes",
+             "en cada punto de corte y se reporta un odds ratio distinto para cada uno.",
+             "Es una alternativa transparente cuando el objetivo es describir el patrón",
+             "de la relación más que producir un modelo parsimonioso único.",
+             "",
+             "Interpretación:",
+             "p < .05 en la prueba ómnibus de Brant sugiere una desviación",
+             "estadísticamente significativa respecto a los momios proporcionales.",
+             "p >= .05 indica que el resultado es compatible con momios proporcionales",
+             "aproximados.",
+             "",
+             "Decisión metodológica:",
+             "Si hay evidencia contra los momios proporcionales, revise primero qué",
+             "predictor(es) individuales la prueba de Brant señala (no solo el ómnibus).",
+             "Con uno o dos predictores puntuales, considere un modelo de momios",
+             "parcialmente proporcionales; con una violación generalizada, considere un",
+             "modelo multinomial (mlogCheck) o reportar los efectos por punto de corte",
+             "por separado."
+         ),
+
          robustPart1 = c(
              "Transformaciones y alternativas robustas",
              "",
@@ -3454,6 +3549,90 @@ es = list(
              "nonparametric Friedman test (Friedman, 1937) as an alternative, or fit a",
              "mixed model that does not assume sphericity, depending on the study design."
          ),
+
+         # ---- proportionalOdds: see the matching ES block above for the
+         # design rationale (new category, modeled on "sphericity").
+         # ---------------------------------------------------------------
+         proportionalOddsPart1 = c(
+             "Proportional Odds",
+             "",
+             "What it evaluates:",
+             "The proportional-odds model assumes each predictor's effect on the",
+             "ordinal outcome has the same magnitude at every cutpoint between",
+             "categories (the \"parallel lines\" assumption). Brant's (1990) test is the",
+             "standard check.",
+             "",
+             "Where it is used in AssumptionsLab:",
+             "ordCheck (ordinal logistic regression).",
+             "",
+             "It does not apply to binary logistic regression (logCheck) or",
+             "multinomial regression (mlogCheck), since neither has multiple cutpoints",
+             "whose slopes need to be compared against each other.",
+             "",
+             "Why it matters:",
+             "When violated, a single reported odds ratio per predictor misrepresents",
+             "its real effect - understating it at some cutpoints and overstating it at",
+             "others - and can lead to mistaken substantive conclusions about which",
+             "categories a predictor actually discriminates between."
+         ),
+         proportionalOddsTableHeaders = c("Diagnostic / alternative", "What it does", "When to use it", "Main limitation"),
+         proportionalOddsTableRows = list(
+             c("Brant test", "Tests whether each predictor's coefficient is equal across every cutpoint",
+               "As an initial check right after fitting the model, before interpreting a single OR per predictor",
+               "Limited power in small samples or sparse categories; a non-significant result is weak evidence of proportionality"),
+             c("Partial proportional-odds model", "Lets only the predictors flagged by Brant vary by cutpoint, keeping the rest at a single coefficient",
+               "When Brant flags one or two specific predictors, not the full omnibus",
+               "Less standardized across statistical software; interpretation gets more complex when mixing constant and varying effects"),
+             c("Multinomial model (mlogCheck)", "Abandons the proportionality assumption by treating each category as nominal",
+               "When the violation is widespread (significant omnibus, several predictors affected)",
+               "Loses the efficiency of exploiting the categories' order; more parameters to estimate"),
+             c("Report cutpoint-specific effects", "Fits separate binary logits at each cutpoint and reports a different OR for each",
+               "As a transparent alternative when the goal is documenting the pattern rather than forcing a single model",
+               "No single pooled model summarizes the effect; comparisons across cutpoints lose some statistical efficiency")
+         ),
+         proportionalOddsPart2 = c(
+             "",
+             "",
+             "Brant — what it evaluates and its limitations:",
+             "Tests H0: each predictor's coefficient is equal across every cutpoint",
+             "(proportional odds), against H1: at least one cutpoint differs (Brant,",
+             "1990). It compares the coefficients from separate binary logits fit at",
+             "each cutpoint against the single coefficient the proportional-odds model",
+             "reports. It has limited power in small samples or with sparse",
+             "categories.",
+             "",
+             "Partial proportional-odds model — what it does and when to use it:",
+             "Lets a specific predictor's coefficient vary across cutpoints while",
+             "every other predictor keeps a single constant coefficient. It is the",
+             "most surgical option when Brant flags one or two specific predictors",
+             "rather than a widespread violation.",
+             "",
+             "Multinomial model — what it does and when to use it:",
+             "Treats every category of the outcome as nominal, with no assumed order",
+             "or proportionality relationship between coefficients. It is the safer",
+             "alternative when Brant's omnibus test is significant and affects",
+             "several predictors at once, at the cost of not exploiting the",
+             "categories' order.",
+             "",
+             "Reporting cutpoint-specific effects — what it does and when to use it:",
+             "Instead of forcing a single model, independent binary logits are fit at",
+             "each cutpoint and a different odds ratio is reported for each. It is a",
+             "transparent alternative when the goal is describing the pattern of the",
+             "relationship rather than producing a single parsimonious model.",
+             "",
+             "Interpretation:",
+             "p < .05 on Brant's omnibus test suggests a statistically significant",
+             "deviation from proportional odds. p >= .05 indicates the result is",
+             "compatible with approximate proportional odds.",
+             "",
+             "Methodological decision:",
+             "If there is evidence against proportional odds, first check which",
+             "individual predictor(s) Brant's test flags (not just the omnibus). With",
+             "one or two specific predictors, consider a partial-proportional-odds",
+             "model; with a widespread violation, consider a multinomial model",
+             "(mlogCheck) or report the cutpoint-specific effects separately."
+         ),
+
          robustPart1 = c(
              "Transformations and Robust Alternatives",
              "",

@@ -1,7 +1,7 @@
 ---
 name: AssumptionsLab
 title: Assumption Lab
-version: 1.0.0
+version: 1.5.0
 jms: '1.0'
 usesNative: false
 minApp: 1.0.8
@@ -56,6 +56,20 @@ analyses:
     menuSubgroup: Regression
     menuTitle: Logistic Regression
     category: analyses
+  - title: Ordinal Logistic Regression
+    name: ordCheck
+    ns: AssumptionsLab
+    menuGroup: Assumption Lab
+    menuSubgroup: Regression
+    menuTitle: Ordinal Logistic Regression
+    category: analyses
+  - title: Multinomial Logistic Regression
+    name: multCheck
+    ns: AssumptionsLab
+    menuGroup: Assumption Lab
+    menuSubgroup: Regression
+    menuTitle: Multinomial Logistic Regression
+    category: analyses
   - title: Path Analysis & Structural Validation
     name: pathCheck
     ns: AssumptionsLab
@@ -70,5 +84,11 @@ analyses:
     menuSubgroup: Time Series
     menuTitle: Time Series
     category: analyses
+datasets:
+  - name: AssumptionsLab Test Dataset (n=450)
+    path: assumptionslab_test_data.csv
+    description: >-
+      Translated, MCAR-missingness- and outlier-augmented survey/financial-
+      behavior data exercising every implemented module — see data/README.md
 
 ...

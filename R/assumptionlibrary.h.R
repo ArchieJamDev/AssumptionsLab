@@ -27,6 +27,7 @@ assumptionLibraryOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                     "multicollinearity",
                     "influence",
                     "sphericity",
+                    "proportionalOdds",
                     "robust"),
                 default="all")
             private$..reportLang <- jmvcore::OptionList$new(
@@ -60,6 +61,7 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
         multicollinearity = function() private$.items[["multicollinearity"]],
         influence = function() private$.items[["influence"]],
         sphericity = function() private$.items[["sphericity"]],
+        proportionalOdds = function() private$.items[["proportionalOdds"]],
         robust = function() private$.items[["robust"]],
         notes = function() private$.items[["notes"]]),
     private = list(),
@@ -101,6 +103,10 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 options=options,
                 name="sphericity",
                 title="Esfericidad"))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="proportionalOdds",
+                title="Momios Proporcionales"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="robust",
@@ -147,6 +153,7 @@ assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cl
 #'   \code{results$multicollinearity} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$influence} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$sphericity} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$proportionalOdds} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$robust} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$notes} \tab \tab \tab \tab \tab a html \cr
 #' }

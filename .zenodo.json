@@ -9,5 +9,6 @@
   ],
   "description": "An open-source Jamovi module designed to evaluate statistical assumptions while providing evidence-based methodological guidance.",
   "license": "gpl-3.0",
-  "upload_type": "software"
+  "upload_type": "software",
+  "version": "1.5.0"
 }

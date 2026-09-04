@@ -22,8 +22,97 @@
 # If not, see https://www.gnu.org/licenses/.
 # -----------------------------------------------------------------------------
 
-
-# This file is a generated template, your changes will not be overwritten
+# -----------------------------------------------------------------------------
+# Independent Groups.
+# ES: Grupos Independientes.
+#
+# This file implements groupCheck: an assumption-diagnostic module for
+# comparing two or more independent groups on a single dependent variable.
+# It reports the assumption diagnostics that decide whether a classical
+# t-test/ANOVA comparison of group means is trustworthy (normality by
+# group, homogeneity of variances, outlier screening, and case-level
+# influence via Cook's distance and Mahalanobis distance), and recommends
+# a specific test given the pattern of results.
+#
+# ES: Este archivo implementa groupCheck: un módulo de diagnóstico de
+# supuestos para comparar dos o más grupos independientes en una única
+# variable dependiente. Reporta los diagnósticos de supuestos que deciden
+# si una comparación clásica de medias de grupo por t/ANOVA es confiable
+# (normalidad por grupo, homogeneidad de varianzas, cribado de atípicos e
+# influencia a nivel de caso mediante la distancia de Cook y la distancia
+# de Mahalanobis), y recomienda una prueba específica según el patrón de
+# resultados.
+#
+# Responsibilities
+# 1. Validate the selected dependent and grouping variables and prepare
+#    the analysis sample (valid group values, complete cases for the
+#    case-level model).
+# 2. Compute descriptive statistics and IQR-based outlier screening for
+#    every group.
+# 3. Fit the group-comparison model and compute case-level influence
+#    diagnostics (Cook's distance, Mahalanobis distance).
+# 4. Compute and report the normality battery per group and the
+#    homogeneity-of-variance battery across groups.
+# 5. Render the diagnostic plots (distribution by group, Q-Q, observed-vs-
+#    normal density), grouped by methodological purpose.
+# 6. Assemble the applied-interpretation text for every diagnostic area
+#    and a dynamic test recommendation, in the user's selected report
+#    language.
+#
+# ES: Responsabilidades
+# 1. Validar las variables dependiente y de agrupación seleccionadas y
+#    preparar la muestra de análisis (valores de grupo válidos, casos
+#    completos para el modelo a nivel de caso).
+# 2. Calcular estadísticos descriptivos y el cribado de atípicos basado en
+#    IQR para cada grupo.
+# 3. Ajustar el modelo de comparación de grupos y calcular los
+#    diagnósticos de influencia a nivel de caso (distancia de Cook,
+#    distancia de Mahalanobis).
+# 4. Calcular y reportar la batería de normalidad por grupo y la batería
+#    de homogeneidad de varianzas entre grupos.
+# 5. Renderizar los gráficos diagnósticos (distribución por grupo, Q-Q,
+#    densidad observada vs normal), agrupados por propósito metodológico.
+# 6. Ensamblar el texto de interpretación aplicada para cada área
+#    diagnóstica y una recomendación de prueba dinámica, en el idioma de
+#    informe seleccionado por el usuario.
+#
+# Workflow
+# 1. Validate: check that a dependent and a grouping variable were
+#    selected and that the dependent variable is numeric.
+# 2. Prepare: build the analysis sample (valid group rows, complete
+#    cases for the case-level model) and translate result titles.
+# 3. Describe: compute descriptive statistics and render the distribution
+#    plot per group.
+# 4. Screen: flag IQR outliers and case-level influential points (Cook's
+#    distance, Mahalanobis distance).
+# 5. Test assumptions: run the normality battery per group and the
+#    homogeneity-of-variance battery across groups.
+# 6. Plot: render the Q-Q and observed-vs-normal diagnostic plots.
+# 7. Interpret: build the applied-interpretation text for every
+#    diagnostic area.
+# 8. Recommend: assemble a dynamic recommendation (which test fits the
+#    observed assumption pattern) into the executive summary and notes.
+#
+# ES: Flujo de trabajo
+# 1. Validar: comprobar que se seleccionaron una variable dependiente y
+#    una variable de agrupación, y que la dependiente es numérica.
+# 2. Preparar: construir la muestra de análisis (filas con grupo válido,
+#    casos completos para el modelo a nivel de caso) y traducir los
+#    títulos de los resultados.
+# 3. Describir: calcular estadísticos descriptivos y renderizar el
+#    gráfico de distribución por grupo.
+# 4. Cribar: marcar atípicos por IQR y puntos influyentes a nivel de caso
+#    (distancia de Cook, distancia de Mahalanobis).
+# 5. Probar supuestos: correr la batería de normalidad por grupo y la
+#    batería de homogeneidad de varianzas entre grupos.
+# 6. Graficar: renderizar los gráficos diagnósticos Q-Q y de densidad
+#    observada vs normal.
+# 7. Interpretar: construir el texto de interpretación aplicada para cada
+#    área diagnóstica.
+# 8. Recomendar: ensamblar una recomendación dinámica (qué prueba se
+#    ajusta al patrón de supuestos observado) en el resumen ejecutivo y
+#    las notas.
+# -----------------------------------------------------------------------------
 
 groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     "groupCheckClass",
@@ -32,9 +121,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         .qqPlotData = NULL,
         .qqPlotSelected = NULL,
 
-
-
-
+        # -----------------------------------------------------------------------------
+        # Main analysis entry point.
+        # ES: Punto de entrada principal del análisis.
+        #
+        # Validates the dependent/grouping variables, computes descriptives, outlier
+        # and case-level influence screening, the normality and homogeneity-of-
+        # variance batteries, and the dynamic test recommendation for the selected
+        # independent-groups comparison; then renders every guide, interpretation,
+        # and table title in the user's selected report language.
+        #
+        # ES: Valida las variables dependiente/de agrupación, calcula descriptivos,
+        # cribado de atípicos e influencia a nivel de caso, las baterías de
+        # normalidad y homogeneidad de varianzas, y la recomendación de prueba
+        # dinámica para la comparación de grupos independientes seleccionada; luego
+        # renderiza cada guía, interpretación y título de tabla en el idioma de
+        # informe seleccionado por el usuario.
+        # -----------------------------------------------------------------------------
         .run = function() {
             data <- self$data
             dep <- self$options$dep
@@ -43,12 +146,25 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             reportLang <- .al_normalize_lang(reportLang)
 
+            # Report-language helpers: tr() picks between the English/Spanish
+            # argument pair, txt() looks up a pre-translated string by
+            # section/key from the shared text catalog (shared-helpers.R).
+            # ES: ayudantes de idioma de informe: tr() elige entre el par de
+            # argumentos inglés/español, txt() busca una cadena pretraducida
+            # por sección/clave en el catálogo de textos compartido
+            # (shared-helpers.R).
             tr <- function(en, es = NULL, ...) .al_tr(reportLang, en, es)
 
             txt <- function(section, key) {
                 .al_text(reportLang, section, key)
             }
 
+            # Coerces a value to NA_real_ whenever it is missing, empty, NaN, or
+            # infinite, so downstream formatting/comparison functions never have to
+            # special-case those states themselves.
+            # ES: convierte un valor en NA_real_ cuando está ausente, vacío, NaN o
+            # infinito, para que las funciones de formato/comparación posteriores no
+            # tengan que tratar esos casos por separado.
             clean_num <- function(x) {
                 if (length(x) == 0)
                     return(NA_real_)
@@ -68,6 +184,22 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # efecto real; ver el comentario de .al_p_sig().
             p_sig <- .al_p_sig
 
+            # -----------------------------------------------------------------------------
+            # Verbal decision labels for normality and variance tests.
+            # ES: Etiquetas verbales de decisión para las pruebas de normalidad y
+            # varianza.
+            #
+            # Translate a raw p-value into the plain-language decision shown in the
+            # report tables, using the same .05/.01/.001 significance thresholds as
+            # the rest of the module, so every table reads consistently regardless of
+            # which specific test produced the p-value.
+            #
+            # ES: Traducen un valor p crudo a la decisión en lenguaje llano que se
+            # muestra en las tablas del informe, usando los mismos umbrales de
+            # significancia .05/.01/.001 que el resto del módulo, de modo que todas
+            # las tablas se lean de forma consistente sin importar qué prueba produjo
+            # el valor p.
+            # -----------------------------------------------------------------------------
             p_decision <- function(p) {
                 if (is.na(p) || is.nan(p))
                     return(tr("Not calc.", "No calc."))
@@ -94,6 +226,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 tr("Homogeneous", "Homogéneas")
             }
 
+            # -----------------------------------------------------------------------------
+            # Interpretation-text wrapping utilities.
+            # ES: Utilidades de ajuste de texto para las interpretaciones.
+            #
+            # wrap_text() collapses a piece of applied-interpretation prose to single
+            # spaces and re-wraps it at a fixed width; block96() applies the same
+            # wrapping to every paragraph of a multi-paragraph block independently, so
+            # that HTML text built from string concatenation always renders with
+            # consistent line lengths regardless of how the source strings were split.
+            #
+            # ES: wrap_text() colapsa un fragmento de prosa de interpretación aplicada
+            # a espacios simples y lo reajusta a un ancho fijo; block96() aplica el
+            # mismo ajuste a cada párrafo de un bloque de varios párrafos por
+            # separado, de modo que el texto HTML construido por concatenación de
+            # cadenas siempre se renderice con longitudes de línea consistentes sin
+            # importar cómo se dividieron las cadenas de origen.
+            # -----------------------------------------------------------------------------
             wrap_text <- function(..., width = 96) {
                 txt <- paste(..., collapse = "")
                 txt <- gsub("\\\\n", "\n", txt)
@@ -133,7 +282,24 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 .al_html_block(title, text, paragraphs = paragraphs, raw = raw)
             }
 
-
+            # -----------------------------------------------------------------------------
+            # Introductory panel renderer.
+            # ES: Renderizador del panel introductorio.
+            #
+            # Builds the fixed HTML shown at the top of the report (module name, short
+            # description of when to use the analysis, and the selected variable
+            # names). Kept as its own function because it is called twice: once with
+            # variable names when the analysis runs, and once without them for the
+            # placeholder shown before the user has selected variables.
+            #
+            # ES: Construye el HTML fijo que se muestra en la parte superior del
+            # informe (nombre del módulo, descripción breve de cuándo usar el
+            # análisis y los nombres de las variables seleccionadas). Se mantiene como
+            # función propia porque se invoca dos veces: una con los nombres de
+            # variable cuando el análisis corre, y otra sin ellos para el mensaje de
+            # marcador de posición que se muestra antes de que el usuario seleccione
+            # variables.
+            # -----------------------------------------------------------------------------
             render_groupcheck_intro <- function(show_vars = TRUE) {
 
                 title_block <- paste0(
@@ -181,6 +347,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            # -----------------------------------------------------------------------------
+            # Numeric formatting for report tables.
+            # ES: Formato numérico para las tablas del informe.
+            #
+            # fmt_num() trims a numeric value to a fixed number of decimals and strips
+            # trailing zeros; fmt_p() formats a p-value in the conventional "< .001"
+            # / leading-zero-dropped style used throughout the report tables. Both
+            # route non-finite/missing input through clean_num() and fall back to the
+            # "Not calc." label so a failed statistic never renders as a raw NA.
+            #
+            # ES: fmt_num() recorta un valor numérico a un número fijo de decimales y
+            # elimina los ceros finales; fmt_p() formatea un valor p en el estilo
+            # convencional "< .001" / sin cero inicial usado en todas las tablas del
+            # informe. Ambas enrutan la entrada no finita/faltante a través de
+            # clean_num() y usan la etiqueta "No calc." como respaldo, de modo que un
+            # estadístico fallido nunca se muestre como un NA crudo.
+            # -----------------------------------------------------------------------------
             fmt_num <- function(x, digits = 4) {
                 x <- clean_num(x)
 
@@ -210,6 +393,27 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 self$results$intro$setContent(render_groupcheck_intro(show_vars = FALSE))
             }
 
+            # -----------------------------------------------------------------------------
+            # Result title and column-title translation.
+            # ES: Traducción de títulos de resultados y de columnas.
+            #
+            # set_col_title() safely renames one table column, swallowing errors from
+            # columns that do not exist under the current option combination (e.g. a
+            # column only added when a particular test path runs). translate_titles_
+            # and_columns() applies every panel/table/column title in the user's
+            # selected report language; it is called once before the analysis runs and
+            # once more at the end so that titles set during validation short-circuits
+            # are still correct.
+            #
+            # ES: set_col_title() renombra una columna de tabla de forma segura,
+            # absorbiendo los errores de columnas que no existen bajo la combinación
+            # de opciones actual (p. ej. una columna que solo se agrega cuando corre
+            # cierta ruta de prueba). translate_titles_and_columns() aplica el título
+            # de cada panel/tabla/columna en el idioma de informe seleccionado por el
+            # usuario; se invoca una vez antes de correr el análisis y otra vez al
+            # final, para que los títulos fijados durante las salidas anticipadas de
+            # validación también queden correctos.
+            # -----------------------------------------------------------------------------
             set_col_title <- function(table, column, title) {
 
                 column_obj <- tryCatch(
@@ -249,7 +453,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                 self$results$normalitySummary$setTitle(title = tr("Normality decision summary", "Resumen de decisión sobre normalidad"))
                 self$results$normalitySummaryInterpretation$setTitle(title = tr("Applied interpretation of normality", "Interpretación aplicada de normalidad"))
-
 
                 self$results$qqNormalityPlot$setTitle(title = tr(
                     "Normality Q-Q plots: global and by group",
@@ -310,6 +513,20 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 set_col_title(self$results$homogeneity, "decision", tr("Decision", "Decisión"))
             }
 
+            # -----------------------------------------------------------------------------
+            # Input validation.
+            # ES: Validación de entrada.
+            #
+            # Every check below returns early with an explanatory placeholder message
+            # instead of the report, so the user is never shown a partially computed
+            # analysis or a raw R error while the variable selection is incomplete or
+            # unsuitable.
+            #
+            # ES: Cada verificación siguiente retorna anticipadamente con un mensaje
+            # explicativo en lugar del informe, de modo que el usuario nunca vea un
+            # análisis parcialmente calculado ni un error crudo de R mientras la
+            # selección de variables esté incompleta o no sea adecuada.
+            # -----------------------------------------------------------------------------
             if (is.null(dep) || is.null(group)) {
                 set_empty_message(
                     paste(
@@ -341,6 +558,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             translate_titles_and_columns()
 
+            # -----------------------------------------------------------------------------
+            # Data preparation: valid rows and group factor.
+            # ES: Preparación de datos: filas válidas y factor de grupo.
+            #
+            # Rows with a missing group value are excluded up front (valid_group) so
+            # every downstream computation shares the same group factor and level set;
+            # rows with a missing dependent value are kept at this stage (only
+            # excluded per-group inside each computation) so the design-summary table
+            # can still report how many were missing.
+            #
+            # ES: las filas con valor de grupo faltante se excluyen desde el inicio
+            # (valid_group) para que todo cálculo posterior comparta el mismo factor
+            # de grupo y el mismo conjunto de niveles; las filas con valor faltante en
+            # la variable dependiente se conservan en esta etapa (solo se excluyen por
+            # grupo dentro de cada cálculo) para que la tabla de resumen del diseño
+            # pueda seguir reportando cuántas faltaron.
+            # -----------------------------------------------------------------------------
             valid_group <- ! is.na(g)
             y2 <- y[valid_group]
             g2 <- as.factor(g[valid_group])
@@ -353,31 +587,22 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             n_missing_dep <- sum(is.na(y))
             missing_dep_pct <- round(100 * n_missing_dep / n_total, 2)
 
-            intro_lines_main <- c(
-                txt("independentGroups", "intro"),
-                tr(
-                    paste0("Dependent variable: ", dep),
-                    paste0("Variable dependiente: ", dep)
-                ),
-                tr(
-                    paste0("Grouping variable: ", group),
-                    paste0("Variable de grupo: ", group)
-                )
-            )
-
-            intro_html_main <- paste0(
-                "<div style=\"line-height:1.55;  text-align: justify; margin:0.15em 0 1.05em 0;\">",
-                paste0(
-                    "<p style=\"margin:0 0 0.72em 0; line-height:1.55;\">",
-                    html_escape(intro_lines_main),
-                    "</p>",
-                    collapse = ""
-                ),
-                "</div>"
-            )
-
             self$results$intro$setContent(render_groupcheck_intro(show_vars = TRUE))
 
+            # -----------------------------------------------------------------------------
+            # Design summary table.
+            # ES: Tabla de resumen del diseño.
+            #
+            # Reports the detected design (two groups vs. three-or-more vs. only one)
+            # together with basic row/group accounting, so the reader can immediately
+            # confirm groupCheck parsed the intended comparison before looking at any
+            # diagnostic result.
+            #
+            # ES: Reporta el diseño detectado (dos grupos vs. tres o más vs. solo uno)
+            # junto con un recuento básico de filas/grupos, para que el lector pueda
+            # confirmar de inmediato que groupCheck interpretó la comparación prevista
+            # antes de revisar cualquier resultado diagnóstico.
+            # -----------------------------------------------------------------------------
             design_text <- if (n_groups == 2) {
                 tr("Comparison of two independent groups", "Comparación de dos grupos independientes")
             } else if (n_groups > 2) {
@@ -416,6 +641,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 value = paste0(n_missing_dep, " (", missing_dep_pct, "%)")
             ))
 
+            # -----------------------------------------------------------------------------
+            # Descriptive statistics by group.
+            # ES: Estadísticos descriptivos por grupo.
+            # -----------------------------------------------------------------------------
             summary_rows <- lapply(group_levels, function(level) {
                 values <- y2[g2 == level]
                 values_valid <- values[! is.na(values)]
@@ -452,6 +681,21 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            # -----------------------------------------------------------------------------
+            # Distribution plot data (boxplot/violin state).
+            # ES: Datos del gráfico de distribución (estado de boxplot/violin).
+            #
+            # Builds the long-format data frame consumed by .plotGroupDistribution();
+            # kept as a plot state object (rather than recomputed inside the plotting
+            # callback) because jamovi re-invokes the plotting function on export/
+            # resize without re-running .run().
+            #
+            # ES: construye el data frame en formato largo que consume
+            # .plotGroupDistribution(); se mantiene como objeto de estado del gráfico
+            # (en lugar de recalcularse dentro del callback de graficado) porque
+            # jamovi vuelve a invocar la función de graficado al exportar/redimensionar
+            # sin volver a ejecutar .run().
+            # -----------------------------------------------------------------------------
             distribution_plot_state <- data.frame(
                 value = numeric(0),
                 group = character(0),
@@ -485,6 +729,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             self$results$distributionPlot$setState(distribution_plot_state)
 
+            # -----------------------------------------------------------------------------
+            # Outlier screening via the IQR rule.
+            # ES: Cribado de valores atípicos mediante la regla IQR.
+            #
+            # Applies the classic Tukey fences (1.5 x IQR for outliers, 3 x IQR for
+            # extreme values) independently within each group, since IQR-based
+            # screening is only meaningful relative to a group's own spread. Requires
+            # at least 4 valid values per group to compute a stable quartile estimate;
+            # smaller groups are reported with NA rather than an unreliable fence.
+            #
+            # ES: aplica las cercas clásicas de Tukey (1.5 x IQR para atípicos, 3 x IQR
+            # para valores extremos) de forma independiente dentro de cada grupo, ya
+            # que el cribado basado en IQR solo tiene sentido en relación con la
+            # dispersión propia de cada grupo. Requiere al menos 4 valores válidos por
+            # grupo para calcular una estimación estable de los cuartiles; los grupos
+            # más pequeños se reportan con NA en lugar de una cerca poco confiable.
+            # -----------------------------------------------------------------------------
             outlier_rows <- lapply(group_levels, function(level) {
                 values <- y2[g2 == level]
                 values_valid <- values[! is.na(values)]
@@ -543,6 +804,29 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            # -----------------------------------------------------------------------------
+            # Case-level diagnostics: Cook's distance and Mahalanobis distance.
+            # ES: Diagnósticos a nivel de caso: distancia de Cook y distancia de
+            # Mahalanobis.
+            #
+            # Fits y_model ~ g_model (equivalent to a one-way ANOVA) on complete cases
+            # only, then derives two complementary influence measures from it: Cook's
+            # distance (impact of removing the case on the fitted group means, cutoff
+            # 4/n as a screening threshold, not a hard rule) and a Mahalanobis-style
+            # squared distance from the case's own group mean, expressed in standard-
+            # deviation units. With a single dependent variable, Mahalanobis distance
+            # reduces to the univariate standardized-distance case.
+            #
+            # ES: ajusta y_model ~ g_model (equivalente a un ANOVA de un factor) solo
+            # sobre los casos completos, y de ahí deriva dos medidas de influencia
+            # complementarias: la distancia de Cook (impacto de eliminar el caso sobre
+            # las medias de grupo ajustadas, punto de corte 4/n como umbral de
+            # cribado, no una regla estricta) y una distancia al cuadrado tipo
+            # Mahalanobis respecto a la media del propio grupo del caso, expresada en
+            # unidades de desviación estándar. Con una única variable dependiente, la
+            # distancia de Mahalanobis se reduce al caso univariado de distancia
+            # estandarizada.
+            # -----------------------------------------------------------------------------
             complete_cases <- which(valid_group & ! is.na(y))
             y_model <- y[complete_cases]
             g_model <- droplevels(as.factor(g[complete_cases]))
@@ -619,6 +903,18 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 }
             }
 
+            # -----------------------------------------------------------------------------
+            # Case diagnostics applied-interpretation text.
+            # ES: Texto de interpretación aplicada de los diagnósticos de casos.
+            #
+            # Tallies the IQR-rule and case-level (Cook's D / Mahalanobis) flags and
+            # explains, in applied terms, that the two diagnostics answer different
+            # questions and are not expected to always agree.
+            #
+            # ES: cuenta las marcas de la regla IQR y las de nivel de caso (Cook's D /
+            # Mahalanobis) y explica, en términos aplicados, que ambos diagnósticos
+            # responden preguntas distintas y no se espera que siempre coincidan.
+            # -----------------------------------------------------------------------------
             n_groups_with_outliers <- sum(outlier_table$outliers > 0, na.rm = TRUE)
             n_iqr_outliers <- sum(outlier_table$outliers, na.rm = TRUE)
             n_iqr_extreme <- sum(outlier_table$extreme, na.rm = TRUE)
@@ -670,6 +966,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 ))
             ))
 
+            # -----------------------------------------------------------------------------
+            # Normality diagnostic battery per group.
+            # ES: Batería diagnóstica de normalidad por grupo.
+            #
+            # Runs the full normality battery (Shapiro-Wilk, Lilliefors, Anderson-
+            # Darling, Cramer-von Mises, Shapiro-Francia, Pearson chi-square, Jarque-
+            # Bera, skewness and kurtosis tests) independently within every group,
+            # because a parametric group comparison assumes approximate normality at
+            # each level of the grouping factor, not only in the pooled sample.
+            #
+            # ES: ejecuta la batería completa de normalidad (Shapiro-Wilk, Lilliefors,
+            # Anderson-Darling, Cramer-von Mises, Shapiro-Francia, chi-cuadrado de
+            # Pearson, Jarque-Bera, y pruebas de asimetría y curtosis) de forma
+            # independiente dentro de cada grupo, porque una comparación paramétrica
+            # de grupos supone normalidad aproximada en cada nivel del factor de
+            # agrupación, no solo en la muestra combinada.
+            # -----------------------------------------------------------------------------
             normality_rows <- list()
 
             normality_use <- function(test) {
@@ -863,6 +1176,27 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            # -----------------------------------------------------------------------------
+            # Homogeneity-of-variance diagnostic battery.
+            # ES: Batería diagnóstica de homogeneidad de varianzas.
+            #
+            # Runs Levene (mean- and median-centered), Brown-Forsythe, Bartlett, and
+            # Fligner-Killeen across the complete-case sample. Levene (mean-centered)
+            # is treated as the primary/anchor test in the applied interpretation
+            # below because it is the classical, most widely recognized test for
+            # equality of variances (Levene, 1960); the others are reported alongside
+            # as robustness checks, since some are more sensitive to non-normality
+            # (Bartlett) and others less so (Brown-Forsythe, Fligner-Killeen).
+            #
+            # ES: ejecuta Levene (centrado en media y en mediana), Brown-Forsythe,
+            # Bartlett y Fligner-Killeen sobre la muestra de casos completos. Levene
+            # (centrado en media) se trata como la prueba principal/ancla en la
+            # interpretación aplicada de más abajo por ser la prueba clásica más
+            # ampliamente reconocida para igualdad de varianzas (Levene, 1960); las
+            # demás se reportan junto a esta como verificaciones de robustez, ya que
+            # algunas son más sensibles a la no normalidad (Bartlett) y otras menos
+            # (Brown-Forsythe, Fligner-Killeen).
+            # -----------------------------------------------------------------------------
             complete_idx <- ! is.na(y2)
             y_complete <- y2[complete_idx]
             g_complete <- droplevels(g2[complete_idx])
@@ -994,6 +1328,22 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     add_homogeneity("Fligner-Killeen", "χ²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Not calc.", "No calc."))
                 }
 
+                # -----------------------------------------------------------------------------
+                # Applied-interpretation text: normality.
+                # ES: Texto de interpretación aplicada: normalidad.
+                #
+                # Builds the narrative that anchors on Shapiro-Wilk (chosen for its
+                # power across sample sizes, Razali & Wah, 2011) but also looks across
+                # the full battery per group, distinguishing an isolated significant
+                # test from a consistent multi-test signal of non-normality before
+                # concluding anything.
+                #
+                # ES: construye la narrativa que se ancla en Shapiro-Wilk (elegida por
+                # su potencia en todo el rango de tamaños muestrales, Razali & Wah,
+                # 2011) pero que también revisa la batería completa por grupo,
+                # distinguiendo una prueba significativa aislada de una señal
+                # consistente entre varias pruebas antes de concluir cualquier cosa.
+                # -----------------------------------------------------------------------------
                 n_sig_shapiro <- sum(shapiro_p_by_group < .05, na.rm = TRUE)
                 n_valid_shapiro <- sum(!is.na(shapiro_p_by_group))
 
@@ -1069,6 +1419,21 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     ))
                 ))
 
+                # -----------------------------------------------------------------------------
+                # Applied-interpretation text: homogeneity of variance.
+                # ES: Texto de interpretación aplicada: homogeneidad de varianzas.
+                #
+                # Anchors the narrative on Levene (mean-centered) and reports whether
+                # the other tests in the table agree with its conclusion, then
+                # explains the practical remedy (Welch's t-test/ANOVA) rather than
+                # treating a significant result as a reason to discard the comparison.
+                #
+                # ES: ancla la narrativa en Levene (centrado en media) y reporta si las
+                # demás pruebas de la tabla coinciden con su conclusión, y luego
+                # explica el remedio práctico (t de Welch/ANOVA de Welch) en lugar de
+                # tratar un resultado significativo como motivo para descartar la
+                # comparación.
+                # -----------------------------------------------------------------------------
                 lev_mean_p <- tryCatch(as.numeric(lev_mean[1, "Pr(>F)"]), error = function(e) NA_real_)
                 lev_median_p <- tryCatch(as.numeric(lev_median[1, "Pr(>F)"]), error = function(e) NA_real_)
                 bart_p <- if (!is.null(bart)) bart$p.value else NA_real_
@@ -1120,13 +1485,28 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 add_homogeneity("Fligner-Killeen", "χ²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Requires at least two groups", "Requiere al menos dos grupos"))
             }
 
+            # -----------------------------------------------------------------------------
+            # Two-group variance F-test.
+            # ES: Prueba F de varianza para dos grupos.
+            #
+            # Adds the classic two-sample F variance-ratio test only when there are
+            # exactly two groups, since var.test() is defined for two samples; with
+            # three or more groups the battery above (Levene/Brown-Forsythe/Bartlett/
+            # Fligner-Killeen) already covers homogeneity of variance.
+            #
+            # ES: agrega la prueba F clásica de razón de varianzas para dos muestras
+            # solo cuando hay exactamente dos grupos, ya que var.test() está definida
+            # para dos muestras; con tres o más grupos, la batería anterior (Levene/
+            # Brown-Forsythe/Bartlett/Fligner-Killeen) ya cubre la homogeneidad de
+            # varianzas.
+            # -----------------------------------------------------------------------------
             if (length(unique(g_complete)) == 2) {
 
                 group_names <- levels(g_complete)
-                x1 <- y_complete[g_complete == group_names[1]]
+                group1Values <- y_complete[g_complete == group_names[1]]
                 x2 <- y_complete[g_complete == group_names[2]]
 
-                ftest <- tryCatch(stats::var.test(x1, x2), error = function(e) NULL)
+                ftest <- tryCatch(stats::var.test(group1Values, x2), error = function(e) NULL)
 
                 if (! is.null(ftest)) {
                     add_homogeneity(
@@ -1144,6 +1524,11 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             }
 
+            # -----------------------------------------------------------------------------
+            # Diagnostic guide texts: distribution plot and case diagnostics.
+            # ES: Textos de guía diagnóstica: gráfico de distribución y diagnóstico de
+            # casos.
+            # -----------------------------------------------------------------------------
             case_diagnostics_guide <- tr(
                 c(
                     "These diagnostics help identify cases that may have an unusual effect on the group comparison model.",
@@ -1182,6 +1567,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
+            # -----------------------------------------------------------------------------
+            # Normality guide text.
+            # ES: Texto de guía de normalidad.
+            # -----------------------------------------------------------------------------
             normality_guide_text <- tr(
                 c(
                     "Normality is evaluated within each independent group because parametric group comparisons assume approximately normal distributions at each level of the grouping factor.",
@@ -1205,11 +1594,24 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
-
             private$.qqPlotData <- NULL
             private$.qqPlotSelected <- NULL
 
-
+            # -----------------------------------------------------------------------------
+            # Q-Q plot state preparation.
+            # ES: Preparación del estado del gráfico Q-Q.
+            #
+            # Builds the long-format data used by .plotGroupQQNormality(): the global
+            # (all valid cases) panel plus one panel per group, each included only
+            # when it is methodologically viable (>= 10 valid cases and non-zero
+            # variability) so an unstable Q-Q plot is never rendered.
+            #
+            # ES: construye los datos en formato largo que usa
+            # .plotGroupQQNormality(): el panel global (todos los casos válidos) más
+            # un panel por grupo, cada uno incluido solo cuando es metodológicamente
+            # viable (>= 10 casos válidos y variabilidad mayor que cero), de modo que
+            # nunca se renderice un Q-Q plot inestable.
+            # -----------------------------------------------------------------------------
             # BEGIN AL_QQ_STATE
             qq_plot_state <- data.frame(
                 value = numeric(0),
@@ -1270,7 +1672,21 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             self$results$qqNormalityPlot$setState(qq_plot_state)
             # END AL_QQ_STATE
 
-
+            # -----------------------------------------------------------------------------
+            # Observed-vs-normal-curve state preparation.
+            # ES: Preparación del estado de la curva observada vs normal.
+            #
+            # Mirrors the Q-Q state block above: a global panel plus one per group,
+            # each standardized (z-scored) and included only when it is
+            # methodologically viable (>= 20 valid cases and non-zero variability),
+            # for the density-vs-theoretical-normal overlay plot.
+            #
+            # ES: refleja el bloque de estado Q-Q anterior: un panel global más uno
+            # por grupo, cada uno estandarizado (puntuación z) e incluido solo cuando
+            # es metodológicamente viable (>= 20 casos válidos y variabilidad mayor
+            # que cero), para el gráfico de superposición de densidad observada vs
+            # normal teórica.
+            # -----------------------------------------------------------------------------
             # BEGIN AL_NORMAL_CURVE_STATE
             normal_curve_state <- data.frame(
                 z = numeric(0),
@@ -1331,6 +1747,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             self$results$normalCurvePlot$setState(normal_curve_state)
             # END AL_NORMAL_CURVE_STATE
 
+            # -----------------------------------------------------------------------------
+            # Visual guide texts: Q-Q and observed-vs-normal-curve plots.
+            # ES: Textos de guía visual: gráficos Q-Q y de curva observada vs normal.
+            # -----------------------------------------------------------------------------
             qq_plot_guide_text <- tr(
                 c(
                     "Q-Q plots compare the observed quantiles of each selected group with the quantiles expected under a normal distribution.",
@@ -1373,7 +1793,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
-
+            # -----------------------------------------------------------------------------
+            # Homogeneity results table population.
+            # ES: Llenado de la tabla de resultados de homogeneidad.
+            # -----------------------------------------------------------------------------
             homogeneity_table <- do.call(rbind, homogeneity_rows)
 
             for (i in seq_len(nrow(homogeneity_table))) {
@@ -1392,6 +1815,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            # -----------------------------------------------------------------------------
+            # Variance guide text.
+            # ES: Texto de guía de varianza.
+            # -----------------------------------------------------------------------------
             variance_guide_text <- tr(
                 c(
                     "These tests evaluate whether the group variances are reasonably similar.",
@@ -1415,20 +1842,25 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
+            # -----------------------------------------------------------------------------
+            # Executive-summary evidence tally.
+            # ES: Recuento de evidencia para el resumen ejecutivo.
+            #
+            # Consolidates outlier, normality, and homogeneity counts into the small
+            # set of numbers the test recommendation and the checklist further below
+            # are built from. normality_significant/homogeneity_significant are read
+            # from the pSig column rather than a raw p < .05 comparison, since pSig is
+            # itself derived from p and is what the printed tables actually show.
+            #
+            # ES: consolida los conteos de atípicos, normalidad y homogeneidad en el
+            # pequeño conjunto de números sobre el que se construyen la recomendación
+            # de prueba y la lista de verificación más adelante.
+            # normality_significant/homogeneity_significant se leen de la columna
+            # pSig en vez de comparar p < .05 directamente, ya que pSig se deriva del
+            # propio p y es lo que las tablas impresas realmente muestran.
+            # -----------------------------------------------------------------------------
             total_outliers <- sum(outlier_table$outliers, na.rm = TRUE)
             total_extreme <- sum(outlier_table$extreme, na.rm = TRUE)
-            normality_significant <- sum(! is.na(normality_table$p) & normality_table$p < .05)
-            homogeneity_significant <- sum(! is.na(homogeneity_table$p) & homogeneity_table$p < .05)
-
-            normality_group_note <- if (length(group_levels) >= 2) {
-                paste0(
-                    tr("Normality table groups: ", "Grupos en la tabla de normalidad: "),
-                    "Grupo 1 = ", group_levels[1], "; ",
-                    "Grupo 2 = ", group_levels[2], "."
-                )
-            } else {
-                ""
-            }
 
             normality_group_note <- if (length(group_levels) >= 2) {
                 paste0(
@@ -1468,6 +1900,27 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            # -----------------------------------------------------------------------------
+            # Test-recommendation logic.
+            # ES: Lógica de recomendación de prueba.
+            #
+            # Chooses a short recommended-test label from the two-group/more-than-two-
+            # group design and the accumulated assumption evidence: no relevant
+            # concerns favors the classical test, heterogeneous variances favors
+            # Welch's variant, and otherwise the sample size (n >= 30, a conventional
+            # rule-of-thumb for the central limit theorem to reasonably apply to the
+            # sampling distribution of group means) decides whether the classical test
+            # is still defensible or a mix of options should be weighed.
+            #
+            # ES: elige una etiqueta breve de prueba recomendada a partir del diseño
+            # (dos grupos/más de dos grupos) y la evidencia de supuestos acumulada: sin
+            # preocupaciones relevantes favorece la prueba clásica, varianzas
+            # heterogéneas favorece la variante de Welch, y en otro caso el tamaño
+            # muestral (n >= 30, una regla convencional para que el teorema central
+            # del límite aplique razonablemente a la distribución muestral de las
+            # medias de grupo) decide si la prueba clásica sigue siendo defendible o
+            # si conviene ponderar varias opciones.
+            # -----------------------------------------------------------------------------
             decision_label <- if (n_groups == 2) {
                 if (homogeneity_significant == 0 && normality_significant == 0 && total_extreme == 0) {
                     tr(
@@ -1536,6 +1989,22 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             )
 
+            # -----------------------------------------------------------------------------
+            # Narrative guidance text by design and evidence pattern.
+            # ES: Texto narrativo de orientación según el diseño y el patrón de
+            # evidencia.
+            #
+            # Expands decision_label into full applied-interpretation paragraphs,
+            # mirroring the same four-way branching (design x evidence pattern) so the
+            # notes panel below can present the recommendation with its full
+            # methodological justification rather than only the short label.
+            #
+            # ES: expande decision_label en párrafos completos de interpretación
+            # aplicada, siguiendo la misma ramificación en cuatro vías (diseño x patrón
+            # de evidencia), de modo que el panel de notas más abajo pueda presentar
+            # la recomendación con su justificación metodológica completa y no solo
+            # con la etiqueta breve.
+            # -----------------------------------------------------------------------------
             guidance <- if (n_groups == 2) {
 
                 if (homogeneity_significant == 0 && normality_significant == 0 && total_extreme == 0) {
@@ -1683,6 +2152,20 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 )
             }
 
+            # -----------------------------------------------------------------------------
+            # Executive summary assembly.
+            # ES: Ensamblaje del resumen ejecutivo.
+            #
+            # Builds the short checklist (outliers, influence, normality,
+            # homogeneity) and final verdict line shown at the top-level
+            # "Methodological Conclusion" panel, giving the reader a one-glance
+            # summary before the full report detail.
+            #
+            # ES: construye la lista de verificaci\u00f3n breve (at\u00edpicos, influencia,
+            # normalidad, homogeneidad) y la l\u00ednea de veredicto final que se muestra
+            # en el panel de nivel superior "Conclusi\u00f3n Metodol\u00f3gica", dando al
+            # lector un resumen de un vistazo antes del detalle completo del informe.
+            # -----------------------------------------------------------------------------
             check_mark <- "\u2713"
 
             outlier_line <- if (total_outliers == 0 && total_extreme == 0) {
@@ -1757,6 +2240,20 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 paragraphs = FALSE
             ))
 
+            # -----------------------------------------------------------------------------
+            # Notes and recommendation panel.
+            # ES: Panel de notas y recomendación.
+            #
+            # Assembles the final report section: the suggested decision label, the
+            # evidence it is based on, and the full narrative guidance text, followed
+            # by the shared significance-code and statistical-symbol legends so the
+            # report is self-contained.
+            #
+            # ES: ensambla la sección final del informe: la decisión sugerida, la
+            # evidencia en que se basa y el texto narrativo completo de orientación,
+            # seguidos de las leyendas compartidas de códigos de significancia y
+            # símbolos estadísticos, para que el informe sea autocontenido.
+            # -----------------------------------------------------------------------------
             self$results$notes$setContent(html_block(
                 tr("Notes and recommendation", "Notas y recomendación"),
                 paste0(
@@ -1782,12 +2279,40 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
+            # Titles/columns are translated again here (identical call to the one
+            # near the top of .run()) so that any table/panel titled after that first
+            # call (e.g. once group_levels is known) also ends up in the correct
+            # report language.
+            # ES: los títulos/columnas se traducen de nuevo aquí (llamada idéntica a
+            # la del inicio de .run()) para que cualquier tabla/panel titulado
+            # después de esa primera llamada (p. ej. una vez que group_levels es
+            # conocido) también quede en el idioma de informe correcto.
             # BEGIN AL_FINAL_TITLES_AND_REFERENCE
             translate_titles_and_columns()
             # END AL_FINAL_TITLES_AND_REFERENCE
 
         },
 
+        # -----------------------------------------------------------------------------
+        # Plot style, palette, and language helpers shared by every plotting callback.
+        # ES: Ayudantes de estilo de gráfico, paleta e idioma compartidos por cada
+        # función de graficado.
+        #
+        # .plotTr() mirrors tr() for use inside plotting callbacks (which run in a
+        # separate evaluation context from .run() and cannot see its local tr()).
+        # .plotStyle()/.plotPalette()/.plotBoxPalette()/.plotGroupPalette() resolve
+        # the user's selected plot-appearance options into concrete color sets, so
+        # every plot in this module shares one consistent visual identity per style/
+        # palette choice.
+        #
+        # ES: .plotTr() refleja tr() para su uso dentro de las funciones de
+        # graficado (que corren en un contexto de evaluación distinto al de .run() y
+        # no pueden ver su tr() local). .plotStyle()/.plotPalette()/
+        # .plotBoxPalette()/.plotGroupPalette() resuelven las opciones de apariencia
+        # de gráfico seleccionadas por el usuario en conjuntos de colores concretos,
+        # de modo que todo gráfico de este módulo comparta una identidad visual
+        # consistente según el estilo/paleta elegidos.
+        # -----------------------------------------------------------------------------
         .plotTr = function(en, es = NULL) {
             if (is.null(es))
                 es <- en
@@ -1866,6 +2391,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             cols
         },
 
+        # -----------------------------------------------------------------------------
+        # Distribution (boxplot/violin) plot renderer.
+        # ES: Renderizador del gráfico de distribución (boxplot/violin).
+        #
+        # Draws the by-group distribution plot from the state built earlier in
+        # .run() (distribution_plot_state): a boxplot per group with optional violin-
+        # density, jittered points, and mean-marker layers, colored per the user's
+        # plot-appearance options. A group needs at least 3 valid cases to receive a
+        # boxplot, since fewer points cannot support a meaningful quartile display.
+        #
+        # ES: dibuja el gráfico de distribución por grupo a partir del estado
+        # construido antes en .run() (distribution_plot_state): un boxplot por grupo
+        # con capas opcionales de densidad tipo violin, puntos con jitter y marca de
+        # media, coloreado según las opciones de apariencia del usuario. Un grupo
+        # necesita al menos 3 casos válidos para recibir un boxplot, ya que con menos
+        # puntos no se puede sostener una visualización de cuartiles significativa.
+        # -----------------------------------------------------------------------------
         .plotGroupDistribution = function(image, ...) {
 
             reportLang <- .al_normalize_lang(self$options$reportLang)
@@ -2092,6 +2634,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             invisible(TRUE)
         },
 
+        # -----------------------------------------------------------------------------
+        # Q-Q normality plot renderer.
+        # ES: Renderizador del gráfico Q-Q de normalidad.
+        #
+        # Draws one Q-Q panel per entry in the state built by the "Q-Q plot state
+        # preparation" block in .run() (global panel plus one per viable group),
+        # laid out in a grid. Optionally overlays a 95% pointwise confidence band
+        # around the reference line and flags |z| > 2.5 points as potential
+        # outliers, purely as a visual aid alongside the numerical diagnostics.
+        #
+        # ES: dibuja un panel Q-Q por cada entrada del estado construido en el
+        # bloque "Preparación del estado del gráfico Q-Q" de .run() (panel global
+        # más uno por cada grupo viable), dispuestos en una cuadrícula. Opcionalmente
+        # superpone una banda de confianza puntual del 95% alrededor de la línea de
+        # referencia y marca los puntos con |z| > 2.5 como atípicos potenciales,
+        # puramente como apoyo visual junto a los diagnósticos numéricos.
+        # -----------------------------------------------------------------------------
         .plotGroupQQNormality = function(image, ...) {
 
             d <- image$state
@@ -2231,6 +2790,24 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             TRUE
         },
 
+        # -----------------------------------------------------------------------------
+        # Observed-vs-normal-curve plot renderer.
+        # ES: Renderizador del gráfico de curva observada vs normal.
+        #
+        # Draws, per panel in the state built by the "Observed-vs-normal-curve state
+        # preparation" block in .run(), the standardized observed density (kernel
+        # density estimate, user-adjustable bandwidth) overlaid on the theoretical
+        # standard-normal curve, so shape departures (skew, heavy tails, multiple
+        # modes) are visible directly rather than only through summary statistics.
+        #
+        # ES: dibuja, por cada panel del estado construido en el bloque
+        # "Preparación del estado de la curva observada vs normal" de .run(), la
+        # densidad observada estandarizada (estimación de densidad kernel, ancho de
+        # banda ajustable por el usuario) superpuesta a la curva normal estándar
+        # teórica, de modo que las desviaciones de forma (asimetría, colas pesadas,
+        # múltiples modas) sean visibles directamente y no solo a través de
+        # estadísticos resumen.
+        # -----------------------------------------------------------------------------
         .plotGroupNormalCurve = function(image, ...) {
 
             d <- image$state

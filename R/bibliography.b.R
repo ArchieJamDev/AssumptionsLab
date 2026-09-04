@@ -28,18 +28,22 @@
 #
 # This file implements the Bibliography tool: a curated, verified database of
 # the methodological references cited throughout AssumptionsLab, filterable
-# by topic and renderable in APA 7th, Vancouver, or IEEE style.
+# by topic and rendered in APA 7th edition. AssumptionsLab always cites in
+# APA 7th edition; there is no citation-style selector (see CODE_STYLE.md
+# §21 / DEVELOPER_GUIDE.md).
 #
 # ES: Este archivo implementa la herramienta de Bibliografía: una base de
 # datos curada y verificada de las referencias metodológicas citadas en todo
-# AssumptionsLab, filtrable por tema y renderizable en formato APA 7.ª
-# edición, Vancouver o IEEE.
+# AssumptionsLab, filtrable por tema y renderizada en formato APA 7.ª
+# edición. AssumptionsLab siempre cita en APA 7.ª edición; no existe un
+# selector de estilo de citación (ver CODE_STYLE.md §21 / DEVELOPER_GUIDE.md).
 #
 # Responsibilities
 # 1. Hold the curated reference database (refs_db), with every entry
 #    individually verified against its primary source.
 # 2. Filter references by the topic selected in the module's options.
-# 3. Format each reference in the citation style selected by the user.
+# 3. Format each reference in APA 7th edition style, the module's fixed
+#    citation format.
 # 4. Assemble the introductory text, the formatted reference list, and a
 #    methodological note into the report.
 #
@@ -48,25 +52,23 @@
 #    entrada verificada individualmente contra su fuente primaria.
 # 2. Filtrar las referencias según el tema seleccionado en las opciones del
 #    módulo.
-# 3. Formatear cada referencia en el estilo de citación elegido por el
-#    usuario.
+# 3. Formatear cada referencia en formato APA 7.ª edición, el estilo de
+#    citación fijo del módulo.
 # 4. Ensamblar el texto introductorio, la lista de referencias formateada y
 #    una nota metodológica en el informe.
 #
 # Workflow
-# 1. Read the selected topic, citation style, and report language.
+# 1. Read the selected topic and report language.
 # 2. Filter the curated database down to the entries matching the topic.
-# 3. Format each filtered entry according to the selected citation style.
+# 3. Format each filtered entry in APA 7th edition style.
 # 4. Render the introduction, the reference list, and the methodological
 #    note.
 #
 # ES: Flujo de trabajo
-# 1. Leer el tema seleccionado, el estilo de citación y el idioma del
-#    informe.
+# 1. Leer el tema seleccionado y el idioma del informe.
 # 2. Filtrar la base de datos curada a las entradas que coinciden con el
 #    tema.
-# 3. Formatear cada entrada filtrada según el estilo de citación
-#    seleccionado.
+# 3. Formatear cada entrada filtrada en formato APA 7.ª edición.
 # 4. Renderizar la introducción, la lista de referencias y la nota
 #    metodológica.
 # -----------------------------------------------------------------------------
@@ -526,6 +528,93 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     doi = "10.1001/jama.280.19.1690",
                     topics = c("regression", "assumptions")
                 ),
+                # ---------------------------------------------------------
+                # Ordinal logistic regression (ordCheck, Sep 2026). Tagged
+                # c("regression", "assumptions") like the rest of the
+                # logistic-regression cluster above - there is no separate
+                # "logistic"/"ordinal" topic in this database, so these
+                # follow the existing convention rather than introduce a
+                # new tag.
+                # ES: Regresión logística ordinal (ordCheck, sep 2026).
+                # Etiquetadas c("regression", "assumptions") como el resto
+                # del grupo de regresión logística de arriba - no existe un
+                # tema "logistic"/"ordinal" separado en esta base, así que
+                # siguen la convención existente en vez de introducir una
+                # etiqueta nueva.
+                # ---------------------------------------------------------
+                list(
+                    authors = list(c("Brant", "R.")),
+                    year = 1990,
+                    title = "Assessing proportionality in the proportional odds model for ordinal logistic regression",
+                    ref_type = "seminal",
+                    is_book = FALSE,
+                    journal = "Biometrics",
+                    volume = "46", issue = "4", pages = "1171-1178",
+                    doi = "10.2307/2532457",
+                    topics = c("regression", "assumptions")
+                ),
+                list(
+                    authors = list(c("McCullagh", "P.")),
+                    year = 1980,
+                    title = "Regression models for ordinal data",
+                    ref_type = "seminal",
+                    is_book = FALSE,
+                    journal = "Journal of the Royal Statistical Society: Series B (Methodological)",
+                    volume = "42", issue = "2", pages = "109-127",
+                    doi = "10.1111/j.2517-6161.1980.tb01109.x",
+                    topics = c("regression", "assumptions")
+                ),
+                list(
+                    authors = list(c("Pulkstenis", "E."), c("Robinson", "T. J.")),
+                    year = 2004,
+                    title = "Goodness-of-fit tests for ordinal response regression models",
+                    ref_type = "methodological",
+                    is_book = FALSE,
+                    journal = "Statistics in Medicine",
+                    volume = "23", issue = "6", pages = "999-1014",
+                    doi = "10.1002/sim.1659",
+                    topics = c("regression", "assumptions")
+                ),
+                list(
+                    authors = list(c("Fagerland", "M. W."), c("Hosmer", "D. W.")),
+                    year = 2013,
+                    title = "A goodness-of-fit test for the proportional odds regression model",
+                    ref_type = "methodological",
+                    is_book = FALSE,
+                    journal = "Statistics in Medicine",
+                    volume = "32", issue = "13", pages = "2235-2249",
+                    doi = "10.1002/sim.5645",
+                    topics = c("regression", "assumptions")
+                ),
+                list(
+                    authors = list(c("Liu", "I."), c("Mukherjee", "B."), c("Suesse", "T."), c("Sparrow", "D."), c("Park", "S. K.")),
+                    year = 2009,
+                    title = "Graphical diagnostics to check model misspecification for the proportional odds regression model",
+                    ref_type = "methodological",
+                    is_book = FALSE,
+                    journal = "Statistics in Medicine",
+                    # Issue number left unverified (every secondary source
+                    # found cites this as "28:412-429" without an issue
+                    # number) - using "" rather than NULL because the
+                    # formatter below does paste0(..., "(", r$issue, ")",
+                    # ...) unconditionally, and a NULL argument makes
+                    # paste0() return character(0) for the whole citation,
+                    # not just drop the parentheses. Archie: please confirm
+                    # the issue number from the Wiley/DOI page and fill it
+                    # in here.
+                    # ES: Número de issue sin verificar (cada fuente
+                    # secundaria encontrada cita esto como "28:412-429" sin
+                    # número de issue) - se usa "" en vez de NULL porque el
+                    # formateador de abajo hace paste0(..., "(", r$issue,
+                    # ")", ...) sin condicional, y un argumento NULL hace
+                    # que paste0() devuelva character(0) para toda la cita,
+                    # no solo que se omitan los paréntesis. Archie: por
+                    # favor confirma el número de issue desde la página de
+                    # Wiley/DOI y complétalo aquí.
+                    volume = "28", issue = "", pages = "412-429",
+                    doi = "10.1002/sim.3386",
+                    topics = c("regression", "assumptions")
+                ),
                 list(
                     authors = list(c("Mardia", "K. V.")),
                     year = 1970,
@@ -867,11 +956,11 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             )
 
             # ------------------------------------------------------------
-            # Bibliometria por revista (Scopus / Web of Science / otras
-            # indexaciones / cuartil). Se indexa por nombre exacto de
-            # revista, no por referencia individual, porque estos datos
-            # son propiedad de la revista, no del articulo. Verificado
-            # por revista, no por cada uno de los 69 articulos.
+            # Journal-level bibliometrics (Scopus / Web of Science / other
+            # indexes / quartile). Indexed by exact journal name rather
+            # than by individual reference, because this data belongs to
+            # the journal, not the article. Verified per journal, not
+            # separately for each of the 69 references.
             # ES: Bibliometria por revista (Scopus / Web of Science /
             # otras indexaciones / cuartil). Se indexa por nombre exacto
             # de revista, no por referencia individual, porque estos
@@ -940,7 +1029,8 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
             # ------------------------------------------------------------
-            # Resumen bibliometrico (tabla al final de Bibliography)
+            # Bibliometric summary (table at the end of Bibliography).
+            # ES: Resumen bibliometrico (tabla al final de Bibliography).
             # ------------------------------------------------------------
             ref_type_label <- function(rt, lang) {
                 .al_tr(lang,
@@ -1337,7 +1427,8 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
             # ------------------------------------------------------------
-            # DOI / enlace verificado (nunca inventado)
+            # Verified DOI / link (never invented).
+            # ES: DOI / enlace verificado (nunca inventado).
             # ------------------------------------------------------------
             link_html <- function(r) {
                 if (!is.null(r$doi) && nzchar(r$doi)) {
@@ -1351,7 +1442,9 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
             # ------------------------------------------------------------
-            # Formateadores de cita por estilo, con sangria francesa via CSS
+            # Citation formatter(s), with a hanging indent via CSS.
+            # ES: Formateadores de cita por estilo, con sangria francesa
+            # via CSS.
             # ------------------------------------------------------------
             hanging <- function(inner_html) {
                 paste0(
@@ -1386,7 +1479,9 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             format_ref <- format_apa
 
             # ------------------------------------------------------------
-            # Filtrado por tema y orden alfabetico por primer apellido
+            # Filter by topic and sort alphabetically by first author's
+            # surname.
+            # ES: Filtrado por tema y orden alfabetico por primer apellido.
             # ------------------------------------------------------------
             selected <- if (identical(topic, "all")) {
                 refs_db

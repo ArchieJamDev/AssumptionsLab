@@ -75,6 +75,47 @@
 #    externo de forma defensiva para que un paquete faltante o un ajuste
 #    numéricamente inestable degrade con gracia en vez de fallar todo el
 #    análisis.
+#
+# Workflow
+# 1. Read the selected series, model, exogenous variables, and seasonal
+#    frequency.
+# 2. Wire the bilingual text and the shared statistical/diagnostic
+#    helpers.
+# 3. Populate the model profile and the static assumption/condition
+#    matrix for the selected model.
+# 4. Guard: verify enough series are selected and the required packages
+#    are installed before running anything.
+# 5. Assemble the numeric series data, dropping incomplete rows.
+# 6. Fit the selected model (ARIMA, SARIMA, ETS, VAR, VECM, or GARCH) and
+#    run its diagnostic battery: stationarity, residual independence/
+#    heteroscedasticity/normality, and model-specific checks, populating
+#    the forecast/residual plot data along the way.
+# 7. Populate plot visibility from the diagnostics' plot data.
+# 8. Assemble the cited methodological foundations for the selected
+#    model.
+# 9. Build the guide, interpretation, and scope panels.
+#
+# ES: Flujo de trabajo
+# 1. Leer la serie o series seleccionadas, el modelo, las variables
+#    exógenas y la frecuencia estacional.
+# 2. Cablear el texto bilingüe y los auxiliares estadísticos/diagnósticos
+#    compartidos.
+# 3. Poblar el perfil del modelo y la matriz estática de supuestos/
+#    condiciones para el modelo seleccionado.
+# 4. Guarda: verificar que haya series suficientes seleccionadas y que
+#    los paquetes requeridos estén instalados antes de ejecutar nada.
+# 5. Ensamblar los datos numéricos de las series, descartando las filas
+#    incompletas.
+# 6. Ajustar el modelo seleccionado (ARIMA, SARIMA, ETS, VAR, VECM o
+#    GARCH) y ejecutar su batería de diagnóstico: estacionariedad,
+#    independencia/heteroscedasticidad/normalidad de los residuos y
+#    verificaciones propias del modelo, poblando de paso los datos de
+#    los gráficos de pronóstico/residuos.
+# 7. Poblar la visibilidad de los gráficos a partir de los datos de
+#    diagnóstico.
+# 8. Ensamblar los fundamentos metodológicos citados para el modelo
+#    seleccionado.
+# 9. Construir los paneles de guía, interpretación y alcance.
 # -----------------------------------------------------------------------------
 
 timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(

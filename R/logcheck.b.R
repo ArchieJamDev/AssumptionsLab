@@ -362,7 +362,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             dep_data <- data[[dep_var]]
 
             # ------------------------------------------------------------
-            # Conversión a binaria, dejando explícito cuál nivel es "evento"
+            # Conversion to binary, making explicit which level is the "event".
+            # ES: Conversión a binaria, dejando explícito cuál nivel es "evento".
             # ------------------------------------------------------------
             event_label <- NULL
             reference_label <- NULL
