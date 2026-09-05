@@ -42,6 +42,10 @@ Rather than asking users to memorize statistical rules, AssumptionsLab helps the
 
 ## Screenshots
 
+<p align="center">
+  <img src="docs/screenshots/demo.gif" width="100%" alt="AssumptionsLab demo">
+</p>
+
 <table width="100%">
   <tr>
     <td align="center" width="50%">
