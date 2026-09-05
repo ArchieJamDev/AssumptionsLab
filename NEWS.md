@@ -1,3 +1,43 @@
+# AssumptionsLab 1.5.2 (2026-09-05)
+
+## Bug fixes
+
+- `regCheck`: `normality_problem` was computed from the residual
+  Shapiro-Wilk test but never consulted when building the "Suggested
+  decision" recommendation text, unlike the analogous flags for
+  heteroscedasticity, autocorrelation, severe multicollinearity, and
+  influence, each of which already gated its own branch. Added the
+  missing branch: when residuals are non-normal, n < 30, and no other
+  diagnostic is flagged, the module now recommends a bootstrap
+  confidence interval, a nonparametric alternative, or explicit
+  caution about classical inference — the same n < 30
+  central-limit-theorem convention `groupCheck` already uses for its
+  own normality-driven branch. A regression test locks in the new
+  branch.
+
+## Validation
+
+- Added `validation/`, a standing location (separate from
+  `tests/testthat/`, which checks code correctness, not statistical
+  performance) for Monte Carlo scripts that evaluate the module's
+  decision rules rather than implement them:
+  - `normality_groupcheck_mc.R`: compares `groupCheck`'s
+    classical-vs-Welch decision rule for a two-group comparison
+    against four alternative strategies, for the normality battery's
+    raw-variable case (32 cells, 5,000 replications each).
+  - `normality_regcheck_mc.R`: the residual-case companion, using the
+    `regCheck` fix above as its "actual rule" strategy (24 cells, 500
+    replications, R=99 bootstrap resamples).
+  - `normality_regcheck_mc_pilot_r999.R`: a pilot rerun of the single
+    cell most sensitive to the residual script's bootstrap resample
+    count (n=15, skewed errors), at R=999, confirming the qualitative
+    finding is not an artifact of the smaller R=99 budget used
+    elsewhere for computational tractability.
+
+Developed to support the module's AJS article, "AssumptionsLab:
+Pedagogical Accompaniment and Graduated Evidence for Statistical
+Assumption Checking in Jamovi."
+
 # AssumptionsLab 1.5.1 (2026-09-05)
 
 ## Bug fixes
