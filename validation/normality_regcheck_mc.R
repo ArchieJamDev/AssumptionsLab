@@ -65,7 +65,7 @@ rerr <- function(n, family) {
 
 # --- nine-test normality battery (mirrors shared-helpers.R) ---
 normality_battery <- function(x) {
-  n <- length(x); sx <- sd(x); m <- mean(x)
+  n <- length(x); sx <- sqrt(mean((x - mean(x))^2)); m <- mean(x)
   sw_p  <- tryCatch(shapiro.test(x)$p.value, error = function(e) NA)
   li_p  <- tryCatch(nortest::lillie.test(x)$p.value, error = function(e) NA)
   ad_p  <- tryCatch(nortest::ad.test(x)$p.value, error = function(e) NA)

@@ -1,3 +1,32 @@
+# Validation scripts (unreleased, 2026-09-05)
+
+## Bug fixes
+
+- `validation/normality_groupcheck_mc.R` and `validation/normality_regcheck_mc.R`
+  computed the shared nine-test normality battery's skewness, kurtosis, and
+  Jarque-Bera statistics using `stats::sd(x)` (Bessel-corrected, 1/(n-1)),
+  the same convention `shared-helpers.R` used *before* the 1.5.1 fix
+  documented below — not the population standard deviation
+  (`sqrt(mean((x-mean(x))^2))`) the module has actually used since that
+  fix. The two validation scripts were therefore evaluating a stale,
+  pre-1.5.1 version of the module's own statistics rather than its current
+  behavior, an inconsistency an external AI-assisted review of this
+  article's supporting code surfaced. `validation/normality_regcheck_mc_pilot_r999.R`
+  already used the correct population-SD convention and needed no change.
+  Both main scripts were corrected and rerun in full (5,000 replications
+  x 32 cells for the raw-variable case; 500 replications x 24 cells for
+  the residual case); the resulting `*_results.csv` files, and the
+  article's Tables reporting them, have been regenerated and updated
+  accordingly. The qualitative conclusions of both evaluations are
+  unchanged; only the specific reported rates shifted, mostly by less
+  than a percentage point.
+- `validation/normality_groupcheck_mc_results.csv` also carried an
+  `npair` column the current script does not produce, evidence the
+  shipped CSV predated some structural edit to the script (e.g. the
+  later addition of the (10,10) supplemental cell). Regenerating the CSV
+  from the current script resolves this; script and results file now
+  match column-for-column.
+
 # AssumptionsLab 1.5.2 (2026-09-05)
 
 ## Bug fixes
