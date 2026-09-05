@@ -4,6 +4,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/ArchieJamDev/AssumptionsLab)](https://github.com/ArchieJamDev/AssumptionsLab/releases)
 [![CI](https://github.com/ArchieJamDev/AssumptionsLab/actions/workflows/jamovi-check.yml/badge.svg)](https://github.com/ArchieJamDev/AssumptionsLab/actions/workflows/jamovi-check.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22209135.svg)](https://doi.org/10.5281/zenodo.22209135)
+![AssumptionsLab views](https://komarev.com/ghpvc/?username=ArchieJamDev-AssumptionsLab&style=flat-square&color=181717&label=AssumptionsLab+Views)
 
 > **A jamovi module for statistical assumptions assessment and evidence-based methodological decision support.**
 
