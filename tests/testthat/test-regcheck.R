@@ -122,3 +122,25 @@ test_that("regCheck shows its own guidance when no predictor is selected", {
         )
     )
 })
+
+test_that("regCheck's suggested decision reacts to small-sample non-normal residuals", {
+
+    # normality_problem is computed from the residual Shapiro-Wilk test but,
+    # before this fix, was never consulted when building the "Suggested
+    # decision" recommendation - a small-n, skewed-residual fit like this one
+    # used to fall through to the generic "no strong signals" text even
+    # though the residuals were clearly non-normal. Seed chosen so that only
+    # normality is flagged (no heteroscedasticity, autocorrelation, severe
+    # collinearity, or influence).
+    set.seed(1)
+    n <- 20
+    x <- rnorm(n)
+    e <- rchisq(n, df = 2) - 2
+    data <- data.frame(y = 2 * x + e, x = x)
+
+    res <- AssumptionsLab::regCheck(data = data, dep = "y", covs = "x")
+    notes_html <- res$notes$content
+
+    expect_match(notes_html, "bootstrap", ignore.case = TRUE)
+    expect_match(notes_html, "Central Limit Theorem", fixed = TRUE)
+})

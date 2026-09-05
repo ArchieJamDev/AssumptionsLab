@@ -3129,8 +3129,33 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             }
 
-            if (influence_problem && !homo_problem && !auto_problem &&
+            # Residual non-normality mainly threatens the precision of classical
+            # inference (CIs, p-values on coefficients), not the point estimates
+            # themselves, and the Central Limit Theorem makes that threat fade as
+            # n grows - the same n>=30 convention groupCheck uses for its own
+            # normality-driven branch. Below that threshold, flag it explicitly
+            # rather than leaving normality_problem computed but unused.
+            # ES: la no-normalidad residual amenaza principalmente la precisión
+            # de la inferencia clásica (IC, p de los coeficientes), no las
+            # estimaciones puntuales, y el Teorema Central del Límite atenúa esa
+            # amenaza a medida que crece n - la misma convención n>=30 que usa
+            # groupCheck en su propia rama de normalidad. Por debajo de ese
+            # umbral, señalarlo explícitamente en vez de dejar normality_problem
+            # calculada pero sin uso.
+            normality_small_n_problem <- normality_problem && n_used < 30
+
+            if (normality_small_n_problem && !homo_problem && !auto_problem &&
                 !severe_col_problem) {
+                recommendation <- paste(
+                    tr("There is evidence of non-normal residuals in a small sample, where the Central Limit Theorem cannot yet be relied on; consider",
+                       "Hay evidencia de residuos no normales en una muestra pequeña, donde todavía no puede confiarse en el Teorema Central del Límite; considerar"),
+                    tr("a bootstrap confidence interval, a nonparametric alternative, or reporting classical inference with explicit caution.",
+                       "un intervalo de confianza bootstrap, una alternativa no paramétrica, o reportar la inferencia clásica con cautela explícita.")
+                )
+            }
+
+            if (influence_problem && !homo_problem && !auto_problem &&
+                !severe_col_problem && !normality_small_n_problem) {
                 recommendation <- paste(
                     tr("There are outlying or influential cases; inspect them before",
                        "Existen casos atípicos o influyentes; inspeccionarlos antes de"),
