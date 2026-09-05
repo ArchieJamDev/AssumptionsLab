@@ -3,6 +3,27 @@
 ## Bug fixes
 
 - `validation/normality_groupcheck_mc.R` and `validation/normality_regcheck_mc.R`
+  reimplemented the battery's Pearson chi-square goodness-of-fit test with a
+  manual equal-probability binning (a fixed 5-10 class cap, no degrees-of-
+  freedom adjustment for the two estimated parameters) instead of calling
+  `nortest::pearson.test()`, the actual function `shared-helpers.R` calls.
+  A quick diagnostic (2,000 null replications per sample size) found the
+  manual version badly miscalibrated under the null --- rejecting at
+  0.6-1.9% instead of the nominal 5%, versus 4.7-5.6% for the real
+  function --- because it never subtracted 2 degrees of freedom for the
+  estimated mean and standard deviation. Both scripts now call
+  `nortest::pearson.test(x)$p.value` directly, matching the module exactly.
+  Rerunning both simulations left Type~I error and power (`rate1`-`rate5`)
+  essentially unchanged in the raw-variable case, since a single better-
+  calibrated test rarely flips a nine-test majority vote by itself; but the
+  module's own two-group decision rule (Strategy 3), which flags *any*
+  significant test rather than a majority, saw its ambiguous-branch rate at
+  the smallest sample size $(10,10)$ shift from roughly 19-58% to 23-62%
+  across families --- a previously under-reporting test now correctly
+  contributing evidence. The residual case was materially unaffected (its
+  decision rule keys off Shapiro-Wilk alone, not the full battery). Found
+  via the same external AI-assisted code review as the fix below.
+- `validation/normality_groupcheck_mc.R` and `validation/normality_regcheck_mc.R`
   computed the shared nine-test normality battery's skewness, kurtosis, and
   Jarque-Bera statistics using `stats::sd(x)` (Bessel-corrected, 1/(n-1)),
   the same convention `shared-helpers.R` used *before* the 1.5.1 fix

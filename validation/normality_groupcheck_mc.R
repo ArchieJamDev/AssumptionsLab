@@ -63,13 +63,7 @@ normality_battery <- function(x) {
   jb_val <- n/6 * (sk^2 + ((ku - 3)^2 / 4)); jb_p <- pchisq(jb_val, df = 2, lower.tail = FALSE)
   z_sk <- sk / sqrt(6 / n); skew_p <- 2 * pnorm(abs(z_sk), lower.tail = FALSE)
   kurt_p <- if (n >= 20) { z_ku <- (ku - 3) / sqrt(24 / n); 2 * pnorm(abs(z_ku), lower.tail = FALSE) } else NA
-  pear_p <- tryCatch({
-    k <- max(5, min(10, floor(n / 5)))
-    breaks <- qnorm(seq(0, 1, length.out = k + 1), mean = m, sd = sx)
-    breaks[1] <- -Inf; breaks[length(breaks)] <- Inf
-    obs <- table(cut(x, breaks)); exp <- rep(n / k, k)
-    pchisq(sum((obs - exp)^2 / exp), df = k - 1, lower.tail = FALSE)
-  }, error = function(e) NA)
+  pear_p <- tryCatch(nortest::pearson.test(x)$p.value, error = function(e) NA)
   ps <- c(sw_p, li_p, ad_p, cvm_p, sf_p, pear_p, jb_p, skew_p, kurt_p)
   list(sw_p = sw_p, sig9 = sum(ps < alpha, na.rm = TRUE), skew = sk, kurt_excess = ku - 3)
 }
