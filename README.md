@@ -130,9 +130,9 @@ Please read **CONTRIBUTING.md** before submitting issues, feature requests, or p
 
 # Citation
 
-If you use AssumptionsLab in research, please cite the software using the information provided in **CITATION.cff**.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22209135.svg)](https://doi.org/10.5281/zenodo.22209135)
 
-A formal software publication will be announced upon release.
+If you use AssumptionsLab in research, please cite the software using the information provided in **CITATION.cff**, or via GitHub's "Cite this repository" button. The DOI above is the concept DOI — it always resolves to the latest release; cite a version-specific DOI instead only if you need to pin the exact version used in a specific analysis.
 
 ---
 
