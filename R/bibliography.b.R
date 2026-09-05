@@ -615,6 +615,56 @@ bibliographyClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     doi = "10.1002/sim.3386",
                     topics = c("regression", "assumptions")
                 ),
+                # ---------------------------------------------------------
+                # Independence of Irrelevant Alternatives / Hausman-McFadden
+                # test (multCheck, Sep 2026). Tagged c("regression",
+                # "assumptions") for the same reason as the ordCheck cluster
+                # above - there is no separate "logistic"/"multinomial"
+                # topic in this database (see jamovi/bibliography.a.yaml's
+                # "Linearity and Regression" option), so these follow the
+                # existing convention rather than introduce a new tag.
+                # ES: Independencia de Alternativas Irrelevantes / prueba de
+                # Hausman-McFadden (multCheck, sep 2026). Etiquetadas
+                # c("regression", "assumptions") por la misma razon que el
+                # grupo de ordCheck de arriba - no existe un tema
+                # "logistic"/"multinomial" separado en esta base (ver la
+                # opcion "Linearity and Regression" de
+                # jamovi/bibliography.a.yaml), asi que siguen la convencion
+                # existente en vez de introducir una etiqueta nueva.
+                # ---------------------------------------------------------
+                list(
+                    authors = list(c("Hausman", "J."), c("McFadden", "D.")),
+                    year = 1984,
+                    title = "Specification tests for the multinomial logit model",
+                    ref_type = "seminal",
+                    is_book = FALSE,
+                    journal = "Econometrica",
+                    volume = "52", issue = "5", pages = "1219-1240",
+                    doi = "10.2307/1910997",
+                    topics = c("regression", "assumptions")
+                ),
+                list(
+                    authors = list(c("Small", "K. A."), c("Hsiao", "C.")),
+                    year = 1985,
+                    title = "Multinomial logit specification tests",
+                    ref_type = "methodological",
+                    is_book = FALSE,
+                    journal = "International Economic Review",
+                    volume = "26", issue = "3", pages = "619-627",
+                    doi = "10.2307/2526707",
+                    topics = c("regression", "assumptions")
+                ),
+                list(
+                    authors = list(c("Cheng", "S."), c("Long", "J. S.")),
+                    year = 2007,
+                    title = "Testing for IIA in the multinomial logit model",
+                    ref_type = "review",
+                    is_book = FALSE,
+                    journal = "Sociological Methods & Research",
+                    volume = "35", issue = "4", pages = "583-600",
+                    doi = "10.1177/0049124106292361",
+                    topics = c("regression", "assumptions")
+                ),
                 list(
                     authors = list(c("Mardia", "K. V.")),
                     year = 1970,

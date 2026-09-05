@@ -54,6 +54,8 @@ options:
         name: sphericity
       - title: Proportional Odds
         name: proportionalOdds
+      - title: Independence of Irrelevant Alternatives
+        name: independenceIrrelevantAlternatives
       - title: Transformations and Robust Alternatives
         name: robust
     default: all

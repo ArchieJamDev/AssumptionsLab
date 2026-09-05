@@ -32,3 +32,32 @@ jobs:
           Rscript -e "install.packages('jmvtools', repos = c('https://repo.jamovi.org', 'https://cloud.r-project.org'))"
           Rscript -e "remotes::install_deps(dependencies = TRUE, upgrade = 'never')"
           Rscript -e "jmvtools::check()"
+
+      # jmvtools::check() (above) only verifies that a compatible jamovi
+      # Desktop/server installation is reachable - it never touches tests/
+      # or runs testthat, so a green run of that step alone is not proof the
+      # edge-case suite passes. This step is therefore explicit and
+      # separate: it installs AssumptionsLab itself as a plain R package (the
+      # committed R/*.h.R wrapper functions and the root NAMESPACE's
+      # exportPattern are enough for a standard R CMD INSTALL - no jamovi
+      # Desktop/Node toolchain required) and then runs the full
+      # tests/testthat/ suite, so a green checkmark on GitHub is unambiguous
+      # proof that every module degrades gracefully on the pathological
+      # input covered there.
+      # ES: jmvtools::check() (arriba) solo verifica que haya una instalación
+      # de jamovi Desktop/server compatible alcanzable - nunca toca tests/ ni
+      # ejecuta testthat, así que una ejecución en verde de ese paso por sí
+      # sola no es prueba de que la suite de casos límite pase. Por eso este
+      # paso es explícito y separado: instala AssumptionsLab como un paquete
+      # de R normal (las funciones envoltorio R/*.h.R ya confirmadas y el
+      # exportPattern del NAMESPACE raíz bastan para un R CMD INSTALL
+      # estándar - no se requiere el toolchain de jamovi Desktop/Node) y
+      # luego ejecuta la suite completa de tests/testthat/, de modo que una
+      # marca verde en GitHub sea prueba inequívoca de que cada módulo
+      # degrada con elegancia ante la entrada patológica cubierta allí.
+      - name: Instalar AssumptionsLab y ejecutar la suite de pruebas de casos límite
+        run: |
+          Rscript -e "if (!requireNamespace('testthat', quietly = TRUE)) install.packages('testthat', repos = 'https://cloud.r-project.org')"
+          Rscript -e "if (!requireNamespace('withr', quietly = TRUE)) install.packages('withr', repos = 'https://cloud.r-project.org')"
+          R CMD INSTALL --no-multiarch --with-keep.source .
+          Rscript -e "testthat::test_dir('tests/testthat')"

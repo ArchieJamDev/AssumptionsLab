@@ -174,11 +174,21 @@ AssumptionsLab/
 
 ├── jamovi/
 
+│   └── assets/
+
+├── inst/
+
+│   └── assets/
+
+├── data/
+
+├── data-raw/
+
 ├── docs/
 
-├── assets/
-
 ├── tests/
+
+├── .github/
 
 ├── README.md
 
@@ -207,7 +217,18 @@ Implements every statistical algorithm.
 
 ### jamovi/
 
-Defines analysis options and user interfaces.
+Defines analysis options and user interfaces. Also holds `jamovi/assets/`,
+the module's own icon and the bundled example dataset.
+
+### inst/
+
+Package-installed resources: icons/logos and the plain-text `CITATION` file.
+
+### data/ and data-raw/
+
+`data/` ships the bundled example dataset shown inside jamovi (registered
+under `datasets:` in `jamovi/0000.yaml`); `data-raw/` holds the script that
+produces it reproducibly from the original source export.
 
 ### docs/
 
@@ -216,10 +237,6 @@ Contains project documentation.
 ### tests/
 
 Stores validation procedures.
-
-### assets/
-
-Stores graphical resources.
 
 -------------------------------------------------------------------------------
 
@@ -667,8 +684,6 @@ major structural modifications.
 Potential future modules include
 
 • Bayesian statistics
-
-• Path Analysis
 
 • CB-SEM
 

@@ -125,6 +125,9 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
                       "Casos atípicos e influencia"),
                     c("sphericity", "Sphericity", "Esfericidad"),
                     c("proportionalOdds", "Proportional Odds", "Momios proporcionales"),
+                    c("independenceIrrelevantAlternatives",
+                      "Independence of Irrelevant Alternatives",
+                      "Independencia de alternativas irrelevantes"),
                     c("robust",
                       "Transformations and Robust Alternatives",
                       "Transformaciones y alternativas robustas"),
@@ -460,6 +463,30 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
                 '</div>'
             ))
 
+            # The text-database keys below use the short "iia" prefix
+            # (matching multCheck's own result names, self$results$iiaGuide
+            # / self$results$iia) rather than spelling out
+            # "independenceIrrelevantAlternatives" - this keeps the txt()
+            # keys readable, and "iia" is an unambiguous, universally
+            # recognized abbreviation for this one assumption.
+            # ES: Las claves de la base de textos de abajo usan el prefijo
+            # corto "iia" (igual que los nombres de resultado propios de
+            # multCheck, self$results$iiaGuide / self$results$iia) en vez
+            # de escribir "independenceIrrelevantAlternatives" completo -
+            # esto mantiene legibles las claves txt(), y "iia" es una
+            # abreviatura inequívoca y universalmente reconocida para este
+            # supuesto.
+            self$results$independenceIrrelevantAlternatives$setContent(paste0(
+                '<div style="max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;">',
+                paste0(
+                    .al_title_html(txt("iiaPart1")[1]),
+                    .al_body(txt("iiaPart1")[-1]),
+                    .al_table(txt("iiaTableHeaders"), txt("iiaTableRows")),
+                    .al_body(txt("iiaPart2")[-1])
+                ),
+                '</div>'
+            ))
+
             self$results$robust$setContent(paste0(
                 '<div style="max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;">',
                 paste0(
@@ -479,6 +506,7 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
             hide_if_needed(self$results$influence, "influence")
             hide_if_needed(self$results$sphericity, "sphericity")
             hide_if_needed(self$results$proportionalOdds, "proportionalOdds")
+            hide_if_needed(self$results$independenceIrrelevantAlternatives, "independenceIrrelevantAlternatives")
             hide_if_needed(self$results$robust, "robust")
 
             self$results$notes$setContent(.al_render(txt("notes")))

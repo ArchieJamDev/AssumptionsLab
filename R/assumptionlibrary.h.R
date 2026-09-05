@@ -28,6 +28,7 @@ assumptionLibraryOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                     "influence",
                     "sphericity",
                     "proportionalOdds",
+                    "independenceIrrelevantAlternatives",
                     "robust"),
                 default="all")
             private$..reportLang <- jmvcore::OptionList$new(
@@ -62,6 +63,7 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
         influence = function() private$.items[["influence"]],
         sphericity = function() private$.items[["sphericity"]],
         proportionalOdds = function() private$.items[["proportionalOdds"]],
+        independenceIrrelevantAlternatives = function() private$.items[["independenceIrrelevantAlternatives"]],
         robust = function() private$.items[["robust"]],
         notes = function() private$.items[["notes"]]),
     private = list(),
@@ -109,6 +111,10 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 title="Momios Proporcionales"))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="independenceIrrelevantAlternatives",
+                title="Independencia de Alternativas Irrelevantes"))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="robust",
                 title="Transformaciones y alternativas robustas"))
             self$add(jmvcore::Html$new(
@@ -154,6 +160,7 @@ assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cl
 #'   \code{results$influence} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$sphericity} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$proportionalOdds} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$independenceIrrelevantAlternatives} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$robust} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$notes} \tab \tab \tab \tab \tab a html \cr
 #' }

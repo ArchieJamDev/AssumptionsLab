@@ -79,6 +79,7 @@ options:
     permitted:
       - factor
       - numeric
+    default: null
     description: >-
       Optional variable with the date or timestamp of each observation,
       used only to label the plots' horizontal axis. It is not
@@ -103,6 +104,7 @@ options:
       - continuous
     permitted:
       - numeric
+    default: null
     description: >-
       External numeric variables to include as model regressors
       (ARIMAX if the model is ARIMA, SARIMAX if it is SARIMA). Does not

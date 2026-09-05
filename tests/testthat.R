@@ -22,56 +22,20 @@
 # If not, see https://www.gnu.org/licenses/.
 # -----------------------------------------------------------------------------
 
----
-name: assumptionLibrary
-title: Biblioteca de Supuestos
-jrs: '1.1'
+# -----------------------------------------------------------------------------
+# testthat entry point.
+# ES: Punto de entrada de testthat.
+#
+# Standard R CMD check / devtools::test() harness entry point. Discovers and
+# runs every test-*.R file under tests/testthat/ against the installed
+# AssumptionsLab package.
+#
+# ES: Punto de entrada estándar del arnés de R CMD check / devtools::test().
+# Descubre y ejecuta cada archivo test-*.R bajo tests/testthat/ contra el
+# paquete AssumptionsLab instalado.
+# -----------------------------------------------------------------------------
 
-items:
-  - name: intro
-    title: Biblioteca de Supuestos
-    type: Html
+library(testthat)
+library(AssumptionsLab)
 
-  - name: normality
-    title: Normalidad
-    type: Html
-
-  - name: homoscedasticity
-    title: Homocedasticidad / Homogeneidad de varianzas
-    type: Html
-
-  - name: linearity
-    title: Linealidad
-    type: Html
-
-  - name: independence
-    title: Independencia
-    type: Html
-
-  - name: multicollinearity
-    title: Multicolinealidad
-    type: Html
-
-  - name: influence
-    title: Casos atípicos e influencia
-    type: Html
-
-  - name: sphericity
-    title: Esfericidad
-    type: Html
-
-  - name: proportionalOdds
-    title: Momios Proporcionales
-    type: Html
-
-  - name: independenceIrrelevantAlternatives
-    title: Independencia de Alternativas Irrelevantes
-    type: Html
-
-  - name: robust
-    title: Transformaciones y alternativas robustas
-    type: Html
-
-  - name: notes
-    title: Uso de esta biblioteca
-    type: Html
+test_check("AssumptionsLab")

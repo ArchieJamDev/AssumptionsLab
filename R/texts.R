@@ -1419,7 +1419,7 @@ es = list(
              "ordCheck (regresión logística ordinal).",
              "",
              "No aplica a regresión logística binaria (logCheck) ni a regresión",
-             "multinomial (mlogCheck), porque ninguna de las dos tiene múltiples puntos",
+             "multinomial (multCheck), porque ninguna de las dos tiene múltiples puntos",
              "de corte cuyas pendientes deban compararse entre sí.",
              "",
              "Por qué importa:",
@@ -1436,7 +1436,7 @@ es = list(
              c("Modelo de momios parcialmente proporcionales", "Deja variar por punto de corte solo los predictores señalados por Brant, y fija el resto con un único coeficiente",
                "Cuando Brant señala uno o dos predictores puntuales, no el ómnibus completo",
                "Menos estandarizado en software estadístico; la interpretación se complica al mezclar efectos constantes y variables"),
-             c("Modelo multinomial (mlogCheck)", "Abandona el supuesto de proporcionalidad tratando cada categoría como nominal",
+             c("Modelo multinomial (multCheck)", "Abandona el supuesto de proporcionalidad tratando cada categoría como nominal",
                "Cuando la violación es generalizada (ómnibus significativo, varios predictores afectados)",
                "Pierde la eficiencia de aprovechar el orden de las categorías; hay que estimar más parámetros"),
              c("Reportar efectos por punto de corte", "Ajusta logits binarios separados en cada punto de corte y reporta un OR distinto para cada uno",
@@ -1484,8 +1484,123 @@ es = list(
              "predictor(es) individuales la prueba de Brant señala (no solo el ómnibus).",
              "Con uno o dos predictores puntuales, considere un modelo de momios",
              "parcialmente proporcionales; con una violación generalizada, considere un",
-             "modelo multinomial (mlogCheck) o reportar los efectos por punto de corte",
+             "modelo multinomial (multCheck) o reportar los efectos por punto de corte",
              "por separado."
+         ),
+
+         # ---- iia: multCheck's own assumption (Independence of Irrelevant
+         # Alternatives), added Sep 2026 alongside proportionalOdds above.
+         # New library category, not a subsection of an existing one -
+         # same rationale as proportionalOdds: a narrow assumption tied to
+         # one specific model family (multinomial logit), not a
+         # cross-cutting concept. Placed right after proportionalOdds
+         # because both are regression-family, model-specific "sibling"
+         # assumptions (ordCheck / multCheck). Content is grounded in
+         # multcheck.b.R's own iiaGuide text and "not computable" fallback
+         # wording - see that file's header for the full rationale.
+         # ES: iia: el supuesto propio de multCheck (Independencia de
+         # Alternativas Irrelevantes), agregado en sep 2026 junto con
+         # proportionalOdds de arriba. Categoría nueva de la biblioteca, no
+         # una subsección de una existente - mismo razonamiento que
+         # proportionalOdds: un supuesto angosto ligado a una familia de
+         # modelo específica (logit multinomial), no un concepto
+         # transversal. Ubicado justo después de proportionalOdds porque
+         # ambos son supuestos "hermanos" propios de un modelo de la
+         # familia Regression (ordCheck / multCheck). El contenido se basa
+         # en el texto propio de iiaGuide de multcheck.b.R y en su mensaje
+         # de reserva "no calculable" - ver el encabezado de ese archivo
+         # para el razonamiento completo.
+         iiaPart1 = c(
+             "Independencia de alternativas irrelevantes (IIA)",
+             "",
+             "Qué evalúa:",
+             "El modelo logit multinomial asume que los momios relativos entre dos",
+             "categorías cualesquiera del desenlace no dependen de qué otras categorías",
+             "también estén disponibles en el conjunto de elección: la independencia de",
+             "alternativas irrelevantes (IIA). Es el único supuesto propio de esta familia",
+             "de modelos, sin equivalente en regresión logística binaria ni ordinal.",
+             "",
+             "Dónde se usa en AssumptionsLab:",
+             "multCheck (regresión logística multinomial).",
+             "",
+             "No aplica a regresión logística binaria (logCheck), porque con solo dos",
+             "categorías no existen \"alternativas irrelevantes\" que puedan retirarse del",
+             "conjunto de elección. Tampoco aplica a regresión logística ordinal",
+             "(ordCheck), que en su lugar depende del supuesto de momios proporcionales",
+             "(líneas paralelas) entre puntos de corte ordenados.",
+             "",
+             "Por qué importa:",
+             "Si se viola, los odds ratios reportados entre categorías no son estables:",
+             "cambian según qué otras categorías estén presentes en el conjunto de",
+             "elección, lo que socava interpretar un único conjunto de coeficientes como si",
+             "describiera una preferencia consistente entre alternativas."
+         ),
+         iiaTableHeaders = c("Diagnóstico / alternativa", "Qué hace", "Cuándo usarlo", "Principal limitación"),
+         iiaTableRows = list(
+             c("Prueba de Hausman-McFadden", "Reajusta el modelo omitiendo, de a una, cada categoría del desenlace y compara los coeficientes compartidos con el modelo completo",
+               "Como chequeo inicial tras ajustar el modelo multinomial, antes de confiar en los odds ratios reportados",
+               "El estadístico no siempre es calculable (la diferencia de matrices de covarianza puede no ser invertible en muestras finitas); un resultado no calculable no es prueba de que la IIA se sostenga"),
+             c("Modelo logit anidado", "Agrupa las categorías del desenlace en una estructura jerárquica de nidos, permitiendo correlación entre alternativas dentro de un mismo nido",
+               "Cuando la violación de IIA sigue un patrón de agrupamiento sustantivo (p. ej., categorías que comparten atributos no observados)",
+               "Requiere especificar a priori una estructura de nidos razonable; los resultados son sensibles a esa elección"),
+             c("Modelo probit multinomial", "Reemplaza el supuesto logit de errores independientes por errores con distribución normal multivariante, permitiendo correlación entre alternativas",
+               "Cuando se dispone de tiempo de cómputo suficiente y no hay una estructura de nidos natural",
+               "Computacionalmente más costoso; no tiene forma cerrada y requiere integración numérica o simulación"),
+             c("Reportar coeficientes con cautela", "En vez de descartar el modelo, se documentan las categorías señaladas por Hausman-McFadden y se interpretan sus odds ratios con reserva adicional",
+               "Como alternativa transparente cuando la violación afecta solo una o dos categorías puntuales, no un patrón generalizado",
+               "No corrige el problema subyacente, solo lo documenta, dejando la cautela interpretativa a cargo del lector")
+         ),
+         iiaPart2 = c(
+             "",
+             "",
+             "Hausman-McFadden — qué evalúa y limitaciones:",
+             "Contrasta H0: los coeficientes compartidos entre el modelo completo y un",
+             "modelo reajustado sin una categoría no cambian más allá del error de",
+             "muestreo (la IIA se sostiene), frente a H1: sí cambian (Hausman & McFadden,",
+             "1984). Se calcula una vez por cada categoría omitida. En muestras finitas,",
+             "el estadístico depende de la diferencia entre dos matrices de covarianza,",
+             "que no siempre es invertible — una degeneración numérica bien documentada",
+             "de esta prueba específica, no evidencia de un error de cálculo. Cuando esto",
+             "ocurre, el resultado se reporta como \"no calculable\": esto no es en sí mismo",
+             "prueba de que la IIA se sostenga (Cheng & Long, 2007, documentan que las",
+             "pruebas de tipo Hausman para IIA se comportan de forma errática en la",
+             "práctica).",
+             "",
+             "Modelo logit anidado — qué hace y cuándo usarlo:",
+             "Agrupa las categorías del desenlace en una estructura jerárquica de nidos,",
+             "permitiendo factores no observados correlacionados dentro de un mismo nido",
+             "mientras mantiene independencia entre nidos distintos. Es la alternativa más",
+             "fundamentada cuando las categorías señaladas por Hausman-McFadden comparten",
+             "un agrupamiento sustantivo identificable.",
+             "",
+             "Modelo probit multinomial — qué hace y cuándo usarlo:",
+             "Abandona por completo el supuesto logit de errores independientes en favor",
+             "de errores correlacionados con distribución normal multivariante entre",
+             "alternativas. Es la alternativa más general —pero computacionalmente más",
+             "pesada— cuando no existe una estructura de nidos natural.",
+             "",
+             "Reportar coeficientes con cautela — qué hace y cuándo usarlo:",
+             "En vez de cambiar de modelo, se documentan explícitamente las categorías",
+             "señaladas por la prueba de Hausman-McFadden y se interpretan sus odds ratios",
+             "con reserva adicional. Es una opción transparente cuando solo una o dos",
+             "categorías quedan señaladas, no un patrón generalizado.",
+             "",
+             "Interpretación:",
+             "p < .05 en la prueba de Hausman-McFadden para una categoría omitida sugiere",
+             "una desviación estadísticamente significativa respecto a la IIA para esa",
+             "categoría. p >= .05 indica que el resultado es compatible con la IIA. Un",
+             "resultado \"no calculable\" no debe interpretarse como evidencia a favor ni en",
+             "contra: es una limitación conocida de la prueba en sí, no un hallazgo",
+             "sustantivo.",
+             "",
+             "Decisión metodológica:",
+             "Si al menos una categoría omitida produce un estadístico significativo,",
+             "considere un modelo logit anidado o probit multinomial (ninguno de los dos",
+             "requiere IIA) antes de confiar en los odds ratios de este modelo, o",
+             "documente con cautela las categorías señaladas. Si ninguna categoría resulta",
+             "significativa —o si el resultado es mayormente \"no calculable\"—, esto es",
+             "compatible con (aunque no prueba definitiva de) que la IIA se sostiene para",
+             "este modelo."
          ),
 
          robustPart1 = c(
@@ -3566,7 +3681,7 @@ es = list(
              "ordCheck (ordinal logistic regression).",
              "",
              "It does not apply to binary logistic regression (logCheck) or",
-             "multinomial regression (mlogCheck), since neither has multiple cutpoints",
+             "multinomial regression (multCheck), since neither has multiple cutpoints",
              "whose slopes need to be compared against each other.",
              "",
              "Why it matters:",
@@ -3583,7 +3698,7 @@ es = list(
              c("Partial proportional-odds model", "Lets only the predictors flagged by Brant vary by cutpoint, keeping the rest at a single coefficient",
                "When Brant flags one or two specific predictors, not the full omnibus",
                "Less standardized across statistical software; interpretation gets more complex when mixing constant and varying effects"),
-             c("Multinomial model (mlogCheck)", "Abandons the proportionality assumption by treating each category as nominal",
+             c("Multinomial model (multCheck)", "Abandons the proportionality assumption by treating each category as nominal",
                "When the violation is widespread (significant omnibus, several predictors affected)",
                "Loses the efficiency of exploiting the categories' order; more parameters to estimate"),
              c("Report cutpoint-specific effects", "Fits separate binary logits at each cutpoint and reports a different OR for each",
@@ -3630,7 +3745,102 @@ es = list(
              "individual predictor(s) Brant's test flags (not just the omnibus). With",
              "one or two specific predictors, consider a partial-proportional-odds",
              "model; with a widespread violation, consider a multinomial model",
-             "(mlogCheck) or report the cutpoint-specific effects separately."
+             "(multCheck) or report the cutpoint-specific effects separately."
+         ),
+
+         # ---- iia: see the matching ES block above for the design
+         # rationale (new category, placed right after proportionalOdds as
+         # its regression-family sibling assumption).
+         # ---------------------------------------------------------------
+         iiaPart1 = c(
+             "Independence of Irrelevant Alternatives (IIA)",
+             "",
+             "What it evaluates:",
+             "The multinomial-logit model assumes the relative odds between any two",
+             "categories of the outcome do not depend on which other categories are",
+             "also available in the choice set - Independence of Irrelevant",
+             "Alternatives (IIA). It is the one assumption unique to this model family,",
+             "with no equivalent in binary or ordinal logistic regression.",
+             "",
+             "Where it is used in AssumptionsLab:",
+             "multCheck (multinomial logistic regression).",
+             "",
+             "It does not apply to binary logistic regression (logCheck), since with",
+             "only two categories there are no \"irrelevant alternatives\" that could be",
+             "dropped from the choice set. It also does not apply to ordinal logistic",
+             "regression (ordCheck), which instead depends on the proportional-odds",
+             "(parallel-lines) assumption across ordered cutpoints.",
+             "",
+             "Why it matters:",
+             "When violated, the reported odds ratios between categories are not",
+             "stable - they shift depending on which other categories are present in",
+             "the choice set - which undermines interpreting a single set of",
+             "coefficients as describing a consistent preference among alternatives."
+         ),
+         iiaTableHeaders = c("Diagnostic / alternative", "What it does", "When to use it", "Main limitation"),
+         iiaTableRows = list(
+             c("Hausman-McFadden test", "Refits the model omitting each outcome category in turn and compares the coefficients shared with the full model",
+               "As an initial check right after fitting the multinomial model, before relying on the reported odds ratios",
+               "The statistic is not always computable (the covariance-matrix difference can fail to be invertible in finite samples); a non-computable result is not proof that IIA holds"),
+             c("Nested logit model", "Groups outcome categories into a hierarchical nest structure, allowing correlation between alternatives within the same nest",
+               "When the IIA violation follows a substantively meaningful grouping pattern (e.g., categories sharing unobserved attributes)",
+               "Requires specifying a reasonable nest structure a priori; results are sensitive to that choice"),
+             c("Multinomial probit model", "Replaces the logit's independent-errors assumption with multivariate-normal errors, allowing correlation between alternatives",
+               "When enough computing time is available and no natural nest structure exists",
+               "Computationally more expensive; has no closed form and requires numerical integration or simulation"),
+             c("Report coefficients with caution", "Instead of discarding the model, the categories flagged by Hausman-McFadden are documented and their odds ratios interpreted with added reservation",
+               "As a transparent alternative when the violation affects only one or two specific categories rather than the general pattern",
+               "Does not fix the underlying problem, only documents it, leaving interpretive caution to the reader")
+         ),
+         iiaPart2 = c(
+             "",
+             "",
+             "Hausman-McFadden — what it evaluates and its limitations:",
+             "Tests H0: the coefficients shared between the full model and a model",
+             "refit without one category do not change beyond sampling error (IIA",
+             "holds), against H1: they do change (Hausman & McFadden, 1984). It is",
+             "computed once per omitted category. In finite samples, the statistic",
+             "depends on the difference between two covariance matrices, which is not",
+             "always invertible — a well-documented numerical degeneracy of this",
+             "specific test, not evidence of a calculation error. When this happens,",
+             "the result is reported as \"not computable\": this is not itself proof",
+             "that IIA holds (Cheng & Long, 2007, document that Hausman-type IIA",
+             "tests behave erratically in practice).",
+             "",
+             "Nested logit model — what it does and when to use it:",
+             "Groups the outcome's categories into a hierarchical nest structure,",
+             "allowing correlated unobserved factors within a nest while keeping",
+             "independence across nests. It is the more principled alternative when",
+             "the categories flagged by Hausman-McFadden share an identifiable",
+             "substantive grouping.",
+             "",
+             "Multinomial probit model — what it does and when to use it:",
+             "Drops the logit's independent-errors assumption altogether in favor of",
+             "correlated, multivariate-normal errors across alternatives. It is the",
+             "more general - but computationally heavier - alternative when no",
+             "natural nest structure exists.",
+             "",
+             "Reporting coefficients with caution — what it does and when to use it:",
+             "Rather than switching models, the categories flagged by the",
+             "Hausman-McFadden test are documented explicitly and their odds ratios",
+             "interpreted with added reservation. It is a transparent option when",
+             "only one or two categories are flagged, not a widespread pattern.",
+             "",
+             "Interpretation:",
+             "p < .05 on the Hausman-McFadden test for an omitted category suggests a",
+             "statistically significant deviation from IIA for that category. p >=",
+             ".05 indicates the result is compatible with IIA. A \"not computable\"",
+             "result should not be read as evidence either for or against IIA: it is",
+             "a known limitation of the test itself, not a substantive finding.",
+             "",
+             "Methodological decision:",
+             "If at least one omitted category produces a significant statistic,",
+             "consider a nested-logit or multinomial-probit model (neither requires",
+             "IIA) before relying on this model's odds ratios, or document the",
+             "flagged categories with explicit caution. If no category is",
+             "significant - or the result is mostly \"not computable\" - this is",
+             "compatible with (but not definitive proof of) IIA holding for this",
+             "model."
          ),
 
          robustPart1 = c(

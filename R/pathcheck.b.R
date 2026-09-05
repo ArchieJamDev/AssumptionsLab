@@ -762,9 +762,40 @@ pathCheckClass <- R6::R6Class(
                 co <- s$coefficients
                 sdY <- stats::sd(yx[[d]])
 
+                # A predictor whose name is not syntactically valid on its own (a
+                # space, an accent, or a symbol such as the "café ± más" case exercised
+                # in tests/testthat/test-pathcheck.R) is backtick-quoted in the formula
+                # built above, and lm()/summary.lm() then report that predictor's
+                # coefficient row under the LITERAL backtick-quoted string (e.g.
+                # "`café ± más`", backticks included as characters), not under the bare
+                # predictor name. Matching `p` directly against rownames(co) therefore
+                # always failed for such predictors - silently treating every one of
+                # them as aliased/dropped, which then starved edgeStats of an entry and
+                # crashed the applied-interpretation narrative below on abs(NULL).
+                # Stripping one leading/trailing backtick from each rowname before
+                # matching restores correct lookup for both syntactic and
+                # non-syntactic predictor names.
+                # ES: un predictor cuyo nombre no es sintácticamente válido por sí
+                # mismo (un espacio, un acento, o un símbolo como el caso "café ± más"
+                # que ejercitan las pruebas en tests/testthat/test-pathcheck.R) queda
+                # citado con comillas invertidas en la fórmula construida arriba, y
+                # lm()/summary.lm() reportan entonces la fila de coeficiente de ese
+                # predictor bajo la cadena LITERAL citada con comillas invertidas (p.
+                # ej. "`café ± más`", comillas invertidas incluidas como caracteres), no
+                # bajo el nombre desnudo del predictor. Comparar `p` directamente contra
+                # rownames(co) por lo tanto siempre fallaba para tales predictores -
+                # tratando en silencio a cada uno de ellos como confundido/eliminado, lo
+                # que dejaba a edgeStats sin una entrada y hacía fallar la narrativa de
+                # interpretación aplicada más abajo con abs(NULL). Quitar una comilla
+                # invertida inicial/final de cada nombre de fila antes de comparar
+                # restaura la búsqueda correcta tanto para nombres de predictor
+                # sintácticos como no sintácticos.
+                co_rownames_bare <- gsub("^`|`$", "", rownames(co))
+
                 for (p in preds_d) {
-                    rn <- p
-                    if (!(rn %in% rownames(co))) next()
+                    rn_idx <- match(p, co_rownames_bare)
+                    if (is.na(rn_idx)) next()
+                    rn <- rownames(co)[rn_idx]
                     sdX <- stats::sd(yx[[p]])
                     beta <- co[rn, "Estimate"] * (sdX / sdY)
                     edgeStats[[paste(p, d, sep = "->")]] <- list(
@@ -852,16 +883,40 @@ pathCheckClass <- R6::R6Class(
             }
             nSig <- sum(vapply(fits, function(f) {
                 co <- summary(f$fit)$coefficients
+                co_rns_bare <- gsub("^`|`$", "", rownames(co))
                 rns <- f$preds
-                sum(co[rns[rns %in% rownames(co)], "Pr(>|t|)"] < .05)
+                matched <- co_rns_bare %in% rns
+                sum(co[matched, "Pr(>|t|)"] < .05)
             }, numeric(1)))
             nCoef <- sum(vapply(fits, function(f) length(f$preds), numeric(1)))
 
             depLines <- character(0)
             for (d in names(fits)) {
                 f <- fits[[d]]
-                preds_d <- f$preds
                 s <- summary(f$fit)
+
+                # Not every predictor in f$preds necessarily has an edgeStats entry:
+                # a predictor that is genuinely aliased/rank-deficient in this equation
+                # (e.g. a constant covariate, or a saturated fit with as few complete
+                # cases as parameters - both exercised in
+                # tests/testthat/test-pathcheck.R) is deliberately skipped when
+                # edgeStats is built above, so it is excluded here too rather than
+                # feeding a NULL beta/p into abs()/comparisons below.
+                # ES: no todo predictor en f$preds tiene necesariamente una entrada en
+                # edgeStats: un predictor genuinamente confundido/con rango deficiente
+                # en esta ecuación (p. ej. una covariable constante, o un ajuste
+                # saturado con tan pocos casos completos como parámetros - ambos
+                # ejercitados en tests/testthat/test-pathcheck.R) se omite
+                # deliberadamente al construir edgeStats arriba, así que también se
+                # excluye aquí en lugar de alimentar un beta/p NULL a abs()/
+                # comparaciones más abajo.
+                preds_d <- Filter(
+                    function(pr) !is.null(edgeStats[[paste(pr, d, sep = "->")]]),
+                    f$preds
+                )
+
+                if (length(preds_d) == 0) next()
+
                 rowsInfo <- lapply(preds_d, function(pr) {
                     es <- edgeStats[[paste(pr, d, sep = "->")]]
                     list(pred = pr, beta = es$beta, p = es$p)
@@ -945,11 +1000,32 @@ pathCheckClass <- R6::R6Class(
 
                 for (i in shown) {
                     crit <- character(0)
-                    if (mahaResult$d2[i] > mahaResult$threshold)
+
+                    # Too few complete cases to estimate a covariance matrix (e.g. the
+                    # single-row data set exercised in
+                    # tests/testthat/test-pathcheck.R) leaves stats::cov() returning NA,
+                    # which propagates into mahalanobis() as NaN/NA d2 values; NA/NaN
+                    # compared with `>` yields NA, and NA inside an `if()` condition is
+                    # a fatal R error rather than a case simply not being flagged. Each
+                    # criterion is therefore only evaluated once confirmed finite, the
+                    # same NA-safe pattern used by .al_influence_diagnostics() in
+                    # shared-helpers.R and by logCheck's own influence loop.
+                    # ES: muy pocos casos completos para estimar una matriz de
+                    # covarianza (p. ej. el conjunto de datos de una sola fila
+                    # ejercitado en tests/testthat/test-pathcheck.R) deja que
+                    # stats::cov() devuelva NA, que se propaga a mahalanobis() como
+                    # valores d2 NaN/NA; NA/NaN comparado con `>` produce NA, y un NA
+                    # dentro de una condici\u00F3n `if()` es un error fatal de R en lugar de
+                    # que el caso simplemente no se marque. Por eso cada criterio solo
+                    # se eval\u00FAa una vez confirmado que es finito, el mismo patr\u00F3n
+                    # seguro ante NA que usa .al_influence_diagnostics() en
+                    # shared-helpers.R y el propio bucle de influencia de logCheck.
+                    if (!is.na(mahaResult$d2[i]) && !is.na(mahaResult$threshold) &&
+                        mahaResult$d2[i] > mahaResult$threshold)
                         crit <- c(crit, sprintf("D\u00B2 > %.2f", mahaResult$threshold))
-                    if (i <= length(leverage) && leverage[i] > levThreshold)
+                    if (i <= length(leverage) && !is.na(leverage[i]) && leverage[i] > levThreshold)
                         crit <- c(crit, sprintf("Leverage > %.4f", levThreshold))
-                    if (i <= length(cooksD) && cooksD[i] > cookThreshold)
+                    if (i <= length(cooksD) && !is.na(cooksD[i]) && cooksD[i] > cookThreshold)
                         crit <- c(crit, sprintf("Cook > %.4f", cookThreshold))
                     if (length(crit) == 0) next()
 
@@ -963,7 +1039,7 @@ pathCheckClass <- R6::R6Class(
                     ))
                 }
 
-                nFlaggedD2 <- sum(mahaResult$d2 > mahaResult$threshold)
+                nFlaggedD2 <- sum(mahaResult$d2 > mahaResult$threshold, na.rm = TRUE)
                 set_html_safe("outlierGuide", paste0(
                     html_guide(tr("Multivariate Outliers", "Valores Atípicos Multivariados"), "path", "outlierAnalysisGuide"),
                     html_block(NULL, tr(

@@ -13,19 +13,26 @@ example data — inside jamovi Desktop it shows up under **File → Open →
 Data Library → AssumptionsLab** once the module is installed, no manual
 file hunting required.
 
-**Unlike PeopleLab's `peoplelab_test_data.csv`, this file is not
-simulated from scratch.** Every substantive value — scores, categories,
-dates, time-series levels — is copied verbatim from the original export
-(kept untouched at
+**Unlike PeopleLab's `peoplelab_test_data.csv`, this file is mostly not
+simulated from scratch.** Every substantive value in the 26 columns
+translated from the original export — scores, categories, dates,
+time-series levels — is copied verbatim from that export (kept untouched
+at
 [`../data-raw/assumptionslab_raw_source.csv`](../data-raw/assumptionslab_raw_source.csv)).
-Only three things were changed: (1) column names and category labels
-were translated from Spanish to English, (2) ~3% MCAR missingness was
-injected into six columns, and (3) a handful of deliberate outliers were
-injected — both reproducible under a fixed seed (`set.seed(20260904)`).
-Because the underlying relationships were not engineered to a target
-effect size, this file documents what a run **currently finds**, not a
-guaranteed recoverable signal — re-running the analyses below after any
-edit to the raw source may change these numbers.
+Four things were changed on top of that: (1) column names and category
+labels were translated from Spanish to English, (2) ~3% MCAR missingness
+was injected into six columns, (3) a handful of deliberate outliers were
+injected, and (4) one entirely new column, `investment_preference`, was
+simulated from a multinomial-logit model to give `multCheck` a dependent
+variable to test (see its section below) — all four reproducible under a
+fixed seed (`set.seed(20260904)`). Because the 26 translated columns'
+relationships were not engineered to a target effect size, this file
+documents what a run **currently finds** on them, not a guaranteed
+recoverable signal — re-running the analyses below after any edit to the
+raw source may change those numbers. `investment_preference` is the
+exception: its relationships *were* deliberately calibrated (see its
+section below for the target pseudo-R²/accuracy) precisely because
+nothing to calibrate against existed in the original export.
 
 To regenerate it (identical output, same seed):
 
@@ -147,6 +154,39 @@ the proportional-odds (Brant) and goodness-of-fit diagnostics properly
 (unlike a 2-level variable, which `ordCheck` itself warns is better
 suited to `logCheck`).
 
+### Module — Multinomial Logistic Regression (`multCheck`)
+
+| Column | Type | Role |
+|---|---|---|
+| `investment_preference` | **nominal (unordered)**, 3 levels | `dep` — Fixed Income (reference level, first factor level) / Real Estate / Stocks. Simulated (not copied from the original export) from a multinomial-logit model driven by `neuroticism`, `investment_experience`, and `planning` — all three complete, so this column has no missingness of its own. |
+| `neuroticism`, `planning` | `covs` candidates. |
+| `investment_experience` | `factors` candidate. |
+
+Every other categorical column in this file is either binary or already
+ordinal (`gender`, `age_range`, `education_level`, `investment_experience`,
+`savings_intention`) — before `investment_preference` was added, the
+dataset had no unordered nominal variable with 3+ levels, so `multCheck`'s
+dependent-variable slot had nothing to point at. Deliberately, *different*
+predictors drive different categories (`planning` mainly drives Real
+Estate vs. Fixed Income; `neuroticism` and `investment_experience` mainly
+drive Stocks vs. Fixed Income) rather than one uniform effect
+copy-pasted across categories, so the category-specific coefficient
+table has a genuine story to tell.
+
+**Currently finds** (`investment_preference ~ neuroticism +
+investment_experience + planning`, McFadden pseudo-R² = .061,
+classification accuracy 50.4% against a 33% chance baseline for 3
+balanced-ish classes: 122/144/184): the Real Estate equation has
+`neuroticism` (p = .002), `investment_experience` (p = .044), and
+`planning` (p = .004) all significant; the Stocks equation has
+`neuroticism` and `investment_experience` significant (p < .001 both) but
+not `planning` (p = .27) — a realistic, non-uniform pattern across the two
+non-reference categories, not an inflated toy example. The
+Hausman-McFadden IIA test comes back "not computable" for every omitted
+category on this data (a non-invertible covariance difference) — expected
+and honestly reported, not itself evidence of a violation, since this
+column was never simulated to break IIA.
+
 ### Module — Path Analysis & Structural Validation (`pathCheck`)
 
 | Column | Role |
@@ -160,33 +200,6 @@ strongest relationships are `anxiety`↔`resilience` (r = -.51),
 such as `neuroticism`/`anxiety` → `resilience` → `wellbeing` alongside a
 mostly-independent `need_for_cognition` → `planning` chain, rather than
 either an unrealistic all-variables-correlated block or pure noise.
-
-### Reserved for the planned Multinomial Logistic Regression module (`multCheck`)
-
-| Column | Type | Role |
-|---|---|---|
-| `investment_preference` | **nominal (unordered)**, 3 levels | `dep` — Fixed Income (reference level, first factor level) / Real Estate / Stocks. Simulated (not copied from the original export) from a multinomial-logit model driven by `neuroticism`, `investment_experience`, and `planning` — all three complete, so this column has no missingness of its own. |
-
-Every other categorical column in this file is either binary or already
-ordinal (`gender`, `age_range`, `education_level`, `investment_experience`,
-`savings_intention`) — before this column was added, the dataset had no
-unordered nominal variable with 3+ levels, so `multCheck`'s dependent-
-variable slot had nothing to point at. `investment_preference` fills that
-gap. Deliberately, *different* predictors drive different categories
-(`planning` mainly drives Real Estate vs. Fixed Income; `neuroticism` and
-`investment_experience` mainly drive Stocks vs. Fixed Income) rather than
-one uniform effect copy-pasted across categories, so a category-specific
-coefficient table has a genuine story to tell.
-
-**Currently finds** (`investment_preference ~ neuroticism +
-investment_experience + planning`, McFadden pseudo-R² = .061,
-classification accuracy 50.4% against a 33% chance baseline for 3
-balanced-ish classes: 122/144/184): the Real Estate equation has
-`neuroticism` (p = .002), `investment_experience` (p = .044), and
-`planning` (p = .004) all significant; the Stocks equation has
-`neuroticism` and `investment_experience` significant (p < .001 both) but
-not `planning` (p = .27) — a realistic, non-uniform pattern across the two
-non-reference categories, not an inflated toy example.
 
 ### Module — Time Series (`timeCheck`)
 
@@ -207,11 +220,14 @@ outlier work is being tested elsewhere in the file.
 
 ## Regenerating
 
-`prepare_dataset.R` never re-derives values from a statistical model —
-it only translates names/labels and injects missingness/outliers at
-fixed, seeded row indices. To change *which* columns get missingness or
+Every column copied verbatim from `assumptionslab_raw_source.csv` (all
+demographics, psychological/behavioral scales, paired scores, and time
+series) is untouched by any statistical model — `prepare_dataset.R` only
+translates their names/labels and injects missingness/outliers at fixed,
+seeded row indices; to change *which* columns get missingness or
 outliers, edit the `mcar_cols` vector or the three outlier-injection
-blocks near the bottom of the script and re-run it; the underlying
-scores, categories, and time series themselves come from
-`assumptionslab_raw_source.csv` and are not something this script
-controls.
+blocks near the bottom of the script and re-run it. The one exception is
+`investment_preference`, which the script *does* simulate from a
+multinomial-logit model (see the `multCheck` section above) — to change
+its behavior, edit the `eta_real_estate`/`eta_stocks` coefficients in the
+script's "Simulate investment_preference" section instead.

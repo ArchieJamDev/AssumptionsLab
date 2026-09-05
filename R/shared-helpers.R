@@ -373,8 +373,36 @@
     m <- if (valid_sd) mean(x) else NA_real_
 
     if (n >= 8 && valid_sd) {
-        sk <- mean((x - m) ^ 3) / sx ^ 3
-        ku <- mean((x - m) ^ 4) / sx ^ 4
+        # The classical Jarque-Bera skewness/kurtosis formulas (as in
+        # tseries::jarque.bera.test, the reference implementation timeCheck
+        # calls directly) divide the mean() central moment (a 1/n
+        # denominator) by the population, ALSO-1/n standard deviation -
+        # not stats::sd(x)'s Bessel-corrected 1/(n-1) version. Dividing by
+        # sx (as this line did before) mixes the two conventions and
+        # understates both statistics; cross-checked against
+        # tseries::jarque.bera.test() on real study data, that mismatch
+        # was large enough to move the JB statistic outside the 3rd
+        # decimal place (JB=1.1653 vs. 1.3143 on the same vector) even
+        # though it happened not to flip the significance conclusion in
+        # that case. pop_sd below is the 1/n version that matches
+        # tseries's own convention.
+        # ES: Las fórmulas clásicas de asimetría/curtosis de Jarque-Bera
+        # (como en tseries::jarque.bera.test, la implementación de
+        # referencia que timeCheck llama directamente) dividen el momento
+        # central de mean() (denominador 1/n) entre la desviación
+        # estándar poblacional, TAMBIÉN 1/n - no la versión de
+        # stats::sd(x) corregida por Bessel (1/(n-1)). Dividir entre sx
+        # (como hacía esta línea antes) mezcla ambas convenciones y
+        # subestima ambos estadísticos; verificado contra
+        # tseries::jarque.bera.test() con datos reales de estudio, esa
+        # discrepancia fue suficiente para mover el estadístico JB más
+        # allá del tercer decimal (JB=1.1653 vs. 1.3143 sobre el mismo
+        # vector), aunque en ese caso no cambió la conclusión de
+        # significancia. pop_sd abajo es la versión 1/n que coincide con
+        # la convención propia de tseries.
+        pop_sd <- sqrt(mean((x - m) ^ 2))
+        sk <- mean((x - m) ^ 3) / pop_sd ^ 3
+        ku <- mean((x - m) ^ 4) / pop_sd ^ 4
 
         # Jarque-Bera still uses n>=8 (it inherits skewness's threshold,
         # matching relatedCheck's original jb_test_approx()); only the

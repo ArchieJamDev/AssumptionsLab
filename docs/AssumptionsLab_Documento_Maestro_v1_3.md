@@ -72,12 +72,13 @@ Cada módulo incluye:
 - Interpretación de resultados
 - Errores frecuentes
 
-Ejemplos de módulos:
-- t-test
-- ANOVA
-- Correlación
-- Regresión lineal
-- Chi-cuadrado
+Ejemplos de módulos ya implementados (ver README.md para el listado
+completo y siempre actualizado):
+- Comparación de grupos independientes y relacionados
+- ANOVA/ANCOVA
+- Regresión lineal, logística, logística ordinal y logística multinomial
+- Path Analysis y validación estructural
+- Series de tiempo
 
 ---
 
@@ -147,13 +148,25 @@ El aprendizaje sigue este ciclo:
 
 ## 7. Versión del sistema
 
-- Versión: 1.3
-- Estado: consolidación conceptual
-- Alcance: estructura base + integración bibliográfica + Library funcional
-- Próximo paso: expansión de módulos específicos de Jamovi
+- Versión del documento: 1.3
+- Versión de software correspondiente: AssumptionsLab 1.5.0
+- Estado: expansión de módulos completada — estructura base, integración
+  bibliográfica y Library funcional, más los diez módulos de análisis
+  (Comparación de Grupos independientes y relacionados, ANOVA/ANCOVA,
+  la familia completa de Regresión — lineal, logística, logística
+  ordinal y logística multinomial —, Path Analysis y Series de Tiempo)
+- Alcance: estructura base + integración bibliográfica + Library
+  funcional + suite completa de módulos de análisis
+- Próximo paso: ver la Sección 14 "Future Expansion" de
+  ARCHITECTURE.md (métodos bayesianos, SEM/PLS-SEM, modelos
+  multinivel, análisis de supervivencia, meta-análisis, diagnósticos
+  de aprendizaje automático)
 
 ---
 
 ## 8. Nota final
 
 Este documento actúa como base estructural del sistema AssumptionsLab y debe actualizarse de forma incremental conforme se incorporen nuevos módulos, mejoras pedagógicas y expansión de la Library.
+
+Última revisión de contenido: 2026-09-04, con motivo del cierre de la
+expansión de módulos descrita en la Sección 7 (AssumptionsLab 1.5.0).

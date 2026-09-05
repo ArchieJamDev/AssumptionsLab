@@ -11,8 +11,8 @@ authors:
     orcid: "https://orcid.org/0000-0002-7014-7513"
 repository-code: "https://github.com/imetriclab/AssumptionsLab"
 license: "GPL-3.0-only"
-version: "1.5.0"
-date-released: "2026-09-04"
+version: "1.5.1"
+date-released: "2026-09-05"
 abstract: >
   AssumptionsLab is an open-source Jamovi module designed
   to evaluate statistical assumptions while providing
@@ -32,5 +32,5 @@ preferred-citation:
     - family-names: "Chacón Chacón"
       given-names: "Arquímedes De León"
   title: "AssumptionsLab"
-  version: "1.5.0"
+  version: "1.5.1"
   year: 2026

@@ -116,11 +116,19 @@ AssumptionsLab/
 
 ├── jamovi/
 
+│   └── assets/
+
+├── inst/
+
+│   └── assets/
+
+├── data/
+
+├── data-raw/
+
 ├── docs/
 
 ├── tests/
-
-├── assets/
 
 │
 
@@ -151,7 +159,17 @@ Statistical algorithms.
 
 **jamovi/**
 
-User interface definitions.
+User interface definitions, plus the module's own icon and bundled example
+dataset under `jamovi/assets/`.
+
+**inst/**
+
+Package-installed icons/logos and the plain-text `CITATION` file.
+
+**data/ and data-raw/**
+
+`data/` ships the example dataset shown inside jamovi; `data-raw/` holds the
+script that produces it reproducibly.
 
 **docs/**
 
@@ -160,10 +178,6 @@ Project documentation.
 **tests/**
 
 Validation scripts.
-
-**assets/**
-
-Icons, images and supplementary resources.
 
 -------------------------------------------------------------------------------
 

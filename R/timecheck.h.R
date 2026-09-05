@@ -37,14 +37,16 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "continuous"),
                 permitted=list(
                     "factor",
-                    "numeric"))
+                    "numeric"),
+                default=NULL)
             private$..exogenous <- jmvcore::OptionVariables$new(
                 "exogenous",
                 exogenous,
                 suggested=list(
                     "continuous"),
                 permitted=list(
-                    "numeric"))
+                    "numeric"),
+                default=NULL)
             private$..model <- jmvcore::OptionList$new(
                 "model",
                 model,
@@ -388,8 +390,8 @@ timeCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 timeCheck <- function(
     data,
     series,
-    dateVar,
-    exogenous,
+    dateVar = NULL,
+    exogenous = NULL,
     model = "sarima",
     frequency = 12,
     reportLang = "en",

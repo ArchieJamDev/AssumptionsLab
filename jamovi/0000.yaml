@@ -1,8 +1,20 @@
 ---
 name: AssumptionsLab
 title: Assumption Lab
-version: 1.5.0
+version: 1.5.1
 jms: '1.0'
+authors:
+  - Arquímedes De León Chacón Chacón
+maintainer: Arquímedes De León Chacón Chacón <arquimedeschacon@gmail.com>
+description: >
+  AssumptionsLab evaluates the statistical assumptions required for common
+  analytical techniques and pairs every diagnostic with evidence-based
+  methodological guidance, interpretation, and educational support, rather than
+  reporting isolated test statistics. It covers group comparisons (independent
+  and related samples, ANOVA/ANCOVA), regression (linear, logistic, ordinal
+  logistic, multinomial logistic), path analysis and structural validation, and
+  time series, alongside a built-in methodological library and a unified,
+  APA-7th-referenced bibliography.
 usesNative: false
 minApp: 1.0.8
 icon: assets/assumptionslab-icon.png
@@ -13,6 +25,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Methodological Guide
     menuTitle: Assumption Library
+    description: >
+      A methodological reference glossary, not a data analysis: it explains what
+      each statistical assumption and test covered by AssumptionsLab means, why
+      it matters, and when it applies, without computing anything from the
+      user's dataset. Entries can be filtered by category (e.g. normality,
+      homoscedasticity, linearity, independence, multicollinearity,
+      outliers/influence, sphericity, proportional odds, robust alternatives)
+      and are available in English or Spanish. Use it alongside any of the
+      assumption-checking analyses to look up the theory behind a diagnostic, or
+      as a stand-alone teaching aid for planning an analysis before running one.
     category: analyses
   - title: Bibliography
     name: bibliography
@@ -20,6 +42,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Methodological Guide
     menuTitle: Bibliography
+    description: >
+      A curated, verified bibliography of the methodological sources cited
+      throughout AssumptionsLab, not a data analysis: it renders a
+      topic-filtered reading list in APA 7th edition and does not read or
+      compute anything from the user's dataset. References can be filtered by
+      topic (statistical assumptions, normality, homoscedasticity, linearity and
+      regression, path analysis, related groups, time series, robust methods)
+      and displayed in English or Spanish, with citation style always fixed to
+      APA 7th. Use it to trace a diagnostic back to its source literature or to
+      build a reference list for a methods section.
     category: analyses
   - title: Independent Groups
     name: groupCheck
@@ -27,6 +59,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Group Comparison
     menuTitle: Independent Groups
+    description: >
+      Evaluates the assumptions behind comparing a continuous outcome across two
+      independent groups (independent-samples t-test / Mann-Whitney U) before
+      the comparison is trusted, rather than only reporting the test statistic.
+      It checks normality within each group, homogeneity of variance, and flags
+      extreme cases, pairing each diagnostic with distribution, Q-Q, and
+      violin/jitter plots plus plain-language interpretation. Use it whenever
+      two independent groups are being compared on a numeric variable, to decide
+      whether the standard t-test, Welch's correction, or a non-parametric
+      alternative is the more defensible choice.
     category: analyses
   - title: Related Groups
     name: relatedCheck
@@ -34,6 +76,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Group Comparison
     menuTitle: Related Groups
+    description: >
+      Evaluates the assumptions behind comparing paired or repeated measurements
+      on the same subjects: two related measures are diagnosed for a paired
+      t-test/Wilcoxon comparison, while three or more are diagnosed for a
+      repeated-measures ANOVA/Friedman comparison. It checks normality of the
+      paired differences and, for three or more occasions, sphericity, alongside
+      profile plots that show whether subjects move together or diverge across
+      occasions. Use it whenever the same units are measured more than once, to
+      decide whether the standard parametric test or a non-parametric
+      alternative is appropriate before interpreting the comparison.
     category: analyses
   - title: ANOVA/ANCOVA
     name: anovaCheck
@@ -41,6 +93,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Group Comparison
     menuTitle: ANOVA/ANCOVA
+    description: >
+      Evaluates the assumptions behind comparing a continuous outcome across the
+      cells of one or more factors, with optional continuous covariates turning
+      the design into an ANCOVA. It checks normality of residuals, homogeneity
+      of variance across cells, and, when covariates are present, homogeneity of
+      regression slopes, covariate linearity, and multicollinearity among
+      covariates, backed by residual, Q-Q, and influence (leverage/Cook's D)
+      plots. Use it before trusting an ANOVA/ANCOVA result, to confirm the
+      design meets the conditions the omnibus F-test relies on and to flag
+      influential cases that could be distorting group means.
     category: analyses
   - title: Simple and Multiple Regression
     name: regCheck
@@ -48,6 +110,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Regression
     menuTitle: Simple and Multiple Regression
+    description: >
+      Evaluates the assumptions of ordinary least squares linear regression for
+      a continuous outcome predicted by one or more numeric and/or categorical
+      predictors. It checks linearity per predictor, homoscedasticity, normality
+      of residuals, multicollinearity, and case influence (leverage, Cook's D,
+      studentized residuals), and compares Pearson correlation against distance
+      correlation and copula entropy to flag non-linear associations that a
+      linear r would miss. Use it before reporting a regression model, to
+      confirm the fitted line is trustworthy and to identify predictors or cases
+      that need attention.
     category: analyses
   - title: Logistic Regression
     name: logCheck
@@ -55,6 +127,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Regression
     menuTitle: Logistic Regression
+    description: >
+      Evaluates the assumptions and performance of a binary logistic regression
+      model for a two-level outcome predicted by numeric and/or categorical
+      predictors. It checks linearity in the logit (via the empirical logit and
+      Box-Tidwell-style diagnostics), multicollinearity, calibration of
+      predicted probabilities against observed proportions, discrimination via
+      the ROC curve and AUC, and case influence through Cook's D. Use it
+      whenever a binary outcome is modeled with logistic regression, to verify
+      the model is well-specified and to judge how well it discriminates and
+      calibrates before trusting its odds ratios.
     category: analyses
   - title: Ordinal Logistic Regression
     name: ordCheck
@@ -62,6 +144,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Regression
     menuTitle: Ordinal Logistic Regression
+    description: >
+      Evaluates the assumptions of a proportional-odds (cumulative logit) model
+      for an ordered outcome with three or more levels, predicted by numeric
+      and/or categorical predictors. It checks the proportional-odds assumption
+      itself (via a Brant-style test), linearity in the cumulative logit,
+      multicollinearity, and case influence through per-case Pearson residuals,
+      warning when a two-level outcome would be better served by the binary
+      Logistic Regression module. Use it whenever an ordinal outcome is modeled
+      with MASS::polr(), to confirm the proportional-odds assumption holds
+      before interpreting a single set of odds ratios across all thresholds.
     category: analyses
   - title: Multinomial Logistic Regression
     name: multCheck
@@ -69,6 +161,18 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Regression
     menuTitle: Multinomial Logistic Regression
+    description: >
+      Evaluates the assumptions of a multinomial logit model (nnet::multinom)
+      for an unordered nominal outcome with three or more categories, predicted
+      by numeric and/or categorical predictors. It checks the independence of
+      irrelevant alternatives via a Hausman-McFadden test, linearity in the
+      log-odds for each non-reference category against the reference,
+      multicollinearity, classification accuracy, and case influence through
+      per-case Pearson residuals, warning when a two-level outcome would be
+      better served by the binary Logistic Regression module. Use it whenever a
+      nominal outcome with three or more unordered categories is modeled, to
+      confirm the model's structural assumptions before interpreting its
+      category-specific coefficients.
     category: analyses
   - title: Path Analysis & Structural Validation
     name: pathCheck
@@ -76,6 +180,17 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Path Analysis
     menuTitle: Path Analysis
+    description: >
+      Builds a user-specified path model (a set of predictor -> dependent
+      relationships among observed continuous variables) and evaluates the
+      assumptions underlying its estimation, alongside a labeled path diagram,
+      coefficients, R², correlations, and residual diagnostics. It checks
+      normality and outliers in residuals and compares linear (Pearson) against
+      non-linear (distance correlation, copula entropy) association strength
+      between variables to flag relationships a linear path coefficient would
+      misrepresent. Use it for lightweight path-analysis/SEM-style models, to
+      validate the structural assumptions of the specified paths before trusting
+      the estimated coefficients.
     category: analyses
   - title: Time Series
     name: timeCheck
@@ -83,6 +198,16 @@ analyses:
     menuGroup: Assumption Lab
     menuSubgroup: Time Series
     menuTitle: Time Series
+    description: >
+      Evaluates the statistical and methodological conditions relevant to a
+      chosen time-series modeling approach — ARIMA, SARIMA, ETS/exponential
+      smoothing, VAR, VECM, or GARCH — for one or more numeric series, with
+      optional external regressors and seasonal periodicity. It runs the minimum
+      recommended set of diagnostics for the selected model (such as
+      stationarity, autocorrelation of residuals, and seasonality checks),
+      supported by time-series plots. Use it before finalizing a time-series
+      model, to confirm the chosen approach and its assumptions fit the data
+      rather than only inspecting the fitted forecast.
     category: analyses
 datasets:
   - name: AssumptionsLab Test Dataset (n=450)

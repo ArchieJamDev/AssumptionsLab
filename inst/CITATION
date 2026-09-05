@@ -3,6 +3,6 @@ bibentry(
     title = "AssumptionsLab",
     author = person("A.", "Chacon"),
     year = "2026",
-    note = "Version 1.5.0 [jamovi module]",
-    textVersion = "Chacon, A. (2026). AssumptionsLab (Version 1.5.0) [jamovi module]."
+    note = "Version 1.5.1 [jamovi module]",
+    textVersion = "Chacon, A. (2026). AssumptionsLab (Version 1.5.1) [jamovi module]."
 )

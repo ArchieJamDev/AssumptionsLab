@@ -1126,12 +1126,32 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n_model_params <- length(coef(model))
 
             for (i in seq_len(n_complete)) {
-                if (cooks_d[i] > 4 / n_complete || leverage_vals[i] > 2 * n_model_params / n_complete) {
+
+                # A saturated or near-saturated fit (e.g. as few complete cases as
+                # model parameters) can leave cooks.distance()/hatvalues() returning
+                # NaN for a given case; comparing NaN with `>` yields NA, and NA in an
+                # `if()` condition is a fatal R error rather than a skipped case. Each
+                # term is therefore only evaluated once its value is confirmed finite,
+                # mirroring the guard already used by .al_influence_diagnostics() in
+                # shared-helpers.R for anovaCheck/regCheck's equivalent loop.
+                # ES: un ajuste saturado o casi saturado (p. ej. tan pocos casos
+                # completos como parámetros del modelo) puede dejar que
+                # cooks.distance()/hatvalues() devuelvan NaN para un caso dado;
+                # comparar NaN con `>` produce NA, y un NA en una condición `if()` es
+                # un error fatal de R en lugar de un caso simplemente omitido. Por eso
+                # cada término solo se evalúa una vez confirmado que su valor es
+                # finito, replicando la protección que ya usa
+                # .al_influence_diagnostics() en shared-helpers.R para el bucle
+                # equivalente de anovaCheck/regCheck.
+                cooks_ok <- !is.na(clean_num(cooks_d[i])) && cooks_d[i] > 4 / n_complete
+                leverage_ok <- !is.na(clean_num(leverage_vals[i])) && leverage_vals[i] > 2 * n_model_params / n_complete
+
+                if (cooks_ok || leverage_ok) {
                     n_influential <- n_influential + 1
                     self$results$influence$addRow(rowKey = paste0("case_", i), values = list(
                         case = i,
-                        cooksD = cooks_d[i],
-                        leverage = leverage_vals[i]
+                        cooksD = clean_num(cooks_d[i]),
+                        leverage = clean_num(leverage_vals[i])
                     ))
                 }
             }
@@ -1177,8 +1197,29 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 matrix(NA_real_, nrow = length(ors), ncol = 2)
             })
 
+            # coef(model) keeps one entry per predictor even when a predictor is
+            # aliased (e.g. a constant/collinear covariate), reporting NA for it;
+            # summary()$coefficients (coef_table), however, DROPS aliased rows
+            # entirely, so it can have fewer rows than length(ors). Looking up each
+            # p-value by coefficient name - defaulting to NA when the name is absent
+            # from coef_table - keeps ors/p-value pairing correct instead of reading
+            # coef_table by raw row position, which silently misaligns or throws
+            # "subscript out of bounds" once a coefficient has been dropped.
+            # ES: coef(model) conserva una entrada por predictor incluso cuando un
+            # predictor está confundido/alias (p. ej. una covariable constante o
+            # colineal), reportando NA para él; summary()$coefficients (coef_table),
+            # en cambio, ELIMINA por completo las filas confundidas, por lo que puede
+            # tener menos filas que length(ors). Buscar cada valor p por el nombre
+            # del coeficiente - usando NA cuando el nombre no está en coef_table -
+            # mantiene correcta la relación ors/valor p, en lugar de leer coef_table
+            # por posición de fila cruda, lo que desalinea en silencio o produce
+            # "subíndice fuera de los límites" en cuanto se elimina un coeficiente.
+            p_values_by_name <- stats::setNames(rep(NA_real_, length(ors)), names(ors))
+            matched_names <- intersect(names(ors), rownames(coef_table))
+            p_values_by_name[matched_names] <- coef_table[matched_names, "Pr(>|z|)"]
+
             for (i in seq_along(ors)) {
-                p_val <- coef_table[i, "Pr(>|z|)"]
+                p_val <- p_values_by_name[i]
                 self$results$oddsRatios$addRow(rowKey = paste0("or_", i), values = list(
                     predictor = names(ors)[i],
                     or = ors[i],
@@ -1192,8 +1233,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             event_prevalence <- 100 * n_events / n_complete
 
             strongest_idx <- NA_integer_
-            if (nrow(coef_table) > 1) {
-                p_vals_no_intercept <- coef_table[2:nrow(coef_table), "Pr(>|z|)"]
+            if (length(p_values_by_name) > 1) {
+                p_vals_no_intercept <- p_values_by_name[2:length(p_values_by_name)]
                 if (any(!is.na(p_vals_no_intercept))) {
                     strongest_idx <- which.min(p_vals_no_intercept) + 1
                 }
@@ -1203,10 +1244,26 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 tr("Applied Interpretation", "Interpretación Aplicada"),
                 c(
                     if (!is.na(strongest_idx)) {
+                        # p_values_by_name (not coef_table) is the correct lookup here:
+                        # strongest_idx indexes into ors/names(ors)/coef(model), and
+                        # coef_table can have fewer rows than that whenever a
+                        # coefficient was dropped as aliased (see the p_values_by_name
+                        # construction above), which would otherwise throw "subscript
+                        # out of bounds" or silently misalign for a strongest-predictor
+                        # index beyond coef_table's own row count.
+                        # ES: p_values_by_name (no coef_table) es la búsqueda correcta
+                        # aquí: strongest_idx indexa dentro de ors/names(ors)/
+                        # coef(model), y coef_table puede tener menos filas que eso
+                        # cuando un coeficiente fue eliminado por estar confundido/alias
+                        # (ver la construcción de p_values_by_name más arriba), lo que
+                        # de otro modo produciría "subíndice fuera de los límites" o un
+                        # desalineamiento silencioso para un índice de predictor más
+                        # fuerte que exceda el propio número de filas de coef_table.
+                        strongest_p <- p_values_by_name[strongest_idx]
                         paste0(
                             tr("Strongest association: ", "Asociación más fuerte: "), names(ors)[strongest_idx],
-                            tr(paste0(", OR = ", fmt_num(ors[strongest_idx], 2), " (p ", if (coef_table[strongest_idx, "Pr(>|z|)"] < .001) "< .001" else paste0("= ", fmt_num(coef_table[strongest_idx, "Pr(>|z|)"], 3)), ")."),
-                               paste0(", OR = ", fmt_num(ors[strongest_idx], 2), " (p ", if (coef_table[strongest_idx, "Pr(>|z|)"] < .001) "< .001" else paste0("= ", fmt_num(coef_table[strongest_idx, "Pr(>|z|)"], 3)), ").")
+                            tr(paste0(", OR = ", fmt_num(ors[strongest_idx], 2), " (p ", if (!is.na(strongest_p) && strongest_p < .001) "< .001" else paste0("= ", fmt_num(strongest_p, 3)), ")."),
+                               paste0(", OR = ", fmt_num(ors[strongest_idx], 2), " (p ", if (!is.na(strongest_p) && strongest_p < .001) "< .001" else paste0("= ", fmt_num(strongest_p, 3)), ").")
                             )
                         )
                     } else {
