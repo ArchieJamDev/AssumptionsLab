@@ -23,6 +23,10 @@ does not evaluate the residual case (`regCheck`/`pathCheck`) or the
 homoscedasticity/linearity/independence batteries. See
 `normality_regcheck_mc.R` for the residual case.
 
+Run with `Rscript normality_groupcheck_mc.R` (requires the `nortest` package;
+~35-40 minutes on a single core). Reproduces `normality_groupcheck_mc_results.csv`,
+already included here.
+
 ## `normality_regcheck_mc.R`
 
 Companion script for the residual case: `regCheck` checks normality of a
@@ -54,13 +58,39 @@ underlying question.
 
 Run with `Rscript normality_regcheck_mc.R` (requires `nortest` and `boot`;
 ~40-45 minutes on a single core). Reproduces
-`normality_regcheck_mc_results.csv`, already included here.
-
-Run with `Rscript normality_groupcheck_mc.R` (requires the `nortest` package;
-~35-40 minutes on a single core). Reproduces `normality_groupcheck_mc_results.csv`,
-already included here.
+`normality_regcheck_mc_results.csv`, already included here. A companion
+pilot at a larger bootstrap resample count (`normality_regcheck_mc_pilot_r999.R`,
+R=999 instead of R=99, restricted to the single cell most sensitive to that
+choice) is also included, confirming the pattern is not an artifact of the
+smaller R=99 budget used elsewhere.
 
 Reported in: Chacón, A. (2026). "AssumptionsLab: Pedagogical Accompaniment and
 Graduated Evidence for Statistical Assumption Checking in Jamovi", Austrian
 Journal of Statistics, Section "Monte Carlo Validation of the
 Normality-Battery Rule".
+
+## `linearity_dcor_mc.R`
+
+A single, narrowly scoped confirmatory check of the dCor/Pearson gap
+heuristic that `groupCheck`/`regCheck`/`pathCheck`'s pairwise linearity
+diagnostic uses to flag a pair for inspection (gap = dCor - |r| > 0.10):
+one purely linear scenario (`y = x + e`) and one canonical non-linear
+scenario with quadratic dependence (`y = x^2 + e`), both `x, e ~ N(0,1)`,
+at the sample size of the article's own applied case (n=119). 5,000
+replications per scenario, seed `20260908`. No permutation testing or
+bootstrap is involved, so this runs in well under a minute.
+
+**Scope**: this checks the gap heuristic for one canonical non-linear form
+at one sample size. It is not a characterization of the heuristic's
+behavior across the wider space of possible non-linear relationships,
+sample sizes, or noise levels, and it does not evaluate copula entropy
+(the module's second line of evidence) on its own terms.
+
+Run with `Rscript linearity_dcor_mc.R` (requires the `energy` package;
+~20 seconds on a single core). Reproduces `linearity_dcor_mc_results.csv`,
+already included here.
+
+Reported in: Chacón, A. (2026). "AssumptionsLab: Pedagogical Accompaniment and
+Graduated Evidence for Statistical Assumption Checking in Jamovi", Austrian
+Journal of Statistics, Section "Extending Graduated Evidence to Linearity
+and Dependence".
