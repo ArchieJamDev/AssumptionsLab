@@ -6,18 +6,22 @@ that the module's code runs correctly and produces the expected numbers.
 
 ## `normality_groupcheck_mc.R`
 
-Monte Carlo comparison of five candidate decision strategies for `groupCheck`'s
-classical-vs-Welch two-sample-test recommendation, evaluating the module's
-actual primary-plus-battery rule against a single primary test, a majority
-vote across the battery, a graphical-inspection proxy, and always using a
-robust test without diagnosis. 32 cells (4 distribution families x 4
-sample-size pairs x 2 true effect sizes), 5,000 replications each, seed
-`20260905`.
+The nine-test normality battery is shared infrastructure, implemented once
+and reused by five of AssumptionsLab's nine submodules, applied to two
+structurally different targets: a raw observed variable (`groupCheck`,
+`anovaCheck`, `relatedCheck`) or a fitted model's residuals (`regCheck`,
+`pathCheck`). This script evaluates the raw-variable case, using the
+concrete decision it feeds in `groupCheck`: the classical-vs-Welch
+two-sample-test recommendation. It compares the module's actual
+primary-plus-battery rule against a single primary test, a majority vote
+across the battery, a graphical-inspection proxy, and always using a robust
+test without diagnosis. 32 cells (4 distribution families x 4 sample-size
+pairs x 2 true effect sizes), 5,000 replications each, seed `20260905`.
 
-**Scope**: this evaluates only the normality battery as `groupCheck` applies
-it to a raw (not residual) variable in a two-group comparison. It does not
-evaluate the other eight submodules, `regCheck`'s/`pathCheck`'s residual-based
-normality checks, or the homoscedasticity/linearity/independence batteries.
+**Scope**: this evaluates only the normality battery's raw-variable case. It
+does not evaluate the residual case (`regCheck`/`pathCheck`) or the
+homoscedasticity/linearity/independence batteries. A companion script for
+the residual case is planned.
 
 Run with `Rscript normality_groupcheck_mc.R` (requires the `nortest` package;
 ~35-40 minutes on a single core). Reproduces `normality_groupcheck_mc_results.csv`,

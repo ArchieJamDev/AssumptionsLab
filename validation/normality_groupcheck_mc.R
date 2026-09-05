@@ -1,21 +1,25 @@
 # -----------------------------------------------------------------------------
 # AssumptionsLab
-# Monte Carlo validation of groupCheck's normality-battery decision rule.
+# Monte Carlo validation of the normality battery: raw-variable case.
 #
-# Compares five candidate strategies for deciding between the classical
-# (equal-variance) and Welch (unequal-variance) two-sample t-test:
+# The nine-test normality battery is shared infrastructure, implemented once
+# and reused by five of AssumptionsLab's nine submodules, applied to two
+# structurally different targets: a raw observed variable (groupCheck,
+# anovaCheck, relatedCheck) or a fitted model's residuals (regCheck,
+# pathCheck). This script evaluates the raw-variable case, using the
+# concrete decision it feeds in groupCheck: the classical-vs-Welch
+# two-sample-test recommendation. Five candidate strategies are compared:
 #   1. Shapiro-Wilk (primary test) alone.
 #   2. Majority vote across all 18 test-group cells (9 tests x 2 groups).
 #   3. groupCheck's actual four-branch decision rule, as coded.
 #   4. A graphical-inspection proxy (|skewness|>1 or |excess kurtosis|>1).
 #   5. Always Welch, without diagnosis.
 #
-# Scope: this validates ONLY the normality battery as groupCheck applies it
-# to a raw (not residual) variable in a two-group comparison. It says
-# nothing about the other eight AssumptionsLab submodules, about
-# regCheck's/pathCheck's residual-based normality checks, or about the
-# homoscedasticity/linearity/independence batteries -- those are not
-# evaluated here and no claim is made about them.
+# Scope: this validates ONLY the normality battery's raw-variable case. It
+# says nothing about the battery's residual-based use (regCheck/pathCheck)
+# or about the homoscedasticity/linearity/independence batteries -- those
+# are not evaluated here and no claim is made about them. A companion
+# script for the residual case is planned.
 #
 # Used in: "AssumptionsLab: Pedagogical Accompaniment and Graduated Evidence
 # for Statistical Assumption Checking in Jamovi" (AJS), Section "Monte Carlo
