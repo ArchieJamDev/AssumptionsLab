@@ -172,6 +172,41 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 table$addRow(rowKey = key, values = values)
             }
 
+            # Backtick-quotes a variable name before it goes into a formula
+            # string. Without this, a predictor name containing a space or
+            # another character that isn't valid in a bare R identifier
+            # (common in jamovi datasets, e.g. imported from spreadsheet
+            # column headers) breaks as.formula()'s parser - this was
+            # reported as a real crash by jamovi's own module review (Sep
+            # 2026) and mirrors the qname() helper already used in
+            # ordcheck.b.R for the same reason.
+            # ES: cita con comillas invertidas un nombre de variable antes
+            # de usarlo en una fórmula. Sin esto, un predictor con espacio u
+            # otro carácter no válido en un identificador de R (común en
+            # datasets de jamovi importados de encabezados de hoja de
+            # cálculo) rompe el parser de as.formula() - esto se reportó
+            # como un crash real en la revisión del módulo de jamovi (sep.
+            # 2026) y replica el helper qname() ya usado en ordcheck.b.R por
+            # la misma razón.
+            qname <- function(x) {
+                paste0("`", gsub("`", "", x), "`")
+            }
+
+            # The inverse of qname(), for display only: coefficient/rowname
+            # labels pulled from a fitted model (e.g. rownames(coef_table),
+            # names(coef(model))) carry qname()'s backticks whenever the
+            # original name needed them to parse, and that's correct for
+            # re-use in another formula/regex, but showing the backticks to
+            # the user in a results table is just visual noise.
+            # ES: la inversa de qname(), solo para mostrar: las etiquetas de
+            # coeficiente/nombre de fila tomadas de un modelo ajustado
+            # llevan las comillas invertidas de qname() cuando el nombre
+            # original las necesitó para analizarse, y eso es correcto para
+            # reutilizarlas en otra fórmula/regex, pero mostrarle esas
+            # comillas al usuario en una tabla de resultados es solo ruido
+            # visual.
+            strip_qname <- function(x) gsub("^`|`$", "", x)
+
             set_result_titles <- function() {
 
                 set_title_safe <- function(name, en, es) {
@@ -420,7 +455,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n_predictors <- length(predictors)
             epv <- min(n_events, n_non_events) / max(n_predictors, 1)
 
-            formula_str <- paste("dep_binary ~", paste(predictors, collapse = " + "))
+            formula_str <- paste("dep_binary ~", paste(qname(predictors), collapse = " + "))
             formula <- as.formula(formula_str)
 
             model <- tryCatch({
@@ -494,7 +529,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n_separations <- 0
             if (nrow(coef_table) > 1) {
                 for (i in 2:nrow(coef_table)) {
-                    predictor_name <- rownames(coef_table)[i]
+                    predictor_name <- strip_qname(rownames(coef_table)[i])
                     coef_val <- coef_table[i, 1]
                     se_val <- coef_table[i, 2]
 
@@ -581,8 +616,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     }
 
                     bt_formula <- as.formula(paste0(
-                        "dep_binary ~ ", paste(predictors, collapse = " + "),
-                        " + ", predictor, ":log(", predictor, ")"
+                        "dep_binary ~ ", paste(qname(predictors), collapse = " + "),
+                        " + ", qname(predictor), ":log(", qname(predictor), ")"
                     ))
 
                     bt_model <- tryCatch(
@@ -594,7 +629,24 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         next
 
                     bt_coefs <- summary(bt_model)$coefficients
-                    idx <- grep(paste0("^", predictor, ":log\\(", predictor, "\\)$"), rownames(bt_coefs))
+
+                    # The interaction term was built with qname() above, so
+                    # its coefficient name comes back from glm() with the
+                    # same backticks (R preserves them whenever a term
+                    # needed quoting to parse) - the lookup regex has to
+                    # match that, not the bare predictor name, or it always
+                    # misses.
+                    # ES: el término de interacción se construyó con
+                    # qname() arriba, así que su nombre de coeficiente
+                    # vuelve de glm() con las mismas comillas invertidas (R
+                    # las conserva siempre que un término las necesitó para
+                    # analizarse) - el regex de búsqueda tiene que
+                    # coincidir con eso, no con el nombre desnudo del
+                    # predictor, o nunca lo encuentra.
+                    bt_term_pattern <- paste0(
+                        "^", qname(predictor), ":log\\(", qname(predictor), "\\)$"
+                    )
+                    idx <- grep(bt_term_pattern, rownames(bt_coefs), fixed = FALSE)
 
                     if (length(idx) == 1) {
                         bt_tested <- bt_tested + 1
@@ -1221,7 +1273,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (i in seq_along(ors)) {
                 p_val <- p_values_by_name[i]
                 self$results$oddsRatios$addRow(rowKey = paste0("or_", i), values = list(
-                    predictor = names(ors)[i],
+                    predictor = strip_qname(names(ors)[i]),
                     or = ors[i],
                     ciLower = if (!is.null(ci) && nrow(ci) >= i) ci[i, 1] else NA,
                     ciUpper = if (!is.null(ci) && nrow(ci) >= i) ci[i, 2] else NA,
@@ -1261,7 +1313,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         # fuerte que exceda el propio número de filas de coef_table.
                         strongest_p <- p_values_by_name[strongest_idx]
                         paste0(
-                            tr("Strongest association: ", "Asociación más fuerte: "), names(ors)[strongest_idx],
+                            tr("Strongest association: ", "Asociación más fuerte: "), strip_qname(names(ors)[strongest_idx]),
                             tr(paste0(", OR = ", fmt_num(ors[strongest_idx], 2), " (p ", if (!is.na(strongest_p) && strongest_p < .001) "< .001" else paste0("= ", fmt_num(strongest_p, 3)), ")."),
                                paste0(", OR = ", fmt_num(ors[strongest_idx], 2), " (p ", if (!is.na(strongest_p) && strongest_p < .001) "< .001" else paste0("= ", fmt_num(strongest_p, 3)), ").")
                             )

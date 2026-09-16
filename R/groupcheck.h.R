@@ -9,8 +9,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             dep = NULL,
             group = NULL,
             reportLang = "en",
-            alt = "notequal",
-            varEq = TRUE,
             showDistributionPlot = FALSE,
             addViolinPlot = FALSE,
             showJitterPoints = FALSE,
@@ -44,18 +42,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "en",
                     "es"),
                 default="en")
-            private$..alt <- jmvcore::OptionList$new(
-                "alt",
-                alt,
-                options=list(
-                    "notequal",
-                    "onegreater",
-                    "twogreater"),
-                default="notequal")
-            private$..varEq <- jmvcore::OptionBool$new(
-                "varEq",
-                varEq,
-                default=TRUE)
             private$..showDistributionPlot <- jmvcore::OptionBool$new(
                 "showDistributionPlot",
                 showDistributionPlot,
@@ -124,8 +110,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..dep)
             self$.addOption(private$..group)
             self$.addOption(private$..reportLang)
-            self$.addOption(private$..alt)
-            self$.addOption(private$..varEq)
             self$.addOption(private$..showDistributionPlot)
             self$.addOption(private$..addViolinPlot)
             self$.addOption(private$..showJitterPoints)
@@ -144,8 +128,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         dep = function() private$..dep$value,
         group = function() private$..group$value,
         reportLang = function() private$..reportLang$value,
-        alt = function() private$..alt$value,
-        varEq = function() private$..varEq$value,
         showDistributionPlot = function() private$..showDistributionPlot$value,
         addViolinPlot = function() private$..addViolinPlot$value,
         showJitterPoints = function() private$..showJitterPoints$value,
@@ -163,8 +145,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..dep = NA,
         ..group = NA,
         ..reportLang = NA,
-        ..alt = NA,
-        ..varEq = NA,
         ..showDistributionPlot = NA,
         ..addViolinPlot = NA,
         ..showJitterPoints = NA,
@@ -535,8 +515,6 @@ groupCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param dep .
 #' @param group .
 #' @param reportLang .
-#' @param alt .
-#' @param varEq .
 #' @param showDistributionPlot .
 #' @param addViolinPlot .
 #' @param showJitterPoints .
@@ -590,8 +568,6 @@ groupCheck <- function(
     dep,
     group,
     reportLang = "en",
-    alt = "notequal",
-    varEq = TRUE,
     showDistributionPlot = FALSE,
     addViolinPlot = FALSE,
     showJitterPoints = FALSE,
@@ -622,8 +598,6 @@ groupCheck <- function(
         dep = dep,
         group = group,
         reportLang = reportLang,
-        alt = alt,
-        varEq = varEq,
         showDistributionPlot = showDistributionPlot,
         addViolinPlot = addViolinPlot,
         showJitterPoints = showJitterPoints,

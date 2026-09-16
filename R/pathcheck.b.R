@@ -568,6 +568,29 @@ pathCheckClass <- R6::R6Class(
             private$.pathVars  <- vars
             private$.pathEdges <- edges
 
+            # jamovi's review team found that pathDiagram/residualPlots rendered
+            # correctly in the live results panel but exported blank to PDF/image:
+            # export re-renders each Image from a fresh instance whose `private$`
+            # fields are empty, so a render function that reads plot data from
+            # `private$` (instead of `image$state`, which IS serialized and does
+            # survive) has nothing to draw from. The diagram is meant to be visible
+            # while the user is still building the model, before "Finalize Model" is
+            # checked, so its state is seeded here - ahead of every early return
+            # below - with fits = NULL, and overwritten once the equations are
+            # actually fitted further down.
+            # ES: el equipo de revisión de jamovi encontró que pathDiagram/
+            # residualPlots se renderizaban correctamente en el panel de resultados
+            # en vivo pero se exportaban en blanco a PDF/imagen: la exportación
+            # vuelve a renderizar cada Image desde una instancia nueva cuyos campos
+            # `private$` están vacíos, así que una función de renderizado que lee
+            # los datos del gráfico desde `private$` (en vez de `image$state`, que SÍ
+            # se serializa y sobrevive) no tiene de dónde dibujar. El diagrama debe
+            # permanecer visible mientras el usuario aún construye el modelo, antes
+            # de marcar "Finalizar Modelo", así que su estado se siembra aquí - antes
+            # de cualquier retorno anticipado más abajo - con fits = NULL, y se
+            # sobreescribe una vez que las ecuaciones se ajustan realmente más abajo.
+            self$results$pathDiagram$setState(list(fits = NULL))
+
             deps       <- unique(vapply(edges, function(e) e$dep,  character(1)))
             predsAll   <- unique(vapply(edges, function(e) e$pred, character(1)))
             involved   <- unique(c(deps, predsAll))
@@ -822,6 +845,24 @@ pathCheckClass <- R6::R6Class(
 
             private$.pathFits <- fits
             private$.edgeStats <- edgeStats
+
+            # Only the pieces the two plots actually read (coefficient table,
+            # R², residuals, and the small per-equation data frame) are kept -
+            # not the raw lm() fit objects - matching how state is packaged
+            # elsewhere in the suite (e.g. ordcheck.b.R/groupcheck.b.R).
+            # ES: solo se conservan las piezas que ambos gráficos realmente leen
+            # (tabla de coeficientes, R², residuos, y el pequeño data frame por
+            # ecuación) - no los objetos de ajuste lm() crudos - siguiendo cómo se
+            # empaqueta el estado en el resto de la suite (p. ej.
+            # ordcheck.b.R/groupcheck.b.R).
+            pathFitsForPlots <- lapply(fits, function(f) list(
+                coefficients = summary(f$fit)$coefficients,
+                r2           = summary(f$fit)$r.squared,
+                residuals    = stats::residuals(f$fit),
+                data         = f$data
+            ))
+            self$results$pathDiagram$setState(list(fits = pathFitsForPlots))
+            self$results$residualPlots$setState(list(fits = pathFitsForPlots))
 
             if (length(fits) == 0) return()
 
@@ -2086,7 +2127,10 @@ pathCheckClass <- R6::R6Class(
 
         .plotPathDiagram = function(image, ...) {
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError("The ggplot2 package is required to draw the path diagram.")
+                image$setError(private$.plotTr(
+                    "The ggplot2 package is required to draw the path diagram.",
+                    "El paquete ggplot2 es necesario para dibujar el diagrama de ruta."
+                ))
                 return(FALSE)
             }
 
@@ -2124,7 +2168,19 @@ pathCheckClass <- R6::R6Class(
             rx <- 0.095 * sizeMult; ry <- 0.05 * sizeMult
             if (identical(shape, "circle")) ry <- rx
 
-            fits <- private$.pathFits
+            # Read from image$state (set in .run() via setState()), not from a
+            # private$ field: export/print re-renders this function from a fresh
+            # instance where private$ is empty (see the export-context comment in
+            # .run()). fits legitimately stays NULL while the model is not yet
+            # finalized - the diagram must still draw its nodes/edges in that case.
+            # ES: se lee desde image$state (fijado en .run() vía setState()), no
+            # desde un campo private$: la exportación/impresión vuelve a renderizar
+            # esta función desde una instancia nueva donde private$ está vacío (ver
+            # el comentario de contexto de exportación en .run()). fits
+            # legítimamente permanece NULL mientras el modelo no está finalizado -
+            # el diagrama debe seguir dibujando sus nodos/aristas en ese caso.
+            plotState <- image$state
+            fits <- if (!is.null(plotState) && is.list(plotState)) plotState$fits else NULL
             deps <- unique(vapply(edges, function(e) e$dep, character(1)))
 
             # Etiquetas de ruta secuenciales (a, b, c, ...) para el modo "labels"
@@ -2143,8 +2199,7 @@ pathCheckClass <- R6::R6Class(
                     if (identical(edgeLabelMode, "labels")) {
                         label <- pathLetters[[paste(e$pred, e$dep, sep = "->")]]
                     } else if (!identical(edgeLabelMode, "none") && !is.null(fits) && !is.null(fits[[e$dep]])) {
-                        fit <- fits[[e$dep]]$fit
-                        co <- summary(fit)$coefficients
+                        co <- fits[[e$dep]]$coefficients
                         rn <- e$pred
                         if (rn %in% rownames(co)) {
                             pval <- co[rn, "Pr(>|t|)"]
@@ -2220,7 +2275,7 @@ pathCheckClass <- R6::R6Class(
             if (showErrors && length(deps) > 0 && !is.null(fits)) {
                 errRows <- do.call(rbind, lapply(deps, function(d) {
                     if (!(d %in% names(posX)) || is.null(fits[[d]])) return(NULL)
-                    r2 <- summary(fits[[d]]$fit)$r.squared
+                    r2 <- fits[[d]]$r2
                     data.frame(
                         x = posX[d] + rx * 1.9, y = posY[d] + ry * 2.1,
                         xend = posX[d], yend = posY[d],
@@ -2268,11 +2323,21 @@ pathCheckClass <- R6::R6Class(
 
         .plotResidualHistograms = function(image, ...) {
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError("The ggplot2 package is required to draw diagnostic plots.")
+                image$setError(private$.plotTr(
+                    "The ggplot2 package is required to draw diagnostic plots.",
+                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
+                ))
                 return(FALSE)
             }
 
-            fits <- private$.pathFits
+            # Read from image$state instead of private$.pathFits: see the
+            # export-context comment on the equivalent guard in
+            # .plotPathDiagram()/at the setState() call site in .run().
+            # ES: se lee desde image$state en vez de private$.pathFits: ver el
+            # comentario de contexto de exportación en el guard equivalente de
+            # .plotPathDiagram()/en el punto de llamada a setState() en .run().
+            plotState <- image$state
+            fits <- if (!is.null(plotState) && is.list(plotState)) plotState$fits else NULL
             if (is.null(fits) || length(fits) == 0) return(FALSE)
 
             pal <- private$.plotPalette()
@@ -2281,7 +2346,7 @@ pathCheckClass <- R6::R6Class(
             names(cat_cols) <- deps
 
             d <- do.call(rbind, lapply(deps, function(dep) {
-                res <- stats::residuals(fits[[dep]]$fit)
+                res <- fits[[dep]]$residuals
                 data.frame(dep = dep, stdResidual = scale(res)[, 1], stringsAsFactors = FALSE)
             }))
             d <- d[is.finite(d$stdResidual), , drop = FALSE]

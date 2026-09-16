@@ -47,21 +47,6 @@ options:
       - title: Español
         name: es
     default: en
-  - name: alt
-    title: Alternative Hypothesis
-    type: List
-    options:
-      - title: Different
-        name: notequal
-      - title: Group 1 Higher
-        name: onegreater
-      - title: Group 2 Higher
-        name: twogreater
-    default: notequal
-  - name: varEq
-    title: Assume Equal Variances
-    type: Bool
-    default: true
   - name: showDistributionPlot
     title: Show Distribution by Group
     type: Bool

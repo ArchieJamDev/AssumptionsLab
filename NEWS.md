@@ -48,6 +48,39 @@
   from the current script resolves this; script and results file now
   match column-for-column.
 
+# AssumptionsLab 1.5.3 (2026-09-16)
+
+## Bug fixes
+
+- `regCheck`, `anovaCheck`, `timeCheck`, `pathCheck`: every diagnostic plot
+  exported blank to PDF/image while rendering correctly in jamovi's live
+  results panel. Root cause: each `Image` result's render function read its
+  plotting data from an R6 `private$` field, populated only within the live
+  `.run()` execution instance — jamovi re-renders `Image`s for export from a
+  separate, fresh instance whose `private$` fields are empty, so there was
+  nothing to draw from. Fixed by moving every plot's data into
+  `self$results$<image>$setState(x)` at computation time and reading
+  `image$state` (which does survive into the export context) in each render
+  function, the pattern `groupCheck`, `relatedCheck`, `logCheck`, `ordCheck`,
+  and `multCheck` already used correctly. Found by jamovi's official module
+  review team (HIGH severity) during the library-submission review of 1.5.2.
+- `logCheck`: crashed when any predictor name contained a space (or another
+  character invalid in an unquoted R formula — common in spreadsheet-derived
+  column headers), in both the main model formula and the Box-Tidwell
+  linearity-in-the-logit interaction formula. Root cause: model formulas
+  were built via `as.formula(paste("y ~", paste(predictors, collapse =
+  "+")))` without backtick-quoting each name first. Fixed with a
+  `qname()`/`strip_qname()` helper pair — quoting names for formula
+  construction and for any name-based coefficient lookup built
+  independently of the fitted model's own coefficient names, and stripping
+  the backticks only at user-facing display sites — mirroring the pattern
+  `ordCheck` and `pathCheck` already used. Also corrected the Box-Tidwell
+  interaction-coefficient lookup regex, which would otherwise have silently
+  failed to match a backtick-preserved coefficient name for any predictor
+  requiring quoting. A regression test (a predictor named `Test Score`)
+  locks in the fix. Found by jamovi's official module review team (HIGH
+  severity) during the library-submission review of 1.5.2.
+
 # AssumptionsLab 1.5.2 (2026-09-05)
 
 ## Bug fixes

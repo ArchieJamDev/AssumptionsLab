@@ -60,6 +60,50 @@ test_that("logCheck tolerates accented and symbol variable names", {
     )
 })
 
+test_that("logCheck tolerates a predictor name containing a space", {
+
+    # jamovi's Sep 2026 module review reported a crash when a predictor name
+    # contains a space (a common case: spreadsheet-derived column headers).
+    # The root cause was unquoted formula construction
+    # (`as.formula(paste("y ~", paste(predictors, collapse = "+")))`); fixed
+    # via the qname()/strip_qname() helper pair, mirroring ordCheck/
+    # pathCheck. Covers both the main glm() formula and the Box-Tidwell
+    # linearity-in-the-logit interaction formula, and confirms the
+    # odds-ratios/linearity tables display the name without stray backticks.
+    # ES: la revisión del módulo de jamovi de sep. 2026 reportó un fallo
+    # cuando un nombre de predictor contiene un espacio (caso común:
+    # encabezados de columna provenientes de una hoja de cálculo). La causa
+    # raíz era la construcción de fórmula sin comillas
+    # (`as.formula(paste("y ~", paste(predictors, collapse = "+")))`);
+    # corregido con el par de funciones qname()/strip_qname(), siguiendo el
+    # mismo patrón de ordCheck/pathCheck. Cubre tanto la fórmula glm()
+    # principal como la fórmula de interacción de linealidad-en-el-logit de
+    # Box-Tidwell, y confirma que las tablas de razones de momios/linealidad
+    # muestran el nombre sin comillas invertidas sobrantes.
+
+    withr::local_seed(20260916)
+    n <- 60
+    data <- data.frame(
+        `Test Score` = stats::rnorm(n, 70, 10),
+        anxiety      = stats::rnorm(n, 50, 10),
+        outcome      = edgeLevelFactor(n, 2),
+        check.names  = FALSE
+    )
+
+    res <- AssumptionsLab::logCheck(
+        data = data,
+        dep  = "outcome",
+        covs = c("Test Score", "anxiety")
+    )
+
+    expect_true(res$oddsRatios$isFilled())
+    expect_true(res$linearity$isFilled())
+
+    predictorNames <- res$oddsRatios$asDF$predictor
+    expect_false(any(grepl("`", predictorNames, fixed = TRUE)))
+    expect_true("Test Score" %in% predictorNames)
+})
+
 test_that("logCheck tolerates a single-row data set (declared levels, one observed)", {
 
     data <- edgeSingleRowData()

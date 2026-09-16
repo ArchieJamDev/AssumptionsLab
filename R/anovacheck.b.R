@@ -779,6 +779,26 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 stringsAsFactors = FALSE
             )
 
+            # jamovi's PDF/image export renders each Image's render function in a
+            # fresh context (not the live results-panel instance), where private$
+            # fields are already empty; setState() serializes the plot data into
+            # the results tree instead, which does survive into that export
+            # context. Without this, these plots render fine on screen but export
+            # blank (jamovi review finding).
+            # ES: La exportación a PDF/imagen de jamovi renderiza la función de
+            # cada Image en un contexto nuevo (no la instancia en vivo del panel
+            # de resultados), donde los campos private$ ya están vacíos;
+            # setState() serializa los datos del gráfico en el árbol de
+            # resultados, y ese sí sobrevive a ese contexto de exportación. Sin
+            # esto, estos gráficos se ven bien en pantalla pero exportan en
+            # blanco (hallazgo de la revisión de jamovi).
+            self$results$residualsFittedPlot$setState(private$.plotData)
+            self$results$qqResidualsPlot$setState(private$.plotData)
+            self$results$residualHistogramPlot$setState(private$.plotData)
+            self$results$residualNormalCurvePlot$setState(private$.plotData)
+            self$results$residualsLeveragePlot$setState(private$.plotData)
+            self$results$cooksDPlot$setState(private$.plotData)
+
             self$results$residualsFittedGuide$setContent(plot_guide(
                 tr("check for residual patterns not captured by group or cell means.",
                    "revisar patrones en los residuos no capturados por las medias de grupo o celda."),
@@ -935,6 +955,14 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 value = as.numeric(y),
                 stringsAsFactors = FALSE
             )
+
+            # Same export-context issue as private$.plotData above: setState()
+            # keeps this boxplot's data available when jamovi renders it in a
+            # fresh export context.
+            # ES: Mismo problema de contexto de exportación que private$.plotData
+            # arriba: setState() mantiene disponibles los datos de este boxplot
+            # cuando jamovi lo renderiza en un contexto de exportación nuevo.
+            self$results$groupBoxplotsPlot$setState(private$.groupPlotData)
 
             self$results$groupBoxplotsGuide$setContent(plot_guide(
                 tr("compare central tendency, spread, and univariate outliers across groups or cells.",
@@ -2289,11 +2317,22 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError("The ggplot2 package is required to draw diagnostic plots.")
+                image$setError(private$.plotTr(
+                    "The ggplot2 package is required to draw diagnostic plots.",
+                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
+                ))
                 return(FALSE)
             }
-            if (is.null(private$.plotData) || nrow(private$.plotData) == 0) {
-                image$setError("No diagnostic plot data are available.")
+            # image$state, not private$.plotData: state is what survives into the
+            # fresh render context jamovi uses for PDF/image export.
+            # ES: image$state, no private$.plotData: el state es lo que
+            # sobrevive al contexto de renderizado nuevo que usa jamovi al
+            # exportar a PDF/imagen.
+            if (is.null(image$state) || nrow(image$state) == 0) {
+                image$setError(private$.plotTr(
+                    "No diagnostic plot data are available.",
+                    "No hay datos disponibles para este gráfico diagnóstico."
+                ))
                 return(FALSE)
             }
             TRUE
@@ -2304,11 +2343,17 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError("The ggplot2 package is required to draw diagnostic plots.")
+                image$setError(private$.plotTr(
+                    "The ggplot2 package is required to draw diagnostic plots.",
+                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
+                ))
                 return(FALSE)
             }
-            if (is.null(private$.groupPlotData) || nrow(private$.groupPlotData) == 0) {
-                image$setError("No group plot data are available.")
+            if (is.null(image$state) || nrow(image$state) == 0) {
+                image$setError(private$.plotTr(
+                    "No group plot data are available.",
+                    "No hay datos disponibles para este gráfico de grupos."
+                ))
                 return(FALSE)
             }
             TRUE
@@ -2480,7 +2525,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotResidualsFitted = function(image, ...) {
             if (!private$.requirePlotData(image)) return()
-            d <- private$.plotData
+            d <- image$state
             d <- d[is.finite(d$fitted) & is.finite(d$residual), , drop = FALSE]
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = fitted, y = residual))
@@ -2509,7 +2554,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotQQResiduals = function(image, ...) {
             if (!private$.requirePlotData(image)) return()
-            d <- private$.plotData
+            d <- image$state
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(sample = stdResidual)) +
@@ -2526,7 +2571,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotResidualHistogram = function(image, ...) {
             if (!private$.requirePlotData(image)) return()
-            d <- private$.plotData
+            d <- image$state
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = stdResidual)) +
@@ -2545,10 +2590,13 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotResidualNormalCurve = function(image, ...) {
             if (!private$.requirePlotData(image)) return()
-            d <- private$.plotData
+            d <- image$state
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
             if (nrow(d) < 3) {
-                image$setError("At least three residuals are required for this plot.")
+                image$setError(private$.plotTr(
+                    "At least three residuals are required for this plot.",
+                    "Se requieren al menos tres residuos para este gráfico."
+                ))
                 return()
             }
 
@@ -2584,7 +2632,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotGroupBoxplots = function(image, ...) {
             if (!private$.requireGroupPlotData(image)) return()
-            d <- private$.groupPlotData
+            d <- image$state
             d <- d[is.finite(d$value), , drop = FALSE]
             d$cell <- factor(d$cell, levels = unique(d$cell))
             pal <- private$.categoricalPalette(nlevels(d$cell))
@@ -2611,7 +2659,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotResidualsLeverage = function(image, ...) {
             if (!private$.requirePlotData(image)) return()
-            d <- private$.plotData
+            d <- image$state
             d <- d[is.finite(d$leverage) & is.finite(d$studResidual), , drop = FALSE]
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = leverage, y = studResidual))
@@ -2645,7 +2693,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotCooksD = function(image, ...) {
             if (!private$.requirePlotData(image)) return()
-            d <- private$.plotData
+            d <- image$state
             d <- d[is.finite(d$case) & is.finite(d$cooksD), , drop = FALSE]
             cut <- 4 / max(1, nrow(d))
 

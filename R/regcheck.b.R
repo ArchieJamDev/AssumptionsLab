@@ -875,6 +875,37 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 stringsAsFactors = FALSE
             )
 
+            # jamovi re-renders Image results in a fresh execution context
+            # when exporting to PDF/image; private$ fields (populated only
+            # in this live .run() instance) are empty there, but data
+            # placed in image$state via setState() survives into it. This
+            # is the fix for the jamovi review team's HIGH-severity report
+            # that this module's plots exported blank. Every Image in this
+            # file gets its own setState() call below and at its
+            # corresponding private$ assignment; render functions read
+            # image$state instead of private$ fields.
+            # ES: jamovi vuelve a renderizar los resultados Image en un
+            # contexto de ejecución nuevo al exportar a PDF/imagen; los
+            # campos private$ (poblados solo en esta instancia viva de
+            # .run()) están vacíos allí, pero los datos colocados en
+            # image$state mediante setState() sí sobreviven. Esta es la
+            # corrección al hallazgo de severidad ALTA del equipo de
+            # revisión de jamovi de que los gráficos de este módulo se
+            # exportaban en blanco. Cada Image de este archivo recibe su
+            # propio setState() más abajo y en su asignación private$
+            # correspondiente; las funciones de render leen image$state en
+            # lugar de campos private$.
+            reg_plot_state <- list(plotData = private$.plotData, pModel = p_model)
+
+            self$results$residualsFittedPlot$setState(reg_plot_state)
+            self$results$qqResidualsPlot$setState(reg_plot_state)
+            self$results$residualHistogramPlot$setState(reg_plot_state)
+            self$results$residualNormalCurvePlot$setState(reg_plot_state)
+            self$results$scaleLocationPlot$setState(reg_plot_state)
+            self$results$residualsLeveragePlot$setState(reg_plot_state)
+            self$results$cooksDPlot$setState(reg_plot_state)
+            self$results$observedPredictedPlot$setState(reg_plot_state)
+
             box_vars <- unique(c(dep, self$options$covs))
             box_vars <- box_vars[box_vars %in% names(dat2)]
 
@@ -892,6 +923,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             } else {
                 NULL
             }
+
+            self$results$numericBoxplotsPlot$setState(private$.numericBoxplotData)
 
             make_mode <- function(x) {
                 x <- x[!is.na(x)]
@@ -956,6 +989,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             } else {
                 NULL
             }
+
+            self$results$predictorEffectsPlot$setState(private$.predictorEffectsData)
 
             r2 <- clean_num(model_sum$r.squared)
             adj_r2 <- clean_num(model_sum$adj.r.squared)
@@ -1406,6 +1441,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.corrData <- NULL
             private$.corrMatVars <- NULL
 
+            self$results$correlationIndividualPlot$setState(NULL)
+            self$results$correlationComparativePlot$setState(NULL)
+
             if (k >= 2) {
                 for (i in seq_len(k)) {
                     for (j in seq_len(k)) {
@@ -1432,6 +1470,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 private$.corrPairResults <- pairResults
                 private$.corrData <- dat2[, matVars, drop = FALSE]
                 private$.corrMatVars <- matVars
+
+                corr_plot_state <- list(corrPairResults = pairResults, corrData = private$.corrData)
+                self$results$correlationIndividualPlot$setState(corr_plot_state)
+                self$results$correlationComparativePlot$setState(corr_plot_state)
 
                 for (i in seq_len(k)) {
                     rowVar <- matVars[i]
@@ -3185,12 +3227,23 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError("The ggplot2 package is required to draw diagnostic plots.")
+                image$setError(private$.plotTr(
+                    "The ggplot2 package is required to draw diagnostic plots.",
+                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
+                ))
                 return(FALSE)
             }
 
-            if (is.null(private$.plotData) || nrow(private$.plotData) == 0) {
-                image$setError("No diagnostic plot data are available.")
+            # image$state, not private$.plotData, is the export-safe check
+            # (see the setState() comment in .run()).
+            # ES: image$state, no private$.plotData, es la verificación
+            # segura para exportación (ver el comentario de setState() en
+            # .run()).
+            if (is.null(image$state)) {
+                image$setError(private$.plotTr(
+                    "No diagnostic plot data are available.",
+                    "No hay datos disponibles para este gráfico diagnóstico."
+                ))
                 return(FALSE)
             }
 
@@ -3202,12 +3255,18 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError("The ggplot2 package is required to draw diagnostic plots.")
+                image$setError(private$.plotTr(
+                    "The ggplot2 package is required to draw diagnostic plots.",
+                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
+                ))
                 return(FALSE)
             }
 
-            if (is.null(private$.corrPairResults) || length(private$.corrPairResults) == 0) {
-                image$setError("No hay suficientes variables numéricas para este gráfico.")
+            if (is.null(image$state) || length(image$state$corrPairResults) == 0) {
+                image$setError(private$.plotTr(
+                    "Not enough numeric variables are available for this plot.",
+                    "No hay suficientes variables numéricas para este gráfico."
+                ))
                 return(FALSE)
             }
 
@@ -3309,7 +3368,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
         },
 
-        .labelPlotCases = function(d) {
+        .labelPlotCases = function(d, p_count = NULL) {
             label_mode <- tryCatch(
                 self$options$influenceLabelMode,
                 error = function(e) "top5"
@@ -3337,7 +3396,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 d$studResidual <- NA_real_
 
             n_plot <- max(1, nrow(d))
-            p_count <- private$.pModel
             if (is.null(p_count) || !is.finite(p_count) || p_count < 1)
                 p_count <- max(1, length(self$options$covs) + length(self$options$factors) + 1)
 
@@ -3380,7 +3438,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.plotData
+            d <- image$state$plotData
             d <- d[is.finite(d$fitted) & is.finite(d$residual), , drop = FALSE]
 
             show_ref <- tryCatch(isTRUE(self$options$linRefLine), error = function(e) TRUE)
@@ -3411,17 +3469,23 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.predictorEffectsData
+            d <- image$state
 
             if (is.null(d) || nrow(d) == 0) {
-                image$setError("No numeric predictor effects are available.")
+                image$setError(private$.plotTr(
+                    "No numeric predictor effects are available.",
+                    "No hay efectos de predictores numéricos disponibles."
+                ))
                 return()
             }
 
             d <- d[is.finite(d$predictorZ) & is.finite(d$predicted), , drop = FALSE]
 
             if (nrow(d) == 0) {
-                image$setError("No finite predictor effects are available.")
+                image$setError(private$.plotTr(
+                    "No finite predictor effects are available.",
+                    "No hay efectos de predictores con valores finitos disponibles."
+                ))
                 return()
             }
 
@@ -3467,7 +3531,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.plotData
+            d <- image$state$plotData
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
             n <- nrow(d)
 
@@ -3521,7 +3585,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.plotData
+            d <- image$state$plotData
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
 
             bin_method <- tryCatch(self$options$normHistBins, error = function(e) "sturges")
@@ -3568,11 +3632,14 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.plotData
+            d <- image$state$plotData
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
 
             if (nrow(d) < 3) {
-                image$setError("At least three residuals are required for this plot.")
+                image$setError(private$.plotTr(
+                    "At least three residuals are required for this plot.",
+                    "Se requieren al menos tres residuos para este gráfico."
+                ))
                 return()
             }
 
@@ -3617,7 +3684,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.plotData
+            d <- image$state$plotData
             d <- d[is.finite(d$fitted) & is.finite(d$absStdResidual), , drop = FALSE]
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = fitted, y = absStdResidual)) +
@@ -3641,17 +3708,23 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.numericBoxplotData
+            d <- image$state
 
             if (is.null(d) || nrow(d) == 0) {
-                image$setError("No numeric variables are available for boxplots.")
+                image$setError(private$.plotTr(
+                    "No numeric variables are available for boxplots.",
+                    "No hay variables numéricas disponibles para los diagramas de caja."
+                ))
                 return()
             }
 
             d <- d[is.finite(d$value), , drop = FALSE]
 
             if (nrow(d) == 0) {
-                image$setError("No finite numeric values are available for boxplots.")
+                image$setError(private$.plotTr(
+                    "No finite numeric values are available for boxplots.",
+                    "No hay valores numéricos finitos disponibles para los diagramas de caja."
+                ))
                 return()
             }
 
@@ -3771,10 +3844,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.plotData
+            d <- image$state$plotData
             d <- d[is.finite(d$leverage) & is.finite(d$studResidual), , drop = FALSE]
 
-            p_count <- private$.pModel
+            p_count <- image$state$pModel
             if (is.null(p_count) || !is.finite(p_count) || p_count < 1)
                 p_count <- max(1, length(self$options$covs) + length(self$options$factors) + 1)
             lev_cut <- 2 * p_count / max(1, nrow(d))
@@ -3805,7 +3878,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ) +
                 private$.plotTheme()
 
-            lab <- private$.labelPlotCases(d)
+            lab <- private$.labelPlotCases(d, image$state$pModel)
 
             if (!is.null(lab) && nrow(lab) > 0) {
                 plot <- plot +
@@ -3832,7 +3905,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.plotData
+            d <- image$state$plotData
             d <- d[is.finite(d$case) & is.finite(d$cooksD), , drop = FALSE]
             cut <- 4 / max(1, nrow(d))
             show_threshold <- tryCatch(isTRUE(self$options$influenceShowThreshold), error = function(e) TRUE)
@@ -3855,7 +3928,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ) +
                 private$.plotTheme()
 
-            lab <- private$.labelPlotCases(d)
+            lab <- private$.labelPlotCases(d, image$state$pModel)
 
             if (!is.null(lab) && nrow(lab) > 0) {
                 plot <- plot +
@@ -3881,8 +3954,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requireCorrPlotData(image))
                 return()
 
-            pr <- private$.corrPairResults
-            dat <- private$.corrData
+            pr <- image$state$corrPairResults
+            dat <- image$state$corrData
             show_fit <- tryCatch(isTRUE(self$options$corrIndividualFit), error = function(e) TRUE)
             highlight <- tryCatch(isTRUE(self$options$corrHighlightDiscordant), error = function(e) TRUE)
 
@@ -3975,7 +4048,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requireCorrPlotData(image))
                 return()
 
-            pr <- private$.corrPairResults
+            pr <- image$state$corrPairResults
             style <- tryCatch(self$options$corrComparativeStyle, error = function(e) "dumbbell")
             highlight <- tryCatch(isTRUE(self$options$corrHighlightDiscordant), error = function(e) TRUE)
 
@@ -4054,7 +4127,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!private$.requirePlotData(image))
                 return()
 
-            d <- private$.plotData
+            d <- image$state$plotData
             d <- d[is.finite(d$observed) & is.finite(d$fitted), , drop = FALSE]
             lims <- range(c(d$observed, d$fitted), na.rm = TRUE)
 

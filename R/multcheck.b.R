@@ -783,8 +783,17 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             add_row(self$results$design, "design_1", list(element = tr("Total cases", "Casos totales"), value = as.character(n_total)))
             add_row(self$results$design, "design_2", list(element = tr("Complete cases", "Casos completos"), value = as.character(n_complete)))
             add_row(self$results$design, "design_3", list(element = tr("Number of categories", "Número de categorías"), value = as.character(n_levels)))
-            add_row(self$results$design, "design_4", list(element = tr("Reference category", "Categoría de referencia"), value = html_escape(reference_label)))
-            add_row(self$results$design, "design_5", list(element = tr("Smallest category", "Categoría más pequeña"), value = paste0(html_escape(min_cat_name), " (n = ", min_cat_n, ")")))
+            # design is a native jamovi Table (plain-text cells), unlike the
+            # intro block above - html_escape() would leak literal "&amp;"-
+            # style text into the cell instead of rendering as HTML, so the
+            # raw category label goes here unescaped.
+            # ES: design es una Table nativa de jamovi (celdas de texto
+            # plano), a diferencia del bloque de introducción de arriba -
+            # html_escape() dejaría texto literal "&amp;" en la celda en vez
+            # de interpretarse como HTML, así que aquí va la etiqueta de
+            # categoría cruda, sin escapar.
+            add_row(self$results$design, "design_4", list(element = tr("Reference category", "Categoría de referencia"), value = reference_label))
+            add_row(self$results$design, "design_5", list(element = tr("Smallest category", "Categoría más pequeña"), value = paste0(min_cat_name, " (n = ", min_cat_n, ")")))
             add_row(self$results$design, "design_6", list(element = tr("Estimated parameters", "Parámetros estimados"), value = as.character(n_model_params)))
 
             for (i in seq_along(cat_counts)) {

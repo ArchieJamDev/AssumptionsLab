@@ -788,6 +788,24 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         )
                     }))
                     private$.plotIsDate <- inherits(x_labels, "Date")
+
+                    # jamovi review finding (HIGH severity): exporting results to PDF/
+                    # image renders each Image in a fresh context where private$ fields
+                    # (live only within the .run() instance that set them) are empty, so
+                    # plot data must survive export via setState()/image$state instead —
+                    # same pattern already used by ordcheck.b.R (linearityPlot/
+                    # influencePlot) and groupcheck.b.R (distributionPlot and others).
+                    # ES: hallazgo de la revisión de jamovi (severidad ALTA): exportar
+                    # resultados a PDF/imagen renderiza cada Image en un contexto nuevo
+                    # donde los campos private$ (vivos solo dentro de la instancia de
+                    # .run() que los fijó) están vacíos, así que los datos del gráfico
+                    # deben sobrevivir a la exportación vía setState()/image$state — el
+                    # mismo patrón ya usado en ordcheck.b.R (linearityPlot/
+                    # influencePlot) y groupcheck.b.R (distributionPlot y otros).
+                    self$results$seriesPlot$setState(list(
+                        data = private$.plotSeriesData,
+                        isDate = private$.plotIsDate
+                    ))
                 }
 
                 if (n_complete < n_total) {
@@ -931,6 +949,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     lag = as.numeric(acf_res$lag)[-1],
                     value = as.numeric(acf_res$acf)[-1]
                 )
+                self$results$acfPlot$setState(list(data = private$.plotAcfData, n = n))
             }
 
             pacf_res <- tryCatch(stats::pacf(x, lag.max = max_lag, plot = FALSE), error = function(e) NULL)
@@ -939,6 +958,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     lag = as.numeric(pacf_res$lag),
                     value = as.numeric(pacf_res$acf)
                 )
+                self$results$pacfPlot$setState(list(data = private$.plotPacfData, n = n))
             }
 
             private$.plotN <- n
@@ -990,6 +1010,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             resid <- as.numeric(stats::residuals(fit))
             private$.plotResidualsData <- data.frame(x = seq_along(resid), residual = resid)
+            self$results$residualsPlot$setState(private$.plotResidualsData)
             n_params <- length(fit$coef[names(fit$coef) != "intercept"])
             lb_lag <- min(20, max(8, floor(n / 5)))
 
@@ -1111,6 +1132,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             resid <- as.numeric(stats::residuals(fit))
             private$.plotResidualsData <- data.frame(x = seq_along(resid), residual = resid)
+            self$results$residualsPlot$setState(private$.plotResidualsData)
             n_params <- length(fit$coef)
 
             lb_lag <- min(20, max(8, floor(n / 5)))
@@ -1198,6 +1220,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             resid <- as.numeric(stats::residuals(fit))
             private$.plotResidualsData <- data.frame(x = seq_along(resid), residual = resid)
+            self$results$residualsPlot$setState(private$.plotResidualsData)
             lb_lag <- min(20, max(8, floor(n / 5)))
 
             lb <- tryCatch(stats::Box.test(resid, lag = lb_lag, type = "Ljung-Box"),
@@ -1546,6 +1569,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (!is.null(std_resid)) {
                 private$.plotResidualsData <- data.frame(x = seq_along(std_resid), residual = std_resid)
+                self$results$residualsPlot$setState(private$.plotResidualsData)
 
                 lb_lag <- min(20, max(8, floor(n / 5)))
                 lb <- tryCatch(stats::Box.test(std_resid, lag = lb_lag, type = "Ljung-Box"),
@@ -1560,8 +1584,10 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             sigma_vals <- tryCatch(as.numeric(rugarch::sigma(fit)), error = function(e) NULL)
-            if (!is.null(sigma_vals) && length(sigma_vals) > 0)
+            if (!is.null(sigma_vals) && length(sigma_vals) > 0) {
                 private$.plotVolatilityData <- data.frame(x = seq_along(sigma_vals), sigma = sigma_vals)
+                self$results$volatilityPlot$setState(private$.plotVolatilityData)
+            }
 
             tryCatch({
                 coefs <- rugarch::coef(fit)
@@ -1704,17 +1730,36 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
         },
 
-        .requirePlot = function(image, data_field) {
+        # image$state (set via setState() at computation time, see above) is what
+        # survives into the export render context; a live private$ field does not
+        # (see the jamovi-review comment near the first setState() call in this
+        # file). The state shape differs per plot — seriesPlot/acfPlot/pacfPlot
+        # store list(data = <data.frame>, ...), residualsPlot/volatilityPlot store
+        # the data.frame directly — so this guard unwraps either shape before
+        # checking it is present and non-empty.
+        # ES: image$state (fijado vía setState() en el momento del cómputo, ver
+        # arriba) es lo que sobrevive al contexto de renderizado de exportación; un
+        # campo private$ en vivo no (ver el comentario de la revisión de jamovi
+        # junto a la primera llamada a setState() en este archivo). La forma del
+        # estado difiere según el gráfico — seriesPlot/acfPlot/pacfPlot guardan
+        # list(data = <data.frame>, ...), residualsPlot/volatilityPlot guardan el
+        # data.frame directamente — así que esta guarda desenvuelve cualquiera de
+        # las dos formas antes de verificar que esté presente y no vacía.
+        .requirePlot = function(image) {
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError("The ggplot2 package is required to draw diagnostic plots.")
+                image$setError(private$.plotTr(
+                    "The ggplot2 package is required to draw diagnostic plots.",
+                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
+                ))
                 return(FALSE)
             }
 
-            d <- private[[data_field]]
-            if (is.null(d) || (is.data.frame(d) && nrow(d) == 0)) {
+            st <- image$state
+            d <- if (is.list(st) && !is.data.frame(st)) st$data else st
+            if (is.null(st) || is.null(d) || (is.data.frame(d) && nrow(d) == 0)) {
                 image$setError(private$.plotTr(
                     "No plot data are available.",
                     "No hay datos disponibles para este gráfico."
@@ -1726,9 +1771,10 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotSeries = function(image, ...) {
-            if (!private$.requirePlot(image, ".plotSeriesData")) return()
+            if (!private$.requirePlot(image)) return()
 
-            d <- private$.plotSeriesData
+            st <- image$state
+            d <- st$data
             n_series <- length(unique(d$series))
             pal <- private$.plotPalette()
 
@@ -1745,7 +1791,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot <- plot +
                 ggplot2::labs(
-                    x = if (isTRUE(private$.plotIsDate))
+                    x = if (isTRUE(st$isDate))
                         private$.plotTr("Date", "Fecha")
                     else
                         private$.plotTr("Observation", "Observación"),
@@ -1757,10 +1803,11 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotAcf = function(image, ...) {
-            if (!private$.requirePlot(image, ".plotAcfData")) return()
+            if (!private$.requirePlot(image)) return()
 
-            d <- private$.plotAcfData
-            n <- private$.plotN
+            st <- image$state
+            d <- st$data
+            n <- st$n
             bound <- if (!is.null(n) && n > 0) 1.96 / sqrt(n) else NA
             pal <- private$.plotPalette()
 
@@ -1786,10 +1833,11 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotPacf = function(image, ...) {
-            if (!private$.requirePlot(image, ".plotPacfData")) return()
+            if (!private$.requirePlot(image)) return()
 
-            d <- private$.plotPacfData
-            n <- private$.plotN
+            st <- image$state
+            d <- st$data
+            n <- st$n
             bound <- if (!is.null(n) && n > 0) 1.96 / sqrt(n) else NA
             pal <- private$.plotPalette()
 
@@ -1815,9 +1863,9 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResiduals = function(image, ...) {
-            if (!private$.requirePlot(image, ".plotResidualsData")) return()
+            if (!private$.requirePlot(image)) return()
 
-            d <- private$.plotResidualsData
+            d <- image$state
             pal <- private$.plotPalette()
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = x, y = residual)) +
@@ -1834,9 +1882,9 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotVolatility = function(image, ...) {
-            if (!private$.requirePlot(image, ".plotVolatilityData")) return()
+            if (!private$.requirePlot(image)) return()
 
-            d <- private$.plotVolatilityData
+            d <- image$state
             pal <- private$.plotPalette()
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = x, y = sigma)) +

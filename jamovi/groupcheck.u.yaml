@@ -59,14 +59,6 @@ children:
       - type: Label
         label: 'Statistical symbols remain in international format: n, M, SD, Mdn, Min, Max, IQR, CI, p, df.'
   - type: CollapseBox
-    label: Test Options
-    collapsed: false
-    children:
-      - type: ComboBox
-        name: alt
-      - type: CheckBox
-        name: varEq
-  - type: CollapseBox
     label: 'Plots: Distribution by Group'
     collapsed: true
     children:
