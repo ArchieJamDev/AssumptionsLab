@@ -192,6 +192,6 @@ If you use AssumptionsLab in research, please cite the software using the inform
 
 AssumptionsLab is licensed under the **GNU General Public License v3.0 (GPL-3.0)** — see [`LICENSE`](LICENSE).
 
-**Arquímedes De León Chacón Chacón** — Psychologist · Data Scientist · Research Methodologist. Project Founder and Lead Developer. [ORCID](https://orcid.org/0000-0002-7014-7513)
+**Arquímedes De León Chacón Chacón** — Psychologist · Data Scientist · Research Methodologist. Project Founder and Lead Developer. Universidad Católica Andrés Bello (UCAB), Caracas, Venezuela. [ORCID](https://orcid.org/0000-0002-7014-7513)
 
 Copyright © 2026 Arquímedes De León Chacón Chacón
