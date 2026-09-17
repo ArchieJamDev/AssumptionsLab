@@ -48,6 +48,81 @@
   from the current script resolves this; script and results file now
   match column-for-column.
 
+# AssumptionsLab 1.6.0 (2026-09-17)
+
+## Interface changes
+
+- Every module's `plotStyle` option (Clean Academic / Black and White /
+  High Contrast / Full color) is removed, and `plotPalette` is narrowed
+  from 4 style-specific choices to 3: Follow jamovi theme (default),
+  Colorblind-safe (Okabe-Ito), Viridis. All 9 analysis modules
+  (`logCheck`, `ordCheck`, `multCheck`, `anovaCheck`, `regCheck`,
+  `timeCheck`, `groupCheck`, `relatedCheck`, `pathCheck`) migrated their
+  plots from a hand-rolled theme/palette system to jamovi's own native
+  `ggtheme`/`theme` mechanism, so every plot now follows the user's
+  jamovi-wide Theme and Palette settings by default instead of
+  duplicating them with a separate module-level control. Colorblind-safe
+  and viridis remain genuinely additive options jamovi does not
+  otherwise offer. Fixed one real bug uncovered along the way: a
+  `scale_color_manual()`/`scale_fill_manual()` call added *before*
+  `+ ggtheme` in the plot-building chain is silently overridden by
+  ggtheme's own embedded discrete scale — this had been silently
+  discoloring the outlier/influence-flag highlight in `logCheck`,
+  `ordCheck`, `multCheck`, and `regCheck`'s plots since those modules
+  were first written; all now build the chain in the correct order.
+
+## New features
+
+- Added Spanish (`es`) as a jamovi interface-language translation via
+  jamovi's own native i18n mechanism (`jamovi/i18n/catalog.pot` +
+  `es.po`, 530 translated strings): option-panel titles, descriptions,
+  and result/table headers now follow jamovi's own UI-language setting,
+  independent of the module's existing `reportLang` option (which still
+  separately controls the language of the report's analytical content).
+  Normalized roughly half of every module's `.r.yaml` result titles from
+  hardcoded Spanish to English first, so the yaml source is one
+  consistent language for jamovi's translation tooling to build from.
+
+## Bug fixes
+
+- `groupCheck`, `relatedCheck`, `anovaCheck`, `logCheck`, `ordCheck`,
+  `multCheck`, `regCheck`, `timeCheck`, `pathCheck`: a diagnostic test
+  failing on its own (too few observations, a constant series, a
+  near-collinear sub-model, a package-level edge case) could silently
+  drop its entire results row instead of showing it as "Not computable"
+  with a footnote naming the specific reason — the row-adding helper had
+  no `else` branch for the failure case. Every such helper across all 9
+  modules now always renders the row, with a methodologically specific
+  footnote rather than a generic message. A related, broader issue was
+  fixed alongside it: several R statistical functions (`tseries::
+  adf.test`/`Box.test`/`jarque.bera.test`, `nortest::sf.test`,
+  `ResourceSelection::hoslem.test`, and a hand-rolled skewness test) do
+  not throw on degenerate input — they warn and return a result with a
+  non-finite statistic/p-value instead — so a bare `tryCatch` was not
+  enough to catch a bad result; every affected call site now also checks
+  the result is finite before treating it as real.
+- `anovaCheck`: `fmt_num()`'s "Not computed" fallback text ignored the
+  `reportLang` option and was always shown in English regardless of the
+  user's selected report language.
+- Blocking conditions (missing variables, wrong factor-level count, no
+  predictors selected, a model that fails to fit entirely) across all 9
+  modules now call `jmvcore::reject()` with the actual failure reason,
+  so jamovi shows its own error presentation instead of a
+  completed-looking report with the explanation buried in the intro
+  text.
+
+## Internal
+
+- Consolidated the `qname()`/`strip_qname()`/`add_row()`/`html_block()`
+  helpers — previously re-declared as identical local closures in most
+  analysis files — into `shared-helpers.R` as `.al_qname()`/
+  `.al_strip_qname()`/`.al_add_row()`/reused `.al_html_block()`
+  directly. This is the same kind of duplication that caused the
+  formula-breaking-on-spaces bug fixed in 1.5.3: a helper missing from
+  one file's copy goes unnoticed until it matters. `pathCheck`'s inline
+  backtick-quoting at its two `as.formula()` call sites is now routed
+  through the shared `.al_qname()` too.
+
 # AssumptionsLab 1.5.3 (2026-09-16)
 
 ## Bug fixes
