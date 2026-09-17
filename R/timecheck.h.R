@@ -13,8 +13,7 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             frequency = 12,
             reportLang = "en",
             showPlots = TRUE,
-            plotStyle = "clean",
-            plotPalette = "blueOrange", ...) {
+            plotPalette = "jamovi", ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -74,24 +73,14 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "showPlots",
                 showPlots,
                 default=TRUE)
-            private$..plotStyle <- jmvcore::OptionList$new(
-                "plotStyle",
-                plotStyle,
-                options=list(
-                    "clean",
-                    "bw",
-                    "contrast",
-                    "fullColor"),
-                default="clean")
             private$..plotPalette <- jmvcore::OptionList$new(
                 "plotPalette",
                 plotPalette,
                 options=list(
-                    "blueOrange",
-                    "viridis",
-                    "greyscale",
-                    "colorblind"),
-                default="blueOrange")
+                    "jamovi",
+                    "colorblind",
+                    "viridis"),
+                default="jamovi")
 
             self$.addOption(private$..series)
             self$.addOption(private$..dateVar)
@@ -100,7 +89,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..frequency)
             self$.addOption(private$..reportLang)
             self$.addOption(private$..showPlots)
-            self$.addOption(private$..plotStyle)
             self$.addOption(private$..plotPalette)
         }),
     active = list(
@@ -111,7 +99,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         frequency = function() private$..frequency$value,
         reportLang = function() private$..reportLang$value,
         showPlots = function() private$..showPlots$value,
-        plotStyle = function() private$..plotStyle$value,
         plotPalette = function() private$..plotPalette$value),
     private = list(
         ..series = NA,
@@ -121,7 +108,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..frequency = NA,
         ..reportLang = NA,
         ..showPlots = NA,
-        ..plotStyle = NA,
         ..plotPalette = NA)
 )
 
@@ -389,12 +375,10 @@ timeCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   seasonal tests and differencing in SARIMA and ETS.
 #' @param reportLang .
 #' @param showPlots Uncheck for a text-only report.
-#' @param plotStyle Visual style of the plots (background, line type): clean
-#'   academic, black and white for print, high contrast for accessibility, or
-#'   full color. Purely cosmetic; does not affect any computed value.
 #' @param plotPalette Palette used to distinguish several series in the same
-#'   plot (for example, the variables of a VAR/VECM). Includes a colorblind-safe
-#'   option for accessibility.
+#'   plot (for example, the variables of a VAR/VECM). Follows jamovi's own theme
+#'   by default; the colorblind-safe and viridis options are additive choices
+#'   jamovi does not otherwise offer.
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -431,8 +415,7 @@ timeCheck <- function(
     frequency = 12,
     reportLang = "en",
     showPlots = TRUE,
-    plotStyle = "clean",
-    plotPalette = "blueOrange") {
+    plotPalette = "jamovi") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("timeCheck requires jmvcore to be installed (restart may be required)")
@@ -456,7 +439,6 @@ timeCheck <- function(
         frequency = frequency,
         reportLang = reportLang,
         showPlots = showPlots,
-        plotStyle = plotStyle,
         plotPalette = plotPalette)
 
     analysis <- timeCheckClass$new(

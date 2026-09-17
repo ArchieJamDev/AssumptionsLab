@@ -1794,62 +1794,47 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (identical(lang, "es")) es else en
         },
 
-        .plotPalette = function() {
-            # Base palette + series palette: identical shape and logic in
-            # regCheck, logCheck, and timeCheck, consolidated in
-            # shared-helpers.R (.al_plot_palette_base /
-            # .al_plot_series_palette). fullColor already matched Variant A
-            # here (Archie's suite-wide standard, Aug 2026) - no visible
-            # change for timeCheck. The shared base always includes a
-            # "smooth" key (regCheck's original shape); timeCheck's own
-            # base never had one and never reads it, so this is an inert
-            # addition.
-            # ES: paleta base + paleta de series idénticas en regCheck,
-            # logCheck y timeCheck, consolidadas en shared-helpers.R.
-            # fullColor ya coincidía con la Variante A acá (estándar de
-            # Archie, agosto 2026) - sin cambio visible para timeCheck. La
-            # base compartida siempre incluye una clave "smooth" (forma
-            # original de regCheck); la base propia de timeCheck nunca
-            # tuvo una y nunca la lee, así que es un agregado inerte.
-            style <- tryCatch(self$options$plotStyle, error = function(e) "clean")
-            if (is.null(style) || length(style) == 0 || !nzchar(style)) style <- "clean"
+        # Plot theme/palette migrated to jamovi's native ggtheme/theme
+        # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
+        # (the pilot for this change, 2026-09-17) for the full rationale,
+        # and anovacheck.b.R's .plotThemeExtra() for the "small adjustments
+        # layered after ggtheme" pattern used here too.
+        # ES: Tema/paleta de gráficos migrado al mecanismo nativo
+        # ggtheme/theme de jamovi - ver .plotColors()/.plotSeriesColors()
+        # de logcheck.b.R (el piloto de este cambio, 2026-09-17) para el
+        # razonamiento completo, y .plotThemeExtra() de anovacheck.b.R
+        # para el patrón de "ajustes pequeños colocados después de
+        # ggtheme" usado también aquí.
+        .plotColors = function(theme) {
+            base_color <- if (!is.null(theme$color) && length(theme$color) >= 1) theme$color[1] else "#333333"
+            accent_color <- if (!is.null(theme$color) && length(theme$color) >= 2) theme$color[2] else "#2C7FB8"
+            accent_fill <- if (!is.null(theme$fill) && length(theme$fill) >= 2) theme$fill[2] else "#A6CEE3"
 
-            base <- .al_plot_palette_base(style)
-
-            palette_choice <- tryCatch(self$options$plotPalette, error = function(e) "blueOrange")
-            if (is.null(palette_choice) || length(palette_choice) == 0 || !nzchar(palette_choice))
-                palette_choice <- "blueOrange"
-
-            base$series <- .al_plot_series_palette(palette_choice)
-
-            base
+            list(
+                point = base_color, line = base_color, ref = "gray50",
+                alert = accent_color, smooth = accent_color, fill = accent_fill
+            )
         },
 
-        .plotTheme = function() {
-            style <- tryCatch(self$options$plotStyle, error = function(e) "clean")
-            if (is.null(style) || length(style) == 0 || !nzchar(style)) style <- "clean"
+        .plotSeriesColors = function() {
+            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
+            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
+                return(NULL)
+            .al_plot_series_palette(choice)
+        },
 
-            base <- if (identical(style, "bw")) {
-                ggplot2::theme_bw(base_size = 10.5)
-            } else if (identical(style, "contrast")) {
-                ggplot2::theme_classic(base_size = 10.5)
-            } else {
-                ggplot2::theme_minimal(base_size = 10.5)
-            }
-
-            base +
-                ggplot2::theme(
-                    plot.title = ggplot2::element_blank(),
-                    plot.subtitle = ggplot2::element_text(size = 9.5),
-                    axis.title = ggplot2::element_text(size = 9.5),
-                    axis.text = ggplot2::element_text(size = 8.5),
-                    legend.title = ggplot2::element_text(size = 9),
-                    legend.text = ggplot2::element_text(size = 8.5),
-                    legend.position = "bottom",
-                    panel.grid.minor = ggplot2::element_blank(),
-                    panel.grid.major = ggplot2::element_line(linewidth = 0.25),
-                    plot.margin = ggplot2::margin(4, 6, 4, 6)
-                )
+        .plotThemeExtra = function() {
+            ggplot2::theme(
+                plot.title = ggplot2::element_blank(),
+                plot.subtitle = ggplot2::element_text(size = 9.5),
+                axis.title = ggplot2::element_text(size = 9.5),
+                axis.text = ggplot2::element_text(size = 8.5),
+                legend.title = ggplot2::element_text(size = 9),
+                legend.text = ggplot2::element_text(size = 8.5),
+                legend.position = "bottom",
+                panel.grid.major = ggplot2::element_line(linewidth = 0.25, color = "grey90"),
+                plot.margin = ggplot2::margin(4, 6, 4, 6)
+            )
         },
 
         # image$state (set via setState() at computation time, see above) is what
@@ -1892,20 +1877,28 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             TRUE
         },
 
-        .plotSeries = function(image, ...) {
+        .plotSeries = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlot(image)) return()
 
             st <- image$state
             d <- st$data
             n_series <- length(unique(d$series))
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = x, y = y))
 
+            series_colors <- NULL
             if (n_series > 1) {
+                series_unique <- unique(as.character(d$series))
+                series_colors <- private$.plotSeriesColors()
+                if (!is.null(series_colors)) {
+                    series_colors <- rep(series_colors, length.out = max(1, length(series_unique)))
+                    series_colors <- stats::setNames(series_colors, series_unique)
+                }
+
                 plot <- plot +
                     ggplot2::geom_line(ggplot2::aes(color = series), linewidth = 0.7) +
-                    ggplot2::scale_color_manual(values = pal$series, name = NULL)
+                    ggplot2::labs(color = NULL)
             } else {
                 plot <- plot +
                     ggplot2::geom_line(linewidth = 0.7, color = pal$line)
@@ -1919,19 +1912,30 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         private$.plotTr("Observation", "Observación"),
                     y = private$.plotTr("Value", "Valor")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
+
+            # scale_color_manual must be added AFTER ggtheme: ggtheme carries
+            # its own discrete colour scale, and whichever scale is added
+            # last wins for a given aesthetic (see logcheck.b.R's
+            # .plotLinearity for the same ordering).
+            # ES: scale_color_manual debe agregarse DESPUÉS de ggtheme:
+            # ggtheme trae su propia escala discreta de color, y para una
+            # misma estética gana la escala agregada al final (ver
+            # .plotLinearity en logcheck.b.R para el mismo orden).
+            if (!is.null(series_colors))
+                plot <- plot + ggplot2::scale_color_manual(values = series_colors, name = NULL)
 
             print(plot)
         },
 
-        .plotAcf = function(image, ...) {
+        .plotAcf = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlot(image)) return()
 
             st <- image$state
             d <- st$data
             n <- st$n
             bound <- if (!is.null(n) && n > 0) 1.96 / sqrt(n) else NA
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = lag, y = value)) +
                 ggplot2::geom_hline(yintercept = 0, color = pal$ref)
@@ -1949,19 +1953,19 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = private$.plotTr("Lag", "Rezago"),
                     y = "ACF"
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             print(plot)
         },
 
-        .plotPacf = function(image, ...) {
+        .plotPacf = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlot(image)) return()
 
             st <- image$state
             d <- st$data
             n <- st$n
             bound <- if (!is.null(n) && n > 0) 1.96 / sqrt(n) else NA
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = lag, y = value)) +
                 ggplot2::geom_hline(yintercept = 0, color = pal$ref)
@@ -1979,16 +1983,16 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = private$.plotTr("Lag", "Rezago"),
                     y = "PACF"
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             print(plot)
         },
 
-        .plotResiduals = function(image, ...) {
+        .plotResiduals = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlot(image)) return()
 
             d <- image$state
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = x, y = residual)) +
                 ggplot2::geom_hline(yintercept = 0, linetype = "dashed", color = pal$ref) +
@@ -1998,16 +2002,16 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = private$.plotTr("Observation", "Observación"),
                     y = private$.plotTr("Residual", "Residuo")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             print(plot)
         },
 
-        .plotVolatility = function(image, ...) {
+        .plotVolatility = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlot(image)) return()
 
             d <- image$state
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = x, y = sigma)) +
                 ggplot2::geom_line(color = pal$line, linewidth = 0.7) +
@@ -2015,7 +2019,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = private$.plotTr("Observation", "Observación"),
                     y = private$.plotTr("Conditional standard deviation", "Desviación estándar condicional")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             print(plot)
         }

@@ -95,7 +95,9 @@ children:
     children:
       - type: CheckBox
         name: showPlots
-      - type: ComboBox
-        name: plotStyle
+  - type: CollapseBox
+    label: Plot Color Palette
+    collapsed: true
+    children:
       - type: ComboBox
         name: plotPalette
