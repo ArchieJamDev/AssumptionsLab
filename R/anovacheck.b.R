@@ -1239,13 +1239,14 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
 
             vt_i <- 1
-            add_var <- function(family, test, statistic, value, df, p_value) {
+            add_var <- function(family, test, statistic, value, df, p_value, reason = NULL) {
                 if (!is.na(clean_num(p_value)) && clean_num(p_value) < .05)
                     variance_problem <<- TRUE
 
+                key <- paste0("var_", vt_i)
                 add_table_row(
                     self$results$varianceTests,
-                    paste0("var_", vt_i),
+                    key,
                     list(
                         family = family,
                         test = test,
@@ -1256,6 +1257,11 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         pSig = p_sig(p_value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(p_value)))
+                    tryCatch(
+                        self$results$varianceTests$addFootnote(col = "p", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
 
                 variance_texts <<- c(
                     variance_texts,
@@ -1272,19 +1278,38 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: idéntico en anovaCheck y regCheck, consolidado en
             # shared-helpers.R. Las filas de groupCheck (car::leveneTest) son
             # una implementación aparte, sin tocar.
+            # All four variance-equality tests below share the same basic
+            # precondition - every cell (factor-level combination) needs at
+            # least 2 observations to contribute a within-cell spread - so a
+            # failure in any of them is almost always explained by the
+            # smallest cell, not a random computational glitch.
+            # ES: las cuatro pruebas de igualdad de varianzas comparten la
+            # misma precondición básica - cada celda (combinación de niveles
+            # de factor) necesita al menos 2 observaciones para aportar una
+            # dispersión intra-celda - así que un fallo en cualquiera de
+            # ellas casi siempre se explica por la celda más pequeña, no por
+            # un fallo computacional aleatorio.
+            variance_test_reason <- if (length(cell_n) > 0 && min(cell_n) < 2) tr(
+                paste0("Could not be computed - the smallest factor-level combination has only ", min(cell_n), " observation(s); at least 2 are needed in every cell."),
+                paste0("No se pudo calcular - la combinación de niveles de factor más pequeña tiene solo ", min(cell_n), " observación(es); se necesitan al menos 2 en cada celda.")
+            ) else tr(
+                "Could not be computed for this design.",
+                "No se pudo calcular para este diseño."
+            )
+
             lev <- tryCatch(.al_levene_manual(y, cell_factor, "mean"), error = function(e) NULL)
 
             if (!is.null(lev))
                 add_var(tr("Equality of variances", "Igualdad de varianzas"), "Levene", "F", lev$value, lev$df, lev$p)
             else
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Levene", "F", NA_real_, NA_integer_, NA_real_)
+                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Levene", "F", NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
 
             bf <- tryCatch(.al_levene_manual(y, cell_factor, "median"), error = function(e) NULL)
 
             if (!is.null(bf))
                 add_var(tr("Equality of variances", "Igualdad de varianzas"), "Brown-Forsythe", "F", bf$value, bf$df, bf$p)
             else
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Brown-Forsythe", "F", NA_real_, NA_integer_, NA_real_)
+                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Brown-Forsythe", "F", NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
 
             bart <- tryCatch(stats::bartlett.test(y ~ cell_factor), error = function(e) NULL)
 
@@ -1293,7 +1318,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         bart$statistic[[1]], bart$parameter[[1]], bart$p.value)
             else
                 add_var(tr("Equality of variances", "Igualdad de varianzas"), "Bartlett", "K²",
-                        NA_real_, NA_integer_, NA_real_)
+                        NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
 
             flig <- tryCatch(stats::fligner.test(y ~ cell_factor), error = function(e) NULL)
 
@@ -1302,7 +1327,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         flig$statistic[[1]], flig$parameter[[1]], flig$p.value)
             else
                 add_var(tr("Equality of variances", "Igualdad de varianzas"), "Fligner-Killeen", "χ²",
-                        NA_real_, NA_integer_, NA_real_)
+                        NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
 
             hartley <- tryCatch({
                 vars <- tapply(y, cell_factor, stats::var, na.rm = TRUE)
@@ -1454,16 +1479,17 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
 
             cl_i <- 1
-            add_covlin <- function(cv, test, statistic, value, p_value, extra_r = NA_real_) {
+            add_covlin <- function(cv, test, statistic, value, p_value, extra_r = NA_real_, reason = NULL) {
                 if (!is.na(clean_num(p_value)) && clean_num(p_value) < .05 &&
                     test %in% c(tr("Exploratory quadratic term", "Término cuadrático exploratorio"),
                                 tr("Exploratory Box-Tidwell", "Box-Tidwell exploratorio"))) {
                     linearity_problem <<- TRUE
                 }
 
+                key <- paste0("covlin_", cl_i)
                 add_table_row(
                     self$results$covariateLinearity,
-                    paste0("covlin_", cl_i),
+                    key,
                     list(
                         covariate = cv,
                         dependent = dep,
@@ -1474,6 +1500,11 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         pSig = p_sig(p_value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(value)) && is.na(clean_num(p_value)))
+                    tryCatch(
+                        self$results$covariateLinearity$addFootnote(col = "p", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
 
                 covlin_texts <<- c(
                     covlin_texts,
@@ -1511,10 +1542,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                     add_covlin(cv, tr("Exploratory quadratic term", "Término cuadrático exploratorio"), "p", quad_p, quad_p)
 
-                    bt_p <- tryCatch({
-                        if (any(x <= 0, na.rm = TRUE))
-                            stop("Box-Tidwell requiere valores positivos.")
-
+                    bt_needs_positive <- any(x <= 0, na.rm = TRUE)
+                    bt_p <- if (bt_needs_positive) NA_real_ else tryCatch({
                         boxTidwellDat <- dat2
                         boxTidwellDat[[".bt_tmp"]] <- x * log(x)
                         f_bt <- stats::as.formula(paste(
@@ -1524,7 +1553,15 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         coef(summary(fit_bt))[".bt_tmp", "Pr(>|t|)"]
                     }, error = function(e) NA_real_)
 
-                    add_covlin(cv, tr("Exploratory Box-Tidwell", "Box-Tidwell exploratorio"), "p", bt_p, bt_p)
+                    bt_reason <- if (bt_needs_positive) tr(
+                        "Box-Tidwell requires strictly positive values (it uses x*log(x)); this covariate has zero or negative values.",
+                        "Box-Tidwell requiere valores estrictamente positivos (usa x*log(x)); esta covariable tiene valores cero o negativos."
+                    ) else if (is.na(clean_num(bt_p))) tr(
+                        "Could not be computed for this covariate.",
+                        "No se pudo calcular para esta covariable."
+                    ) else NULL
+
+                    add_covlin(cv, tr("Exploratory Box-Tidwell", "Box-Tidwell exploratorio"), "p", bt_p, bt_p, reason = bt_reason)
 
                     dcor_val <- tryCatch(dcor_stat(x, y), error = function(e) NA_real_)
                     dcor_p <- tryCatch(dcor_pvalue(x, y), error = function(e) NA_real_)
@@ -1540,8 +1577,15 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                     if (!is.null(ce_res)) {
                         add_covlin(cv, tr("Copula entropy (copent)", "Entropía copular (copent)"), "CE", ce_res$ce, ce_res$p)
-                    } else if (!requireNamespace("copent", quietly = TRUE)) {
-                        add_covlin(cv, tr("Copula entropy (copent)", "Entropía copular (copent)"), "CE", NA_real_, NA_real_)
+                    } else {
+                        ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) tr(
+                            "The 'copent' package is not installed.",
+                            "El paquete 'copent' no está instalado."
+                        ) else tr(
+                            "Could not be computed for this covariate (copula entropy needs enough distinct values to estimate a copula density).",
+                            "No se pudo calcular para esta covariable (la entropía copular necesita suficientes valores distintos para estimar una densidad de cópula)."
+                        )
+                        add_covlin(cv, tr("Copula entropy (copent)", "Entropía copular (copent)"), "CE", NA_real_, NA_real_, reason = ce_reason)
                     }
                 }
             }
@@ -1595,10 +1639,11 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             max_vif <- NA_real_
             max_vif_name <- NA_character_
 
-            add_multi <- function(diagnostic, item, statistic, value) {
+            add_multi <- function(diagnostic, item, statistic, value, reason = NULL) {
+                key <- paste0("multi_", multi_i)
                 add_table_row(
                     self$results$multicollinearity,
-                    paste0("multi_", multi_i),
+                    key,
                     list(
                         diagnostic = diagnostic,
                         item = item,
@@ -1606,6 +1651,11 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         value = clean_num(value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(value)))
+                    tryCatch(
+                        self$results$multicollinearity$addFootnote(col = "value", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
 
                 multi_i <<- multi_i + 1
             }
@@ -1639,8 +1689,12 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         }
                     }
 
-                    add_multi("VIF", colnames(X_no_intercept)[j], "VIF", vif)
-                    add_multi(tr("Tolerance", "Tolerancia"), colnames(X_no_intercept)[j], "1/VIF", tol)
+                    vif_reason <- if (is.na(clean_num(vif))) tr(
+                        "Could not be computed - regressing this term on the others is likely singular (more terms than complete cases, or an exact linear dependency among predictors).",
+                        "No se pudo calcular - regresar este término sobre los demás es probablemente singular (más términos que casos completos, o una dependencia lineal exacta entre predictores)."
+                    ) else NULL
+                    add_multi("VIF", colnames(X_no_intercept)[j], "VIF", vif, reason = vif_reason)
+                    add_multi(tr("Tolerance", "Tolerancia"), colnames(X_no_intercept)[j], "1/VIF", tol, reason = vif_reason)
                 }
 
                 eig <- tryCatch({
@@ -1648,6 +1702,16 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     R <- stats::cor(X_scaled, use = "pairwise.complete.obs")
                     eigen(R, symmetric = TRUE)$values
                 }, error = function(e) NULL)
+
+                if (is.null(eig)) {
+                    eig_reason <- tr(
+                        "Could not be computed - the design matrix's correlation matrix could not be decomposed (likely too few complete cases relative to the number of terms).",
+                        "No se pudo calcular - no fue posible descomponer la matriz de correlación de la matriz de diseño (probablemente muy pocos casos completos respecto al número de términos)."
+                    )
+                    add_multi(tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), NA_real_, reason = eig_reason)
+                    add_multi(tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", NA_real_, reason = eig_reason)
+                    add_multi(tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", NA_real_, reason = eig_reason)
+                }
 
                 if (!is.null(eig)) {
                     min_eig <- max(min(eig, na.rm = TRUE), .Machine$double.eps)

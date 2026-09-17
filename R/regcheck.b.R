@@ -1221,10 +1221,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     quad_p
                 )
 
-                bt_p <- tryCatch({
-                    if (any(is.na(x)) || any(x <= 0))
-                        stop("Box-Tidwell requiere valores positivos.")
-
+                bt_needs_positive <- any(is.na(x)) || any(x <= 0)
+                bt_p <- if (bt_needs_positive) NA_real_ else tryCatch({
                     boxTidwellDat <- dat2
                     boxTidwellDat[[".bt_tmp"]] <- x * log(x)
 
@@ -1240,12 +1238,21 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     coef(summary(fit_bt))[".bt_tmp", "Pr(>|t|)"]
                 }, error = function(e) NA_real_)
 
+                bt_reason <- if (bt_needs_positive) tr(
+                    "Box-Tidwell requires strictly positive values (it uses x*log(x)); this predictor has zero, negative, or missing values.",
+                    "Box-Tidwell requiere valores estrictamente positivos (usa x*log(x)); este predictor tiene valores cero, negativos o faltantes."
+                ) else if (is.na(clean_num(bt_p))) tr(
+                    "Could not be computed for this predictor.",
+                    "No se pudo calcular para este predictor."
+                ) else NULL
+
                 add_linearity_predictor(
                     xname,
                     tr("Exploratory Box-Tidwell", "Box-Tidwell exploratorio"),
                     "p",
                     bt_p,
-                    bt_p
+                    bt_p,
+                    reason = bt_reason
                 )
 
                 dcor_val <- tryCatch(dcor_stat(x, y), error = function(e) NA_real_)
