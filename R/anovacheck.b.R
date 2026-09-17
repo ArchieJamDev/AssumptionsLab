@@ -328,7 +328,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             fmt_num <- function(x, digits = 4) {
                 x <- clean_num(x)
                 if (is.na(x))
-                    return("No calculado")
+                    return(tr("Not computed", "No calculado"))
                 format(round(x, digits), nsmall = digits)
             }
 
