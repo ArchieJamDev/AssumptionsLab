@@ -741,20 +741,54 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             ))
 
             hl_test <- NULL
-            if (requireNamespace("ResourceSelection", quietly = TRUE)) {
+            hl_reason <- NULL
+            if (!requireNamespace("ResourceSelection", quietly = TRUE)) {
+                hl_reason <- tr(
+                    "The 'ResourceSelection' package is not installed.",
+                    "El paquete 'ResourceSelection' no está instalado."
+                )
+            } else {
                 hl_test <- tryCatch({
                     ResourceSelection::hoslem.test(model_data_complete$dep_binary, fitted(model), g = 10)
                 }, error = function(e) NULL)
 
-                if (!is.null(hl_test)) {
-                    self$results$goodnessOfFit$addRow(rowKey = "gof_hl", values = list(
-                        test = "Hosmer-Lemeshow",
-                        statistic = hl_test$statistic,
-                        p = hl_test$p.value,
-                        pSig = p_sig(hl_test$p.value)
-                    ))
-                }
+                # hoslem.test() does not always throw on a degenerate input -
+                # when the data cannot support 10 distinct bins it instead
+                # warns ("did not allow for the requested number of bins")
+                # and returns a result with p.value = NA, the same
+                # non-throwing "soft failure" gotcha already found in
+                # tseries/nortest/relatedCheck's manual skewness test - so a
+                # result is only accepted when its p-value is actually
+                # finite, not merely non-NULL.
+                # ES: hoslem.test() no siempre lanza error ante una entrada
+                # degenerada - cuando los datos no soportan 10 bins distintos,
+                # en cambio avisa ("did not allow for the requested number of
+                # bins") y devuelve un resultado con p.value = NA, el mismo
+                # "fallo blando" sin lanzar error ya encontrado en tseries/
+                # nortest/la prueba manual de asimetría de relatedCheck - así
+                # que un resultado solo se acepta cuando su p-valor es
+                # realmente finito, no solo por no ser NULL.
+                if (!is.null(hl_test) && !is.finite(hl_test$p.value))
+                    hl_test <- NULL
+
+                if (is.null(hl_test))
+                    hl_reason <- tr(
+                        "Could not be computed - the predicted probabilities are not spread out enough to form 10 distinct groups (too few observations or too little variation in fitted probabilities).",
+                        "No se pudo calcular - las probabilidades predichas no están suficientemente dispersas para formar 10 grupos distintos (muy pocas observaciones o muy poca variación en las probabilidades ajustadas)."
+                    )
             }
+
+            self$results$goodnessOfFit$addRow(rowKey = "gof_hl", values = list(
+                test = "Hosmer-Lemeshow",
+                statistic = if (!is.null(hl_test)) hl_test$statistic else NA_real_,
+                p = if (!is.null(hl_test)) hl_test$p.value else NA_real_,
+                pSig = if (!is.null(hl_test)) p_sig(hl_test$p.value) else ""
+            ))
+            if (!is.null(hl_reason))
+                tryCatch(
+                    self$results$goodnessOfFit$addFootnote(col = "p", note = hl_reason, rowKey = "gof_hl"),
+                    error = function(e) invisible(NULL)
+                )
 
             self$results$goodnessOfFitInterpretation$setContent(html_block(
                 tr("Applied Interpretation", "Interpretación Aplicada"),
@@ -786,9 +820,9 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             )
                         )
                     } else {
-                        tr(
-                            "The Hosmer-Lemeshow test could not be computed (the 'ResourceSelection' package is required).",
-                            "No fue posible calcular la prueba de Hosmer-Lemeshow (se requiere el paquete 'ResourceSelection')."
+                        paste0(
+                            tr("Hosmer-Lemeshow: ", "Hosmer-Lemeshow: "),
+                            hl_reason
                         )
                     },
                     tr(
@@ -807,16 +841,39 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             auc_val <- NA_real_
             roc_obj <- NULL
-            if (requireNamespace("pROC", quietly = TRUE)) {
+            auc_reason <- NULL
+            if (!requireNamespace("pROC", quietly = TRUE)) {
+                auc_reason <- tr(
+                    "The 'pROC' package is not installed.",
+                    "El paquete 'pROC' no está instalado."
+                )
+            } else {
                 roc_obj <- tryCatch({
                     pROC::roc(model_data_complete$dep_binary, fitted(model), quiet = TRUE)
                 }, error = function(e) NULL)
 
-                if (!is.null(roc_obj)) {
+                if (!is.null(roc_obj))
                     auc_val <- as.numeric(pROC::auc(roc_obj))
-                    self$results$discrimination$addRow(rowKey = "disc_auc", values = list(metric = "AUC", value = auc_val))
+
+                # Same non-throwing "soft failure" gotcha as hoslem.test():
+                # accept a result only when it is actually finite.
+                # ES: mismo "fallo blando" sin lanzar error que
+                # hoslem.test(): un resultado solo se acepta cuando es
+                # realmente finito.
+                if (!is.finite(auc_val)) {
+                    auc_val <- NA_real_
+                    auc_reason <- tr(
+                        "Could not be computed for this model's predicted probabilities.",
+                        "No se pudo calcular para las probabilidades predichas de este modelo."
+                    )
                 }
             }
+            self$results$discrimination$addRow(rowKey = "disc_auc", values = list(metric = "AUC", value = auc_val))
+            if (!is.null(auc_reason))
+                tryCatch(
+                    self$results$discrimination$addFootnote(col = "value", note = auc_reason, rowKey = "disc_auc"),
+                    error = function(e) invisible(NULL)
+                )
 
             self$results$discriminationInterpretation$setContent(html_block(
                 tr("Applied Interpretation", "Interpretación Aplicada"),
@@ -863,10 +920,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         )
                     )
                 } else {
-                    tr(
-                        "AUC could not be computed (the 'pROC' package is required).",
-                        "No fue posible calcular el AUC (se requiere el paquete 'pROC')."
-                    )
+                    paste0(tr("AUC: ", "AUC: "), auc_reason)
                 },
                 paragraphs = TRUE
             ))
@@ -882,12 +936,18 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             max_ci <- NA_real_
             multi_i <- 0
 
-            add_multi <- function(diagnostic, item, statistic, value) {
+            add_multi <- function(diagnostic, item, statistic, value, reason = NULL) {
                 multi_i <<- multi_i + 1
-                self$results$multicollinearity$addRow(rowKey = paste0("multi_", multi_i), values = list(
+                key <- paste0("multi_", multi_i)
+                self$results$multicollinearity$addRow(rowKey = key, values = list(
                     diagnostic = diagnostic, item = item, statistic = statistic,
                     value = if (is.na(value)) NA_real_ else value
                 ))
+                if (!is.null(reason) && is.na(value))
+                    tryCatch(
+                        self$results$multicollinearity$addFootnote(col = "value", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
             }
 
             X <- tryCatch(stats::model.matrix(model), error = function(e) NULL)
@@ -911,8 +971,12 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     tol <- if (is.na(vif)) NA_real_ else 1 / vif
                     pClean <- gsub("^`|`$", "", colnames(X_no_intercept)[j])
 
-                    add_multi("VIF", pClean, "VIF", vif)
-                    add_multi(tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol)
+                    vif_reason <- if (is.na(vif)) tr(
+                        "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
+                        "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
+                    ) else NULL
+                    add_multi("VIF", pClean, "VIF", vif, reason = vif_reason)
+                    add_multi(tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol, reason = vif_reason)
 
                     if (!is.na(vif) && (is.na(max_vif) || vif > max_vif)) {
                         max_vif <- vif

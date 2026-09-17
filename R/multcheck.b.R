@@ -1154,7 +1154,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             } else {
                 lipsitz_res <- tryCatch(generalhoslem::lipsitz.test(model), error = function(e) NULL)
-                if (!is.null(lipsitz_res)) {
+                if (!is.null(lipsitz_res) && is.finite(lipsitz_res$p.value)) {
                     add_row(self$results$goodnessOfFit, "gof_lipsitz", list(
                         test = "Lipsitz",
                         statistic = unname(lipsitz_res$statistic),
@@ -1171,7 +1171,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 if (length(factors) > 0) {
                     pr_chisq <- tryCatch(generalhoslem::pulkrob.chisq(model, catvars = factors), error = function(e) NULL)
-                    if (!is.null(pr_chisq)) {
+                    if (!is.null(pr_chisq) && is.finite(pr_chisq$p.value)) {
                         add_row(self$results$goodnessOfFit, "gof_pr_chisq", list(
                             test = tr("Pulkstenis-Robinson (chi-squared)", "Pulkstenis-Robinson (ji-cuadrado)"),
                             statistic = unname(pr_chisq$statistic),
@@ -1186,7 +1186,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         ))
                     }
                     pr_dev <- tryCatch(generalhoslem::pulkrob.deviance(model, catvars = factors), error = function(e) NULL)
-                    if (!is.null(pr_dev)) {
+                    if (!is.null(pr_dev) && is.finite(pr_dev$p.value)) {
                         add_row(self$results$goodnessOfFit, "gof_pr_dev", list(
                             test = tr("Pulkstenis-Robinson (deviance)", "Pulkstenis-Robinson (devianza)"),
                             statistic = unname(pr_dev$statistic),
@@ -1392,11 +1392,17 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (mc_visible) {
                 multi_i <- 0
-                add_multi <- function(diagnostic, item, statistic, value) {
+                add_multi <- function(diagnostic, item, statistic, value, reason = NULL) {
                     multi_i <<- multi_i + 1
-                    add_row(self$results$multicollinearity, paste0("multi_", multi_i), list(
+                    key <- paste0("multi_", multi_i)
+                    add_row(self$results$multicollinearity, key, list(
                         diagnostic = diagnostic, item = item, statistic = statistic, value = value
                     ))
+                    if (!is.null(reason) && is.na(value))
+                        tryCatch(
+                            self$results$multicollinearity$addFootnote(col = "value", note = reason, rowKey = key),
+                            error = function(e) invisible(NULL)
+                        )
                 }
 
                 design_formula <- stats::as.formula(paste("~", paste(qname(predictors), collapse = " + "), "- 1"))
@@ -1414,8 +1420,12 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         }, error = function(e) NA_real_)
                         tol <- if (is.na(vif)) NA_real_ else 1 / vif
 
-                        add_multi("VIF", pClean, "VIF", vif)
-                        add_multi(tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol)
+                        vif_reason <- if (is.na(vif)) tr(
+                            "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
+                            "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
+                        ) else NULL
+                        add_multi("VIF", pClean, "VIF", vif, reason = vif_reason)
+                        add_multi(tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol, reason = vif_reason)
 
                         if (!is.na(vif) && (is.na(max_vif) || vif > max_vif)) {
                             max_vif <- vif

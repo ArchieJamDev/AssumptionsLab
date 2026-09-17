@@ -838,44 +838,52 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     statistic = NA, df = NA, p = NA, pSig = ""
                 ))
             } else {
-                lipsitz_res <- tryCatch(generalhoslem::lipsitz.test(model), error = function(e) NULL)
-                if (!is.null(lipsitz_res)) {
-                    add_row(self$results$goodnessOfFit, "gof_lipsitz", list(
-                        test = "Lipsitz",
-                        statistic = unname(lipsitz_res$statistic),
-                        df = unname(lipsitz_res$parameter),
-                        p = lipsitz_res$p.value,
-                        pSig = p_sig(lipsitz_res$p.value)
+                add_gof_row <- function(key, test, res, reason) {
+                    # generalhoslem's tests do not always throw on a
+                    # degenerate model - like hoslem.test() (found in
+                    # logCheck), they can warn and return a result with
+                    # p.value = NA instead of erroring - so a result is only
+                    # accepted when its p-value is actually finite, not
+                    # merely non-NULL.
+                    # ES: las pruebas de generalhoslem no siempre lanzan
+                    # error ante un modelo degenerado - igual que
+                    # hoslem.test() (encontrado en logCheck), pueden avisar y
+                    # devolver un resultado con p.value = NA en vez de
+                    # fallar - así que un resultado solo se acepta cuando su
+                    # p-valor es realmente finito, no solo por no ser NULL.
+                    if (!is.null(res) && !is.finite(res$p.value))
+                        res <- NULL
+
+                    add_row(self$results$goodnessOfFit, key, list(
+                        test = test,
+                        statistic = if (!is.null(res)) unname(res$statistic) else NA_real_,
+                        df = if (!is.null(res)) unname(res$parameter) else NA_integer_,
+                        p = if (!is.null(res)) res$p.value else NA_real_,
+                        pSig = if (!is.null(res)) p_sig(res$p.value) else ""
                     ))
+                    if (is.null(res) && !is.null(reason))
+                        tryCatch(
+                            self$results$goodnessOfFit$addFootnote(col = "p", note = reason, rowKey = key),
+                            error = function(e) invisible(NULL)
+                        )
                 }
+
+                lipsitz_res <- tryCatch(generalhoslem::lipsitz.test(model), error = function(e) NULL)
+                add_gof_row("gof_lipsitz", "Lipsitz", lipsitz_res, tr(
+                    "Could not be computed - the predicted probabilities are not spread out enough to form the test's groups (too few observations or too little variation).",
+                    "No se pudo calcular - las probabilidades predichas no están suficientemente dispersas para formar los grupos de la prueba (muy pocas observaciones o muy poca variación)."
+                ))
 
                 if (length(factors) > 0) {
                     pr_chisq <- tryCatch(generalhoslem::pulkrob.chisq(model, catvars = factors), error = function(e) NULL)
-                    if (!is.null(pr_chisq)) {
-                        add_row(self$results$goodnessOfFit, "gof_pr_chisq", list(
-                            test = tr("Pulkstenis-Robinson (chi-squared)", "Pulkstenis-Robinson (ji-cuadrado)"),
-                            statistic = unname(pr_chisq$statistic),
-                            df = unname(pr_chisq$parameter),
-                            p = pr_chisq$p.value,
-                            pSig = p_sig(pr_chisq$p.value)
-                        ))
-                    }
+                    add_gof_row("gof_pr_chisq", tr("Pulkstenis-Robinson (chi-squared)", "Pulkstenis-Robinson (ji-cuadrado)"), pr_chisq, tr(
+                        "Could not be computed - needs at least as many distinct covariate patterns as outcome categories.",
+                        "No se pudo calcular - necesita al menos tantos patrones de covariables distintos como categorías del desenlace."
+                    ))
                     pr_dev <- tryCatch(generalhoslem::pulkrob.deviance(model, catvars = factors), error = function(e) NULL)
-                    if (!is.null(pr_dev)) {
-                        add_row(self$results$goodnessOfFit, "gof_pr_dev", list(
-                            test = tr("Pulkstenis-Robinson (deviance)", "Pulkstenis-Robinson (devianza)"),
-                            statistic = unname(pr_dev$statistic),
-                            df = unname(pr_dev$parameter),
-                            p = pr_dev$p.value,
-                            pSig = p_sig(pr_dev$p.value)
-                        ))
-                    }
-                }
-
-                if (self$results$goodnessOfFit$rowCount == 0) {
-                    add_row(self$results$goodnessOfFit, "gof_none", list(
-                        test = tr("No test could be computed", "No se pudo calcular ninguna prueba"),
-                        statistic = NA, df = NA, p = NA, pSig = ""
+                    add_gof_row("gof_pr_dev", tr("Pulkstenis-Robinson (deviance)", "Pulkstenis-Robinson (devianza)"), pr_dev, tr(
+                        "Could not be computed - needs at least as many distinct covariate patterns as outcome categories.",
+                        "No se pudo calcular - necesita al menos tantos patrones de covariables distintos como categorías del desenlace."
                     ))
                 }
             }
@@ -991,11 +999,17 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (mc_visible) {
                 multi_i <- 0
-                add_multi <- function(diagnostic, item, statistic, value) {
+                add_multi <- function(diagnostic, item, statistic, value, reason = NULL) {
                     multi_i <<- multi_i + 1
-                    add_row(self$results$multicollinearity, paste0("multi_", multi_i), list(
+                    key <- paste0("multi_", multi_i)
+                    add_row(self$results$multicollinearity, key, list(
                         diagnostic = diagnostic, item = item, statistic = statistic, value = value
                     ))
+                    if (!is.null(reason) && is.na(value))
+                        tryCatch(
+                            self$results$multicollinearity$addFootnote(col = "value", note = reason, rowKey = key),
+                            error = function(e) invisible(NULL)
+                        )
                 }
 
                 design_formula <- stats::as.formula(paste("~", paste(qname(predictors), collapse = " + "), "- 1"))
@@ -1013,8 +1027,12 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         }, error = function(e) NA_real_)
                         tol <- if (is.na(vif)) NA_real_ else 1 / vif
 
-                        add_multi("VIF", pClean, "VIF", vif)
-                        add_multi(tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol)
+                        vif_reason <- if (is.na(vif)) tr(
+                            "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
+                            "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
+                        ) else NULL
+                        add_multi("VIF", pClean, "VIF", vif, reason = vif_reason)
+                        add_multi(tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol, reason = vif_reason)
 
                         if (!is.na(vif) && (is.na(max_vif) || vif > max_vif)) {
                             max_vif <- vif
