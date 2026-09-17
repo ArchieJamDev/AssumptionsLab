@@ -124,10 +124,8 @@ children:
       - type: CheckBox
         name: influenceShowThreshold
   - type: CollapseBox
-    label: General Plot Style
+    label: Plot Color Palette
     collapsed: true
     children:
-      - type: ComboBox
-        name: plotStyle
       - type: ComboBox
         name: plotPalette

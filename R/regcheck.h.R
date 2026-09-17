@@ -31,8 +31,7 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             influenceShowPlots = TRUE,
             influenceLabelMode = "top5",
             influenceShowThreshold = TRUE,
-            plotStyle = "clean",
-            plotPalette = "blueOrange", ...) {
+            plotPalette = "jamovi", ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -176,24 +175,14 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "influenceShowThreshold",
                 influenceShowThreshold,
                 default=TRUE)
-            private$..plotStyle <- jmvcore::OptionList$new(
-                "plotStyle",
-                plotStyle,
-                options=list(
-                    "clean",
-                    "bw",
-                    "contrast",
-                    "fullColor"),
-                default="clean")
             private$..plotPalette <- jmvcore::OptionList$new(
                 "plotPalette",
                 plotPalette,
                 options=list(
-                    "blueOrange",
-                    "viridis",
-                    "greyscale",
-                    "colorblind"),
-                default="blueOrange")
+                    "jamovi",
+                    "colorblind",
+                    "viridis"),
+                default="jamovi")
 
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
@@ -220,7 +209,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..influenceShowPlots)
             self$.addOption(private$..influenceLabelMode)
             self$.addOption(private$..influenceShowThreshold)
-            self$.addOption(private$..plotStyle)
             self$.addOption(private$..plotPalette)
         }),
     active = list(
@@ -249,7 +237,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         influenceShowPlots = function() private$..influenceShowPlots$value,
         influenceLabelMode = function() private$..influenceLabelMode$value,
         influenceShowThreshold = function() private$..influenceShowThreshold$value,
-        plotStyle = function() private$..plotStyle$value,
         plotPalette = function() private$..plotPalette$value),
     private = list(
         ..dep = NA,
@@ -277,7 +264,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..influenceShowPlots = NA,
         ..influenceLabelMode = NA,
         ..influenceShowThreshold = NA,
-        ..plotStyle = NA,
         ..plotPalette = NA)
 )
 
@@ -1062,7 +1048,6 @@ regCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param influenceShowPlots .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
-#' @param plotStyle .
 #' @param plotPalette .
 #' @return A results object containing:
 #' \tabular{llllll}{
@@ -1163,8 +1148,7 @@ regCheck <- function(
     influenceShowPlots = TRUE,
     influenceLabelMode = "top5",
     influenceShowThreshold = TRUE,
-    plotStyle = "clean",
-    plotPalette = "blueOrange") {
+    plotPalette = "jamovi") {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("regCheck requires jmvcore to be installed (restart may be required)")
@@ -1207,7 +1191,6 @@ regCheck <- function(
         influenceShowPlots = influenceShowPlots,
         influenceLabelMode = influenceLabelMode,
         influenceShowThreshold = influenceShowThreshold,
-        plotStyle = plotStyle,
         plotPalette = plotPalette)
 
     analysis <- regCheckClass$new(

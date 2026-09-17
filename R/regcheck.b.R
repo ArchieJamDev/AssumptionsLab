@@ -3365,77 +3365,58 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 en
         },
 
-        .plotPalette = function() {
-            # Base palette + series palette: identical shape and logic in
-            # regCheck, logCheck, and timeCheck, consolidated in
-            # shared-helpers.R (.al_plot_palette_base /
-            # .al_plot_series_palette). fullColor uses Variant A per
-            # Archie's decision, Aug 2026 (see doc comment on
-            # .al_plot_palette_base).
-            # ES: paleta base + paleta de series idénticas en regCheck,
-            # logCheck y timeCheck, consolidadas en shared-helpers.R.
-            # fullColor usa la Variante A por decisión de Archie, agosto
-            # 2026.
-            style <- tryCatch(
-                self$options$plotStyle,
-                error = function(e) "clean"
+        # Plot theme/palette migrated to jamovi's native ggtheme/theme
+        # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
+        # (the pilot for this change, 2026-09-17) for the full rationale,
+        # and anovacheck.b.R's .plotThemeExtra() for the "small adjustments
+        # layered after ggtheme" pattern used here too.
+        # ES: Tema/paleta de gráficos migrado al mecanismo nativo
+        # ggtheme/theme de jamovi - ver .plotColors()/.plotSeriesColors()
+        # de logcheck.b.R (el piloto de este cambio, 2026-09-17) para el
+        # razonamiento completo, y .plotThemeExtra() de anovacheck.b.R
+        # para el patrón de "ajustes pequeños colocados después de
+        # ggtheme" usado también aquí.
+        .plotColors = function(theme) {
+            base_color <- if (!is.null(theme$color) && length(theme$color) >= 1) theme$color[1] else "#333333"
+            accent_color <- if (!is.null(theme$color) && length(theme$color) >= 2) theme$color[2] else "#2C7FB8"
+            accent_fill <- if (!is.null(theme$fill) && length(theme$fill) >= 2) theme$fill[2] else "#A6CEE3"
+
+            list(
+                point = base_color, line = base_color, ref = "gray50",
+                alert = accent_color, smooth = accent_color, fill = accent_fill
             )
-
-            if (is.null(style) || length(style) == 0 || !nzchar(style))
-                style <- "clean"
-
-            base <- .al_plot_palette_base(style)
-
-            palette_choice <- tryCatch(self$options$plotPalette, error = function(e) "blueOrange")
-            if (is.null(palette_choice) || length(palette_choice) == 0 || !nzchar(palette_choice))
-                palette_choice <- "blueOrange"
-
-            base$series <- .al_plot_series_palette(palette_choice)
-
-            base
         },
 
-        .plotTheme = function() {
-            style <- tryCatch(
-                self$options$plotStyle,
-                error = function(e) "clean"
-            )
-
-            if (is.null(style) || length(style) == 0 || !nzchar(style))
-                style <- "clean"
-
-            base <- if (identical(style, "bw")) {
-                ggplot2::theme_bw(base_size = 10.5)
-            } else if (identical(style, "contrast")) {
-                ggplot2::theme_classic(base_size = 10.5)
-            } else {
-                ggplot2::theme_minimal(base_size = 10.5)
-            }
-
-            base +
-                ggplot2::theme(
-                    plot.title = ggplot2::element_blank(),
-                    plot.subtitle = ggplot2::element_text(size = 9.5),
-                    axis.title = ggplot2::element_text(size = 9.5),
-                    axis.text = ggplot2::element_text(size = 8.5),
-                    legend.title = ggplot2::element_text(size = 9),
-                    legend.text = ggplot2::element_text(size = 8.5),
-                    legend.position = "bottom",
-                    panel.grid.minor = ggplot2::element_blank(),
-                    panel.grid.major = ggplot2::element_line(linewidth = 0.25),
-                    plot.margin = ggplot2::margin(4, 6, 4, 6)
-                )
+        .plotSeriesColors = function() {
+            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
+            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
+                return(NULL)
+            .al_plot_series_palette(choice)
         },
 
-        .addSmoother = function(plot, x, y, smoother = "loess", showBand = FALSE) {
+        .plotThemeExtra = function() {
+            ggplot2::theme(
+                plot.title = ggplot2::element_blank(),
+                plot.subtitle = ggplot2::element_text(size = 9.5),
+                axis.title = ggplot2::element_text(size = 9.5),
+                axis.text = ggplot2::element_text(size = 8.5),
+                legend.title = ggplot2::element_text(size = 9),
+                legend.text = ggplot2::element_text(size = 8.5),
+                legend.position = "bottom",
+                panel.grid.major = ggplot2::element_line(linewidth = 0.25, color = "grey90"),
+                plot.margin = ggplot2::margin(4, 6, 4, 6)
+            )
+        },
+
+        .addSmoother = function(plot, x, y, smoother = "loess", showBand = FALSE, pal) {
             if (identical(smoother, "loess")) {
                 plot + ggplot2::geom_smooth(
                     ggplot2::aes(x = .data[[x]], y = .data[[y]]),
                     method = "loess",
                     se = isTRUE(showBand),
                     linewidth = 0.6,
-                    color = private$.plotPalette()$smooth,
-                    fill = private$.plotPalette()$smooth
+                    color = pal$smooth,
+                    fill = pal$smooth
                 )
             } else if (identical(smoother, "linear")) {
                 plot + ggplot2::geom_smooth(
@@ -3443,8 +3424,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     method = "lm",
                     se = isTRUE(showBand),
                     linewidth = 0.6,
-                    color = private$.plotPalette()$smooth,
-                    fill = private$.plotPalette()$smooth
+                    color = pal$smooth,
+                    fill = pal$smooth
                 )
             } else {
                 plot
@@ -3517,10 +3498,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             out
         },
 
-        .plotResidualsFitted = function(image, ...) {
+        .plotResidualsFitted = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state$plotData
             d <- d[is.finite(d$fitted) & is.finite(d$residual), , drop = FALSE]
 
@@ -3530,28 +3512,29 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (show_ref) {
                 plot <- plot + ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
-                                      color = private$.plotPalette()$ref)
+                                      color = pal$ref)
             }
 
             plot <- plot +
                 ggplot2::geom_point(alpha = 0.75, size = 1.6,
-                                    color = private$.plotPalette()$point) +
+                                    color = pal$point) +
                 ggplot2::labs(
                     x = private$.plotTr("Fitted values", "Valores ajustados"),
                     y = private$.plotTr("Residuals", "Residuos")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             lin_smoother <- tryCatch(self$options$linSmoother, error = function(e) "loess")
             lin_band <- tryCatch(isTRUE(self$options$linShowBand), error = function(e) FALSE)
-            plot <- private$.addSmoother(plot, "fitted", "residual", lin_smoother, lin_band)
+            plot <- private$.addSmoother(plot, "fitted", "residual", lin_smoother, lin_band, pal)
             print(plot)
         },
 
-        .plotPredictorEffects = function(image, ...) {
+        .plotPredictorEffects = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state
 
             if (is.null(d) || nrow(d) == 0) {
@@ -3572,6 +3555,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 return()
             }
 
+            series_colors <- private$.plotSeriesColors()
             plot <- ggplot2::ggplot(
                     d,
                     ggplot2::aes(x = predictorZ, y = predicted, color = predictor)
@@ -3580,7 +3564,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_vline(
                     xintercept = 0,
                     linetype = "dashed",
-                    color = private$.plotPalette()$ref
+                    color = pal$ref
                 ) +
                 ggplot2::labs(
                     x = private$.plotTr(
@@ -3593,27 +3577,22 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ),
                     color = private$.plotTr("Predictor", "Predictor")
                 ) +
-                ggplot2::scale_color_manual(
-                    values = {
-                        predictors <- unique(as.character(d$predictor))
-                        colors <- private$.plotPalette()$series
+                ggtheme + private$.plotThemeExtra()
 
-                        if (is.null(colors) || length(colors) == 0)
-                            colors <- grDevices::rainbow(max(1, length(predictors)))
-
-                        colors <- rep(colors, length.out = max(1, length(predictors)))
-                        stats::setNames(colors, predictors)
-                    }
-                ) +
-                private$.plotTheme()
+            if (!is.null(series_colors)) {
+                predictors <- unique(as.character(d$predictor))
+                colors <- rep(series_colors, length.out = max(1, length(predictors)))
+                plot <- plot + ggplot2::scale_color_manual(values = stats::setNames(colors, predictors))
+            }
 
             print(plot)
         },
 
-        .plotQQResiduals = function(image, ...) {
+        .plotQQResiduals = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state$plotData
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
             n <- nrow(d)
@@ -3640,34 +3619,35 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ggplot2::aes(x = theoretical, ymin = lower, ymax = upper),
                     inherit.aes = FALSE,
                     alpha = 0.15,
-                    fill = private$.plotPalette()$line
+                    fill = pal$line
                 )
             }
 
             plot <- plot +
                 ggplot2::geom_abline(slope = 1, intercept = 0, linewidth = 0.6,
-                                      color = private$.plotPalette()$line) +
+                                      color = pal$line) +
                 ggplot2::geom_point(
                     ggplot2::aes(color = isExtreme),
                     alpha = 0.75, size = 1.6, show.legend = FALSE
                 ) +
                 ggplot2::scale_color_manual(values = c(
-                    "FALSE" = private$.plotPalette()$point,
-                    "TRUE" = private$.plotPalette()$alert
+                    "FALSE" = pal$point,
+                    "TRUE" = pal$alert
                 )) +
                 ggplot2::labs(
                     x = private$.plotTr("Theoretical quantiles", "Cuantiles teóricos"),
                     y = private$.plotTr("Standardized residuals", "Residuos estandarizados")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             print(plot)
         },
 
-        .plotResidualHistogram = function(image, ...) {
+        .plotResidualHistogram = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state$plotData
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
 
@@ -3685,10 +3665,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = stdResidual)) +
                 ggplot2::geom_histogram(bins = n_bins, alpha = 0.85,
-                                          fill = private$.plotPalette()$fill,
-                                          color = private$.plotPalette()$line) +
+                                          fill = pal$fill,
+                                          color = pal$line) +
                 ggplot2::geom_vline(xintercept = 0, linetype = "dashed",
-                                    color = private$.plotPalette()$ref)
+                                    color = pal$ref)
 
             if (show_curve && nrow(d) >= 3) {
                 bin_width <- diff(range(d$stdResidual)) / n_bins
@@ -3696,7 +3676,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 sigma <- stats::sd(d$stdResidual)
                 plot <- plot + ggplot2::stat_function(
                     fun = function(x) stats::dnorm(x, mean = mu, sd = sigma) * nrow(d) * bin_width,
-                    color = private$.plotPalette()$smooth,
+                    color = pal$smooth,
                     linewidth = 0.7
                 )
             }
@@ -3706,15 +3686,16 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = private$.plotTr("Standardized residuals", "Residuos estandarizados"),
                     y = private$.plotTr("Count", "Frecuencia")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             print(plot)
         },
 
-        .plotResidualNormalCurve = function(image, ...) {
+        .plotResidualNormalCurve = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state$plotData
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
 
@@ -3740,57 +3721,60 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = stdResidual)) +
                 ggplot2::geom_density(
                     linewidth = 0.8,
-                    color = private$.plotPalette()$smooth
+                    color = pal$smooth
                 ) +
                 ggplot2::geom_line(
                     data = normal_df,
                     ggplot2::aes(x = stdResidual, y = density, linetype = curve),
                     linewidth = 0.6,
-                    color = private$.plotPalette()$alert
+                    color = pal$alert
                 ) +
                 ggplot2::geom_vline(
                     xintercept = 0,
                     linetype = "dashed",
-                    color = private$.plotPalette()$ref
+                    color = pal$ref
                 ) +
                 ggplot2::scale_linetype_manual(values = "dashed", name = NULL) +
                 ggplot2::labs(
                     x = private$.plotTr("Standardized residuals", "Residuos estandarizados"),
                     y = private$.plotTr("Density", "Densidad")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             print(plot)
         },
 
-        .plotScaleLocation = function(image, ...) {
+        .plotScaleLocation = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state$plotData
             d <- d[is.finite(d$fitted) & is.finite(d$absStdResidual), , drop = FALSE]
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = fitted, y = absStdResidual)) +
                 ggplot2::geom_point(alpha = 0.75, size = 1.6,
-                                    color = private$.plotPalette()$point) +
+                                    color = pal$point) +
                 ggplot2::labs(
                     x = private$.plotTr("Fitted values", "Valores ajustados"),
                     y = private$.plotTr("sqrt(|standardized residuals|)", "sqrt(|residuos estandarizados|)")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             plot <- private$.addSmoother(
                 plot, "fitted", "absStdResidual",
                 tryCatch(self$options$homoSmoother, error = function(e) "loess"),
-                tryCatch(isTRUE(self$options$homoShowBand), error = function(e) FALSE)
+                tryCatch(isTRUE(self$options$homoShowBand), error = function(e) FALSE),
+                pal
             )
             print(plot)
         },
 
-        .plotNumericBoxplots = function(image, ...) {
+        .plotNumericBoxplots = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state
 
             if (is.null(d) || nrow(d) == 0) {
@@ -3867,13 +3851,13 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             base_plot <- ggplot2::ggplot(d, ggplot2::aes(x = variable, y = value)) +
                 ggplot2::geom_boxplot(
                     width = 0.65,
-                    outlier.colour = private$.plotPalette()$alert,
+                    outlier.colour = pal$alert,
                     outlier.alpha = 0.85,
                     outlier.size = 1.6,
-                    fill = private$.plotPalette()$fill,
-                    color = private$.plotPalette()$line
+                    fill = pal$fill,
+                    color = pal$line
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             if (similar_scale) {
                 plot <- base_plot +
@@ -3923,10 +3907,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             print(plot)
         },
 
-        .plotResidualsLeverage = function(image, ...) {
+        .plotResidualsLeverage = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state$plotData
             d <- d[is.finite(d$leverage) & is.finite(d$studResidual), , drop = FALSE]
 
@@ -3942,24 +3927,24 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (show_threshold) {
                 plot <- plot +
                     ggplot2::geom_hline(yintercept = c(-3, 0, 3), linetype = "dashed",
-                                          color = private$.plotPalette()$ref) +
+                                          color = pal$ref) +
                     ggplot2::geom_vline(xintercept = lev_cut, linetype = "dashed",
-                                        color = private$.plotPalette()$alert)
+                                        color = pal$alert)
             } else {
                 plot <- plot +
                     ggplot2::geom_hline(yintercept = 0, linetype = "dashed",
-                                          color = private$.plotPalette()$ref)
+                                          color = pal$ref)
             }
 
             plot <- plot +
                 ggplot2::geom_point(ggplot2::aes(size = cooksD), alpha = 0.75,
-                                    color = private$.plotPalette()$point) +
+                                    color = pal$point) +
                 ggplot2::scale_size_continuous(name = "Cook's D", range = c(1.2, 4)) +
                 ggplot2::labs(
                     x = private$.plotTr("Leverage", "Leverage"),
                     y = private$.plotTr("Studentized residuals", "Residuos studentizados")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             lab <- private$.labelPlotCases(d, image$state$pModel)
 
@@ -3977,17 +3962,18 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         hjust = -0.1,
                         vjust = -0.5,
                         check_overlap = TRUE,
-                        color = private$.plotPalette()$alert
+                        color = pal$alert
                     )
             }
 
             print(plot)
         },
 
-        .plotCooksD = function(image, ...) {
+        .plotCooksD = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state$plotData
             d <- d[is.finite(d$case) & is.finite(d$cooksD), , drop = FALSE]
             cut <- 4 / max(1, nrow(d))
@@ -3995,13 +3981,13 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = case, y = cooksD)) +
                 ggplot2::geom_col(alpha = 0.85,
-                                    fill = private$.plotPalette()$fill,
-                                    color = private$.plotPalette()$line)
+                                    fill = pal$fill,
+                                    color = pal$line)
 
             if (show_threshold) {
                 plot <- plot +
                     ggplot2::geom_hline(yintercept = cut, linetype = "dashed",
-                                        color = private$.plotPalette()$alert)
+                                        color = pal$alert)
             }
 
             plot <- plot +
@@ -4009,7 +3995,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = private$.plotTr("Case", "Caso"),
                     y = private$.plotTr("Cook's D", "Cook's D")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             lab <- private$.labelPlotCases(d, image$state$pModel)
 
@@ -4026,17 +4012,18 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         size = 3,
                         vjust = -0.6,
                         check_overlap = TRUE,
-                        color = private$.plotPalette()$alert
+                        color = pal$alert
                     )
             }
 
             print(plot)
         },
 
-        .plotCorrelationIndividual = function(image, ...) {
+        .plotCorrelationIndividual = function(image, ggtheme, theme, ...) {
             if (!private$.requireCorrPlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             pr <- image$state$corrPairResults
             dat <- image$state$corrData
             show_fit <- tryCatch(isTRUE(self$options$corrIndividualFit), error = function(e) TRUE)
@@ -4093,8 +4080,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ) +
                 ggplot2::scale_color_manual(
                     values = c(
-                        "FALSE" = private$.plotPalette()$point,
-                        "TRUE" = private$.plotPalette()$alert
+                        "FALSE" = pal$point,
+                        "TRUE" = pal$alert
                     ),
                     labels = c(
                         "FALSE" = private$.plotTr("Concordant", "Concordante"),
@@ -4107,11 +4094,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 plot <- plot +
                     ggplot2::geom_smooth(
                         method = "lm", se = FALSE, linewidth = 0.55, linetype = "dashed",
-                        color = private$.plotPalette()$line
+                        color = pal$line
                     ) +
                     ggplot2::geom_smooth(
                         method = "loess", se = FALSE, linewidth = 0.6,
-                        color = private$.plotPalette()$smooth
+                        color = pal$smooth
                     )
             }
 
@@ -4121,16 +4108,17 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = private$.plotTr("Standardized value (variable 1)", "Valor estandarizado (variable 1)"),
                     y = private$.plotTr("Standardized value (variable 2)", "Valor estandarizado (variable 2)")
                 ) +
-                private$.plotTheme() +
+                ggtheme + private$.plotThemeExtra() +
                 ggplot2::theme(strip.text = ggplot2::element_text(size = 8))
 
             print(plot)
         },
 
-        .plotCorrelationComparative = function(image, ...) {
+        .plotCorrelationComparative = function(image, ggtheme, theme, ...) {
             if (!private$.requireCorrPlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             pr <- image$state$corrPairResults
             style <- tryCatch(self$options$corrComparativeStyle, error = function(e) "dumbbell")
             highlight <- tryCatch(isTRUE(self$options$corrHighlightDiscordant), error = function(e) TRUE)
@@ -4160,11 +4148,24 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             d$pairLabel <- factor(d$pairLabel, levels = d$pairLabel)
             if (!highlight) d$discordant <- FALSE
 
-            alert_col <- private$.plotPalette()$alert
-            ref_col <- private$.plotPalette()$ref
-            series <- private$.plotPalette()$series
-            pearson_col <- series[1]
-            dcor_col <- if (length(series) >= 2) series[2] else private$.plotPalette()$smooth
+            # Pearson/dCor are two fixed semantic series (not a
+            # user-varying group count), but still follow the same
+            # jamovi-vs-override choice as every other multi-series plot:
+            # by default no manual scale is set below, so ggtheme's own
+            # 2-color discrete scale colors them; a non-default plotPalette
+            # choice provides an explicit 2-color override instead.
+            # ES: Pearson/dCor son dos series semánticas fijas (no una
+            # cantidad de grupos que varía por usuario), pero igual siguen
+            # la misma elección jamovi-vs-anulación que cualquier otro
+            # gráfico multi-serie: por defecto no se fija ninguna escala
+            # manual abajo, así que la propia escala discreta de 2 colores
+            # de ggtheme las colorea; una elección no predeterminada de
+            # plotPalette da en cambio una anulación explícita de 2 colores.
+            series_colors <- private$.plotSeriesColors()
+            two_colors <- if (!is.null(series_colors))
+                c("Pearson |r|" = series_colors[1], "dCor" = if (length(series_colors) >= 2) series_colors[2] else pal$smooth)
+            else
+                NULL
 
             if (identical(style, "bar")) {
                 long <- rbind(
@@ -4173,58 +4174,57 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
                 plot <- ggplot2::ggplot(long, ggplot2::aes(x = pairLabel, y = value, fill = metric)) +
                     ggplot2::geom_col(position = ggplot2::position_dodge(width = 0.7), width = 0.6) +
-                    ggplot2::scale_fill_manual(
-                        values = c("Pearson |r|" = pearson_col, "dCor" = dcor_col),
-                        name = NULL
-                    ) +
                     ggplot2::coord_flip() +
                     ggplot2::labs(
-                        x = NULL,
+                        x = NULL, fill = NULL,
                         y = private$.plotTr("Coefficient magnitude", "Magnitud del coeficiente")
                     ) +
-                    private$.plotTheme()
+                    ggtheme + private$.plotThemeExtra()
+
+                if (!is.null(two_colors))
+                    plot <- plot + ggplot2::scale_fill_manual(values = two_colors, name = NULL)
             } else {
                 plot <- ggplot2::ggplot(d, ggplot2::aes(y = pairLabel)) +
                     ggplot2::geom_segment(
                         ggplot2::aes(x = pearson, xend = dcor, yend = pairLabel),
-                        color = ifelse(d$discordant, alert_col, ref_col),
+                        color = ifelse(d$discordant, pal$alert, pal$ref),
                         linewidth = ifelse(d$discordant, 1, 0.6)
                     ) +
                     ggplot2::geom_point(ggplot2::aes(x = pearson, color = "Pearson |r|"), size = 2.4) +
                     ggplot2::geom_point(ggplot2::aes(x = dcor, color = "dCor"), size = 2.4) +
-                    ggplot2::scale_color_manual(
-                        values = c("Pearson |r|" = pearson_col, "dCor" = dcor_col),
-                        name = NULL
-                    ) +
                     ggplot2::labs(
                         x = private$.plotTr("Coefficient magnitude", "Magnitud del coeficiente"),
-                        y = NULL
+                        y = NULL, color = NULL
                     ) +
-                    private$.plotTheme()
+                    ggtheme + private$.plotThemeExtra()
+
+                if (!is.null(two_colors))
+                    plot <- plot + ggplot2::scale_color_manual(values = two_colors, name = NULL)
             }
 
             print(plot)
         },
 
-        .plotObservedPredicted = function(image, ...) {
+        .plotObservedPredicted = function(image, ggtheme, theme, ...) {
             if (!private$.requirePlotData(image))
                 return()
 
+            pal <- private$.plotColors(theme)
             d <- image$state$plotData
             d <- d[is.finite(d$observed) & is.finite(d$fitted), , drop = FALSE]
             lims <- range(c(d$observed, d$fitted), na.rm = TRUE)
 
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = fitted, y = observed)) +
                 ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed",
-                                      color = private$.plotPalette()$ref) +
+                                      color = pal$ref) +
                 ggplot2::geom_point(alpha = 0.75, size = 1.6,
-                                    color = private$.plotPalette()$point) +
+                                    color = pal$point) +
                 ggplot2::coord_equal(xlim = lims, ylim = lims) +
                 ggplot2::labs(
                     x = private$.plotTr("Predicted values", "Valores predichos"),
                     y = private$.plotTr("Observed values", "Valores observados")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra()
 
             print(plot)
         }
