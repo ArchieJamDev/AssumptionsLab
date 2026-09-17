@@ -295,13 +295,94 @@
 # estas 5 no tienen ninguna divergencia que reconciliar, así que
 # consolidarlas no cambia nada de lo que se calcula.
 # -----------------------------------------------------------------------------
+# Minimum-n requirements below are the `nortest` package's own hard
+# constraints, confirmed empirically (not a style choice): lillie.test needs
+# n>4, ad.test/cvm.test need n>7, sf.test needs 5<=n<=5000. A failure here is
+# therefore almost always explained by sample size or a constant vector
+# (lillie/ad/cvm error outright on a zero-variance x with a cryptic
+# "missing value where TRUE/FALSE needed"; sf.test instead returns
+# W=NA/p=NA without erroring at all - the same non-throwing "soft failure"
+# gotcha as timeCheck's tseries tests, so a result is only accepted when
+# its p-value is actually non-NA, not merely non-NULL).
+# ES: Los requisitos mínimos de n de abajo son restricciones propias del
+# paquete `nortest`, confirmadas empíricamente (no una elección de estilo):
+# lillie.test exige n>4, ad.test/cvm.test exigen n>7, sf.test exige
+# 5<=n<=5000. Un fallo aquí casi siempre se explica por el tamaño de
+# muestra o un vector constante (lillie/ad/cvm fallan directamente con un
+# vector de varianza cero, con un críptico "missing value where TRUE/FALSE
+# is needed"; sf.test en cambio devuelve W=NA/p=NA sin fallar en absoluto -
+# el mismo "fallo blando" sin lanzar error que en las pruebas de tseries de
+# timeCheck, así que un resultado solo se acepta cuando su p-valor es
+# realmente distinto de NA, no solo por no ser NULL).
 .al_nortest_battery <- function(x) {
+    n <- length(x)
+    sx <- stats::sd(x, na.rm = TRUE)
+    no_variation <- !is.finite(sx) || sx == 0
+
+    run_one <- function(fit_fun, min_n, max_n = Inf) {
+        if (n < min_n)
+            return(list(result = NULL, reason = "n_too_small", min_n = min_n))
+        if (n > max_n)
+            return(list(result = NULL, reason = "n_too_large", min_n = max_n))
+        if (no_variation)
+            return(list(result = NULL, reason = "no_variation", min_n = NA))
+
+        res <- tryCatch(fit_fun(), error = function(e) NULL)
+        if (!is.null(res) && !is.na(res$p.value))
+            list(result = res, reason = NULL, min_n = NA)
+        else
+            list(result = NULL, reason = "generic", min_n = NA)
+    }
+
+    li  <- run_one(function() nortest::lillie.test(x), min_n = 5)
+    ad  <- run_one(function() nortest::ad.test(x), min_n = 8)
+    cvm <- run_one(function() nortest::cvm.test(x), min_n = 8)
+    sf  <- run_one(function() nortest::sf.test(x), min_n = 5, max_n = 5000)
+    pt  <- run_one(function() nortest::pearson.test(x), min_n = 1)
+
     list(
-        li  = tryCatch(nortest::lillie.test(x), error = function(e) NULL),
-        ad  = tryCatch(nortest::ad.test(x), error = function(e) NULL),
-        cvm = tryCatch(nortest::cvm.test(x), error = function(e) NULL),
-        sf  = tryCatch(nortest::sf.test(x), error = function(e) NULL),
-        pt  = tryCatch(nortest::pearson.test(x), error = function(e) NULL)
+        li = li$result, ad = ad$result, cvm = cvm$result, sf = sf$result, pt = pt$result,
+        reasons = list(li = li, ad = ad, cvm = cvm, sf = sf, pt = pt)
+    )
+}
+
+# -----------------------------------------------------------------------------
+# .al_norm_reason_text()
+#
+# Input: info - one element of a battery's $reasons list (a
+#   list(reason=, min_n=), or NULL if the test succeeded); tr - the calling
+#   module's own bilingual selector, `function(en, es) ...`.
+# Output: NULL if the test succeeded (info$reason is NULL), otherwise a
+#   translated, test-agnostic explanation string ready to attach as a table
+#   footnote via addFootnote().
+#
+# Shared translator for the reason codes .al_nortest_battery() and
+# .al_norm_core_battery() return, so the five modules that call either
+# battery do not each re-implement the same switch().
+#
+# ES: Traductor compartido para los códigos de razón que devuelven
+# .al_nortest_battery() y .al_norm_core_battery(), para que los cinco
+# módulos que llaman a cualquiera de las dos no reimplementen cada uno el
+# mismo switch().
+# -----------------------------------------------------------------------------
+.al_norm_reason_text <- function(info, tr) {
+    if (is.null(info) || is.null(info$reason))
+        return(NULL)
+
+    switch(info$reason,
+        n_too_small = tr(
+            paste0("Could not be computed - fewer than ", info$min_n, " valid observations."),
+            paste0("No se pudo calcular - menos de ", info$min_n, " observaciones válidas.")
+        ),
+        n_too_large = tr(
+            paste0("Could not be computed - more than ", info$min_n, " observations (outside this test's valid range)."),
+            paste0("No se pudo calcular - más de ", info$min_n, " observaciones (fuera del rango válido de esta prueba).")
+        ),
+        no_variation = tr(
+            "Could not be computed - the data have no variation (they are constant).",
+            "No se pudo calcular - los datos no tienen variación (son constantes)."
+        ),
+        tr("Could not be computed for this data.", "No se pudo calcular para estos datos.")
     )
 }
 
@@ -423,7 +504,29 @@
         }
     }
 
-    list(sw = sw, jb = jb, skew = skew, kurt = kurt)
+    # Same reason-code convention as .al_nortest_battery(): "n_too_small"
+    # (paired with the actual threshold that applies to that specific test -
+    # 3 for Shapiro-Wilk, 8 for Jarque-Bera/skewness, 20 for kurtosis) or
+    # "no_variation", translated by the shared .al_norm_reason_text().
+    # ES: misma convención de códigos de razón que .al_nortest_battery()
+    # ("n_too_small", emparejado con el umbral real de esa prueba concreta -
+    # 3 para Shapiro-Wilk, 8 para Jarque-Bera/asimetría, 20 para curtosis) o
+    # "no_variation", traducidos por el .al_norm_reason_text() compartido.
+    reason_for <- function(result, min_n) {
+        if (!is.null(result)) return(NULL)
+        if (!valid_sd) return(list(reason = "no_variation", min_n = NA))
+        list(reason = "n_too_small", min_n = min_n)
+    }
+
+    list(
+        sw = sw, jb = jb, skew = skew, kurt = kurt,
+        reasons = list(
+            sw   = reason_for(sw, 3),
+            jb   = reason_for(jb, 8),
+            skew = reason_for(skew, 8),
+            kurt = reason_for(kurt, 20)
+        )
+    )
 }
 
 # -----------------------------------------------------------------------------

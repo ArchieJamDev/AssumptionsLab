@@ -1647,10 +1647,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
             # ------------------------------------------------------------
 
-            add_res_norm <- function(test, statistic, value, p_value) {
+            add_res_norm <- function(test, statistic, value, p_value, reason = NULL) {
+                key <- paste0("norm_", safe_key(test))
                 add_table_row(
                     self$results$residualNormality,
-                    paste0("norm_", safe_key(test)),
+                    key,
                     list(
                         test = test,
                         statistic = statistic,
@@ -1659,6 +1660,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         pSig = p_sig(p_value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(p_value)))
+                    tryCatch(
+                        self$results$residualNormality$addFootnote(col = "p", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
             }
 
             res <- residuals_raw
@@ -1677,7 +1683,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     normality_problem <- TRUE
                 add_res_norm("Shapiro-Wilk", "W", sw$statistic[[1]], sw$p.value)
             } else
-                add_res_norm("Shapiro-Wilk", "W", NA_real_, NA_real_)
+                add_res_norm("Shapiro-Wilk", "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, tr))
 
             # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
             # Pearson chi-square: identical tryCatch calls in every module,
@@ -1689,50 +1695,50 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(li))
                 add_res_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", li$statistic[[1]], li$p.value)
             else
-                add_res_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", NA_real_, NA_real_)
+                add_res_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, tr))
 
             if (!is.null(ad))
                 add_res_norm("Anderson-Darling", "A²", ad$statistic[[1]], ad$p.value)
             else
-                add_res_norm("Anderson-Darling", "A²", NA_real_, NA_real_)
+                add_res_norm("Anderson-Darling", "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, tr))
 
             if (!is.null(cvm))
                 add_res_norm("Cramer-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
             else
-                add_res_norm("Cramer-von Mises", "W²", NA_real_, NA_real_)
+                add_res_norm("Cramer-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, tr))
 
             if (!is.null(sf))
                 add_res_norm("Shapiro-Francia", "W'", sf$statistic[[1]], sf$p.value)
             else
-                add_res_norm("Shapiro-Francia", "W'", NA_real_, NA_real_)
+                add_res_norm("Shapiro-Francia", "W'", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$sf, tr))
 
             pt <- .nt_res$pt
 
             if (!is.null(pt))
                 add_res_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", pt$statistic[[1]], pt$p.value)
             else
-                add_res_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", NA_real_, NA_real_)
+                add_res_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$pt, tr))
 
             jb <- .nc_res$jb
 
             if (!is.null(jb))
                 add_res_norm("Jarque-Bera", "JB", jb$value, jb$p)
             else
-                add_res_norm("Jarque-Bera", "JB", NA_real_, NA_real_)
+                add_res_norm("Jarque-Bera", "JB", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$jb, tr))
 
             skew_test <- .nc_res$skew
 
             if (!is.null(skew_test))
                 add_res_norm(tr("Skewness test", "Prueba de asimetría"), "z", skew_test$value, skew_test$p)
             else
-                add_res_norm(tr("Skewness test", "Prueba de asimetría"), "z", NA_real_, NA_real_)
+                add_res_norm(tr("Skewness test", "Prueba de asimetría"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$skew, tr))
 
             kurt_test <- .nc_res$kurt
 
             if (!is.null(kurt_test))
                 add_res_norm(tr("Kurtosis test", "Prueba de curtosis"), "z", kurt_test$value, kurt_test$p)
             else
-                add_res_norm(tr("Kurtosis test", "Prueba de curtosis"), "z", NA_real_, NA_real_)
+                add_res_norm(tr("Kurtosis test", "Prueba de curtosis"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$kurt, tr))
 
             self$results$residualNormalityGuide$setContent(html_guide(tr("Residual normality", "Normalidad de residuos"), "regression", "residualNormalityGuide"))
 

@@ -474,7 +474,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     return(tr("Not applicable: sphericity requires three or more measurements.", "No aplica: la esfericidad requiere tres o más mediciones."))
 
                 if (is.na(p_value))
-                    return("Mauchly: no calculado. Revise muestra o matriz de covarianzas.")
+                    return(tr(
+                        "Mauchly: not computable (the covariance matrix of the measurements needs more complete cases than measurements).",
+                        "Mauchly: no calculable (la matriz de covarianzas de las mediciones necesita más casos completos que mediciones)."
+                    ))
 
                 if (p_value < .05)
                     return(paste0(
@@ -939,7 +942,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
 
-        add_norm_row <- function(scope, test, statistic, value, p_value, n) {
+        add_norm_row <- function(scope, test, statistic, value, p_value, n, reason = NULL) {
             if (is.finite(p_value)) {
                 normality_records <<- rbind(
                     normality_records,
@@ -955,9 +958,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     normality_problem <<- TRUE
             }
 
+            key <- paste0("norm_", norm_id)
             add_table_row(
                 self$results$normality,
-                paste0("norm_", norm_id),
+                key,
                 list(
                     scope = scope,
                     test = test,
@@ -967,6 +971,11 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     pSig = sig_code(p_value)
                 )
             )
+            if (!is.null(reason) && !is.finite(clean_num(p_value)))
+                tryCatch(
+                    self$results$normality$addFootnote(col = "p", note = reason, rowKey = key),
+                    error = function(e) invisible(NULL)
+                )
 
             norm_id <<- norm_id + 1
         }
@@ -1025,6 +1034,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             sw$p.value,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, "Shapiro-Wilk", "W", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$sw, tr))
                     }
 
                     # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
@@ -1043,6 +1054,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             li$p.value,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$li, tr))
                     }
 
                     if (!is.null(ad)) {
@@ -1054,6 +1067,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             ad$p.value,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, "Anderson-Darling", "A²", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$ad, tr))
                     }
 
                     if (!is.null(cvm)) {
@@ -1065,6 +1080,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             cvm$p.value,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, "Cramer-von Mises", "W²", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$cvm, tr))
                     }
 
                     if (!is.null(sf)) {
@@ -1076,6 +1093,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             sf$p.value,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, "Shapiro-Francia", "W'", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$sf, tr))
                     }
 
                     if (!is.null(pt)) {
@@ -1087,6 +1106,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             pt$p.value,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$pt, tr))
                     }
 
                     jb <- .nc_d$jb
@@ -1100,6 +1121,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             jb$p,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, "Jarque-Bera", "JB", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$jb, tr))
                     }
 
                     sk <- .nc_d$skew
@@ -1113,6 +1136,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             sk$p,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, tr("Skewness test", "Prueba de asimetría"), "z", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$skew, tr))
                     }
 
                     ku <- .nc_d$kurt
@@ -1126,6 +1151,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             ku$p,
                             n_norm
                         )
+                    } else {
+                        add_norm_row(nm, tr("Kurtosis test", "Prueba de curtosis"), "z", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$kurt, tr))
                     }
                 }
             }
@@ -1219,13 +1246,14 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
         sym_i <- 1
 
-            add_sym <- function(comparison, statistic, value, p_value) {
+            add_sym <- function(comparison, statistic, value, p_value, reason = NULL) {
                 if (!is.na(clean_num(p_value)) && clean_num(p_value) < .05)
                     symmetry_problem <<- TRUE
 
+                key <- paste0("sym_", sym_i)
                 add_table_row(
                     self$results$symmetry,
-                    paste0("sym_", sym_i),
+                    key,
                     list(
                         comparison = comparison,
                         statistic = statistic,
@@ -1234,6 +1262,11 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                         pSig = p_sig(p_value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(p_value)))
+                    tryCatch(
+                        self$results$symmetry$addFootnote(col = "p", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
 
                 symmetry_texts <<- c(
                     symmetry_texts,
@@ -1247,6 +1280,19 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 d <- all_diffs[[nm]]
                 d <- d[!is.na(d)]
 
+                # The manual skewness arithmetic below does not throw on a
+                # degenerate input - too few differences or a zero standard
+                # deviation just propagate to a NaN/NA z and p (0/0), not an
+                # error - so a result is only accepted when p is actually
+                # finite, matching the same non-throwing "soft failure"
+                # gotcha found in timeCheck's tseries calls.
+                # ES: la aritmética manual de asimetría de abajo no lanza
+                # error ante una entrada degenerada - muy pocas diferencias o
+                # una desviación estándar cero simplemente se propagan a un z
+                # y p NaN/NA (0/0), no un error - así que un resultado solo
+                # se acepta cuando p es realmente finito, el mismo "fallo
+                # blando" sin lanzar error encontrado en las llamadas a
+                # tseries de timeCheck.
                 sk <- tryCatch({
                     m <- mean(d)
                     ss <- stats::sd(d)
@@ -1256,10 +1302,18 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     list(value = z, p = p)
                 }, error = function(e) NULL)
 
-                if (!is.null(sk))
+                if (!is.null(sk) && is.finite(sk$p)) {
                     add_sym(nm, tr("Skewness z", "Asimetría z"), sk$value, sk$p)
-                else
-                    add_sym(nm, tr("Skewness z", "Asimetría z"), NA_real_, NA_real_)
+                } else {
+                    sk_reason <- if (length(d) < 2) tr(
+                        "Could not be computed - fewer than 2 valid differences.",
+                        "No se pudo calcular - menos de 2 diferencias válidas."
+                    ) else tr(
+                        "Could not be computed - the differences have no variation (they are constant).",
+                        "No se pudo calcular - las diferencias no tienen variación (son constantes)."
+                    )
+                    add_sym(nm, tr("Skewness z", "Asimetría z"), NA_real_, NA_real_, reason = sk_reason)
+                }
             }
 
             self$results$symmetryGuide$setContent(html_block(
@@ -1300,13 +1354,14 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             sp_i <- 1
             mauchly_p_value <- NA_real_
 
-            add_spher <- function(diagnostic, statistic, value, df, p_value) {
+            add_spher <- function(diagnostic, statistic, value, df, p_value, reason = NULL) {
                 if (!is.na(clean_num(p_value)) && clean_num(p_value) < .05)
                     sphericity_problem <<- TRUE
 
+                key <- paste0("sph_", sp_i)
                 add_table_row(
                     self$results$sphericity,
-                    paste0("sph_", sp_i),
+                    key,
                     list(
                         diagnostic = diagnostic,
                         statistic = statistic,
@@ -1316,6 +1371,11 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                         pSig = p_sig(p_value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(value)))
+                    tryCatch(
+                        self$results$sphericity$addFootnote(col = "value", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
 
                 sp_i <<- sp_i + 1
             }
@@ -1361,13 +1421,20 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     add_spher("Lower-bound epsilon", "epsilon",
                               sph$lb, NA_integer_, NA_real_)
                 } else {
-                    add_spher(tr("Approximate Mauchly", "Mauchly aproximado"), "W", NA_real_, NA_integer_, NA_real_)
+                    sph_reason <- if (n_used <= k) tr(
+                        paste0("Could not be computed - the covariance matrix of the ", k, " measurements needs more than ", k, " complete cases (there are ", n_used, ")."),
+                        paste0("No se pudo calcular - la matriz de covarianzas de las ", k, " mediciones necesita más de ", k, " casos completos (hay ", n_used, ").")
+                    ) else tr(
+                        "Could not be computed for these measurements.",
+                        "No se pudo calcular para estas mediciones."
+                    )
+                    add_spher(tr("Approximate Mauchly", "Mauchly aproximado"), "W", NA_real_, NA_integer_, NA_real_, reason = sph_reason)
                     add_spher("Greenhouse-Geisser epsilon", "epsilon",
-                              NA_real_, NA_integer_, NA_real_)
+                              NA_real_, NA_integer_, NA_real_, reason = sph_reason)
                     add_spher("Huynh-Feldt epsilon", "epsilon",
-                              NA_real_, NA_integer_, NA_real_)
+                              NA_real_, NA_integer_, NA_real_, reason = sph_reason)
                     add_spher("Lower-bound epsilon", "epsilon",
-                              NA_real_, NA_integer_, NA_real_)
+                              NA_real_, NA_integer_, NA_real_, reason = sph_reason)
                 }
             }
 

@@ -1001,7 +1001,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 ""
             }
 
-            add_normality <- function(level, test, n, statistic, value, p) {
+            add_normality <- function(level, test, n, statistic, value, p, reason = NA_character_) {
                 value <- clean_num(value)
                 p <- clean_num(p)
 
@@ -1015,6 +1015,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     pSig = p_sig(p),
                     decision = p_decision(p),
                     use = normality_use(test),
+                    reason = if (is.null(reason)) NA_character_ else reason,
                     stringsAsFactors = FALSE
                 )
             }
@@ -1043,7 +1044,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     add_normality(level, "Shapiro-Wilk", n_valid, "W", unname(sw$statistic), sw$p.value)
                     shapiro_p_by_group <- c(shapiro_p_by_group, sw$p.value)
                 } else {
-                    add_normality(level, "Shapiro-Wilk", n_valid, "W", NA_real_, NA_real_)
+                    add_normality(level, "Shapiro-Wilk", n_valid, "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$sw, tr))
                 }
 
                 # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
@@ -1056,50 +1057,50 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 if (!is.null(li)) {
                     add_normality(level, tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), n_valid, "D", unname(li$statistic), li$p.value)
                 } else {
-                    add_normality(level, tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), n_valid, "D", NA_real_, NA_real_)
+                    add_normality(level, tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), n_valid, "D", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$li, tr))
                 }
 
                 if (!is.null(ad)) {
                     add_normality(level, "Anderson-Darling", n_valid, "A²", unname(ad$statistic), ad$p.value)
                 } else {
-                    add_normality(level, "Anderson-Darling", n_valid, "A²", NA_real_, NA_real_)
+                    add_normality(level, "Anderson-Darling", n_valid, "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$ad, tr))
                 }
 
                 if (!is.null(cvm)) {
                     add_normality(level, "Cramer-von Mises", n_valid, "W²", unname(cvm$statistic), cvm$p.value)
                 } else {
-                    add_normality(level, "Cramer-von Mises", n_valid, "W²", NA_real_, NA_real_)
+                    add_normality(level, "Cramer-von Mises", n_valid, "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$cvm, tr))
                 }
 
                 if (!is.null(sf)) {
                     add_normality(level, "Shapiro-Francia", n_valid, "W'", unname(sf$statistic), sf$p.value)
                 } else {
-                    add_normality(level, "Shapiro-Francia", n_valid, "W'", NA_real_, NA_real_)
+                    add_normality(level, "Shapiro-Francia", n_valid, "W'", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$sf, tr))
                 }
 
                 pt <- .nt_x$pt
                 if (!is.null(pt)) {
                     add_normality(level, tr("Pearson chi-square", "Pearson chi-cuadrado"), n_valid, "P", unname(pt$statistic), pt$p.value)
                 } else {
-                    add_normality(level, tr("Pearson chi-square", "Pearson chi-cuadrado"), n_valid, "P", NA_real_, NA_real_)
+                    add_normality(level, tr("Pearson chi-square", "Pearson chi-cuadrado"), n_valid, "P", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$pt, tr))
                 }
 
                 if (!is.null(.nc_x$jb)) {
                     add_normality(level, "Jarque-Bera", n_valid, "JB", .nc_x$jb$value, .nc_x$jb$p)
                 } else {
-                    add_normality(level, "Jarque-Bera", n_valid, "JB", NA_real_, NA_real_)
+                    add_normality(level, "Jarque-Bera", n_valid, "JB", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$jb, tr))
                 }
 
                 if (!is.null(.nc_x$skew)) {
                     add_normality(level, tr("Skewness test", "Prueba de asimetría"), n_valid, "z", .nc_x$skew$value, .nc_x$skew$p)
                 } else {
-                    add_normality(level, tr("Skewness test", "Prueba de asimetría"), n_valid, "z", NA_real_, NA_real_)
+                    add_normality(level, tr("Skewness test", "Prueba de asimetría"), n_valid, "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$skew, tr))
                 }
 
                 if (!is.null(.nc_x$kurt)) {
                     add_normality(level, tr("Kurtosis test", "Prueba de curtosis"), n_valid, "z", .nc_x$kurt$value, .nc_x$kurt$p)
                 } else {
-                    add_normality(level, tr("Kurtosis test", "Prueba de curtosis"), n_valid, "z", NA_real_, NA_real_)
+                    add_normality(level, tr("Kurtosis test", "Prueba de curtosis"), n_valid, "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$kurt, tr))
                 }
             }
 
@@ -1115,8 +1116,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                     group_label <- if (j == 1) as.character(level) else ""
 
+                    row_key <- paste0("norm_", row_counter)
                     self$results$normality$addRow(
-                        rowKey = paste0("norm_", row_counter),
+                        rowKey = row_key,
                         values = list(
                             group = group_label,
                             test = sub_norm$test[j],
@@ -1128,6 +1130,11 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                             decision = sub_norm$decision[j]
                         )
                     )
+                    if (!is.na(sub_norm$reason[j]))
+                        tryCatch(
+                            self$results$normality$addFootnote(col = "p", note = sub_norm$reason[j], rowKey = row_key),
+                            error = function(e) invisible(NULL)
+                        )
 
                     row_counter <- row_counter + 1
                 }
@@ -1201,6 +1208,23 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 value <- clean_num(value)
                 p <- clean_num(p)
 
+                # `use` was accepted but never stored anywhere below - every
+                # failure-reason string passed at the call sites (below) was
+                # silently discarded, so a failed test showed a bare NA with
+                # no explanation at all. Only kept as a row-level reason when
+                # the test actually failed (p is NA) - on a successful row
+                # `use` carries a general description of the test, not a
+                # failure reason, and general descriptions belong in the
+                # guide text, not a per-row footnote.
+                # ES: `use` se aceptaba pero nunca se guardaba en ningún
+                # lado - cada cadena de razón de fallo pasada en los sitios
+                # de llamada (abajo) se descartaba en silencio, así que una
+                # prueba fallida mostraba un NA desnudo sin explicación
+                # alguna. Solo se conserva como razón a nivel de fila cuando
+                # la prueba realmente falló (p es NA) - en una fila exitosa
+                # `use` lleva una descripción general de la prueba, no una
+                # razón de fallo, y las descripciones generales van en el
+                # texto de guía, no en una nota al pie por fila.
                 homogeneity_rows[[length(homogeneity_rows) + 1]] <<- data.frame(
                     test = test,
                     statistic = statistic,
@@ -1210,6 +1234,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     p = p,
                     pSig = p_sig(p),
                     decision = variance_decision(p),
+                    reason = if (is.na(p) && !is.null(use)) use else NA_character_,
                     stringsAsFactors = FALSE
                 )
             }
@@ -1232,7 +1257,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         tr("General robust option; recommended for routine variance screening.", "Opción robusta general; recomendada para revisar varianzas de forma rutinaria.")
                     )
                 } else {
-                    add_homogeneity(tr("Levene (median-centered)", "Levene (centrado en mediana)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Not calc.", "No calc."))
+                    add_homogeneity(tr("Levene (median-centered)", "Levene (centrado en mediana)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
                 }
 
                 bf <- tryCatch(
@@ -1251,7 +1276,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         tr("Median-centered Levene variant; useful when normality is doubtful.", "Variante de Levene centrada en la mediana; útil cuando la normalidad es dudosa.")
                     )
                 } else {
-                    add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Not calc.", "No calc."))
+                    add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
                 }
 
                 lev_mean <- tryCatch(
@@ -1270,7 +1295,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         tr("Classical Levene form; more sensitive to non-normality than median-centered versions.", "Forma clásica de Levene; más sensible a la no normalidad que las versiones centradas en la mediana.")
                     )
                 } else {
-                    add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Not calc.", "No calc."))
+                    add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
                 }
 
             } else {
@@ -1294,7 +1319,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         tr("Powerful when normality is plausible; sensitive to non-normality.", "Potente cuando la normalidad es plausible; sensible a la no normalidad.")
                     )
                 } else {
-                    add_homogeneity("Bartlett", "K²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Not calc.", "No calc."))
+                    add_homogeneity("Bartlett", "K²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
                 }
 
                 flig <- tryCatch(stats::fligner.test(y_complete, g_complete), error = function(e) NULL)
@@ -1310,7 +1335,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         tr("Non-parametric and robust; useful when normality is doubtful.", "No paramétrica y robusta; útil cuando la normalidad es dudosa.")
                     )
                 } else {
-                    add_homogeneity("Fligner-Killeen", "χ²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Not calc.", "No calc."))
+                    add_homogeneity("Fligner-Killeen", "χ²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
                 }
 
                 # -----------------------------------------------------------------------------
@@ -1504,7 +1529,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         tr("Classic two-group variance test; sensitive to non-normality.", "Prueba clásica para dos grupos; sensible a la no normalidad.")
                     )
                 } else {
-                    add_homogeneity("F test", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Not calc.", "No calc."))
+                    add_homogeneity("F test", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations to estimate a variance.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para estimar una varianza."))
                 }
 
             }
@@ -1785,8 +1810,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             homogeneity_table <- do.call(rbind, homogeneity_rows)
 
             for (i in seq_len(nrow(homogeneity_table))) {
+                row_key <- paste0("hom_", i)
                 self$results$homogeneity$addRow(
-                    rowKey = paste0("hom_", i),
+                    rowKey = row_key,
                     values = list(
                         test = homogeneity_table$test[i],
                         statistic = homogeneity_table$statistic[i],
@@ -1798,6 +1824,11 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         decision = homogeneity_table$decision[i]
                     )
                 )
+                if (!is.na(homogeneity_table$reason[i]))
+                    tryCatch(
+                        self$results$homogeneity$addFootnote(col = "p", note = homogeneity_table$reason[i], rowKey = row_key),
+                        error = function(e) invisible(NULL)
+                    )
             }
 
             # -----------------------------------------------------------------------------
