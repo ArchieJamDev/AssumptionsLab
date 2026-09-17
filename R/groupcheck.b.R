@@ -2310,24 +2310,33 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         },
 
         # -----------------------------------------------------------------------------
-        # Plot style, palette, and language helpers shared by every plotting callback.
-        # ES: Ayudantes de estilo de gráfico, paleta e idioma compartidos por cada
-        # función de graficado.
+        # Plot theme/palette and language helpers shared by every plotting callback.
+        # Migrated to jamovi's native ggtheme/theme mechanism - see
+        # logcheck.b.R's .plotColors()/.plotSeriesColors() (the pilot for
+        # this change, 2026-09-17) for the full rationale. groupCheck's own
+        # plots are drawn with base R graphics (graphics::boxplot/plot/
+        # points), not ggplot2, so only jamovi's `theme` (a plain
+        # $color/$fill/$palette/$bw list) is usable here - `ggtheme` (a list
+        # of ggplot2 scale/theme objects) has no base-R equivalent and is
+        # left unused in every render function's signature. The N-group
+        # coloring jamovi normally gives ggplot2 plots "for free" via
+        # ggtheme's embedded discrete scale is replicated here by calling
+        # the same underlying jmvcore::colorPalette() jamovi itself uses.
         #
-        # .plotTr() mirrors tr() for use inside plotting callbacks (which run in a
-        # separate evaluation context from .run() and cannot see its local tr()).
-        # .plotStyle()/.plotPalette()/.plotBoxPalette()/.plotGroupPalette() resolve
-        # the user's selected plot-appearance options into concrete color sets, so
-        # every plot in this module shares one consistent visual identity per style/
-        # palette choice.
-        #
-        # ES: .plotTr() refleja tr() para su uso dentro de las funciones de
-        # graficado (que corren en un contexto de evaluación distinto al de .run() y
-        # no pueden ver su tr() local). .plotStyle()/.plotPalette()/
-        # .plotBoxPalette()/.plotGroupPalette() resuelven las opciones de apariencia
-        # de gráfico seleccionadas por el usuario en conjuntos de colores concretos,
-        # de modo que todo gráfico de este módulo comparta una identidad visual
-        # consistente según el estilo/paleta elegidos.
+        # ES: Tema/paleta de gráficos e idioma compartidos por cada función
+        # de graficado. Migrado al mecanismo nativo ggtheme/theme de jamovi
+        # - ver .plotColors()/.plotSeriesColors() en logcheck.b.R (el
+        # piloto de este cambio, 2026-09-17) para el razonamiento completo.
+        # Los propios gráficos de groupCheck se dibujan con gráficos base
+        # de R (graphics::boxplot/plot/points), no ggplot2, así que solo es
+        # utilizable el `theme` de jamovi (una lista simple
+        # $color/$fill/$palette/$bw) - `ggtheme` (una lista de objetos de
+        # escala/tema de ggplot2) no tiene equivalente en gráficos base de
+        # R y queda sin usar en la firma de cada función de graficado. El
+        # coloreado por N grupos que jamovi normalmente da "gratis" a los
+        # gráficos ggplot2 vía la escala discreta embebida en ggtheme se
+        # replica aquí llamando al mismo jmvcore::colorPalette() que usa
+        # jamovi internamente.
         # -----------------------------------------------------------------------------
         .plotTr = function(en, es = NULL) {
             if (is.null(es))
@@ -2339,72 +2348,38 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 en
         },
 
-        .plotStyle = function() {
-            style <- tryCatch(self$options$plotStyle, error = function(e) "clean")
-            if (is.null(style) || length(style) == 0 || !nzchar(style))
-                style <- "clean"
-            style
+        .plotColors = function(theme) {
+            base_color <- if (!is.null(theme$color) && length(theme$color) >= 1) theme$color[1] else "#333333"
+            accent_color <- if (!is.null(theme$color) && length(theme$color) >= 2) theme$color[2] else "#2C7FB8"
+            accent_fill <- if (!is.null(theme$fill) && length(theme$fill) >= 2) theme$fill[2] else "#A6CEE3"
+
+            list(
+                point = base_color, line = base_color, ref = "gray50",
+                alert = accent_color, smooth = accent_color, fill = accent_fill,
+                box_border = base_color, box_fill = "#F2F2F2", violin_fill = accent_fill,
+                mean = accent_color, median = base_color, axis = base_color, grid = "#E6E6E6"
+            )
         },
 
-        .plotPalette = function() {
-            # Base palette (bw/contrast/fullColor/clean): identical shape in
-            # every module, consolidated in shared-helpers.R
-            # (.al_plot_palette_base). fullColor now uses Variant A per
-            # Archie's decision, Aug 2026 - this changes groupCheck's
-            # fullColor look (previously Variant B: ref #7A7A7A, alert
-            # #D95F0E, smooth #2C7FB8).
-            # ES: paleta base idéntica en todos los módulos, consolidada en
-            # shared-helpers.R. fullColor ahora usa la Variante A por
-            # decisión de Archie, agosto 2026 - esto cambia el aspecto de
-            # fullColor en groupCheck (antes Variante B).
-            style <- private$.plotStyle()
-            .al_plot_palette_base(style)
-        },
-
-        .plotBoxPalette = function() {
-            style <- private$.plotStyle()
-
-            if (identical(style, "bw")) {
-                list(
-                    box_border = "gray10", box_fill = "gray92", violin_fill = "gray85",
-                    point = "gray20", mean = "gray5", median = "gray5",
-                    axis = "gray10", grid = "gray85")
-            } else if (identical(style, "contrast")) {
-                list(
-                    box_border = "#000000", box_fill = "#F0F0F0", violin_fill = "#D9D9D9",
-                    point = "#000000", mean = "#000000", median = "#000000",
-                    axis = "#000000", grid = "#CFCFCF")
-            } else if (identical(style, "fullColor")) {
-                list(
-                    box_border = "#253494", box_fill = "#DCEBFA", violin_fill = "#A6CEE3",
-                    point = "#2C7FB8", mean = "#D95F0E", median = "#253494",
-                    axis = "#222222", grid = "#E5E5E5")
-            } else {
-                list(
-                    box_border = "#2B2B2B", box_fill = "#F2F2F2", violin_fill = "#D9EAF7",
-                    point = "#4D4D4D", mean = "#555555", median = "#2B2B2B",
-                    axis = "#2B2B2B", grid = "#E6E6E6")
-            }
-        },
-
-        .plotGroupPalette = function(n) {
+        .plotSeriesColors = function(n) {
             n <- max(1, as.integer(n))
-            pal_name <- tryCatch(self$options$plotPalette, error = function(e) "blueOrange")
-            if (is.null(pal_name) || length(pal_name) == 0 || !nzchar(pal_name))
-                pal_name <- "blueOrange"
-
-            if (identical(pal_name, "viridis")) {
-                cols <- grDevices::hcl.colors(n, palette = "Viridis")
-            } else if (identical(pal_name, "greyscale")) {
-                cols <- grDevices::grey.colors(n, start = 0.15, end = 0.75)
-            } else if (identical(pal_name, "colorblind")) {
-                base <- c("#0072B2", "#D55E00", "#009E73", "#CC79A7", "#F0E442", "#56B4E9", "#E69F00", "#000000")
-                cols <- rep(base, length.out = n)
-            } else {
-                base <- c("#2C7FB8", "#D95F0E", "#41AB5D", "#8856A7", "#DD3497", "#636363", "#238B45", "#B15928")
-                cols <- rep(base, length.out = n)
+            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
+            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi")) {
+                # Default: replicate jamovi's own N-color scheme (the same
+                # function ggtheme's embedded discrete scale calls
+                # internally for ggplot2 plots) instead of a fixed hard-
+                # coded blue/orange set.
+                # ES: por defecto, replica el esquema de N colores propio
+                # de jamovi (la misma función que llama internamente la
+                # escala discreta embebida en ggtheme para gráficos
+                # ggplot2) en vez de un conjunto azul/naranja fijo.
+                jmv_pal <- tryCatch(self$options$palette, error = function(e) "jmv")
+                if (is.null(jmv_pal) || length(jmv_pal) == 0 || !nzchar(jmv_pal)) jmv_pal <- "jmv"
+                return(tryCatch(jmvcore::colorPalette(n, jmv_pal, "fill"), error = function(e) NULL))
             }
-            cols
+            cols <- .al_plot_series_palette(choice)
+            if (is.null(cols)) return(NULL)
+            rep(cols, length.out = n)
         },
 
         # -----------------------------------------------------------------------------
@@ -2424,7 +2399,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # necesita al menos 3 casos válidos para recibir un boxplot, ya que con menos
         # puntos no se puede sostener una visualización de cuartiles significativa.
         # -----------------------------------------------------------------------------
-        .plotGroupDistribution = function(image, ...) {
+        .plotGroupDistribution = function(image, theme, ...) {
 
             reportLang <- .al_normalize_lang(self$options$reportLang)
             tr <- function(en, es = NULL) private$.plotTr(en, es)
@@ -2432,7 +2407,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             if (!isTRUE(self$options$showDistributionPlot))
                 return(invisible(TRUE))
 
-            pal <- private$.plotBoxPalette()
+            pal <- private$.plotColors(theme)
 
             draw_message <- function(msg) {
                 graphics::plot.new()
@@ -2529,10 +2504,12 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 col.axis = pal$axis,
                 col = pal$axis)
 
-            group_cols <- if (isTRUE(self$options$distColorByGroup))
-                private$.plotGroupPalette(n_groups)
-            else
+            group_cols <- if (isTRUE(self$options$distColorByGroup)) {
+                cols <- private$.plotSeriesColors(n_groups)
+                if (is.null(cols)) rep(pal$box_fill, n_groups) else cols
+            } else {
                 rep(pal$box_fill, n_groups)
+            }
 
             if (isTRUE(self$options$addViolinPlot)) {
                 for (i in seq_along(values_by_group)) {
@@ -2667,11 +2644,11 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # referencia y marca los puntos con |z| > 2.5 como atípicos potenciales,
         # puramente como apoyo visual junto a los diagnósticos numéricos.
         # -----------------------------------------------------------------------------
-        .plotGroupQQNormality = function(image, ...) {
+        .plotGroupQQNormality = function(image, theme, ...) {
 
             d <- image$state
 
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
             tr <- function(en, es = NULL) private$.plotTr(en, es)
 
             draw_message <- function(msg) {
@@ -2824,11 +2801,11 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # múltiples modas) sean visibles directamente y no solo a través de
         # estadísticos resumen.
         # -----------------------------------------------------------------------------
-        .plotGroupNormalCurve = function(image, ...) {
+        .plotGroupNormalCurve = function(image, theme, ...) {
 
             d <- image$state
 
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
             tr <- function(en, es = NULL) private$.plotTr(en, es)
 
             draw_message <- function(msg) {
