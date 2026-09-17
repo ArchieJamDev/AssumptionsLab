@@ -1120,10 +1120,16 @@ pathCheckClass <- R6::R6Class(
                 normTotalByDep[[d]] <- 0
                 normFailedTestsByDep[[d]] <- character(0)
 
-                add_norm <- function(testName, statistic, p) {
-                    normTable$addRow(rowKey = paste(d, testName, sep = "|"), values = list(
+                add_norm <- function(testName, statistic, p, reason = NULL) {
+                    key <- paste(d, testName, sep = "|")
+                    normTable$addRow(rowKey = key, values = list(
                         dep = d, test = testName, statistic = statistic, p = p, pSig = p_sig_stars(p)
                     ))
+                    if (!is.null(reason) && is.na(p))
+                        tryCatch(
+                            normTable$addFootnote(col = "p", note = reason, rowKey = key),
+                            error = function(e) invisible(NULL)
+                        )
                     nNormalityTotal <<- nNormalityTotal + 1
                     normTotalByDep[[d]] <<- normTotalByDep[[d]] + 1
                     if (!is.na(p) && p < .05) {
@@ -1141,7 +1147,10 @@ pathCheckClass <- R6::R6Class(
                 # .al_norm_core_battery() en shared-helpers.R.
                 .nc_res <- .al_norm_core_battery(res)
                 sw <- .nc_res$sw
-                if (!is.null(sw)) add_norm("Shapiro-Wilk", unname(sw$statistic), sw$p.value)
+                if (!is.null(sw))
+                    add_norm("Shapiro-Wilk", unname(sw$statistic), sw$p.value)
+                else
+                    add_norm("Shapiro-Wilk", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, tr))
 
                 # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
                 # Pearson chi-square: identical tryCatch calls in every module,
@@ -1150,20 +1159,48 @@ pathCheckClass <- R6::R6Class(
                 .nt_res <- .al_nortest_battery(res)
                 ad <- .nt_res$ad; li <- .nt_res$li; cvm <- .nt_res$cvm
                 sf <- .nt_res$sf; pt <- .nt_res$pt
-                if (!is.null(ad)) add_norm("Anderson-Darling", unname(ad$statistic), ad$p.value)
-                if (!is.null(li)) add_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), unname(li$statistic), li$p.value)
-                if (!is.null(cvm)) add_norm("Cramer-von Mises", unname(cvm$statistic), cvm$p.value)
-                if (!is.null(sf)) add_norm("Shapiro-Francia", unname(sf$statistic), sf$p.value)
-                if (!is.null(pt)) add_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), unname(pt$statistic), pt$p.value)
+                if (!is.null(ad))
+                    add_norm("Anderson-Darling", unname(ad$statistic), ad$p.value)
+                else
+                    add_norm("Anderson-Darling", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, tr))
+
+                if (!is.null(li))
+                    add_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), unname(li$statistic), li$p.value)
+                else
+                    add_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, tr))
+
+                if (!is.null(cvm))
+                    add_norm("Cramer-von Mises", unname(cvm$statistic), cvm$p.value)
+                else
+                    add_norm("Cramer-von Mises", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, tr))
+
+                if (!is.null(sf))
+                    add_norm("Shapiro-Francia", unname(sf$statistic), sf$p.value)
+                else
+                    add_norm("Shapiro-Francia", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$sf, tr))
+
+                if (!is.null(pt))
+                    add_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), unname(pt$statistic), pt$p.value)
+                else
+                    add_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$pt, tr))
 
                 jb <- .nc_res$jb
-                if (!is.null(jb)) add_norm("Jarque-Bera", jb$value, jb$p)
+                if (!is.null(jb))
+                    add_norm("Jarque-Bera", jb$value, jb$p)
+                else
+                    add_norm("Jarque-Bera", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$jb, tr))
 
                 skew_test <- .nc_res$skew
-                if (!is.null(skew_test)) add_norm(tr("Skewness test", "Prueba de asimetría"), skew_test$value, skew_test$p)
+                if (!is.null(skew_test))
+                    add_norm(tr("Skewness test", "Prueba de asimetría"), skew_test$value, skew_test$p)
+                else
+                    add_norm(tr("Skewness test", "Prueba de asimetría"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$skew, tr))
 
                 kurt_test <- .nc_res$kurt
-                if (!is.null(kurt_test)) add_norm(tr("Kurtosis test", "Prueba de curtosis"), kurt_test$value, kurt_test$p)
+                if (!is.null(kurt_test))
+                    add_norm(tr("Kurtosis test", "Prueba de curtosis"), kurt_test$value, kurt_test$p)
+                else
+                    add_norm(tr("Kurtosis test", "Prueba de curtosis"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$kurt, tr))
             }
 
             nCases <- nrow(data)
@@ -1219,11 +1256,17 @@ pathCheckClass <- R6::R6Class(
                 homoFailByDep[[d]] <- 0
                 homoFailedTestsByDep[[d]] <- character(0)
 
-                add_homo <- function(testName, statistic, value, df, p) {
-                    homoTable$addRow(rowKey = paste(d, testName, sep = "|"), values = list(
+                add_homo <- function(testName, statistic, value, df, p, reason = NULL) {
+                    key <- paste(d, testName, sep = "|")
+                    homoTable$addRow(rowKey = key, values = list(
                         dep = d, test = testName, statistic = statistic,
                         value = value, df = df, p = p, pSig = p_sig_stars(p)
                     ))
+                    if (!is.null(reason) && is.na(p))
+                        tryCatch(
+                            homoTable$addFootnote(col = "p", note = reason, rowKey = key),
+                            error = function(e) invisible(NULL)
+                        )
                     nHomoTotal <<- nHomoTotal + 1
                     if (!is.na(p) && p < .05) {
                         nHomoFail <<- nHomoFail + 1
@@ -1235,11 +1278,21 @@ pathCheckClass <- R6::R6Class(
                 bp <- .al_bptest(fit)
                 if (!is.null(bp))
                     add_homo("Breusch-Pagan (lmtest)", "LM", unname(bp$statistic), as.character(unname(bp$parameter)), bp$p.value)
+                else
+                    add_homo("Breusch-Pagan (lmtest)", "LM", NA_real_, NA_character_, NA_real_, reason = tr(
+                        "Could not be computed - the auxiliary regression of squared residuals on the predictors is likely singular (too few residual degrees of freedom, or near-perfect collinearity among predictors).",
+                        "No se pudo calcular - la regresi\u00F3n auxiliar de residuos al cuadrado sobre los predictores es probablemente singular (muy pocos grados de libertad residuales, o colinealidad casi perfecta entre predictores)."
+                    ))
 
                 gq <- tryCatch(lmtest::gqtest(fit), error = function(e) NULL)
                 if (!is.null(gq))
                     add_homo("Goldfeld-Quandt (lmtest)", "F", unname(gq$statistic),
                              paste(unname(gq$parameter), collapse = ", "), gq$p.value)
+                else
+                    add_homo("Goldfeld-Quandt (lmtest)", "F", NA_real_, NA_character_, NA_real_, reason = tr(
+                        "Could not be computed - Goldfeld-Quandt splits this equation's cases in two (ordered by fitted values) and fits a separate regression to each half; there are likely too few cases, relative to the number of predictors, for both halves to be estimable.",
+                        "No se pudo calcular - Goldfeld-Quandt divide los casos de esta ecuaci\u00F3n en dos (ordenados por valores ajustados) y ajusta una regresi\u00F3n separada a cada mitad; probablemente hay muy pocos casos, respecto al n\u00FAmero de predictores, para que ambas mitades sean estimables."
+                    ))
 
                 white <- tryCatch({
                     e2 <- res^2
@@ -1265,11 +1318,22 @@ pathCheckClass <- R6::R6Class(
                 }, error = function(e) NULL)
                 if (!is.null(white))
                     add_homo(tr("White (general)", "White (general)"), "LM", white$value, as.character(white$df), white$p)
+                else
+                    add_homo(tr("White (general)", "White (general)"), "LM", NA_real_, NA_character_, NA_real_, reason = tr(
+                        "Could not be computed - White's auxiliary regression adds every predictor's square and cross-product, so it needs more residual degrees of freedom than Breusch-Pagan; there are likely too many predictors relative to the number of cases in this equation.",
+                        "No se pudo calcular - la regresi\u00F3n auxiliar de White agrega el cuadrado y los productos cruzados de cada predictor, as\u00ED que necesita m\u00E1s grados de libertad residuales que Breusch-Pagan; probablemente hay demasiados predictores respecto al n\u00FAmero de casos en esta ecuaci\u00F3n."
+                    ))
 
                 sp <- tryCatch(stats::cor.test(abs(res), fitted_vals, method = "spearman"), error = function(e) NULL)
                 if (!is.null(sp))
                     add_homo(tr("Spearman |residuals| vs fitted", "Spearman |residuos| vs ajustados"),
                              "\u03C1", unname(sp$estimate), NA_character_, sp$p.value)
+                else
+                    add_homo(tr("Spearman |residuals| vs fitted", "Spearman |residuos| vs ajustados"),
+                             "\u03C1", NA_real_, NA_character_, NA_real_, reason = tr(
+                                 "Could not be computed - fewer than 2 complete cases, or the residuals/fitted values do not vary, in this equation.",
+                                 "No se pudo calcular - menos de 2 casos completos, o los residuos/valores ajustados no var\u00EDan, en esta ecuaci\u00F3n."
+                             ))
             }
 
             depHomoLines <- vapply(names(fits), function(d) {
@@ -1310,12 +1374,18 @@ pathCheckClass <- R6::R6Class(
             vifByDep <- list()
             multiRowKey <- 0
 
-            add_multi_row <- function(d, diagnostic, item, statistic, value) {
+            add_multi_row <- function(d, diagnostic, item, statistic, value, reason = NULL) {
                 multiRowKey <<- multiRowKey + 1
-                vifTable$addRow(rowKey = paste0("multi_", multiRowKey), values = list(
+                key <- paste0("multi_", multiRowKey)
+                vifTable$addRow(rowKey = key, values = list(
                     dep = d, diagnostic = diagnostic, item = item, statistic = statistic,
                     value = if (is.na(value)) NA_real_ else value
                 ))
+                if (!is.null(reason) && is.na(value))
+                    tryCatch(
+                        vifTable$addFootnote(col = "value", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
             }
 
             for (d in names(fits)) {
@@ -1341,8 +1411,12 @@ pathCheckClass <- R6::R6Class(
                     tol <- if (is.na(vif)) NA_real_ else 1 / vif
                     pClean <- gsub("^`|`$", "", colnames(X_no_intercept)[j])
 
-                    add_multi_row(d, "VIF", pClean, "VIF", vif)
-                    add_multi_row(d, tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol)
+                    vif_reason <- if (is.na(vif)) tr(
+                        "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
+                        "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
+                    ) else NULL
+                    add_multi_row(d, "VIF", pClean, "VIF", vif, reason = vif_reason)
+                    add_multi_row(d, tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol, reason = vif_reason)
 
                     if (!is.na(vif)) {
                         depVifs[pClean] <- vif
@@ -1359,6 +1433,16 @@ pathCheckClass <- R6::R6Class(
                     R <- stats::cor(scale(X_no_intercept), use = "pairwise.complete.obs")
                     eigen(R, symmetric = TRUE)$values
                 }, error = function(e) NULL)
+
+                if (is.null(eig)) {
+                    eig_reason <- tr(
+                        "Could not be computed - the predictors' correlation matrix could not be decomposed (likely too few complete cases relative to the number of predictors) in this equation.",
+                        "No se pudo calcular - no fue posible descomponer la matriz de correlación de los predictores (probablemente muy pocos casos completos respecto al número de predictores) en esta ecuación."
+                    )
+                    add_multi_row(d, tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), NA_real_, reason = eig_reason)
+                    add_multi_row(d, tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", NA_real_, reason = eig_reason)
+                    add_multi_row(d, tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", NA_real_, reason = eig_reason)
+                }
 
                 if (!is.null(eig)) {
                     min_eig <- max(min(eig, na.rm = TRUE), .Machine$double.eps)
