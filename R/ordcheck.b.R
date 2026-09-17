@@ -1436,38 +1436,30 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (identical(plot_lang, "es")) es else en
         },
 
-        .plotStyle = function() {
-            style <- tryCatch(self$options$plotStyle, error = function(e) "clean")
-            if (is.null(style) || length(style) == 0 || !nzchar(style)) style <- "clean"
-            style
-        },
+        # Plot theme/palette migrated to jamovi's native ggtheme/theme
+        # mechanism - see the detailed rationale in logcheck.b.R's
+        # .plotColors()/.plotSeriesColors() (the pilot for this change,
+        # 2026-09-17). Identical design here.
+        # ES: Tema/paleta de gráficos migrado al mecanismo nativo
+        # ggtheme/theme de jamovi - ver el razonamiento detallado en
+        # .plotColors()/.plotSeriesColors() de logcheck.b.R (el piloto de
+        # este cambio, 2026-09-17). Mismo diseño aquí.
+        .plotColors = function(theme) {
+            base_color <- if (!is.null(theme$color) && length(theme$color) >= 1) theme$color[1] else "#333333"
+            accent_color <- if (!is.null(theme$color) && length(theme$color) >= 2) theme$color[2] else "#2C7FB8"
+            accent_fill <- if (!is.null(theme$fill) && length(theme$fill) >= 2) theme$fill[2] else "#A6CEE3"
 
-        .plotPalette = function() {
-            style <- private$.plotStyle()
-            base <- .al_plot_palette_base(style)
-
-            palette_choice <- tryCatch(self$options$plotPalette, error = function(e) "blueOrange")
-            if (is.null(palette_choice) || length(palette_choice) == 0 || !nzchar(palette_choice))
-                palette_choice <- "blueOrange"
-
-            base$series <- .al_plot_series_palette(palette_choice)
-            base
-        },
-
-        .plotTheme = function() {
-            style <- private$.plotStyle()
-            base <- if (identical(style, "bw")) {
-                ggplot2::theme_bw(base_size = 10.5)
-            } else if (identical(style, "contrast")) {
-                ggplot2::theme_classic(base_size = 10.5)
-            } else {
-                ggplot2::theme_minimal(base_size = 10.5)
-            }
-            base + ggplot2::theme(
-                legend.position = "bottom",
-                panel.grid.minor = ggplot2::element_blank(),
-                plot.margin = ggplot2::margin(4, 6, 4, 6)
+            list(
+                point = base_color, line = base_color, ref = "gray50",
+                alert = accent_color, smooth = accent_color, fill = accent_fill
             )
+        },
+
+        .plotSeriesColors = function() {
+            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
+            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
+                return(NULL)
+            .al_plot_series_palette(choice)
         },
 
         # -----------------------------------------------------------------------------
@@ -1484,12 +1476,11 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # desenlace ordinal colapsado en su punto de corte mediano) - todo
         # lo demás queda igual.
         # -----------------------------------------------------------------------------
-        .plotLinearity = function(image, ...) {
+        .plotLinearity = function(image, ggtheme, theme, ...) {
             st <- image$state
             if (is.null(st)) return(FALSE)
 
             tr_p <- function(en, es) private$.plotTr(en, es, image)
-            pal <- private$.plotPalette()
             covs <- st$covs
 
             if (length(covs) == 0) {
@@ -1539,8 +1530,11 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot_df <- do.call(rbind, plot_rows)
             predictors_unique <- unique(as.character(plot_df$predictor))
-            series_colors <- rep(pal$series, length.out = max(1, length(predictors_unique)))
-            series_colors <- stats::setNames(series_colors, predictors_unique)
+            series_colors <- private$.plotSeriesColors()
+            if (!is.null(series_colors)) {
+                series_colors <- rep(series_colors, length.out = max(1, length(predictors_unique)))
+                series_colors <- stats::setNames(series_colors, predictors_unique)
+            }
 
             smoother <- tryCatch(self$options$linSmoother, error = function(e) "none")
 
@@ -1560,14 +1554,17 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             p <- p +
                 ggplot2::geom_point(ggplot2::aes(size = n, color = predictor), show.legend = c(size = TRUE, color = FALSE)) +
-                ggplot2::scale_color_manual(values = series_colors) +
                 ggplot2::facet_wrap(~predictor, scales = "free_x") +
                 ggplot2::labs(
                     x = tr_p("Predictor (binned mean)", "Predictor (media por grupo)"),
                     y = tr_p("Empirical cumulative logit (median cutpoint)", "Logit acumulativo empírico (punto de corte mediano)"),
                     size = tr_p("Group n", "n del grupo")
                 ) +
-                private$.plotTheme()
+                ggtheme +
+                ggplot2::theme(legend.position = "bottom", plot.margin = ggplot2::margin(4, 6, 4, 6))
+
+            if (!is.null(series_colors))
+                p <- p + ggplot2::scale_color_manual(values = series_colors)
 
             print(p)
             TRUE
@@ -1577,12 +1574,12 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # Pearson-type residual by case.
         # ES: Residuo tipo Pearson por caso.
         # -----------------------------------------------------------------------------
-        .plotInfluence = function(image, ...) {
+        .plotInfluence = function(image, ggtheme, theme, ...) {
             st <- image$state
             if (is.null(st)) return(FALSE)
 
             tr_p <- function(en, es) private$.plotTr(en, es, image)
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             resid_vals <- st$pearson_resid
             n <- st$n
@@ -1629,7 +1626,8 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             p <- p +
                 ggplot2::labs(x = tr_p("Case", "Caso"), y = tr_p("Pearson-type residual", "Residuo tipo Pearson")) +
-                private$.plotTheme()
+                ggtheme +
+                ggplot2::theme(plot.margin = ggplot2::margin(4, 6, 4, 6))
 
             print(p)
             TRUE

@@ -168,33 +168,27 @@ options:
     default: true
 
   # -----------------------------------------------------------------------------
-  # General style — cosmetic options applied across every diagnostic plot.
-  # ES: Estilo general — opciones estéticas aplicadas a cada gráfico diagnóstico.
+  # Plot color palette - see logcheck.a.yaml's plotPalette for the full
+  # rationale (jamovi review team feedback, 2026-09-16). Default follows
+  # jamovi's own global Theme/palette; the two other choices are genuinely
+  # additive (jamovi does not currently ship a colorblind-safe or viridis
+  # palette).
+  # ES: Paleta de color del gráfico - ver plotPalette en logcheck.a.yaml
+  # para el razonamiento completo (retroalimentación del equipo de
+  # revisión de jamovi, 2026-09-16). El valor por defecto sigue el Tema/
+  # paleta global de jamovi; las otras dos opciones son genuinamente
+  # aditivas (jamovi no ofrece hoy una paleta apta para daltonismo ni
+  # viridis).
   # -----------------------------------------------------------------------------
-  - name: plotStyle
-    title: Plot Style
-    type: List
-    options:
-      - title: Clean Academic
-        name: clean
-      - title: Black and White
-        name: bw
-      - title: High Contrast
-        name: contrast
-      - title: Full color
-        name: fullColor
-    default: clean
-
   - name: plotPalette
     title: Color Palette for Categories/Groups
     type: List
     options:
-      - title: Blue-Orange (default)
-        name: blueOrange
+      - title: Follow jamovi theme (default)
+        name: jamovi
+      - title: Colorblind-safe (Okabe-Ito)
+        name: colorblind
       - title: Viridis
         name: viridis
-      - title: Grayscale
-        name: greyscale
-      - title: High Contrast (accessible)
-        name: colorblind
-    default: blueOrange
+    default: jamovi
+
