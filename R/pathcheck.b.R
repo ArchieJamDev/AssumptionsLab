@@ -124,60 +124,63 @@ pathCheckClass <- R6::R6Class(
             if (identical(lang, "es")) es else en
         },
 
-        .plotPalette = function() {
-            style <- tryCatch(self$options$plotStyle, error = function(e) "clean")
-            if (is.null(style) || length(style) == 0 || !nzchar(style)) style <- "clean"
+        # Plot theme/palette migrated to jamovi's native ggtheme/theme
+        # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
+        # (the pilot for this change, 2026-09-17) for the full rationale.
+        # .plotColors(theme) derives every fixed color (including the path
+        # diagram's node fill/border, edge text, and significant-vs-not
+        # edge colors) from jamovi's own base/accent theme instead of a
+        # local plotStyle option that duplicated jamovi's Theme setting.
+        # The path diagram (.plotPathDiagram) draws with ggplot2::
+        # theme_void() - a structural node/edge diagram, not a data plot -
+        # so it has no axes/grid/legend for ggtheme to style and never
+        # receives ggtheme, only `theme` (matching groupcheck.b.R's same
+        # choice for its own non-data-plot base-R graphics). The
+        # residual-histograms plot (.plotResidualHistograms) is a genuine
+        # ggplot2 data plot and follows the standard pattern in full,
+        # including .plotSeriesColors() for its per-dependent-variable
+        # fill/colour.
+        # ES: Tema/paleta de gráficos migrado al mecanismo nativo
+        # ggtheme/theme de jamovi - ver .plotColors()/.plotSeriesColors()
+        # de logcheck.b.R (el piloto de este cambio, 2026-09-17) para el
+        # razonamiento completo. .plotColors(theme) deriva cada color fijo
+        # (incluyendo el relleno/borde de nodo del diagrama de ruta, el
+        # texto de arista y los colores de arista significativa/no
+        # significativa) del propio tema base/acento de jamovi en vez de
+        # una opción local plotStyle que duplicaba el ajuste de Tema de
+        # jamovi. El diagrama de ruta (.plotPathDiagram) se dibuja con
+        # ggplot2::theme_void() - un diagrama estructural de nodos/
+        # aristas, no un gráfico de datos - así que no tiene ejes/
+        # cuadrícula/leyenda que ggtheme pueda estilizar y nunca recibe
+        # ggtheme, solo theme (igual que la misma decisión de
+        # groupcheck.b.R para sus propios gráficos base de R que no son
+        # de datos). El gráfico de histogramas de residuos
+        # (.plotResidualHistograms) es un gráfico de datos genuino de
+        # ggplot2 y sigue el patrón estándar por completo, incluyendo
+        # .plotSeriesColors() para su relleno/color por variable
+        # dependiente.
+        .plotColors = function(theme) {
+            base_color <- if (!is.null(theme$color) && length(theme$color) >= 1) theme$color[1] else "#333333"
+            accent_color <- if (!is.null(theme$color) && length(theme$color) >= 2) theme$color[2] else "#2C7FB8"
+            accent_fill <- if (!is.null(theme$fill) && length(theme$fill) >= 2) theme$fill[2] else "#A6CEE3"
 
-            if (identical(style, "bw")) {
-                return(list(nodeFill = "gray90", nodeLine = "gray20", text = "gray10",
-                            edgeSig = "gray10", edgeNs = "gray65", fill = "gray70",
-                            line = "gray10"))
-            }
-            if (identical(style, "contrast")) {
-                return(list(nodeFill = "#FFFFFF", nodeLine = "#000000", text = "#000000",
-                            edgeSig = "#000000", edgeNs = "#999999", fill = "#BDBDBD",
-                            line = "#000000"))
-            }
-            if (identical(style, "fullColor")) {
-                return(list(nodeFill = "#EDE7F6", nodeLine = "#5E35B1", text = "#5E35B1",
-                            edgeSig = "#253494", edgeNs = "#7FC8E8", fill = "#A6CEE3",
-                            line = "#253494"))
-            }
-            list(nodeFill = "#F1E9FB", nodeLine = "#7B4FA6", text = "#7B4FA6",
-                 edgeSig = "#312B81", edgeNs = "#8FC7E8", fill = "#BDBDBD", line = "#2B2B2B")
+            list(
+                point = base_color, line = base_color, ref = "gray50",
+                alert = accent_color, smooth = accent_color, fill = accent_fill,
+                nodeFill = accent_fill, nodeLine = accent_color, text = accent_color,
+                edgeSig = accent_color, edgeNs = "gray70"
+            )
         },
 
-        .plotCategoricalPalette = function(n) {
-            n <- max(1, as.integer(n))
-            pal_name <- tryCatch(self$options$plotPalette, error = function(e) "blueOrange")
-            if (is.null(pal_name) || length(pal_name) == 0 || !nzchar(pal_name))
-                pal_name <- "blueOrange"
-
-            if (identical(pal_name, "viridis")) {
-                cols <- grDevices::hcl.colors(n, palette = "Viridis")
-            } else if (identical(pal_name, "greyscale")) {
-                cols <- grDevices::grey.colors(n, start = 0.15, end = 0.75)
-            } else if (identical(pal_name, "colorblind")) {
-                base <- c("#0072B2", "#D55E00", "#009E73", "#CC79A7", "#F0E442", "#56B4E9", "#E69F00", "#000000")
-                cols <- rep(base, length.out = n)
-            } else {
-                base <- c("#2C7FB8", "#D95F0E", "#41AB5D", "#8856A7", "#DD3497", "#636363", "#238B45", "#B15928")
-                cols <- rep(base, length.out = n)
-            }
-            cols
+        .plotSeriesColors = function() {
+            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
+            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
+                return(NULL)
+            .al_plot_series_palette(choice)
         },
 
-        .plotTheme = function() {
-            style <- tryCatch(self$options$plotStyle, error = function(e) "clean")
-            if (is.null(style) || length(style) == 0 || !nzchar(style)) style <- "clean"
-            base <- if (identical(style, "bw")) {
-                ggplot2::theme_bw(base_size = 10.5)
-            } else if (identical(style, "contrast")) {
-                ggplot2::theme_classic(base_size = 10.5)
-            } else {
-                ggplot2::theme_minimal(base_size = 10.5)
-            }
-            base + ggplot2::theme(
+        .plotThemeExtra = function() {
+            ggplot2::theme(
                 plot.title = ggplot2::element_blank(),
                 axis.title = ggplot2::element_text(size = 9.5),
                 axis.text = ggplot2::element_text(size = 8.5),
@@ -2218,7 +2221,7 @@ pathCheckClass <- R6::R6Class(
         # ES: Diagrama de ruta (ggplot2, con parametrización de estilo, diseño y forma).
         # -----------------------------------------------------------------------------
 
-        .plotPathDiagram = function(image, ...) {
+        .plotPathDiagram = function(image, theme, ...) {
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
                 image$setError(private$.plotTr(
                     "The ggplot2 package is required to draw the path diagram.",
@@ -2231,7 +2234,7 @@ pathCheckClass <- R6::R6Class(
             if (length(vars) == 0) return(FALSE)
 
             result <- tryCatch({
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
             edges <- private$.buildEdges(self$options$relations)
             shape <- self$options$diagramShape
             edgeLabelMode <- self$options$diagramEdgeLabel
@@ -2414,7 +2417,7 @@ pathCheckClass <- R6::R6Class(
             result
         },
 
-        .plotResidualHistograms = function(image, ...) {
+        .plotResidualHistograms = function(image, ggtheme, theme, ...) {
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
                 image$setError(private$.plotTr(
                     "The ggplot2 package is required to draw diagnostic plots.",
@@ -2433,10 +2436,13 @@ pathCheckClass <- R6::R6Class(
             fits <- if (!is.null(plotState) && is.list(plotState)) plotState$fits else NULL
             if (is.null(fits) || length(fits) == 0) return(FALSE)
 
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
             deps <- names(fits)
-            cat_cols <- private$.plotCategoricalPalette(length(deps))
-            names(cat_cols) <- deps
+            cat_cols <- private$.plotSeriesColors()
+            if (!is.null(cat_cols)) {
+                cat_cols <- rep_len(cat_cols, length(deps))
+                names(cat_cols) <- deps
+            }
 
             d <- do.call(rbind, lapply(deps, function(dep) {
                 res <- fits[[dep]]$residuals
@@ -2458,14 +2464,47 @@ pathCheckClass <- R6::R6Class(
                 ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
                                           bins = n_bins, alpha = 0.75) +
                 ggplot2::geom_density(linewidth = 0.8, fill = NA) +
-                ggplot2::scale_fill_manual(values = cat_cols, guide = "none") +
-                ggplot2::scale_color_manual(values = cat_cols, guide = "none") +
                 ggplot2::facet_wrap(~dep, nrow = 1) +
                 ggplot2::labs(
                     x = private$.plotTr("Standardized residuals", "Residuos estandarizados"),
                     y = private$.plotTr("Density", "Densidad")
                 ) +
-                private$.plotTheme()
+                ggtheme + private$.plotThemeExtra() +
+                # The facet strip already names each dependent variable, so
+                # the fill/colour legend is redundant either way - hide it
+                # unconditionally (previously done via guide = "none" on
+                # each scale_*_manual() call, which only fired when a
+                # manual scale was actually applied; ggtheme's own default
+                # discrete scale needs its own guides() to suppress the
+                # same legend on the default "jamovi" palette path).
+                # ES: la franja de faceta ya nombra cada variable
+                # dependiente, así que la leyenda de relleno/color es
+                # redundante en cualquier caso - se oculta de forma
+                # incondicional (antes se hacía vía guide = "none" en cada
+                # scale_*_manual(), que solo se activaba cuando de verdad
+                # se aplicaba una escala manual; la escala discreta por
+                # defecto de ggtheme necesita su propio guides() para
+                # suprimir esa misma leyenda en el camino de paleta
+                # "jamovi" por defecto).
+                ggplot2::guides(fill = "none", color = "none")
+
+            # scale_fill_manual/scale_color_manual must be added AFTER
+            # ggtheme - ggtheme carries its own discrete fill/colour
+            # scales, and whichever scale is added last wins for a given
+            # aesthetic (see logcheck.b.R's .plotLinearity for the same
+            # ordering, and the fix commit that caught this ordering
+            # mistake elsewhere in the suite).
+            # ES: scale_fill_manual/scale_color_manual deben agregarse
+            # DESPUÉS de ggtheme - ggtheme trae sus propias escalas
+            # discretas de relleno/color, y para una misma estética gana
+            # la escala agregada al final (ver .plotLinearity en
+            # logcheck.b.R para el mismo orden, y el commit de corrección
+            # que detectó este error de orden en otra parte de la suite).
+            if (!is.null(cat_cols)) {
+                plot <- plot +
+                    ggplot2::scale_fill_manual(values = cat_cols) +
+                    ggplot2::scale_color_manual(values = cat_cols)
+            }
 
             if (isTRUE(self$options$residShowNormalCurve)) {
                 plot <- plot + ggplot2::stat_function(

@@ -21,9 +21,8 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             residBinMethod = "sturges",
             residShowNormalCurve = TRUE,
             residFlagOutliers = TRUE,
-            plotPalette = "blueOrange",
+            plotPalette = "jamovi",
             reportLang = "en",
-            plotStyle = "clean",
             showDiagram = TRUE,
             diagramEdgeLabel = "coef",
             diagramShowErrors = FALSE,
@@ -116,11 +115,10 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "plotPalette",
                 plotPalette,
                 options=list(
-                    "blueOrange",
-                    "viridis",
-                    "greyscale",
-                    "colorblind"),
-                default="blueOrange")
+                    "jamovi",
+                    "colorblind",
+                    "viridis"),
+                default="jamovi")
             private$..reportLang <- jmvcore::OptionList$new(
                 "reportLang",
                 reportLang,
@@ -128,15 +126,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "en",
                     "es"),
                 default="en")
-            private$..plotStyle <- jmvcore::OptionList$new(
-                "plotStyle",
-                plotStyle,
-                options=list(
-                    "clean",
-                    "bw",
-                    "contrast",
-                    "fullColor"),
-                default="clean")
             private$..showDiagram <- jmvcore::OptionBool$new(
                 "showDiagram",
                 showDiagram,
@@ -217,7 +206,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..residFlagOutliers)
             self$.addOption(private$..plotPalette)
             self$.addOption(private$..reportLang)
-            self$.addOption(private$..plotStyle)
             self$.addOption(private$..showDiagram)
             self$.addOption(private$..diagramEdgeLabel)
             self$.addOption(private$..diagramShowErrors)
@@ -246,7 +234,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         residFlagOutliers = function() private$..residFlagOutliers$value,
         plotPalette = function() private$..plotPalette$value,
         reportLang = function() private$..reportLang$value,
-        plotStyle = function() private$..plotStyle$value,
         showDiagram = function() private$..showDiagram$value,
         diagramEdgeLabel = function() private$..diagramEdgeLabel$value,
         diagramShowErrors = function() private$..diagramShowErrors$value,
@@ -274,7 +261,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..residFlagOutliers = NA,
         ..plotPalette = NA,
         ..reportLang = NA,
-        ..plotStyle = NA,
         ..showDiagram = NA,
         ..diagramEdgeLabel = NA,
         ..diagramShowErrors = NA,
@@ -1196,7 +1182,6 @@ pathCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param residFlagOutliers .
 #' @param plotPalette .
 #' @param reportLang .
-#' @param plotStyle .
 #' @param showDiagram .
 #' @param diagramEdgeLabel .
 #' @param diagramShowErrors Shows, for each endogenous variable, a small error
@@ -1286,9 +1271,8 @@ pathCheck <- function(
     residBinMethod = "sturges",
     residShowNormalCurve = TRUE,
     residFlagOutliers = TRUE,
-    plotPalette = "blueOrange",
+    plotPalette = "jamovi",
     reportLang = "en",
-    plotStyle = "clean",
     showDiagram = TRUE,
     diagramEdgeLabel = "coef",
     diagramShowErrors = FALSE,
@@ -1327,7 +1311,6 @@ pathCheck <- function(
         residFlagOutliers = residFlagOutliers,
         plotPalette = plotPalette,
         reportLang = reportLang,
-        plotStyle = plotStyle,
         showDiagram = showDiagram,
         diagramEdgeLabel = diagramEdgeLabel,
         diagramShowErrors = diagramShowErrors,

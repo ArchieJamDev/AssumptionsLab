@@ -169,19 +169,32 @@ options:
     type: Bool
     default: true
 
+  # -----------------------------------------------------------------------------
+  # Plot color palette - see logcheck.a.yaml's plotPalette for the full
+  # rationale (jamovi review team feedback, 2026-09-16). Default follows
+  # jamovi's own global Theme/palette; the two other choices are genuinely
+  # additive (jamovi does not currently ship a colorblind-safe or viridis
+  # palette). The old plotStyle option (clean/bw/contrast/fullColor) is
+  # removed: it duplicated jamovi's own Theme setting 1:1.
+  # ES: Paleta de color del gráfico - ver plotPalette en logcheck.a.yaml
+  # para el razonamiento completo (retroalimentación del equipo de
+  # revisión de jamovi, 2026-09-16). El valor por defecto sigue el Tema/
+  # paleta global de jamovi; las otras dos opciones son genuinamente
+  # aditivas (jamovi no ofrece hoy una paleta apta para daltonismo ni
+  # viridis). La antigua opción plotStyle (clean/bw/contrast/fullColor) se
+  # elimina: duplicaba 1:1 el propio ajuste de Tema de jamovi.
+  # -----------------------------------------------------------------------------
   - name: plotPalette
     title: Color Palette by Equation
     type: List
     options:
-      - title: Blue/Orange
-        name: blueOrange
+      - title: Follow jamovi theme (default)
+        name: jamovi
+      - title: Colorblind-safe (Okabe-Ito)
+        name: colorblind
       - title: Viridis
         name: viridis
-      - title: Grayscale
-        name: greyscale
-      - title: Colorblind-Friendly
-        name: colorblind
-    default: blueOrange
+    default: jamovi
 
   # Selects which language's text bank (see texts.R) is used to render
   # every guide, interpretation, and table/column title in the report.
@@ -196,20 +209,6 @@ options:
       - title: Español
         name: es
     default: en
-
-  - name: plotStyle
-    title: Plot Style
-    type: List
-    options:
-      - title: Clean Academic
-        name: clean
-      - title: Black and White
-        name: bw
-      - title: High Contrast
-        name: contrast
-      - title: Full color
-        name: fullColor
-    default: clean
 
   - name: showDiagram
     title: Path diagram
