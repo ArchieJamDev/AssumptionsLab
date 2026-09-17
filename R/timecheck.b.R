@@ -971,19 +971,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n <- length(x)
             private$.computeAcfPacf(x)
 
-            adf <- tryCatch(tseries::adf.test(x), error = function(e) NULL)
-            if (!is.null(adf))
-                push_diag(tr("ADF (unit root)", "ADF (raíz unitaria)"),
-                          adf$statistic, adf$p.value, "low_good", "stationarity")
-
-            pp <- tryCatch(tseries::pp.test(x), error = function(e) NULL)
-            if (!is.null(pp))
-                push_diag(tr("Phillips-Perron (unit root)", "Phillips-Perron (raíz unitaria)"),
-                          pp$statistic, pp$p.value, "low_good", "stationarity")
-
-            kpss <- tryCatch(tseries::kpss.test(x, null = "Level"), error = function(e) NULL)
-            if (!is.null(kpss))
-                push_diag("KPSS", kpss$statistic, kpss$p.value, "low_bad", "stationarity")
+            private$.pushStationarityBattery(x, tr, push_diag)
 
             nd <- tryCatch(forecast::ndiffs(x), error = function(e) NA)
             push_diag(tr("Suggested differencing (ndiffs)", "Diferenciación sugerida (ndiffs)"),
@@ -1012,23 +1000,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.plotResidualsData <- data.frame(x = seq_along(resid), residual = resid)
             self$results$residualsPlot$setState(private$.plotResidualsData)
             n_params <- length(fit$coef[names(fit$coef) != "intercept"])
-            lb_lag <- min(20, max(8, floor(n / 5)))
-
-            lb <- tryCatch(stats::Box.test(resid, lag = lb_lag, type = "Ljung-Box",
-                                            fitdf = min(n_params, lb_lag - 1)),
-                            error = function(e) NULL)
-            if (!is.null(lb))
-                push_diag(tr("Ljung-Box (residuals)", "Ljung-Box (residuos)"),
-                          lb$statistic, lb$p.value, "low_bad", "ljungBox")
-
-            arch <- arch_lm_test(resid, lags = min(12, max(4, floor(n / 10))))
-            push_diag(tr("ARCH-LM (residuals)", "ARCH-LM (residuos)"),
-                      arch$statistic, arch$p.value, "low_bad", "archLM")
-
-            jb <- tryCatch(tseries::jarque.bera.test(resid), error = function(e) NULL)
-            if (!is.null(jb))
-                push_diag(tr("Jarque-Bera (residuals)", "Jarque-Bera (residuos)"),
-                          jb$statistic, jb$p.value, "low_bad", "jarqueBera")
+            private$.pushResidualBattery(resid, tr, push_diag, arch_lm_test, n_params)
 
             roots_ok <- tryCatch({
                 ar_coef <- fit$model$phi
@@ -1053,6 +1025,20 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                               else tr("Clear evidence of deviation", "Evidencia clara de incumplimiento"),
                           tier_override = if (ok) "none" else "clear",
                           action_key = "roots", force_action = !ok)
+            } else if (is.na(roots_ok)) {
+                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"), NA, NA,
+                          evidence_override = tr("Not computable", "No calculable"),
+                          tier_override = "na", footnote = tr(
+                              "Root stability could not be computed for this model's AR/MA polynomial.",
+                              "No se pudo calcular la estabilidad de raíces para el polinomio AR/MA de este modelo."
+                          ))
+            } else {
+                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"), NA, NA,
+                          evidence_override = tr("Not applicable", "No aplica"),
+                          tier_override = "na", footnote = tr(
+                              "The selected model has no AR or MA terms, so there is no polynomial whose roots to check.",
+                              "El modelo seleccionado no tiene términos AR ni MA, así que no hay un polinomio cuyas raíces revisar."
+                          ))
             }
 
             push_diag(tr("AICc / BIC", "AICc / BIC"),
@@ -1076,19 +1062,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n <- length(x)
             private$.computeAcfPacf(x)
 
-            adf <- tryCatch(tseries::adf.test(x), error = function(e) NULL)
-            if (!is.null(adf))
-                push_diag(tr("ADF (unit root)", "ADF (raíz unitaria)"),
-                          adf$statistic, adf$p.value, "low_good", "stationarity")
-
-            pp <- tryCatch(tseries::pp.test(x), error = function(e) NULL)
-            if (!is.null(pp))
-                push_diag(tr("Phillips-Perron (unit root)", "Phillips-Perron (raíz unitaria)"),
-                          pp$statistic, pp$p.value, "low_good", "stationarity")
-
-            kpss <- tryCatch(tseries::kpss.test(x, null = "Level"), error = function(e) NULL)
-            if (!is.null(kpss))
-                push_diag("KPSS", kpss$statistic, kpss$p.value, "low_bad", "stationarity")
+            private$.pushStationarityBattery(x, tr, push_diag)
 
             nd <- tryCatch(forecast::ndiffs(x), error = function(e) NA)
             push_diag(tr("Suggested non-seasonal differencing (ndiffs)", "Diferenciación no estacional sugerida (ndiffs)"),
@@ -1135,32 +1109,24 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$residualsPlot$setState(private$.plotResidualsData)
             n_params <- length(fit$coef)
 
-            lb_lag <- min(20, max(8, floor(n / 5)))
-            lb <- tryCatch(stats::Box.test(resid, lag = lb_lag, type = "Ljung-Box",
-                                            fitdf = min(n_params, lb_lag - 1)),
-                            error = function(e) NULL)
-            if (!is.null(lb))
-                push_diag(tr("Ljung-Box (residuals)", "Ljung-Box (residuos)"),
-                          lb$statistic, lb$p.value, "low_bad", "ljungBox")
+            private$.pushResidualBattery(resid, tr, push_diag, arch_lm_test, n_params)
 
             if (freq > 1 && n > 2 * freq) {
                 lb_lag_s <- min(3 * freq, n - 1)
                 lb_s <- tryCatch(stats::Box.test(resid, lag = lb_lag_s, type = "Ljung-Box",
                                                   fitdf = min(n_params, lb_lag_s - 1)),
                                   error = function(e) NULL)
-                if (!is.null(lb_s))
+                if (!is.null(lb_s) && is.finite(lb_s$statistic) && !is.na(lb_s$p.value)) {
                     push_diag(tr("Ljung-Box at seasonal lags", "Ljung-Box en rezagos estacionales"),
                               lb_s$statistic, lb_s$p.value, "low_bad", "ljungBoxSeasonal")
+                } else {
+                    push_diag(tr("Ljung-Box at seasonal lags", "Ljung-Box en rezagos estacionales"), NA, NA,
+                              "low_bad", "ljungBoxSeasonal", footnote = tr(
+                                  paste0("Could not be computed with ", n, " residuals at the seasonal lag order (", lb_lag_s, ")."),
+                                  paste0("No se pudo calcular con ", n, " residuos al orden de rezago estacional (", lb_lag_s, ").")
+                              ))
+                }
             }
-
-            arch <- arch_lm_test(resid, lags = min(12, max(4, floor(n / 10))))
-            push_diag(tr("ARCH-LM (residuals)", "ARCH-LM (residuos)"),
-                      arch$statistic, arch$p.value, "low_bad", "archLM")
-
-            jb <- tryCatch(tseries::jarque.bera.test(resid), error = function(e) NULL)
-            if (!is.null(jb))
-                push_diag(tr("Jarque-Bera (residuals)", "Jarque-Bera (residuos)"),
-                          jb$statistic, jb$p.value, "low_bad", "jarqueBera")
 
             roots_ok <- tryCatch({
                 ar_coef <- fit$model$phi
@@ -1185,6 +1151,20 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                               else tr("Clear evidence of deviation", "Evidencia clara de incumplimiento"),
                           tier_override = if (ok) "none" else "clear",
                           action_key = "roots", force_action = !ok)
+            } else if (is.na(roots_ok)) {
+                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"), NA, NA,
+                          evidence_override = tr("Not computable", "No calculable"),
+                          tier_override = "na", footnote = tr(
+                              "Root stability could not be computed for this model's AR/MA polynomial.",
+                              "No se pudo calcular la estabilidad de raíces para el polinomio AR/MA de este modelo."
+                          ))
+            } else {
+                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"), NA, NA,
+                          evidence_override = tr("Not applicable", "No aplica"),
+                          tier_override = "na", footnote = tr(
+                              "The selected model has no AR or MA terms, so there is no polynomial whose roots to check.",
+                              "El modelo seleccionado no tiene términos AR ni MA, así que no hay un polinomio cuyas raíces revisar."
+                          ))
             }
 
             push_diag(tr("AICc / BIC", "AICc / BIC"),
@@ -1221,22 +1201,8 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             resid <- as.numeric(stats::residuals(fit))
             private$.plotResidualsData <- data.frame(x = seq_along(resid), residual = resid)
             self$results$residualsPlot$setState(private$.plotResidualsData)
-            lb_lag <- min(20, max(8, floor(n / 5)))
 
-            lb <- tryCatch(stats::Box.test(resid, lag = lb_lag, type = "Ljung-Box"),
-                            error = function(e) NULL)
-            if (!is.null(lb))
-                push_diag(tr("Ljung-Box (residuals)", "Ljung-Box (residuos)"),
-                          lb$statistic, lb$p.value, "low_bad", "ljungBox")
-
-            arch <- arch_lm_test(resid, lags = min(12, max(4, floor(n / 10))))
-            push_diag(tr("ARCH-LM (residuals)", "ARCH-LM (residuos)"),
-                      arch$statistic, arch$p.value, "low_bad", "archLM")
-
-            jb <- tryCatch(tseries::jarque.bera.test(resid), error = function(e) NULL)
-            if (!is.null(jb))
-                push_diag(tr("Jarque-Bera (residuals)", "Jarque-Bera (residuos)"),
-                          jb$statistic, jb$p.value, "low_bad", "jarqueBera")
+            private$.pushResidualBattery(resid, tr, push_diag, arch_lm_test)
 
             push_diag(tr("AICc / BIC", "AICc / BIC"),
                       paste0("AICc=", fmt_stat(fit$aicc), ", BIC=", fmt_stat(fit$bic)),
@@ -1249,23 +1215,184 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         # -----------------------------------------------------------------------------
-        # Shared per-variable stationarity loop (ADF/PP/KPSS) used by VAR and VECM.
+        # Precondition check shared by every ADF/PP/KPSS call. A failed unit-root
+        # test is rarely a random computational glitch - it is almost always because
+        # the series is too short for the test's own minimum lag/df requirements, or
+        # because it has no variation at all (a constant series has zero
+        # differences, which makes the underlying regression degenerate). Detecting
+        # these up front turns a silently-vanished row into a specific,
+        # methodologically grounded explanation instead of a generic failure.
+        # ES: Verificación de precondición compartida por cada llamada a ADF/PP/KPSS.
+        # Que una prueba de raíz unitaria falle rara vez es un fallo computacional
+        # aleatorio - casi siempre es porque la serie es demasiado corta para los
+        # requisitos mínimos de rezago/grados de libertad de la propia prueba, o
+        # porque no tiene ninguna variación (una serie constante tiene diferencias
+        # nulas, lo que degenera la regresión subyacente). Detectar esto de antemano
+        # convierte una fila que desaparece en silencio en una explicación
+        # específica y metodológicamente fundamentada, en vez de un fallo genérico.
+        # -----------------------------------------------------------------------------
+        .tsPrecheckReason = function(x, tr) {
+            x <- x[is.finite(x)]
+            n <- length(x)
+            if (n < 8) {
+                return(tr(
+                    paste0("the series has only ", n, " usable observations (fewer than the ~8 these tests need)"),
+                    paste0("la serie tiene solo ", n, " observaciones utilizables (menos de las ~8 que estas pruebas requieren)")
+                ))
+            }
+            sd_x <- stats::sd(x, na.rm = TRUE)
+            if (!is.finite(sd_x) || sd_x == 0) {
+                return(tr(
+                    "the series has no variation (it is constant)",
+                    "la serie no tiene variación (es constante)"
+                ))
+            }
+            NULL
+        },
+
+        # -----------------------------------------------------------------------------
+        # Shared per-variable stationarity loop (ADF/PP/KPSS) used by ARIMA, SARIMA,
+        # GARCH, VAR and VECM. Every test is pushed as a row - never silently
+        # omitted - falling back to a "Not computable" tier (the same convention
+        # already used for a failed ARCH-LM) with a footnote naming the specific
+        # methodological reason when one is known, matching how the module treats
+        # every other diagnostic: no comparison the reader cannot audit disappears
+        # without a trace.
         # ES: Bucle compartido de estacionariedad por variable (ADF/PP/KPSS) usado
-        # por VAR y VECM.
+        # por ARIMA, SARIMA, GARCH, VAR y VECM. Cada prueba se agrega como fila -
+        # nunca se omite en silencio - recurriendo al nivel "No calculable" (la
+        # misma convención ya usada para un ARCH-LM fallido) con una nota al pie que
+        # nombra la razón metodológica específica cuando se conoce, igual que el
+        # módulo trata cualquier otro diagnóstico: ninguna comparación que el
+        # lector no pueda auditar desaparece sin dejar rastro.
         # -----------------------------------------------------------------------------
         .stationarityPerVariable = function(mat, tr, push_diag) {
             for (v in colnames(mat)) {
                 xv <- as.numeric(mat[, v])
-                adf <- tryCatch(tseries::adf.test(xv), error = function(e) NULL)
-                if (!is.null(adf))
-                    push_diag(paste0("ADF (", v, ")"), adf$statistic, adf$p.value, "low_good", "stationarity")
-                pp <- tryCatch(tseries::pp.test(xv), error = function(e) NULL)
-                if (!is.null(pp))
-                    push_diag(paste0("PP (", v, ")"), pp$statistic, pp$p.value, "low_good", "stationarity")
-                kpss <- tryCatch(tseries::kpss.test(xv, null = "Level"), error = function(e) NULL)
-                if (!is.null(kpss))
-                    push_diag(paste0("KPSS (", v, ")"), kpss$statistic, kpss$p.value, "low_bad", "stationarity")
+                private$.pushStationarityBattery(xv, tr, push_diag, label = paste0(" (", v, ")"))
             }
+            invisible(NULL)
+        },
+
+        .pushStationarityBattery = function(x, tr, push_diag, label = "") {
+            reason <- private$.tsPrecheckReason(x, tr)
+
+            run_one <- function(name_en, name_es, fit_fun, direction) {
+                label_txt <- paste0(tr(name_en, name_es), label)
+                res <- tryCatch(fit_fun(), error = function(e) NULL)
+                # Some of these tests do not throw on a degenerate input (e.g.
+                # tseries::adf.test() on a constant series returns statistic = NaN,
+                # p.value = NA instead of erroring) - that is still a failure to
+                # report, not a real result, so it is treated the same as a
+                # caught error below rather than silently showing "NaN"/"NA".
+                # ES: algunas de estas pruebas no lanzan error ante una entrada
+                # degenerada (p. ej. tseries::adf.test() en una serie constante
+                # devuelve statistic = NaN, p.value = NA en vez de fallar) - eso
+                # sigue siendo un fallo que reportar, no un resultado real, así
+                # que se trata igual que un error capturado más abajo en vez de
+                # mostrar "NaN"/"NA" en silencio.
+                if (!is.null(res) && is.finite(res$statistic) && !is.na(res$p.value)) {
+                    push_diag(label_txt, res$statistic, res$p.value, direction, "stationarity")
+                    return(invisible(NULL))
+                }
+                fnote <- if (!is.null(reason))
+                    paste0(
+                        tr(name_en, name_es), label,
+                        tr(" could not be computed because ", " no se pudo calcular porque "),
+                        reason, "."
+                    )
+                else
+                    paste0(tr(name_en, name_es), label, tr(
+                        " could not be computed for this series.",
+                        " no se pudo calcular para esta serie."
+                    ))
+                push_diag(label_txt, NA, NA, direction, "stationarity", footnote = fnote)
+            }
+
+            run_one("ADF (unit root)", "ADF (raíz unitaria)", function() tseries::adf.test(x), "low_good")
+            run_one("Phillips-Perron (unit root)", "Phillips-Perron (raíz unitaria)", function() tseries::pp.test(x), "low_good")
+            run_one("KPSS", "KPSS", function() tseries::kpss.test(x, null = "Level"), "low_bad")
+
+            invisible(NULL)
+        },
+
+        # -----------------------------------------------------------------------------
+        # Shared residual battery (Ljung-Box, ARCH-LM, Jarque-Bera) used by ARIMA,
+        # SARIMA, ETS and GARCH. ARCH-LM already degraded gracefully (arch_lm_test()
+        # itself returns NA statistic/p rather than erroring), which is exactly the
+        # "always show the row, tier it Not computable" convention this extends to
+        # Ljung-Box and Jarque-Bera. A failed Ljung-Box here is almost always too
+        # few residuals for the chosen lag order, not a random glitch - the same
+        # methodological-cause-first spirit as .tsPrecheckReason().
+        # ES: Batería de residuos compartida (Ljung-Box, ARCH-LM, Jarque-Bera)
+        # usada por ARIMA, SARIMA, ETS y GARCH. ARCH-LM ya degradaba con gracia
+        # (arch_lm_test() en sí devuelve estadístico/p en NA en vez de fallar), que
+        # es exactamente la convención "mostrar siempre la fila, con nivel No
+        # calculable" que esto extiende a Ljung-Box y Jarque-Bera. Que Ljung-Box
+        # falle aquí casi siempre es por muy pocos residuos para el orden de rezago
+        # elegido, no un fallo aleatorio - el mismo espíritu de causa-metodológica-
+        # primero que .tsPrecheckReason().
+        # -----------------------------------------------------------------------------
+        .pushResidualBattery = function(resid, tr, push_diag, arch_lm_test, n_params = 0) {
+            resid <- as.numeric(resid)
+            resid <- resid[is.finite(resid)]
+            n <- length(resid)
+            lb_lag <- min(20, max(8, floor(n / 5)))
+            sd_resid <- stats::sd(resid, na.rm = TRUE)
+            no_variation <- !is.finite(sd_resid) || sd_resid == 0
+
+            lb_reason <- if (n <= lb_lag) tr(
+                paste0("there are only ", n, " residuals for the chosen lag order (", lb_lag, ")"),
+                paste0("hay solo ", n, " residuos para el orden de rezago elegido (", lb_lag, ")")
+            ) else if (no_variation) tr(
+                "the residuals have no variation",
+                "los residuos no tienen variación"
+            ) else NULL
+
+            lb <- tryCatch(
+                stats::Box.test(resid, lag = lb_lag, type = "Ljung-Box", fitdf = min(n_params, lb_lag - 1)),
+                error = function(e) NULL
+            )
+            # Box.test() does not always throw on a degenerate input (e.g.
+            # constant residuals return statistic = NaN, p.value = NA) - that is
+            # still a failure to report, not a real result.
+            # ES: Box.test() no siempre lanza error ante una entrada degenerada
+            # (p. ej. residuos constantes devuelven statistic = NaN, p.value = NA)
+            # - eso sigue siendo un fallo que reportar, no un resultado real.
+            if (!is.null(lb) && is.finite(lb$statistic) && !is.na(lb$p.value)) {
+                push_diag(tr("Ljung-Box (residuals)", "Ljung-Box (residuos)"),
+                          lb$statistic, lb$p.value, "low_bad", "ljungBox")
+            } else {
+                fnote <- if (!is.null(lb_reason))
+                    paste0(tr("Ljung-Box could not be computed because ", "Ljung-Box no se pudo calcular porque "), lb_reason, ".")
+                else
+                    tr("Ljung-Box could not be computed for these residuals.", "Ljung-Box no se pudo calcular para estos residuos.")
+                push_diag(tr("Ljung-Box (residuals)", "Ljung-Box (residuos)"), NA, NA, "low_bad", "ljungBox", footnote = fnote)
+            }
+
+            arch <- arch_lm_test(resid, lags = min(12, max(4, floor(n / 10))))
+            push_diag(tr("ARCH-LM (residuals)", "ARCH-LM (residuos)"),
+                      arch$statistic, arch$p.value, "low_bad", "archLM")
+
+            jb_reason <- if (n < 3)
+                tr("there are fewer than 3 residuals", "hay menos de 3 residuos")
+            else if (no_variation)
+                tr("the residuals have no variation", "los residuos no tienen variación")
+            else
+                NULL
+
+            jb <- tryCatch(tseries::jarque.bera.test(resid), error = function(e) NULL)
+            if (!is.null(jb) && is.finite(jb$statistic) && !is.na(jb$p.value)) {
+                push_diag(tr("Jarque-Bera (residuals)", "Jarque-Bera (residuos)"),
+                          jb$statistic, jb$p.value, "low_bad", "jarqueBera")
+            } else {
+                fnote <- if (!is.null(jb_reason))
+                    paste0(tr("Jarque-Bera could not be computed because ", "Jarque-Bera no se pudo calcular porque "), jb_reason, ".")
+                else
+                    tr("Jarque-Bera could not be computed for these residuals.", "Jarque-Bera no se pudo calcular para estos residuos.")
+                push_diag(tr("Jarque-Bera (residuals)", "Jarque-Bera (residuos)"), NA, NA, "low_bad", "jarqueBera", footnote = fnote)
+            }
+
             invisible(NULL)
         },
 
@@ -1513,19 +1640,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "GARCH asume que la serie seleccionada ya representa retornos (u otra serie aproximadamente estacionaria en media), no niveles de precio en bruto."
             ))
 
-            adf <- tryCatch(tseries::adf.test(x), error = function(e) NULL)
-            if (!is.null(adf))
-                push_diag(tr("ADF (unit root, on the provided series)", "ADF (raíz unitaria, sobre la serie provista)"),
-                          adf$statistic, adf$p.value, "low_good", "stationarity")
-
-            pp <- tryCatch(tseries::pp.test(x), error = function(e) NULL)
-            if (!is.null(pp))
-                push_diag(tr("Phillips-Perron (unit root)", "Phillips-Perron (raíz unitaria)"),
-                          pp$statistic, pp$p.value, "low_good", "stationarity")
-
-            kpss <- tryCatch(tseries::kpss.test(x, null = "Level"), error = function(e) NULL)
-            if (!is.null(kpss))
-                push_diag("KPSS", kpss$statistic, kpss$p.value, "low_bad", "stationarity")
+            private$.pushStationarityBattery(x, tr, push_diag)
 
             pre <- arch_lm_test(x - mean(x), lags = min(12, max(4, floor(n / 10))))
             pre_cl_ok <- !is.na(pre$p.value) && pre$p.value < 0.05
@@ -1574,9 +1689,16 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 lb_lag <- min(20, max(8, floor(n / 5)))
                 lb <- tryCatch(stats::Box.test(std_resid, lag = lb_lag, type = "Ljung-Box"),
                                 error = function(e) NULL)
-                if (!is.null(lb))
+                if (!is.null(lb) && is.finite(lb$statistic) && !is.na(lb$p.value)) {
                     push_diag(tr("Ljung-Box (standardized residuals)", "Ljung-Box (residuos estandarizados)"),
                               lb$statistic, lb$p.value, "low_bad", "ljungBox")
+                } else {
+                    push_diag(tr("Ljung-Box (standardized residuals)", "Ljung-Box (residuos estandarizados)"), NA, NA,
+                              "low_bad", "ljungBox", footnote = tr(
+                                  paste0("Could not be computed with ", length(std_resid), " standardized residuals at this lag order (", lb_lag, ")."),
+                                  paste0("No se pudo calcular con ", length(std_resid), " residuos estandarizados a este orden de rezago (", lb_lag, ").")
+                              ))
+                }
 
                 arch_post <- arch_lm_test(std_resid, lags = min(12, max(4, floor(n / 10))))
                 push_diag(tr("ARCH-LM (standardized residuals)", "ARCH-LM (residuos estandarizados)"),

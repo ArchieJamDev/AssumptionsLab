@@ -160,6 +160,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="modelProfile",
                 title="Perfil metodol\u00F3gico del modelo",
+                clearWith=list(
+                    "dateVar",
+                    "exogenous",
+                    "frequency",
+                    "model",
+                    "series",
+                    "reportLang"),
                 rows=0,
                 columns=list(
                     list(
@@ -178,6 +185,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="conditionsMatrix",
                 title="Supuestos y condiciones a evaluar",
+                clearWith=list(
+                    "dateVar",
+                    "exogenous",
+                    "frequency",
+                    "model",
+                    "series",
+                    "reportLang"),
                 rows=0,
                 columns=list(
                     list(
@@ -196,6 +210,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="decisionsMatrix",
                 title="Funci\u00F3n metodol\u00F3gica y decisi\u00F3n asociada",
+                clearWith=list(
+                    "dateVar",
+                    "exogenous",
+                    "frequency",
+                    "model",
+                    "series",
+                    "reportLang"),
                 rows=0,
                 columns=list(
                     list(
@@ -231,6 +252,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="diagnosticsResults",
                 title="Resultados de las pruebas",
+                clearWith=list(
+                    "dateVar",
+                    "exogenous",
+                    "frequency",
+                    "model",
+                    "series",
+                    "reportLang"),
                 rows=0,
                 columns=list(
                     list(
@@ -293,6 +321,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="diagnosticsActions",
                 title="Acci\u00F3n metodol\u00F3gica recomendada",
+                clearWith=list(
+                    "dateVar",
+                    "exogenous",
+                    "frequency",
+                    "model",
+                    "series",
+                    "reportLang"),
                 rows=0,
                 columns=list(
                     list(
@@ -353,7 +388,7 @@ timeCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   = quarterly, 7 = daily with a weekly cycle, 1 = no seasonality). Used for
 #'   seasonal tests and differencing in SARIMA and ETS.
 #' @param reportLang .
-#' @param showPlots .
+#' @param showPlots Uncheck for a text-only report.
 #' @param plotStyle Visual style of the plots (background, line type): clean
 #'   academic, black and white for print, high contrast for accessibility, or
 #'   full color. Purely cosmetic; does not affect any computed value.
