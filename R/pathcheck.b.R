@@ -333,9 +333,7 @@ pathCheckClass <- R6::R6Class(
 
             html_escape <- .al_html_escape
 
-            html_block <- function(title = NULL, text, paragraphs = TRUE, raw = FALSE) {
-                .al_html_block(title, text, paragraphs = paragraphs, raw = raw)
-            }
+            html_block <- .al_html_block
 
             html_guide <- function(title, section, key) {
                 html_block(title, .al_html_list(.al_text(lang, section, key)), raw = TRUE)
@@ -778,7 +776,12 @@ pathCheckClass <- R6::R6Class(
                 yx <- data[, c(d, preds_d), drop = FALSE]
                 for (col in names(yx)) yx[[col]] <- jmvcore::toNumeric(yx[[col]])
 
-                form <- as.formula(paste0("`", d, "` ~ ", paste0("`", preds_d, "`", collapse = " + ")))
+                # .al_qname(): shared-helpers.R (formula-breaking-on-spaces
+                # fix, Sep 2026 jamovi review) - see the note there.
+                # ES: .al_qname(): shared-helpers.R (arreglo para
+                # fórmula-rota-con-espacios, revisión de jamovi sep. 2026)
+                # - ver la nota en ese archivo.
+                form <- as.formula(paste0(.al_qname(d), " ~ ", paste(.al_qname(preds_d), collapse = " + ")))
                 fit  <- try(stats::lm(form, data = yx), silent = TRUE)
                 if (inherits(fit, "try-error")) next()
 
@@ -1301,12 +1304,12 @@ pathCheckClass <- R6::R6Class(
                     e2 <- res^2
                     k <- length(preds_d)
                     if (k >= 1) {
-                        terms <- paste0("`", preds_d, "`")
-                        sq_terms <- paste0("I(`", preds_d, "`^2)")
+                        terms <- .al_qname(preds_d)
+                        sq_terms <- paste0("I(", .al_qname(preds_d), "^2)")
                         int_terms <- character(0)
                         if (k >= 2) {
                             combos <- utils::combn(preds_d, 2, simplify = FALSE)
-                            int_terms <- vapply(combos, function(pr) paste0("`", pr[1], "`:`", pr[2], "`"), character(1))
+                            int_terms <- vapply(combos, function(pr) paste0(.al_qname(pr[1]), ":", .al_qname(pr[2])), character(1))
                         }
                         rhs <- paste(c(terms, sq_terms, int_terms), collapse = " + ")
                         auxForm <- stats::as.formula(paste("e2 ~", rhs))

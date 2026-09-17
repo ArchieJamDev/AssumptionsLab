@@ -332,9 +332,15 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 format(round(x, digits), nsmall = digits)
             }
 
-            qname <- function(x) {
-                paste0("`", gsub("`", "", x), "`")
-            }
+            # qname(): identical logic in every module that had it,
+            # consolidated in shared-helpers.R (.al_qname) - the fix for
+            # the formula-breaking-on-spaces crash jamovi's own module
+            # review reported, Sep 2026.
+            # ES: lógica idéntica en cada módulo que la tenía, consolidada
+            # en shared-helpers.R (.al_qname) - el arreglo para el choque
+            # de fórmula-rota-con-espacios que reportó la revisión oficial
+            # del módulo de jamovi, sep. 2026.
+            qname <- .al_qname
 
             safe_key <- function(x) {
                 x <- gsub("[^A-Za-z0-9_]+", "_", x)

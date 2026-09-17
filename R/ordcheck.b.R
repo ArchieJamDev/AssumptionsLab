@@ -209,9 +209,7 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             html_escape <- .al_html_escape
 
-            html_block <- function(title = NULL, text, paragraphs = TRUE, escape = TRUE, raw = FALSE) {
-                .al_html_block(title, text, paragraphs = paragraphs, escape = escape, raw = raw)
-            }
+            html_block <- .al_html_block
 
             html_guide <- function(title, items) {
                 html_block(title, .al_html_list(items), raw = TRUE)
@@ -228,13 +226,18 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             p_sig <- .al_p_sig
 
-            add_row <- function(table, key, values) {
-                table$addRow(rowKey = key, values = values)
-            }
-
-            qname <- function(x) {
-                paste0("`", gsub("`", "", x), "`")
-            }
+            # add_row()/qname(): identical logic in every module that had
+            # them, consolidated in shared-helpers.R (.al_add_row/
+            # .al_qname) - see that file for the full rationale (qname() is
+            # the fix for the formula-breaking-on-spaces crash jamovi's own
+            # module review reported, Sep 2026).
+            # ES: lógica idéntica en cada módulo que las tenía, consolidada
+            # en shared-helpers.R (.al_add_row/.al_qname) - ver ese archivo
+            # para el razonamiento completo (qname() es el arreglo para el
+            # choque de fórmula-rota-con-espacios que reportó la revisión
+            # oficial del módulo de jamovi, sep. 2026).
+            add_row <- .al_add_row
+            qname <- .al_qname
 
             # dcor_stat()/dcor_pvalue(): consolidated in shared-helpers.R
             # (.al_dcor_stat/.al_dcor_test), same pattern as the other four

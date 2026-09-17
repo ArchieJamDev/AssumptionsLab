@@ -278,9 +278,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             html_escape <- .al_html_escape
 
-            html_block <- function(title = NULL, text, paragraphs = TRUE, raw = FALSE) {
-                .al_html_block(title, text, paragraphs = paragraphs, raw = raw)
-            }
+            html_block <- .al_html_block
 
             # -----------------------------------------------------------------------------
             # Introductory panel renderer.

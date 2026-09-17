@@ -531,9 +531,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
         html_escape <- .al_html_escape
 
-        html_block <- function(title = NULL, text, paragraphs = TRUE, raw = FALSE) {
-            .al_html_block(title, text, paragraphs = paragraphs, raw = raw)
-        }
+        html_block <- .al_html_block
 
         wrap_paragraphs <- function(x, width = 96) {
             x <- paste(x, collapse = "\n")

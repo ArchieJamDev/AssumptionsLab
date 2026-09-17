@@ -264,6 +264,81 @@
 }
 
 # -----------------------------------------------------------------------------
+# .al_qname() / .al_strip_qname() / .al_add_row()
+#
+# .al_qname(x): backtick-quotes a variable name before it goes into a
+# formula string. Without this, a predictor name containing a space or
+# another character that isn't valid in a bare R identifier (common in
+# jamovi datasets, e.g. imported from spreadsheet column headers) breaks
+# as.formula()'s parser - this was reported as a real crash by jamovi's own
+# module review (Sep 2026). Byte-identical in every module that had it
+# (logCheck/ordCheck/multCheck/anovaCheck/regCheck), each as a local
+# closure; consolidated here per finding #10 of that same review (a helper
+# re-declared identically in every file is exactly how the formula-crash
+# bug went unnoticed in the first place - one file's copy simply didn't
+# exist). pathCheck built the same backtick-wrapping inline at its two
+# as.formula() call sites instead of via a qname()-shaped helper; those are
+# now routed through this function too, closing the same gap before it had
+# a chance to drift.
+#
+# .al_strip_qname(x): the inverse, for display only - strips the backticks
+# qname() added back off a name pulled from a fitted model (e.g.
+# rownames(coef_table)), so the report shows the plain variable name.
+# Previously only logCheck had this (the only module that needed to display
+# a backtick-quoted coefficient name back to the user); kept available here
+# for any future module that needs the same round-trip.
+#
+# .al_add_row(table, key, values): thin wrapper around Table$addRow(rowKey=,
+# values=) - saves retyping the argument names at every call site. Byte-
+# identical in logCheck/ordCheck/multCheck; every other module's row-adding
+# needs grew a `reason`/`footnote` parameter during the Category B error-
+# handling work (push_diag/add_homo/add_multi/...) and stayed genuinely
+# module-specific, so only the plain 3-argument shape is consolidated here.
+#
+# ES: .al_qname(x): cita con comillas invertidas un nombre de variable
+# antes de usarlo en una cadena de fórmula. Sin esto, un predictor con
+# espacio u otro carácter no válido en un identificador de R (común en
+# datasets de jamovi importados de encabezados de hoja de cálculo) rompe el
+# parser de as.formula() - esto se reportó como un choque real en la
+# revisión oficial del módulo por parte de jamovi (sep. 2026). Idéntica
+# byte a byte en cada módulo que la tenía (logCheck/ordCheck/multCheck/
+# anovaCheck/regCheck), cada una como closure local; consolidada acá según
+# el hallazgo #10 de esa misma revisión (un ayudante redeclarado idéntico
+# en cada archivo es exactamente cómo el bug de choque por fórmula pasó
+# desapercibido en primer lugar - a un archivo simplemente le faltaba la
+# copia). pathCheck construía el mismo entrecomillado con backticks en
+# línea en sus dos puntos de llamada a as.formula() en vez de vía un
+# ayudante con la forma de qname(); ahora también pasan por esta función,
+# cerrando la misma brecha antes de que tuviera oportunidad de divergir.
+#
+# .al_strip_qname(x): la inversa, solo para mostrar - quita las comillas
+# invertidas que agregó qname() de un nombre extraído de un modelo ajustado
+# (p. ej. rownames(coef_table)), para que el informe muestre el nombre de
+# variable simple. Antes solo logCheck la tenía (el único módulo que
+# necesitaba mostrarle de vuelta al usuario un nombre de coeficiente citado
+# con backticks); queda disponible acá para cualquier módulo futuro que
+# necesite el mismo ida y vuelta.
+#
+# .al_add_row(table, key, values): envoltorio delgado sobre
+# Table$addRow(rowKey=, values=) - evita retipear los nombres de argumento
+# en cada punto de llamada. Idéntica byte a byte en logCheck/ordCheck/
+# multCheck; en cada otro módulo la necesidad de agregar filas creció un
+# parámetro reason/footnote durante el trabajo de manejo de errores de
+# Categoría B (push_diag/add_homo/add_multi/...) y quedó genuinamente
+# específica de cada módulo, así que acá solo se consolida la forma simple
+# de 3 argumentos.
+# -----------------------------------------------------------------------------
+.al_qname <- function(x) {
+    paste0("`", gsub("`", "", x), "`")
+}
+
+.al_strip_qname <- function(x) gsub("^`|`$", "", x)
+
+.al_add_row <- function(table, key, values) {
+    table$addRow(rowKey = key, values = values)
+}
+
+# -----------------------------------------------------------------------------
 # .al_nortest_battery()
 #
 # Input: x - a numeric vector already filtered to finite/non-NA values (the
@@ -906,89 +981,46 @@
 }
 
 # -----------------------------------------------------------------------------
-# .al_plot_palette_base() / .al_plot_series_palette()
+# .al_plot_series_palette()
 #
-# .al_plot_palette_base(style): returns list(point=, line=, ref=, alert=,
-#   fill=, smooth=) for style "bw" / "contrast" / "fullColor" / anything else
-#   ("clean", the default). Every calling module already had this exact
-#   4-branch structure; the "bw", "contrast", and default branches were
-#   byte-identical everywhere. The "fullColor" branch had two competing hex
-#   sets in production for ref/alert/smooth:
-#     Variant A - ref #6B7280, alert #F28E2B, smooth #1D91C0 (anovaCheck,
-#       regCheck, timeCheck)
-#     Variant B - ref #7A7A7A, alert #D95F0E, smooth #2C7FB8 (groupCheck,
-#       logCheck)
-#   Archie chose Variant A as the suite-wide standard (Aug 2026): it's the
-#   one already used by 2 of the 3 modules that also have the "series"
-#   multi-color palette below (regCheck, timeCheck), vs. only 1 (logCheck)
-#   for Variant B. This changes the fullColor preset's look in groupCheck
-#   and logCheck; bw/contrast/clean are unaffected everywhere.
+# Returns a multi-color vector for "viridis" / "greyscale" / "colorblind" /
+# anything else (the default blue-orange set). Verified byte-identical in
+# logCheck, regCheck, and timeCheck - the 3 modules that originally needed
+# a categorical multi-series palette (multi-class ROC curves, multiple time
+# series). anovaCheck was added Aug 2026 when its group boxplots gained a
+# color-by-group option (plotPalette). Every module's own .plotSeriesColors()
+# now only reaches this function for "colorblind"/"viridis" (the plot-theme
+# migration to jamovi's native ggtheme, Sep 2026, narrowed every module's
+# plotPalette option to exactly those two plus "jamovi" - the "jamovi"
+# choice returns before calling here, and "greyscale"/the default branch
+# below are dead code kept only because removing them buys nothing over
+# just not calling them).
 #
-# .al_plot_series_palette(choice): returns a multi-color vector for
-#   "viridis" / "greyscale" / "colorblind" / anything else (the default
-#   blue-orange set). Verified byte-identical in logCheck, regCheck, and
-#   timeCheck - the 3 modules that originally needed a categorical
-#   multi-series palette (multi-class ROC curves, multiple time series).
-#   anovaCheck was added Aug 2026 when its group boxplots gained a
-#   color-by-group option (plotPalette); groupCheck's plots remain
-#   single-series diagnostics (Q-Q, residuals) with no categorical
-#   dimension to color, so it still doesn't call this. pathCheck's
-#   palette (node/edge colors for path diagrams) is a structurally
-#   different thing entirely and was never part of this consolidation.
+# .al_plot_palette_base() (the style="bw"/"contrast"/"fullColor"/"clean"
+# base-color companion this used to sit next to) was removed in that same
+# migration: every module dropped its local plotStyle option entirely
+# (jamovi's own Theme setting already covered the same ground), so its
+# last caller went away.
 #
-# ES: .al_plot_palette_base(style): mismos 4 casos que ya tenía cada
-# módulo; "bw"/"contrast"/por defecto eran idénticos en todos lados.
-# "fullColor" tenía dos combinaciones de color compitiendo en producción
-# para ref/alert/smooth (Variante A y B, ver arriba). Archie eligió la
-# Variante A como estándar de toda la suite (agosto 2026): es la que ya
-# usaban 2 de los 3 módulos que también tienen la paleta multicolor
-# "series" de abajo (regCheck, timeCheck), contra solo 1 (logCheck) para
-# la Variante B. Esto cambia el aspecto del preset fullColor en groupCheck
-# y logCheck; bw/contrast/clean quedan iguales en todos lados.
+# ES: Paleta multicolor para gráficos con varias categorías (curvas ROC por
+# clase, varias series temporales). Verificada idéntica en logCheck,
+# regCheck y timeCheck - los 3 módulos que originalmente la necesitaban.
+# anovaCheck se sumó en agosto 2026 cuando sus boxplots por grupo ganaron
+# la opción de colorear por grupo (plotPalette). El propio
+# .plotSeriesColors() de cada módulo ahora solo llega hasta esta función
+# para "colorblind"/"viridis" (la migración de tema de gráficos al
+# ggtheme nativo de jamovi, sep. 2026, redujo la opción plotPalette de
+# cada módulo a exactamente esas dos más "jamovi" - la opción "jamovi"
+# retorna antes de llamar acá, y "greyscale"/la rama por defecto de abajo
+# son código muerto que se deja solo porque quitarlo no aporta nada frente
+# a simplemente no llamarlas).
 #
-# .al_plot_series_palette(choice): paleta multicolor para gráficos con
-# varias categorías (curvas ROC por clase, varias series temporales).
-# Verificada idéntica en logCheck, regCheck y timeCheck - los 3 módulos
-# que originalmente la necesitaban. anovaCheck se sumó en agosto 2026
-# cuando sus boxplots por grupo ganaron la opción de colorear por grupo
-# (plotPalette); los gráficos de groupCheck siguen siendo diagnósticos de
-# una sola serie (Q-Q, residuos) sin dimensión categórica que colorear,
-# así que sigue sin llamarla. La paleta de pathCheck (colores de
-# nodos/aristas para diagramas de ruta) es una cosa estructuralmente
-# distinta y nunca formó parte de esta consolidación.
+# .al_plot_palette_base() (la compañera de colores base para
+# style="bw"/"contrast"/"fullColor"/"clean" junto a la que solía estar
+# esta función) se eliminó en esa misma migración: cada módulo abandonó
+# por completo su opción local plotStyle (el propio ajuste de Tema de
+# jamovi ya cubría lo mismo), así que se quedó sin su última llamadora.
 # -----------------------------------------------------------------------------
-.al_plot_palette_base <- function(style) {
-    if (identical(style, "bw")) {
-        return(list(
-            point = "gray25", line = "gray10", ref = "gray35",
-            alert = "gray10", fill = "gray70", smooth = "gray10",
-            grid = "#D9D9D9"
-        ))
-    }
-
-    if (identical(style, "contrast")) {
-        return(list(
-            point = "#222222", line = "#000000", ref = "#444444",
-            alert = "#000000", fill = "#BDBDBD", smooth = "#000000",
-            grid = "#BDBDBD"
-        ))
-    }
-
-    if (identical(style, "fullColor")) {
-        return(list(
-            point = "#2C7FB8", line = "#253494", ref = "#6B7280",
-            alert = "#F28E2B", fill = "#A6CEE3", smooth = "#1D91C0",
-            grid = "#D9EAF7"
-        ))
-    }
-
-    list(
-        point = "#4D4D4D", line = "#2B2B2B", ref = "#7A7A7A",
-        alert = "#555555", fill = "#BDBDBD", smooth = "#2C7FB8",
-        grid = "#E0E0E0"
-    )
-}
-
 .al_plot_series_palette <- function(choice) {
     if (identical(choice, "viridis")) {
         # Real stops sampled from the viridis colormap (no package

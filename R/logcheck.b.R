@@ -138,9 +138,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             html_escape <- .al_html_escape
 
-            html_block <- function(title = NULL, text, paragraphs = TRUE, escape = TRUE, raw = FALSE) {
-                .al_html_block(title, text, paragraphs = paragraphs, escape = escape, raw = raw)
-            }
+            html_block <- .al_html_block
 
             html_guide <- function(title, key) {
                 html_block(title, .al_html_list(txt(key)), raw = TRUE)
@@ -168,44 +166,21 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # consolidada en shared-helpers.R.
             p_sig <- .al_p_sig
 
-            add_row <- function(table, key, values) {
-                table$addRow(rowKey = key, values = values)
-            }
-
-            # Backtick-quotes a variable name before it goes into a formula
-            # string. Without this, a predictor name containing a space or
-            # another character that isn't valid in a bare R identifier
-            # (common in jamovi datasets, e.g. imported from spreadsheet
-            # column headers) breaks as.formula()'s parser - this was
-            # reported as a real crash by jamovi's own module review (Sep
-            # 2026) and mirrors the qname() helper already used in
-            # ordcheck.b.R for the same reason.
-            # ES: cita con comillas invertidas un nombre de variable antes
-            # de usarlo en una fórmula. Sin esto, un predictor con espacio u
-            # otro carácter no válido en un identificador de R (común en
-            # datasets de jamovi importados de encabezados de hoja de
-            # cálculo) rompe el parser de as.formula() - esto se reportó
-            # como un crash real en la revisión del módulo de jamovi (sep.
-            # 2026) y replica el helper qname() ya usado en ordcheck.b.R por
-            # la misma razón.
-            qname <- function(x) {
-                paste0("`", gsub("`", "", x), "`")
-            }
-
-            # The inverse of qname(), for display only: coefficient/rowname
-            # labels pulled from a fitted model (e.g. rownames(coef_table),
-            # names(coef(model))) carry qname()'s backticks whenever the
-            # original name needed them to parse, and that's correct for
-            # re-use in another formula/regex, but showing the backticks to
-            # the user in a results table is just visual noise.
-            # ES: la inversa de qname(), solo para mostrar: las etiquetas de
-            # coeficiente/nombre de fila tomadas de un modelo ajustado
-            # llevan las comillas invertidas de qname() cuando el nombre
-            # original las necesitó para analizarse, y eso es correcto para
-            # reutilizarlas en otra fórmula/regex, pero mostrarle esas
-            # comillas al usuario en una tabla de resultados es solo ruido
-            # visual.
-            strip_qname <- function(x) gsub("^`|`$", "", x)
+            # add_row()/qname()/strip_qname(): identical logic in every
+            # module that had them, consolidated in shared-helpers.R
+            # (.al_add_row/.al_qname/.al_strip_qname) - see that file for
+            # the full rationale (this is the qname() fix for the
+            # formula-breaking-on-spaces crash jamovi's own module review
+            # reported, Sep 2026).
+            # ES: lógica idéntica en cada módulo que las tenía, consolidada
+            # en shared-helpers.R (.al_add_row/.al_qname/.al_strip_qname) -
+            # ver ese archivo para el razonamiento completo (este es el
+            # arreglo qname() para el choque de fórmula-rota-con-espacios
+            # que reportó la revisión oficial del módulo de jamovi, sep.
+            # 2026).
+            add_row <- .al_add_row
+            qname <- .al_qname
+            strip_qname <- .al_strip_qname
 
             set_result_titles <- function() {
 

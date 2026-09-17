@@ -164,9 +164,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             html_escape <- .al_html_escape
 
-            html_block <- function(title = NULL, text, paragraphs = TRUE, raw = FALSE) {
-                .al_html_block(title, text, paragraphs = paragraphs, raw = raw)
-            }
+            html_block <- .al_html_block
 
             html_guide <- function(title, section, key) {
                 html_block(title, .al_html_list(.al_text(lang, section, key)), raw = TRUE)
@@ -765,9 +763,15 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # en shared-helpers.R.
             copentTest <- .al_copent_test
 
-            qname <- function(x) {
-                paste0("`", gsub("`", "", x), "`")
-            }
+            # qname(): identical logic in every module that had it,
+            # consolidated in shared-helpers.R (.al_qname) - the fix for
+            # the formula-breaking-on-spaces crash jamovi's own module
+            # review reported, Sep 2026.
+            # ES: lógica idéntica en cada módulo que la tenía, consolidada
+            # en shared-helpers.R (.al_qname) - el arreglo para el choque
+            # de fórmula-rota-con-espacios que reportó la revisión oficial
+            # del módulo de jamovi, sep. 2026.
+            qname <- .al_qname
 
             safe_key <- function(x) {
                 x <- gsub("[^A-Za-z0-9_]+", "_", x)
