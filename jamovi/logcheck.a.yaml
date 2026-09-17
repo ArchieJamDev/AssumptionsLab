@@ -249,45 +249,43 @@ options:
     default: true
 
   # -----------------------------------------------------------------------------
-  # General style — cosmetic options applied across every diagnostic plot.
-  # ES: Estilo general — opciones estéticas aplicadas a cada gráfico diagnóstico.
-  # -----------------------------------------------------------------------------
-  # Overall color/line style (clean academic look, black & white for print,
-  # high contrast for accessibility, or full color). Purely cosmetic; does
-  # not affect any computed value.
-  # ES: Estilo de color/línea general (estilo académico limpio, blanco y
-  # negro para impresión, alto contraste por accesibilidad, o full color).
-  # Es puramente estético; no afecta ningún valor calculado.
-  - name: plotStyle
-    title: Plot Style
-    type: List
-    options:
-      - title: Clean Academic
-        name: clean
-      - title: Black and White
-        name: bw
-      - title: High Contrast
-        name: contrast
-      - title: Full color
-        name: fullColor
-    default: clean
-
-  # The categorical color palette used to distinguish categories/groups
-  # (e.g. predictor levels), decoupled from plotStyle. Includes a
-  # colorblind-safe option for accessibility.
-  # ES: La paleta de color categórica usada para distinguir categorías/
-  # grupos (p. ej. niveles de un predictor), desacoplada de plotStyle.
-  # Incluye una opción apta para daltonismo por accesibilidad.
+  # Plot color palette. Every plot's visual theme (background, gridlines,
+  # base look) always follows jamovi's own global Theme preference - there
+  # is no module-level style override for that anymore, since it would
+  # just duplicate jamovi's own setting (jamovi review team feedback,
+  # 2026-09-16). This option covers ONLY the categorical color/fill scale
+  # used to distinguish categories/groups (e.g. predictor levels), and its
+  # default ("Follow jamovi theme") does the same thing: uses jamovi's own
+  # palette, so plots match every other analysis by default. The two
+  # non-default choices exist because, verified directly against the
+  # installed jmvcore, jamovi does not currently ship a colorblind-safe or
+  # viridis palette (passing those names to jmvcore::colorPalette() falls
+  # back to its default colors) - so choosing one of these is genuinely
+  # additive, not a competing reimplementation of something jamovi already
+  # offers.
+  # ES: Paleta de color del gráfico. El tema visual de cada gráfico (fondo,
+  # grillas, apariencia base) siempre sigue la preferencia global de Tema
+  # de jamovi - ya no hay una opción de estilo propia del módulo para eso,
+  # porque solo duplicaría la configuración de jamovi (retroalimentación
+  # del equipo de revisión de jamovi, 2026-09-16). Esta opción cubre SOLO
+  # la escala de color/relleno categórica usada para distinguir categorías/
+  # grupos (p. ej. niveles de un predictor), y su valor por defecto
+  # ("Seguir tema de jamovi") hace lo mismo: usa la paleta propia de
+  # jamovi, así que los gráficos coinciden con cualquier otro análisis por
+  # defecto. Las dos opciones no predeterminadas existen porque, verificado
+  # directamente contra el jmvcore instalado, jamovi no ofrece hoy una
+  # paleta apta para daltonismo ni viridis (pasarle esos nombres a
+  # jmvcore::colorPalette() cae de vuelta a sus colores por defecto) - así
+  # que elegir una de estas es genuinamente aditivo, no una reimplementación
+  # que compite con algo que jamovi ya ofrece.
   - name: plotPalette
     title: Color Palette for Categories/Groups
     type: List
     options:
-      - title: Blue-Orange (default)
-        name: blueOrange
+      - title: Follow jamovi theme (default)
+        name: jamovi
+      - title: Colorblind-safe (Okabe-Ito)
+        name: colorblind
       - title: Viridis
         name: viridis
-      - title: Grayscale
-        name: greyscale
-      - title: High Contrast (accessible)
-        name: colorblind
-    default: blueOrange
+    default: jamovi

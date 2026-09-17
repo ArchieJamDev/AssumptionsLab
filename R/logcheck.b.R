@@ -1568,72 +1568,96 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (identical(plot_lang, "es")) es else en
         },
 
-        .plotStyle = function() {
-            style <- tryCatch(self$options$plotStyle, error = function(e) "clean")
-            if (is.null(style) || length(style) == 0 || !nzchar(style))
-                style <- "clean"
-            style
-        },
+        # -----------------------------------------------------------------------------
+        # Plot theme/palette - migrated to jamovi's native mechanism (jamovi
+        # review team feedback, 2026-09-16; see
+        # https://dev.jamovi.org/tutorial/tuts0302-plot-themes). Every
+        # render function now declares `ggtheme`/`theme` parameters, which
+        # jamovi always passes (jmvcore::Analysis$.createPlotObject() calls
+        # every render function with `theme = t$theme, ggtheme = t$ggtheme`
+        # regardless of whether the function names them - they were
+        # previously just absorbed into `...` and ignored). `ggtheme` is a
+        # list of ggplot2 layers (a base theme + discrete color/fill scales
+        # already matching the user's jamovi-wide palette choice, verified
+        # against jmvcore::getGGTheme()/ggPalette()) added directly via
+        # `plot + ggtheme`; `theme` is a plain list with `$color`/`$fill`
+        # (2-color base+accent vectors) for elements that are not mapped to
+        # a discrete aesthetic. `private$.plotStyle()`/`.plotTheme()` (a
+        # module-specific theme_bw()/theme_classic()/theme_minimal() choice)
+        # are removed entirely, since that duplicated jamovi's own Theme
+        # preference one-for-one.
+        # ES: Tema/paleta de gráficos - migrado al mecanismo nativo de
+        # jamovi (retroalimentación del equipo de revisión de jamovi,
+        # 2026-09-16; ver
+        # https://dev.jamovi.org/tutorial/tuts0302-plot-themes). Cada
+        # función de render ahora declara parámetros `ggtheme`/`theme`, que
+        # jamovi siempre pasa (jmvcore::Analysis$.createPlotObject() llama a
+        # cada función de render con `theme = t$theme, ggtheme = t$ggtheme`
+        # sin importar si la función los nombra - antes simplemente se
+        # absorbían en `...` y se ignoraban). `ggtheme` es una lista de
+        # capas ggplot2 (un tema base + escalas de color/relleno discretas
+        # que ya coinciden con la paleta elegida por el usuario a nivel de
+        # jamovi, verificado contra jmvcore::getGGTheme()/ggPalette())
+        # agregada directamente vía `plot + ggtheme`; `theme` es una lista
+        # simple con `$color`/`$fill` (vectores de 2 colores base+acento)
+        # para elementos que no están mapeados a una estética discreta.
+        # `private$.plotStyle()`/`.plotTheme()` (una elección propia del
+        # módulo entre theme_bw()/theme_classic()/theme_minimal()) se
+        # eliminan por completo, ya que duplicaban uno a uno la preferencia
+        # de Tema propia de jamovi.
+        # -----------------------------------------------------------------------------
+        .plotColors = function(theme) {
+            base_color <- if (!is.null(theme$color) && length(theme$color) >= 1) theme$color[1] else "#333333"
+            accent_color <- if (!is.null(theme$color) && length(theme$color) >= 2) theme$color[2] else "#2C7FB8"
+            accent_fill <- if (!is.null(theme$fill) && length(theme$fill) >= 2) theme$fill[2] else "#A6CEE3"
 
-        .plotPalette = function() {
-            # Base palette + series palette: identical shape and logic in
-            # regCheck, logCheck, and timeCheck, consolidated in
-            # shared-helpers.R (.al_plot_palette_base /
-            # .al_plot_series_palette). fullColor now uses Variant A per
-            # Archie's decision, Aug 2026 - this changes logCheck's
-            # fullColor look (previously Variant B: ref #7A7A7A, alert
-            # #D95F0E). The shared base also always includes a "smooth"
-            # key (regCheck's original shape); logCheck's own base never
-            # had one and never reads it, so this is an inert addition.
-            # ES: paleta base + paleta de series idénticas en regCheck,
-            # logCheck y timeCheck, consolidadas en shared-helpers.R.
-            # fullColor ahora usa la Variante A por decisión de Archie,
-            # agosto 2026 - esto cambia el aspecto de fullColor en logCheck
-            # (antes Variante B). La base compartida siempre incluye una
-            # clave "smooth" (forma original de regCheck); la base propia
-            # de logCheck nunca tuvo una y nunca la lee, así que es un
-            # agregado inerte.
-            style <- private$.plotStyle()
-            base <- .al_plot_palette_base(style)
-
-            palette_choice <- tryCatch(self$options$plotPalette, error = function(e) "blueOrange")
-            if (is.null(palette_choice) || length(palette_choice) == 0 || !nzchar(palette_choice))
-                palette_choice <- "blueOrange"
-
-            base$series <- .al_plot_series_palette(palette_choice)
-
-            base
-        },
-
-        .plotTheme = function() {
-            style <- private$.plotStyle()
-
-            base <- if (identical(style, "bw")) {
-                ggplot2::theme_bw(base_size = 10.5)
-            } else if (identical(style, "contrast")) {
-                ggplot2::theme_classic(base_size = 10.5)
-            } else {
-                ggplot2::theme_minimal(base_size = 10.5)
-            }
-
-            base + ggplot2::theme(
-                legend.position = "bottom",
-                panel.grid.minor = ggplot2::element_blank(),
-                plot.margin = ggplot2::margin(4, 6, 4, 6)
+            list(
+                point = base_color, line = base_color,
+                # A reference/guide line (e.g. a calibration diagonal) is a
+                # structural comparison element, not data - kept a fixed
+                # neutral gray independent of the user's palette, the
+                # conventional treatment for this role in every theme.
+                # ES: una línea de referencia/guía (p. ej. la diagonal de
+                # calibración) es un elemento estructural de comparación,
+                # no datos - se mantiene en un gris neutro fijo,
+                # independiente de la paleta del usuario, el tratamiento
+                # convencional de este rol en cualquier tema.
+                ref = "gray50",
+                alert = accent_color, smooth = accent_color, fill = accent_fill
             )
+        },
+
+        # NULL return means "let ggtheme's own discrete scale handle it" -
+        # the default and recommended path, since it already matches
+        # jamovi's global palette for any number of groups. A manual vector
+        # is returned only for the two palettes jamovi does not offer
+        # (verified against jmvcore::colorPalette(), which silently falls
+        # back to its default colors for unrecognized names like
+        # "colorblind"/"viridis").
+        # ES: un retorno NULL significa "que la escala discreta propia de
+        # ggtheme se encargue" - la ruta por defecto y recomendada, ya que
+        # coincide con la paleta global de jamovi para cualquier número de
+        # grupos. Se devuelve un vector manual solo para las dos paletas
+        # que jamovi no ofrece (verificado contra jmvcore::colorPalette(),
+        # que cae en silencio a sus colores por defecto ante nombres no
+        # reconocidos como "colorblind"/"viridis").
+        .plotSeriesColors = function() {
+            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
+            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
+                return(NULL)
+            .al_plot_series_palette(choice)
         },
 
         # -----------------------------------------------------------------------------
         # Empirical logit vs predictor (linearity in the logit).
         # ES: Logit empírico vs predictor (linealidad en el logit).
         # -----------------------------------------------------------------------------
-        .plotLinearity = function(image, ...) {
+        .plotLinearity = function(image, ggtheme, theme, ...) {
             st <- image$state
             if (is.null(st))
                 return(FALSE)
 
             tr_p <- function(en, es) private$.plotTr(en, es, image)
-            pal <- private$.plotPalette()
             covs <- st$covs
 
             if (length(covs) == 0) {
@@ -1690,8 +1714,11 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot_df <- do.call(rbind, plot_rows)
             predictors_unique <- unique(as.character(plot_df$predictor))
-            series_colors <- rep(pal$series, length.out = max(1, length(predictors_unique)))
-            series_colors <- stats::setNames(series_colors, predictors_unique)
+            series_colors <- private$.plotSeriesColors()
+            if (!is.null(series_colors)) {
+                series_colors <- rep(series_colors, length.out = max(1, length(predictors_unique)))
+                series_colors <- stats::setNames(series_colors, predictors_unique)
+            }
 
             smoother <- tryCatch(self$options$linSmoother, error = function(e) "none")
 
@@ -1713,14 +1740,17 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             p <- p +
                 ggplot2::geom_point(ggplot2::aes(size = n, color = predictor), show.legend = c(size = TRUE, color = FALSE)) +
-                ggplot2::scale_color_manual(values = series_colors) +
                 ggplot2::facet_wrap(~predictor, scales = "free_x") +
                 ggplot2::labs(
                     x = tr_p("Predictor (binned mean)", "Predictor (media por grupo)"),
                     y = tr_p("Empirical logit", "Logit empírico"),
                     size = tr_p("Group n", "n del grupo")
                 ) +
-                private$.plotTheme()
+                ggtheme +
+                ggplot2::theme(legend.position = "bottom", plot.margin = ggplot2::margin(4, 6, 4, 6))
+
+            if (!is.null(series_colors))
+                p <- p + ggplot2::scale_color_manual(values = series_colors)
 
             print(p)
             TRUE
@@ -1730,13 +1760,13 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # Calibration: predicted probability vs observed proportion by decile.
         # ES: Calibración: probabilidad predicha vs proporción observada por decil.
         # -----------------------------------------------------------------------------
-        .plotCalibration = function(image, ...) {
+        .plotCalibration = function(image, ggtheme, theme, ...) {
             st <- image$state
             if (is.null(st))
                 return(FALSE)
 
             tr_p <- function(en, es) private$.plotTr(en, es, image)
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             fitted_vals <- st$fitted
             dep_binary <- st$dep_binary
@@ -1779,7 +1809,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = tr_p("Mean predicted probability (decile)", "Probabilidad predicha media (decil)"),
                     y = tr_p("Observed proportion", "Proporción observada")
                 ) +
-                private$.plotTheme()
+                ggtheme +
+                ggplot2::theme(plot.margin = ggplot2::margin(4, 6, 4, 6))
 
             print(p)
             TRUE
@@ -1789,13 +1820,13 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ROC curve (discrimination).
         # ES: Curva ROC (discriminación).
         # -----------------------------------------------------------------------------
-        .plotROC = function(image, ...) {
+        .plotROC = function(image, ggtheme, theme, ...) {
             st <- image$state
             if (is.null(st))
                 return(FALSE)
 
             tr_p <- function(en, es) private$.plotTr(en, es, image)
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             specificities <- st$roc_specificities
             sensitivities <- st$roc_sensitivities
@@ -1840,7 +1871,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = tr_p("1 - Specificity", "1 - Especificidad"),
                     y = tr_p("Sensitivity", "Sensibilidad")
                 ) +
-                private$.plotTheme()
+                ggtheme +
+                ggplot2::theme(plot.margin = ggplot2::margin(4, 6, 4, 6))
 
             print(p)
             TRUE
@@ -1850,13 +1882,13 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # Cook's D per case (influence).
         # ES: Cook's D por caso (influencia).
         # -----------------------------------------------------------------------------
-        .plotInfluence = function(image, ...) {
+        .plotInfluence = function(image, ggtheme, theme, ...) {
             st <- image$state
             if (is.null(st))
                 return(FALSE)
 
             tr_p <- function(en, es) private$.plotTr(en, es, image)
-            pal <- private$.plotPalette()
+            pal <- private$.plotColors(theme)
 
             cooks_d <- st$cooks_d
             leverage <- st$leverage
@@ -1916,7 +1948,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     x = tr_p("Case", "Caso"),
                     y = "Cook's D"
                 ) +
-                private$.plotTheme()
+                ggtheme +
+                ggplot2::theme(plot.margin = ggplot2::margin(4, 6, 4, 6))
 
             print(p)
             TRUE
