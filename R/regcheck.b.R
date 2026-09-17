@@ -1111,7 +1111,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             lin_pred_i <- 1
             lin_model_i <- 1
 
-            add_linearity_predictor <- function(predictor, test, statistic, value, p_value) {
+            add_linearity_predictor <- function(predictor, test, statistic, value, p_value, reason = NULL) {
                 if (!is.na(clean_num(p_value)) && clean_num(p_value) < .05 &&
                     test %in% c(
                         tr("Exploratory quadratic term", "Término cuadrático exploratorio"),
@@ -1120,9 +1120,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     linearity_problem <<- TRUE
                 }
 
+                key <- paste0("lin_pred_", lin_pred_i)
                 add_table_row(
                     self$results$linearityPredictor,
-                    paste0("lin_pred_", lin_pred_i),
+                    key,
                     list(
                         predictor = predictor,
                         dependent = dep,
@@ -1133,6 +1134,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         pSig = p_sig(p_value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(value)) && is.na(clean_num(p_value)))
+                    tryCatch(
+                        self$results$linearityPredictor$addFootnote(col = "value", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
 
                 lin_pred_i <<- lin_pred_i + 1
             }
@@ -1268,13 +1274,19 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         ce_res$ce,
                         ce_res$p
                     )
-                } else if (!requireNamespace("copent", quietly = TRUE)) {
+                } else {
+                    ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) tr(
+                        "The 'copent' package is not installed.",
+                        "El paquete 'copent' no está instalado."
+                    ) else tr(
+                        "Could not be computed for this predictor pair (copula entropy needs enough distinct values to estimate a copula density).",
+                        "No se pudo calcular para este par de variables (la entropía copular necesita suficientes valores distintos para estimar una densidad de cópula)."
+                    )
                     add_linearity_predictor(
                         xname,
                         tr("Copula entropy (copent)", "Entropía copular (copent)"),
-                        "CE",
-                        NA_real_,
-                        NA_real_
+                        "CE", NA_real_, NA_real_,
+                        reason = ce_reason
                     )
                 }
             }
@@ -1772,10 +1784,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
             # ------------------------------------------------------------
 
-            add_homo <- function(family, test, statistic, value, df, p_value) {
+            add_homo <- function(family, test, statistic, value, df, p_value, reason = NULL) {
+                key <- paste0("homo_", safe_key(test))
                 add_table_row(
                     self$results$homoscedasticity,
-                    paste0("homo_", safe_key(test)),
+                    key,
                     list(
                         family = family,
                         test = test,
@@ -1786,6 +1799,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         pSig = p_sig(p_value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(p_value)))
+                    tryCatch(
+                        self$results$homoscedasticity$addFootnote(col = "p", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
             }
 
             bp <- .al_bptest(fit)
@@ -1797,7 +1815,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                          "LM", unname(bp$statistic), unname(bp$parameter), bp$p.value)
             } else
                 add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), "Breusch-Pagan (lmtest)",
-                         "LM", NA_real_, NA_integer_, NA_real_)
+                         "LM", NA_real_, NA_integer_, NA_real_, reason = tr(
+                             "Could not be computed - the auxiliary regression of squared residuals on the predictors is likely singular (too few residual degrees of freedom, or near-perfect collinearity among predictors).",
+                             "No se pudo calcular - la regresión auxiliar de residuos al cuadrado sobre los predictores es probablemente singular (muy pocos grados de libertad residuales, o colinealidad casi perfecta entre predictores)."
+                         ))
 
             white <- tryCatch({
                 e2 <- residuals_raw^2
@@ -1831,7 +1852,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                          "LM", white$value, white$df, white$p)
             else
                 add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), tr("White (general)", "White (general)"),
-                         "LM", NA_real_, NA_integer_, NA_real_)
+                         "LM", NA_real_, NA_integer_, NA_real_, reason = tr(
+                             "Could not be computed - White's auxiliary regression adds every predictor's square and cross-product, so it needs more residual degrees of freedom than Breusch-Pagan; there are likely too many predictors relative to the number of complete cases.",
+                             "No se pudo calcular - la regresión auxiliar de White agrega el cuadrado y los productos cruzados de cada predictor, así que necesita más grados de libertad residuales que Breusch-Pagan; probablemente hay demasiados predictores respecto al número de casos completos."
+                         ))
 
             gq <- tryCatch(lmtest::gqtest(fit, order.by = fitted_values), error = function(e) NULL)
 
@@ -1840,7 +1864,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                          "F", unname(gq$statistic), min(unname(gq$parameter)), gq$p.value)
             else
                 add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), "Goldfeld-Quandt (lmtest)",
-                         "F", NA_real_, NA_integer_, NA_real_)
+                         "F", NA_real_, NA_integer_, NA_real_, reason = tr(
+                             "Could not be computed - Goldfeld-Quandt splits the sample in two (ordered by fitted values) and fits a separate regression to each half; the sample is likely too small, relative to the number of predictors, for both halves to be estimable.",
+                             "No se pudo calcular - Goldfeld-Quandt divide la muestra en dos (ordenada por valores ajustados) y ajusta una regresión separada a cada mitad; la muestra probablemente es muy pequeña, respecto al número de predictores, para que ambas mitades sean estimables."
+                         ))
 
             fitted_groups <- tryCatch({
                 r <- rank(fitted_values, ties.method = "first")
@@ -2204,10 +2231,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             max_ci <- NA_real_
             non_estimable <- NA_real_
 
-            add_multi <- function(diagnostic, item, statistic, value) {
+            add_multi <- function(diagnostic, item, statistic, value, reason = NULL) {
+                key <- paste0("multi_", multi_i)
                 add_table_row(
                     self$results$multicollinearity,
-                    paste0("multi_", multi_i),
+                    key,
                     list(
                         diagnostic = diagnostic,
                         item = item,
@@ -2215,6 +2243,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         value = clean_num(value)
                     )
                 )
+                if (!is.null(reason) && is.na(clean_num(value)))
+                    tryCatch(
+                        self$results$multicollinearity$addFootnote(col = "value", note = reason, rowKey = key),
+                        error = function(e) invisible(NULL)
+                    )
 
                 multi_i <<- multi_i + 1
             }
@@ -2253,8 +2286,12 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         }
                     }
 
-                    add_multi("VIF", colnames(X_no_intercept)[j], "VIF", vif)
-                    add_multi(tr("Tolerance", "Tolerancia"), colnames(X_no_intercept)[j], "1/VIF", tol)
+                    vif_reason <- if (is.na(clean_num(vif))) tr(
+                        "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
+                        "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
+                    ) else NULL
+                    add_multi("VIF", colnames(X_no_intercept)[j], "VIF", vif, reason = vif_reason)
+                    add_multi(tr("Tolerance", "Tolerancia"), colnames(X_no_intercept)[j], "1/VIF", tol, reason = vif_reason)
                 }
 
                 eig <- tryCatch({
@@ -2262,6 +2299,16 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     R <- stats::cor(X_scaled, use = "pairwise.complete.obs")
                     eigen(R, symmetric = TRUE)$values
                 }, error = function(e) NULL)
+
+                if (is.null(eig)) {
+                    eig_reason <- tr(
+                        "Could not be computed - the predictors' correlation matrix could not be decomposed (likely too few complete cases relative to the number of predictors).",
+                        "No se pudo calcular - no fue posible descomponer la matriz de correlación de los predictores (probablemente muy pocos casos completos respecto al número de predictores)."
+                    )
+                    add_multi(tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), NA_real_, reason = eig_reason)
+                    add_multi(tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", NA_real_, reason = eig_reason)
+                    add_multi(tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", NA_real_, reason = eig_reason)
+                }
 
                 if (!is.null(eig)) {
                     min_eig <- max(min(eig, na.rm = TRUE), .Machine$double.eps)
