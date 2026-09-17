@@ -3630,15 +3630,24 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ggplot2::aes(color = isExtreme),
                     alpha = 0.75, size = 1.6, show.legend = FALSE
                 ) +
-                ggplot2::scale_color_manual(values = c(
-                    "FALSE" = pal$point,
-                    "TRUE" = pal$alert
-                )) +
                 ggplot2::labs(
                     x = private$.plotTr("Theoretical quantiles", "Cuantiles teóricos"),
                     y = private$.plotTr("Standardized residuals", "Residuos estandarizados")
                 ) +
                 ggtheme + private$.plotThemeExtra()
+
+            # scale_color_manual must be added AFTER ggtheme - ggtheme carries
+            # its own discrete colour scale, and whichever scale is added
+            # last wins for a given aesthetic. This flag is always the
+            # base/accent pair, regardless of plotPalette choice.
+            # ES: scale_color_manual debe agregarse DESPUÉS de ggtheme -
+            # ggtheme trae su propia escala discreta de color, y para una
+            # misma estética gana la escala agregada al final. Este flag
+            # siempre usa el par base/acento, sin importar plotPalette.
+            plot <- plot + ggplot2::scale_color_manual(values = c(
+                "FALSE" = pal$point,
+                "TRUE" = pal$alert
+            ))
 
             print(plot)
         },
@@ -4077,17 +4086,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(
                     ggplot2::aes(color = discordant),
                     alpha = 0.7, size = 1.4, show.legend = highlight
-                ) +
-                ggplot2::scale_color_manual(
-                    values = c(
-                        "FALSE" = pal$point,
-                        "TRUE" = pal$alert
-                    ),
-                    labels = c(
-                        "FALSE" = private$.plotTr("Concordant", "Concordante"),
-                        "TRUE" = private$.plotTr("Notable gap", "Brecha notable")
-                    ),
-                    name = private$.plotTr("Pearson/dCor gap", "Brecha Pearson/dCor")
                 )
 
             if (show_fit) {
@@ -4110,6 +4108,26 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ) +
                 ggtheme + private$.plotThemeExtra() +
                 ggplot2::theme(strip.text = ggplot2::element_text(size = 8))
+
+            # scale_color_manual must be added AFTER ggtheme - ggtheme carries
+            # its own discrete colour scale, and whichever scale is added
+            # last wins for a given aesthetic. This flag is always the
+            # base/accent pair, regardless of plotPalette choice.
+            # ES: scale_color_manual debe agregarse DESPUÉS de ggtheme -
+            # ggtheme trae su propia escala discreta de color, y para una
+            # misma estética gana la escala agregada al final. Este flag
+            # siempre usa el par base/acento, sin importar plotPalette.
+            plot <- plot + ggplot2::scale_color_manual(
+                values = c(
+                    "FALSE" = pal$point,
+                    "TRUE" = pal$alert
+                ),
+                labels = c(
+                    "FALSE" = private$.plotTr("Concordant", "Concordante"),
+                    "TRUE" = private$.plotTr("Notable gap", "Brecha notable")
+                ),
+                name = private$.plotTr("Pearson/dCor gap", "Brecha Pearson/dCor")
+            )
 
             print(plot)
         },

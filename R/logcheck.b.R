@@ -1924,8 +1924,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ) +
                 ggplot2::geom_point(
                     ggplot2::aes(color = flag), size = 1.6, show.legend = FALSE
-                ) +
-                ggplot2::scale_color_manual(values = c(`FALSE` = pal$point, `TRUE` = pal$alert))
+                )
 
             lab <- switch(label_mode,
                 cooks = plot_df[plot_df$cooksD > cooks_threshold, , drop = FALSE],
@@ -1950,6 +1949,16 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ) +
                 ggtheme +
                 ggplot2::theme(plot.margin = ggplot2::margin(4, 6, 4, 6))
+
+            # scale_color_manual must be added AFTER ggtheme - ggtheme carries
+            # its own discrete colour scale, and whichever scale is added
+            # last wins for a given aesthetic. This flag is always the
+            # base/accent pair, regardless of plotPalette choice.
+            # ES: scale_color_manual debe agregarse DESPUÉS de ggtheme -
+            # ggtheme trae su propia escala discreta de color, y para una
+            # misma estética gana la escala agregada al final. Este flag
+            # siempre usa el par base/acento, sin importar plotPalette.
+            p <- p + ggplot2::scale_color_manual(values = c(`FALSE` = pal$point, `TRUE` = pal$alert))
 
             print(p)
             TRUE
