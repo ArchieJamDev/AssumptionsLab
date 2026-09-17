@@ -334,11 +334,11 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="An\u00E1lisis de Rutas"))
+                title="Path Analysis"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="modelSummary",
-                title="Modelo actual",
+                title="Current model",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -354,28 +354,28 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="integer"),
                     list(
                         `name`="nRelations", 
-                        `title`="Relaciones", 
+                        `title`="Relationships", 
                         `type`="integer"),
                     list(
                         `name`="nEndog", 
-                        `title`="Variables end\u00F3genas", 
+                        `title`="Endogenous variables", 
                         `type`="integer"),
                     list(
                         `name`="nExog", 
-                        `title`="Variables ex\u00F3genas", 
+                        `title`="Exogenous variables", 
                         `type`="integer"),
                     list(
                         `name`="nCases", 
-                        `title`="Casos completos", 
+                        `title`="Complete cases", 
                         `type`="integer"),
                     list(
                         `name`="casesPerRelation", 
-                        `title`="Casos por relaci\u00F3n", 
+                        `title`="Cases per relationship", 
                         `type`="number"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="specifiedModel",
-                title="Modelo especificado",
+                title="Specified model",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -387,21 +387,21 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="dependent", 
-                        `title`="Variable dependiente", 
+                        `title`="Dependent variable", 
                         `type`="text"),
                     list(
                         `name`="predictors", 
-                        `title`="Predictores", 
+                        `title`="Predictors", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="modelStructureGuide",
-                title="Estructura del Modelo",
+                title="Model Structure",
                 visible="(showExogenous || showEndogenous)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="exogenousTable",
-                title="Variables Ex\u00F3genas del Modelo",
+                title="Model Exogenous Variables",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -418,12 +418,12 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="outgoingPaths", 
-                        `title`="Rutas salientes", 
+                        `title`="Outgoing paths", 
                         `type`="integer"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="endogenousTable",
-                title="Variables End\u00F3genas del Modelo",
+                title="Model Endogenous Variables",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -440,12 +440,12 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="incomingPaths", 
-                        `title`="Predictores directos", 
+                        `title`="Direct predictors", 
                         `type`="integer"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="validationSummary",
-                title="Validaci\u00F3n Metodol\u00F3gica del Modelo",
+                title="Model Methodological Validation",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -457,20 +457,20 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="check", 
-                        `title`="Validaci\u00F3n", 
+                        `title`="Validation", 
                         `type`="text"),
                     list(
                         `name`="status", 
-                        `title`="Estado", 
+                        `title`="Status", 
                         `type`="text"),
                     list(
                         `name`="details", 
-                        `title`="Detalles", 
+                        `title`="Details", 
                         `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="pathDiagram",
-                title="Diagrama de Ruta (Path Diagram SVG)",
+                title="Path Diagram (SVG)",
                 width=600,
                 height=400,
                 renderFun=".plotPathDiagram",
@@ -478,12 +478,12 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="outlierGuide",
-                title="Valores At\u00EDpicos Multivariados",
+                title="Multivariate Outliers",
                 visible="(isFinalized)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="outlierTable",
-                title="Diagn\u00F3stico de Casos At\u00EDpicos",
+                title="Outlier Diagnostics",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -496,11 +496,11 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="case", 
-                        `title`="Caso", 
+                        `title`="Case", 
                         `type`="integer"),
                     list(
                         `name`="d2", 
-                        `title`="D\u00B2 Mahalanobis", 
+                        `title`="Mahalanobis D\u00B2", 
                         `type`="number"),
                     list(
                         `name`="pD2", 
@@ -513,21 +513,21 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"),
                     list(
                         `name`="cooksD", 
-                        `title`="Distancia de Cook", 
+                        `title`="Cook's distance", 
                         `type`="number"),
                     list(
                         `name`="criteria", 
-                        `title`="Criterios activados", 
+                        `title`="Triggered criteria", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="equationsGuide",
-                title="Dise\u00F1o del Modelo",
+                title="Model Design",
                 visible="(isFinalized)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pathCoefficients",
-                title="Coeficientes de Ruta (Path Coefficients)",
+                title="Path Coefficients",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -540,7 +540,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="dep", 
-                        `title`="Variable End\u00F3gena", 
+                        `title`="Endogenous Variable", 
                         `type`="text"),
                     list(
                         `name`="pred", 
@@ -552,7 +552,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"),
                     list(
                         `name`="se", 
-                        `title`="E.E.", 
+                        `title`="SE", 
                         `type`="number"),
                     list(
                         `name`="t", 
@@ -570,12 +570,12 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="coefficientsInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized && showCoeffs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="rSquaredTable",
-                title="Varianza Explicada (R\u00B2)",
+                title="Explained Variance (R\u00B2)",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -588,7 +588,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="var", 
-                        `title`="Variable End\u00F3gena", 
+                        `title`="Endogenous Variable", 
                         `type`="text"),
                     list(
                         `name`="r2", 
@@ -596,17 +596,17 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"),
                     list(
                         `name`="adjR2", 
-                        `title`="R\u00B2 Ajustado", 
+                        `title`="Adjusted R\u00B2", 
                         `type`="number"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualCovarianceGuide",
-                title="Covarianzas Residuales",
+                title="Residual Covariances",
                 visible="(isFinalized && showCovs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="residualCovarianceTable",
-                title="Covarianzas Residuales entre Variables End\u00F3genas",
+                title="Residual Covariances Among Endogenous Variables",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -627,16 +627,16 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="covariance", 
-                        `title`="Covarianza", 
+                        `title`="Covariance", 
                         `type`="number"),
                     list(
                         `name`="correlation", 
-                        `title`="Correlaci\u00F3n", 
+                        `title`="Correlation", 
                         `type`="number"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualPlots",
-                title="Diagn\u00F3stico de Residuos por Ecuaci\u00F3n",
+                title="Residual Diagnostics by Equation",
                 width=700,
                 height=350,
                 renderFun=".plotResidualHistograms",
@@ -644,12 +644,12 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normalityGuide",
-                title="Normalidad de Residuos",
+                title="Residual Normality",
                 visible="(isFinalized && showResiduals)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="residualNormality",
-                title="Normalidad de Residuos por Ecuaci\u00F3n",
+                title="Residual Normality by Equation",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -662,15 +662,15 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="dep", 
-                        `title`="Variable Dependiente", 
+                        `title`="Dependent Variable", 
                         `type`="text"),
                     list(
                         `name`="test", 
-                        `title`="Prueba", 
+                        `title`="Test", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="number"),
                     list(
                         `name`="p", 
@@ -684,17 +684,17 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normalityInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized && showResiduals)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homoscedasticityGuide",
-                title="Homoscedasticidad",
+                title="Homoscedasticity",
                 visible="(isFinalized)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="homoscedasticity",
-                title="Homoscedasticidad por Ecuaci\u00F3n",
+                title="Homoscedasticity by Equation",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -707,23 +707,23 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="dep", 
-                        `title`="Variable Dependiente", 
+                        `title`="Dependent Variable", 
                         `type`="text"),
                     list(
                         `name`="test", 
-                        `title`="Prueba", 
+                        `title`="Test", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="number"),
                     list(
                         `name`="df", 
-                        `title`="gl", 
+                        `title`="df", 
                         `type`="text"),
                     list(
                         `name`="p", 
@@ -737,17 +737,17 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homoscedasticityInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityGuide",
-                title="Multicolinealidad",
+                title="Multicollinearity",
                 visible="(isFinalized)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="multicollinearity",
-                title="Multicolinealidad por Ecuaci\u00F3n",
+                title="Multicollinearity by Equation",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -760,38 +760,38 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="dep", 
-                        `title`="Variable Dependiente", 
+                        `title`="Dependent Variable", 
                         `type`="text"),
                     list(
                         `name`="diagnostic", 
-                        `title`="Diagn\u00F3stico", 
+                        `title`="Diagnostic", 
                         `type`="text"),
                     list(
                         `name`="item", 
-                        `title`="Elemento", 
+                        `title`="Item", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="number"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="mardiaGuide",
-                title="Normalidad Multivariada (Mardia)",
+                title="Multivariate Normality (Mardia)",
                 visible="(isFinalized)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="mardiaTable",
-                title="Prueba de Normalidad Multivariada de Mardia",
+                title="Mardia's Multivariate Normality Test",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -804,19 +804,19 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="measure", 
-                        `title`="Medida", 
+                        `title`="Measure", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Coeficiente", 
+                        `title`="Coefficient", 
                         `type`="number"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="number"),
                     list(
                         `name`="df", 
-                        `title`="gl", 
+                        `title`="df", 
                         `type`="text"),
                     list(
                         `name`="p", 
@@ -830,17 +830,17 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="mardiaInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationMatrixGuide",
-                title="Matriz de Correlaciones",
+                title="Correlation Matrix",
                 visible="(isFinalized && showCorrs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pearsonMatrixTable",
-                title="Matriz de Correlaciones de Pearson (formato APA 7)",
+                title="Pearson Correlation Matrix (APA 7 Format)",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -858,7 +858,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="dcorMatrixTable",
-                title="Matriz de Correlaci\u00F3n de Distancia (dCor, formato APA 7)",
+                title="Distance Correlation Matrix (dCor, APA 7 Format)",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -881,12 +881,12 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonGuide",
-                title="An\u00E1lisis de Discordancia Pearson / dCor / Entrop\u00EDa Copular",
+                title="Pearson / dCor / Copula Entropy Discordance Analysis",
                 visible="(isFinalized && showCorrs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="correlationComparisonTable",
-                title="Pares con Diferencia Notable entre Pearson y dCor",
+                title="Pairs with a Notable Gap Between Pearson and dCor",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -915,11 +915,11 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="gap", 
-                        `title`="Brecha (dCor \u2212 |r|)", 
+                        `title`="Gap (dCor \u2212 |r|)", 
                         `type`="number"),
                     list(
                         `name`="ce", 
-                        `title`="Entrop\u00EDa Copular", 
+                        `title`="Copula Entropy", 
                         `type`="number"),
                     list(
                         `name`="ceP", 
@@ -932,22 +932,22 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="flag", 
-                        `title`="Diferencia notable", 
+                        `title`="Notable difference", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized && showCorrs)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="crossEntropyGuide",
-                title="Independencia por Entrop\u00EDa Copular",
+                title="Independence via Copula Entropy",
                 visible="(isFinalized && showCorrs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="crossEntropyTable",
-                title="Prueba de Independencia por Entrop\u00EDa Copular",
+                title="Copula Entropy Independence Test",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -968,11 +968,11 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="connected", 
-                        `title`="Conectadas en el modelo", 
+                        `title`="Connected in the model", 
                         `type`="text"),
                     list(
                         `name`="ce", 
-                        `title`="Entrop\u00EDa Copular", 
+                        `title`="Copula Entropy", 
                         `type`="number"),
                     list(
                         `name`="p", 
@@ -986,17 +986,17 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="crossEntropyInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized && showCorrs)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="indirectEffectsGuide",
-                title="Efectos Directos, Indirectos y Totales",
+                title="Direct, Indirect, and Total Effects",
                 visible="(isFinalized)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="indirectEffectsTable",
-                title="Efectos Directos, Indirectos y Totales (Mediaci\u00F3n Simple)",
+                title="Direct, Indirect, and Total Effects (Simple Mediation)",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -1013,27 +1013,27 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="m", 
-                        `title`="Mediador (M)", 
+                        `title`="Mediator (M)", 
                         `type`="text"),
                     list(
                         `name`="y", 
-                        `title`="Variable Dependiente (Y)", 
+                        `title`="Dependent Variable (Y)", 
                         `type`="text"),
                     list(
                         `name`="directBeta", 
-                        `title`="Efecto Directo (\u03B2)", 
+                        `title`="Direct Effect (\u03B2)", 
                         `type`="number"),
                     list(
                         `name`="indirectBeta", 
-                        `title`="Efecto Indirecto (\u03B2)", 
+                        `title`="Indirect Effect (\u03B2)", 
                         `type`="number"),
                     list(
                         `name`="totalBeta", 
-                        `title`="Efecto Total (\u03B2)", 
+                        `title`="Total Effect (\u03B2)", 
                         `type`="number"),
                     list(
                         `name`="sobelZ", 
-                        `title`="z de Sobel", 
+                        `title`="Sobel z", 
                         `type`="number"),
                     list(
                         `name`="sobelP", 
@@ -1047,17 +1047,17 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="indirectEffectsInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sampleSizeGuide",
-                title="Adecuaci\u00F3n del Tama\u00F1o de Muestra",
+                title="Sample Size Adequacy",
                 visible="(isFinalized)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="sampleSizeTable",
-                title="Valoraci\u00F3n del Tama\u00F1o de Muestra seg\u00FAn la Complejidad del Modelo",
+                title="Sample Size Assessment by Model Complexity",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -1070,38 +1070,38 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="criterion", 
-                        `title`="Criterio (autor)", 
+                        `title`="Criterion (author)", 
                         `type`="text"),
                     list(
                         `name`="rule", 
-                        `title`="Regla", 
+                        `title`="Rule", 
                         `type`="text"),
                     list(
                         `name`="required", 
-                        `title`="N requerido", 
+                        `title`="Required N", 
                         `type`="number"),
                     list(
                         `name`="actual", 
-                        `title`="N actual", 
+                        `title`="Current N", 
                         `type`="integer"),
                     list(
                         `name`="status", 
-                        `title`="Estado", 
+                        `title`="Status", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sampleSizeInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible="(isFinalized)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="modelDiagnosticConclusionGuide",
-                title="Conclusi\u00F3n Diagn\u00F3stica del Modelo",
+                title="Model Diagnostic Conclusion",
                 visible="(isFinalized)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="modelDiagnosticConclusionTable",
-                title="Resumen de Diagn\u00F3sticos del Modelo",
+                title="Model Diagnostics Summary",
                 clearWith=list(
                     "vars",
                     "relations",
@@ -1114,20 +1114,20 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="area", 
-                        `title`="\u00C1rea Diagn\u00F3stica", 
+                        `title`="Diagnostic Area", 
                         `type`="text"),
                     list(
                         `name`="status", 
-                        `title`="Estado", 
+                        `title`="Status", 
                         `type`="text"),
                     list(
                         `name`="detail", 
-                        `title`="Detalle", 
+                        `title`="Detail", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="modelDiagnosticConclusionInterpretation",
-                title="Veredicto General",
+                title="Overall Verdict",
                 visible="(isFinalized)"))}))
 
 pathCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(

@@ -63,27 +63,27 @@ bibliographyResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             super$initialize(
                 options=options,
                 name="",
-                title="Bibliografía")
+                title="Bibliography")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Bibliograf\u00EDa"))
+                title="Bibliography"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="references",
-                title="Referencias en formato APA 7.\u00AA edici\u00F3n"))
+                title="References in APA 7th Edition Format"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="notes",
-                title="Notes / Notas"))
+                title="Notes"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="citationsTable",
-                title="Citations / Citaciones"))
+                title="Citations"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="biblioSummary",
-                title="Bibliometric Summary / Resumen bibliom\u00E9trico"))}))
+                title="Bibliometric Summary"))}))
 
 bibliographyBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "bibliographyBase",

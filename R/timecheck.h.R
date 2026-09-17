@@ -137,15 +137,15 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Series Temporales")
+                title="Time Series")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Series Temporales"))
+                title="Time Series"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="modelProfile",
-                title="Perfil metodol\u00F3gico del modelo",
+                title="Model methodological profile",
                 clearWith=list(
                     "dateVar",
                     "exogenous",
@@ -157,20 +157,20 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="element", 
-                        `title`="Elemento", 
+                        `title`="Item", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="modelDescription",
-                title="Sobre este modelo"))
+                title="About this model"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="conditionsMatrix",
-                title="Supuestos y condiciones a evaluar",
+                title="Assumptions and conditions to evaluate",
                 clearWith=list(
                     "dateVar",
                     "exogenous",
@@ -182,20 +182,20 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="area", 
-                        `title`="\u00C1rea", 
+                        `title`="Area", 
                         `type`="text"),
                     list(
                         `name`="condition", 
-                        `title`="Supuesto / condici\u00F3n", 
+                        `title`="Assumption / condition", 
                         `type`="text"),
                     list(
                         `name`="diagnostic", 
-                        `title`="Diagn\u00F3stico", 
+                        `title`="Diagnostic", 
                         `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="decisionsMatrix",
-                title="Funci\u00F3n metodol\u00F3gica y decisi\u00F3n asociada",
+                title="Methodological function and associated decision",
                 clearWith=list(
                     "dateVar",
                     "exogenous",
@@ -207,29 +207,29 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="area", 
-                        `title`="\u00C1rea", 
+                        `title`="Area", 
                         `type`="text"),
                     list(
                         `name`="condition", 
-                        `title`="Supuesto / condici\u00F3n", 
+                        `title`="Assumption / condition", 
                         `type`="text"),
                     list(
                         `name`="role", 
-                        `title`="Funci\u00F3n metodol\u00F3gica", 
+                        `title`="Methodological function", 
                         `type`="text"),
                     list(
                         `name`="decision", 
-                        `title`="Decisi\u00F3n asociada", 
+                        `title`="Associated decision", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="runNotice",
-                title="Aviso",
+                title="Notice",
                 visible=FALSE))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="seriesPlot",
-                title="Serie(s) temporal(es)",
+                title="Time series",
                 width=700,
                 height=280,
                 renderFun=".plotSeries",
@@ -237,7 +237,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="diagnosticsResults",
-                title="Resultados de las pruebas",
+                title="Test results",
                 clearWith=list(
                     "dateVar",
                     "exogenous",
@@ -249,11 +249,11 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="test", 
-                        `title`="Prueba", 
+                        `title`="Test", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="pvalue", 
@@ -261,12 +261,12 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="evidence", 
-                        `title`="Evidencia", 
+                        `title`="Evidence", 
                         `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="acfPlot",
-                title="Autocorrelaci\u00F3n (ACF)",
+                title="Autocorrelation (ACF)",
                 width=460,
                 height=260,
                 renderFun=".plotAcf",
@@ -274,7 +274,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="pacfPlot",
-                title="Autocorrelaci\u00F3n parcial (PACF)",
+                title="Partial autocorrelation (PACF)",
                 width=460,
                 height=260,
                 renderFun=".plotPacf",
@@ -282,7 +282,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualsPlot",
-                title="Residuos en el tiempo",
+                title="Residuals over time",
                 width=700,
                 height=260,
                 renderFun=".plotResiduals",
@@ -290,7 +290,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Image$new(
                 options=options,
                 name="volatilityPlot",
-                title="Volatilidad condicional estimada",
+                title="Estimated conditional volatility",
                 width=700,
                 height=260,
                 renderFun=".plotVolatility",
@@ -298,15 +298,15 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="interpretation",
-                title="Lectura metodol\u00F3gica"))
+                title="Methodological reading"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="foundations",
-                title="Fundamentos metodol\u00F3gicos y referencias"))
+                title="Methodological foundations and references"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="diagnosticsActions",
-                title="Acci\u00F3n metodol\u00F3gica recomendada",
+                title="Recommended methodological action",
                 clearWith=list(
                     "dateVar",
                     "exogenous",
@@ -318,16 +318,16 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="test", 
-                        `title`="Prueba", 
+                        `title`="Test", 
                         `type`="text"),
                     list(
                         `name`="action", 
-                        `title`="Acci\u00F3n recomendada", 
+                        `title`="Recommended action", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="implementationNotes",
-                title="Alcance de esta versi\u00F3n"))}))
+                title="Scope of this version"))}))
 
 timeCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "timeCheckBase",

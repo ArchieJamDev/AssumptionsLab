@@ -26,16 +26,16 @@
 # Jamovi Results Specification - Series Temporales
 # -----------------------------------------------------------------------------
 name: timeCheck
-title: Series Temporales
+title: Time Series
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Series Temporales
+    title: Time Series
     type: Html
 
   - name: modelProfile
-    title: Perfil metodológico del modelo
+    title: Model methodological profile
     type: Table
     clearWith:
       - dateVar
@@ -47,18 +47,18 @@ items:
     rows: 0
     columns:
       - name: element
-        title: Elemento
+        title: Item
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: text
 
   - name: modelDescription
-    title: Sobre este modelo
+    title: About this model
     type: Html
 
   - name: conditionsMatrix
-    title: Supuestos y condiciones a evaluar
+    title: Assumptions and conditions to evaluate
     type: Table
     clearWith:
       - dateVar
@@ -70,17 +70,17 @@ items:
     rows: 0
     columns:
       - name: area
-        title: Área
+        title: Area
         type: text
       - name: condition
-        title: Supuesto / condición
+        title: Assumption / condition
         type: text
       - name: diagnostic
-        title: Diagnóstico
+        title: Diagnostic
         type: text
 
   - name: decisionsMatrix
-    title: Función metodológica y decisión asociada
+    title: Methodological function and associated decision
     type: Table
     clearWith:
       - dateVar
@@ -92,25 +92,25 @@ items:
     rows: 0
     columns:
       - name: area
-        title: Área
+        title: Area
         type: text
       - name: condition
-        title: Supuesto / condición
+        title: Assumption / condition
         type: text
       - name: role
-        title: Función metodológica
+        title: Methodological function
         type: text
       - name: decision
-        title: Decisión asociada
+        title: Associated decision
         type: text
 
   - name: runNotice
-    title: Aviso
+    title: Notice
     type: Html
     visible: false
 
   - name: seriesPlot
-    title: Serie(s) temporal(es)
+    title: Time series
     type: Image
     width: 700
     height: 280
@@ -118,7 +118,7 @@ items:
     visible: false
 
   - name: diagnosticsResults
-    title: Resultados de las pruebas
+    title: Test results
     type: Table
     clearWith:
       - dateVar
@@ -130,20 +130,20 @@ items:
     rows: 0
     columns:
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: pvalue
         title: p
         type: text
       - name: evidence
-        title: Evidencia
+        title: Evidence
         type: text
 
   - name: acfPlot
-    title: Autocorrelación (ACF)
+    title: Autocorrelation (ACF)
     type: Image
     width: 460
     height: 260
@@ -151,7 +151,7 @@ items:
     visible: false
 
   - name: pacfPlot
-    title: Autocorrelación parcial (PACF)
+    title: Partial autocorrelation (PACF)
     type: Image
     width: 460
     height: 260
@@ -159,7 +159,7 @@ items:
     visible: false
 
   - name: residualsPlot
-    title: Residuos en el tiempo
+    title: Residuals over time
     type: Image
     width: 700
     height: 260
@@ -167,7 +167,7 @@ items:
     visible: false
 
   - name: volatilityPlot
-    title: Volatilidad condicional estimada
+    title: Estimated conditional volatility
     type: Image
     width: 700
     height: 260
@@ -175,15 +175,15 @@ items:
     visible: false
 
   - name: interpretation
-    title: Lectura metodológica
+    title: Methodological reading
     type: Html
 
   - name: foundations
-    title: Fundamentos metodológicos y referencias
+    title: Methodological foundations and references
     type: Html
 
   - name: diagnosticsActions
-    title: Acción metodológica recomendada
+    title: Recommended methodological action
     type: Table
     clearWith:
       - dateVar
@@ -195,12 +195,12 @@ items:
     rows: 0
     columns:
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: action
-        title: Acción recomendada
+        title: Recommended action
         type: text
 
   - name: implementationNotes
-    title: Alcance de esta versión
+    title: Scope of this version
     type: Html

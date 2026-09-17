@@ -24,20 +24,20 @@
 
 ---
 name: regCheck
-title: Regresión simple y múltiple
+title: Simple and Multiple Regression
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Regresión simple y múltiple
+    title: Simple and Multiple Regression
     type: Html
 
   - name: designGuide
-    title: Modelo de regresión
+    title: Regression model
     type: Html
 
   - name: modelSummary
-    title: Resumen del modelo
+    title: Model summary
     type: Table
     clearWith:
       - dep
@@ -46,14 +46,14 @@ items:
       - reportLang
     columns:
       - name: item
-        title: Elemento
+        title: Item
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: text
 
   - name: missingSummary
-    title: Resumen de datos faltantes
+    title: Missing data summary
     type: Table
     clearWith:
       - dep
@@ -62,18 +62,18 @@ items:
       - reportLang
     columns:
       - name: item
-        title: Elemento
+        title: Item
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: text
 
   - name: linearityGuide
-    title: Linealidad
+    title: Linearity
     type: Html
 
   - name: linearityPredictor
-    title: Linealidad por predictor numérico
+    title: Linearity by numeric predictor
     type: Table
     clearWith:
       - dep
@@ -85,16 +85,16 @@ items:
         title: Predictor
         type: text
       - name: dependent
-        title: Variable dependiente
+        title: Dependent variable
         type: text
       - name: test
-        title: Prueba / criterio
+        title: Test / criterion
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: p
         title: p
@@ -105,7 +105,7 @@ items:
         type: text
 
   - name: linearityModel
-    title: Linealidad global del modelo
+    title: Overall model linearity
     type: Table
     clearWith:
       - dep
@@ -114,19 +114,19 @@ items:
       - reportLang
     columns:
       - name: scope
-        title: Alcance
+        title: Scope
         type: text
       - name: dependent
-        title: Variable dependiente
+        title: Dependent variable
         type: text
       - name: test
-        title: Prueba / criterio
+        title: Test / criterion
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: p
         title: p
@@ -137,16 +137,16 @@ items:
         type: text
 
   - name: linearityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: correlationMatrixGuide
-    title: Matriz de correlaciones
+    title: Correlation matrix
     type: Html
     visible: false
 
   - name: pearsonMatrixTable
-    title: Matriz de correlaciones de Pearson (formato APA 7)
+    title: Pearson correlation matrix (APA 7 format)
     type: Table
     clearWith:
       - dep
@@ -161,7 +161,7 @@ items:
         type: text
 
   - name: dcorMatrixTable
-    title: Matriz de correlación de distancia (dCor, formato APA 7)
+    title: Distance correlation matrix (dCor, APA 7 format)
     type: Table
     clearWith:
       - dep
@@ -181,12 +181,12 @@ items:
     visible: false
 
   - name: correlationComparisonGuide
-    title: Análisis de discordancia Pearson / dCor / entropía copular
+    title: Pearson / dCor / copula entropy discordance analysis
     type: Html
     visible: false
 
   - name: correlationComparisonTable
-    title: Pares con diferencia notable entre Pearson y dCor
+    title: Pairs with a notable gap between Pearson and dCor
     type: Table
     clearWith:
       - dep
@@ -209,10 +209,10 @@ items:
         title: dCor
         type: text
       - name: gap
-        title: Brecha (dCor − |r|)
+        title: Gap (dCor − |r|)
         type: number
       - name: ce
-        title: Entropía copular
+        title: Copula entropy
         type: number
       - name: ceP
         title: p (CE)
@@ -222,16 +222,16 @@ items:
         title: Sig. (CE)
         type: text
       - name: flag
-        title: Diferencia notable
+        title: Notable difference
         type: text
 
   - name: correlationComparisonInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: false
 
   - name: correlationIndividualPlot
-    title: Relación por par (Pearson / dCor)
+    title: Pairwise relationship (Pearson / dCor)
     type: Image
     width: 620
     height: 380
@@ -239,12 +239,12 @@ items:
     visible: false
 
   - name: correlationIndividualGuide
-    title: 'Guía: Relación por par (Pearson / dCor)'
+    title: 'Guide: Pairwise relationship (Pearson / dCor)'
     type: Html
     visible: false
 
   - name: correlationComparativePlot
-    title: Comparación de Pearson, dCor y entropía copular entre pares
+    title: Pairwise comparison of Pearson, dCor, and copula entropy
     type: Image
     width: 620
     height: 380
@@ -252,38 +252,38 @@ items:
     visible: false
 
   - name: correlationComparativeGuide
-    title: 'Guía: Comparación de Pearson, dCor y entropía copular'
+    title: 'Guide: Comparison of Pearson, dCor, and copula entropy'
     type: Html
     visible: false
 
   - name: diagnosticPlotsGuide
-    title: Gráficos diagnósticos de regresión
+    title: Regression diagnostic plots
     type: Html
 
   - name: residualsFittedPlot
-    title: Residuos vs valores ajustados
+    title: Residuals vs fitted values
     type: Image
     width: 560
     height: 315
     renderFun: .plotResidualsFitted
 
   - name: residualsFittedGuide
-    title: 'Guía: Residuos vs valores ajustados'
+    title: 'Guide: Residuals vs fitted values'
     type: Html
 
   - name: observedPredictedPlot
-    title: Valores observados vs predichos
+    title: Observed vs predicted values
     type: Image
     width: 560
     height: 315
     renderFun: .plotObservedPredicted
 
   - name: observedPredictedGuide
-    title: 'Guía: Valores observados vs predichos'
+    title: 'Guide: Observed vs predicted values'
     type: Html
 
   - name: predictorEffectsPlot
-    title: Efectos visuales de predictores numéricos sobre la dependiente
+    title: Visual effects of numeric predictors on the dependent variable
     type: Image
     width: 620
     height: 350
@@ -291,15 +291,15 @@ items:
 
 
   - name: predictorEffectsGuide
-    title: 'Guía: Efectos visuales de predictores numéricos'
+    title: 'Guide: Visual effects of numeric predictors'
     type: Html
 
   - name: residualNormalityGuide
-    title: Normalidad de residuos
+    title: Residual normality
     type: Html
 
   - name: residualNormality
-    title: Normalidad de residuos
+    title: Residual normality
     type: Table
     clearWith:
       - dep
@@ -308,13 +308,13 @@ items:
       - reportLang
     columns:
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: p
         title: p
@@ -325,33 +325,33 @@ items:
         type: text
 
   - name: residualNormalityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: qqResidualsPlot
-    title: Q-Q plot de residuos
+    title: Residual Q-Q plot
     type: Image
     width: 560
     height: 310
     renderFun: .plotQQResiduals
 
   - name: qqResidualsGuide
-    title: 'Guía: Q-Q plot de residuos'
+    title: 'Guide: Residual Q-Q plot'
     type: Html
 
   - name: residualHistogramPlot
-    title: Histograma de residuos
+    title: Residual histogram
     type: Image
     width: 560
     height: 300
     renderFun: .plotResidualHistogram
 
   - name: residualHistogramGuide
-    title: 'Guía: Histograma de residuos'
+    title: 'Guide: Residual histogram'
     type: Html
 
   - name: residualNormalCurvePlot
-    title: Distribución observada de residuos vs curva normal teórica
+    title: Observed residual distribution vs theoretical normal curve
     type: Image
     width: 560
     height: 315
@@ -359,15 +359,15 @@ items:
 
 
   - name: residualNormalCurveGuide
-    title: 'Guía: Distribución observada vs normal teórica'
+    title: 'Guide: Observed distribution vs theoretical normal'
     type: Html
 
   - name: homoscedasticityGuide
-    title: Homoscedasticidad y heterocedasticidad
+    title: Homoscedasticity and heteroscedasticity
     type: Html
 
   - name: homoscedasticity
-    title: Homoscedasticidad y heterocedasticidad
+    title: Homoscedasticity and heteroscedasticity
     type: Table
     clearWith:
       - dep
@@ -376,16 +376,16 @@ items:
       - reportLang
     columns:
       - name: family
-        title: Familia
+        title: Family
         type: text
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: df
         title: df
@@ -399,7 +399,7 @@ items:
         type: text
 
   - name: homoscedasticityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
 
@@ -411,15 +411,15 @@ items:
     renderFun: .plotScaleLocation
 
   - name: scaleLocationGuide
-    title: 'Guía: Scale-location plot'
+    title: 'Guide: Scale-location plot'
     type: Html
 
   - name: independenceGuide
-    title: Independencia de errores
+    title: Independence of errors
     type: Html
 
   - name: independence
-    title: Independencia de errores
+    title: Independence of errors
     type: Table
     clearWith:
       - dep
@@ -428,13 +428,13 @@ items:
       - reportLang
     columns:
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: p
         title: p
@@ -444,16 +444,16 @@ items:
         type: text
 
   - name: independenceInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: multicollinearityGuide
-    title: Multicolinealidad
+    title: Multicollinearity
     type: Html
     visible: false
 
   - name: multicollinearity
-    title: Multicolinealidad
+    title: Multicollinearity
     type: Table
     clearWith:
       - dep
@@ -463,29 +463,29 @@ items:
     visible: false
     columns:
       - name: diagnostic
-        title: Diagnóstico
+        title: Diagnostic
         type: text
       - name: item
-        title: Elemento
+        title: Item
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
 
   - name: multicollinearityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: false
 
   - name: influenceGuide
-    title: Casos atípicos e influyentes
+    title: Outlying and influential cases
     type: Html
 
   - name: influence
-    title: Casos atípicos e influyentes
+    title: Outlying and influential cases
     type: Table
     clearWith:
       - dep
@@ -494,16 +494,16 @@ items:
       - reportLang
     columns:
       - name: case
-        title: Caso
+        title: Case
         type: integer
       - name: fitted
-        title: Ajustado
+        title: Adjusted
         type: number
       - name: residual
-        title: Residuo
+        title: Residual
         type: number
       - name: studResidual
-        title: Residuo studentizado
+        title: Studentized residual
         type: number
       - name: leverage
         title: Leverage
@@ -515,52 +515,52 @@ items:
         title: DFFITS
         type: number
       - name: criteria
-        title: Criterios activados
+        title: Triggered criteria
         type: text
 
   - name: influenceInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: numericBoxplotsPlot
-    title: Boxplots de la variable dependiente y predictores numéricos
+    title: Boxplots of the dependent variable and numeric predictors
     type: Image
     width: 620
     height: 360
     renderFun: .plotNumericBoxplots
 
   - name: numericBoxplotsGuide
-    title: 'Guía: Boxplots de variables numéricas'
+    title: 'Guide: Boxplots of numeric variables'
     type: Html
 
   - name: residualsLeveragePlot
-    title: Residuos studentizados vs leverage
+    title: Studentized residuals vs leverage
     type: Image
     width: 600
     height: 350
     renderFun: .plotResidualsLeverage
 
   - name: residualsLeverageGuide
-    title: 'Guía: Residuos studentizados vs leverage'
+    title: 'Guide: Studentized residuals vs leverage'
     type: Html
 
   - name: cooksDPlot
-    title: Cook's D por caso
+    title: "Cook's D by case"
     type: Image
     width: 560
     height: 300
     renderFun: .plotCooksD
 
   - name: cooksDGuide
-    title: "Guía: Cook's D por caso"
+    title: "Guide: Cook's D by case"
     type: Html
 
   - name: transformationsGuide
-    title: Transformaciones exploratorias
+    title: Exploratory transformations
     type: Html
 
   - name: transformationNormality
-    title: Normalidad de residuos por transformación
+    title: Residual normality by transformation
     type: Table
     clearWith:
       - dep
@@ -569,7 +569,7 @@ items:
       - reportLang
     columns:
       - name: criterion
-        title: Criterio / prueba
+        title: Criterion / test
         type: text
       - name: original
         title: Original
@@ -586,7 +586,7 @@ items:
 
 
   - name: transformationFit
-    title: Ajuste y varianza residual por transformación
+    title: Fit and residual variance by transformation
     type: Table
     clearWith:
       - dep
@@ -595,7 +595,7 @@ items:
       - reportLang
     columns:
       - name: criterion
-        title: Criterio / prueba
+        title: Criterion / test
         type: text
       - name: original
         title: Original
@@ -612,13 +612,13 @@ items:
 
 
   - name: robustOptionsGuide
-    title: Opciones robustas y de remuestreo
+    title: Robust and resampling options
     type: Html
 
   - name: robustOptionsText
-    title: Interpretación metodológica de opciones robustas
+    title: Methodological interpretation of robust options
     type: Html
 
   - name: notes
-    title: Notas y recomendación
+    title: Notes and recommendation
     type: Html

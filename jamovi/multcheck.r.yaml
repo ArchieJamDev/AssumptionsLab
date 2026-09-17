@@ -24,51 +24,51 @@
 
 ---
 name: multCheck
-title: Regresión logística multinomial
+title: Multinomial Logistic Regression
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Introducción
+    title: Introduction
     type: Html
 
   - name: designGuide
-    title: Diseño del modelo
+    title: Model design
     type: Html
 
   - name: design
-    title: Resumen del diseño
+    title: Design summary
     type: Table
     columns:
       - name: element
-        title: Elemento
+        title: Item
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: text
 
   - name: categoryDistribution
-    title: Distribución por categoría
+    title: Distribution by category
     type: Table
     rows: 0
     columns:
       - name: category
-        title: Categoría
+        title: Category
         type: text
       - name: n
         title: n
         type: integer
       - name: proportion
-        title: Proporción
+        title: Proportion
         type: number
         format: pc
 
   - name: separationGuide
-    title: Separación completa
+    title: Complete separation
     type: Html
 
   - name: separation
-    title: Separación completa
+    title: Complete separation
     type: Table
     rows: 0
     columns:
@@ -76,26 +76,26 @@ items:
         title: Predictor
         type: text
       - name: category
-        title: Categoría
+        title: Category
         type: text
       - name: type
-        title: Tipo
+        title: Type
         type: text
       - name: coefficient
-        title: Coeficiente
+        title: Coefficient
         type: number
         format: decimal
 
   - name: separationInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: linearityGuide
-    title: Linealidad en el logit multinomial
+    title: Linearity in the multinomial logit
     type: Html
 
   - name: linearity
-    title: Linealidad en el logit multinomial (prueba LR)
+    title: Linearity in the multinomial logit (LR test)
     type: Table
     rows: 0
     columns:
@@ -107,7 +107,7 @@ items:
         type: number
         format: decimal
       - name: df
-        title: gl
+        title: df
         type: integer
       - name: p
         title: p
@@ -118,11 +118,11 @@ items:
         type: text
 
   - name: linearityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: linearityPlot
-    title: Logit empírico vs predictor
+    title: Empirical logit vs predictor
     type: Image
     width: 640
     height: 400
@@ -138,23 +138,23 @@ items:
       - reportLang
 
   - name: iiaGuide
-    title: Independencia de alternativas irrelevantes (IIA)
+    title: Independence of irrelevant alternatives (IIA)
     type: Html
 
   - name: iia
-    title: Prueba de Hausman-McFadden (IIA)
+    title: Hausman-McFadden Test (IIA)
     type: Table
     rows: 0
     columns:
       - name: category
-        title: Categoría omitida
+        title: Omitted category
         type: text
       - name: chiSq
         title: X²
         type: number
         format: decimal
       - name: df
-        title: gl
+        title: df
         type: integer
       - name: p
         title: p
@@ -164,31 +164,31 @@ items:
         title: Sig.
         type: text
       - name: note
-        title: Nota
+        title: Note
         type: text
 
   - name: iiaInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: goodnessOfFitGuide
-    title: Bondad de ajuste
+    title: Goodness of fit
     type: Html
 
   - name: goodnessOfFit
-    title: Bondad de ajuste
+    title: Goodness of fit
     type: Table
     rows: 0
     columns:
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: number
         format: decimal
       - name: df
-        title: gl
+        title: df
         type: integer
       - name: p
         title: p
@@ -199,7 +199,7 @@ items:
         type: text
 
   - name: goodnessOfFitInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: discriminationGuide
@@ -211,69 +211,69 @@ items:
     type: Table
     columns:
       - name: metric
-        title: Métrica
+        title: Metric
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
         format: decimal
 
   - name: discriminationInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: classificationGuide
-    title: Tabla de clasificación
+    title: Classification table
     type: Html
 
   - name: classification
-    title: Observado vs. predicho
+    title: Observed vs predicted
     type: Table
     rows: 0
     columns:
       - name: observed
-        title: Observado
+        title: Observed
         type: text
 
   - name: classificationInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: multicollinearityGuide
-    title: Multicolinealidad
+    title: Multicollinearity
     type: Html
     visible: false
 
   - name: multicollinearity
-    title: Multicolinealidad
+    title: Multicollinearity
     type: Table
     visible: false
     columns:
       - name: diagnostic
-        title: Diagnóstico
+        title: Diagnostic
         type: text
       - name: item
-        title: Elemento
+        title: Item
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
 
   - name: multicollinearityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: false
 
   - name: correlationMatrixGuide
-    title: Matriz de correlaciones (predictores numéricos)
+    title: Correlation matrix (numeric predictors)
     type: Html
     visible: false
 
   - name: pearsonMatrixTable
-    title: Matriz de correlaciones de Pearson (formato APA 7)
+    title: Pearson correlation matrix (APA 7 format)
     type: Table
     rows: 0
     visible: false
@@ -283,7 +283,7 @@ items:
         type: text
 
   - name: dcorMatrixTable
-    title: Matriz de correlación de distancia (dCor, formato APA 7)
+    title: Distance correlation matrix (dCor, APA 7 format)
     type: Table
     rows: 0
     visible: false
@@ -298,12 +298,12 @@ items:
     visible: false
 
   - name: correlationComparisonGuide
-    title: Análisis de discordancia Pearson / dCor / entropía copular
+    title: Pearson / dCor / copula entropy discordance analysis
     type: Html
     visible: false
 
   - name: correlationComparisonTable
-    title: Pares con diferencia notable entre Pearson y dCor
+    title: Pairs with a notable gap between Pearson and dCor
     type: Table
     rows: 0
     visible: false
@@ -321,10 +321,10 @@ items:
         title: dCor
         type: text
       - name: gap
-        title: Brecha (dCor − |r|)
+        title: Gap (dCor − |r|)
         type: number
       - name: ce
-        title: Entropía copular
+        title: Copula entropy
         type: number
       - name: ceP
         title: p (CE)
@@ -334,31 +334,31 @@ items:
         title: Sig. (CE)
         type: text
       - name: flag
-        title: Diferencia notable
+        title: Notable difference
         type: text
 
   - name: correlationComparisonInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: false
 
   - name: influenceGuide
-    title: Casos influyentes
+    title: Influential cases
     type: Html
 
   - name: influence
-    title: Casos influyentes
+    title: Influential cases
     type: Table
     rows: 0
     columns:
       - name: case
-        title: Caso
+        title: Case
         type: integer
       - name: observed
-        title: Categoría observada
+        title: Observed category
         type: text
       - name: pearsonStat
-        title: Estadístico de Pearson
+        title: Pearson statistic
         type: number
         format: decimal
       - name: p
@@ -367,11 +367,11 @@ items:
         format: zto,pvalue
 
   - name: influenceInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: influencePlot
-    title: Residuo de Pearson por caso
+    title: Pearson residual by case
     type: Image
     width: 560
     height: 320
@@ -387,11 +387,11 @@ items:
       - reportLang
 
   - name: coefficientsGuide
-    title: Coeficientes y odds ratios (por categoría)
+    title: Coefficients and odds ratios (by category)
     type: Html
 
   - name: coefficients
-    title: Coeficientes y odds ratios
+    title: Coefficients and odds ratios
     type: Table
     rows: 0
     columns:
@@ -399,18 +399,18 @@ items:
         title: Predictor
         type: text
       - name: category
-        title: Categoría
+        title: Category
         type: text
       - name: or
         title: OR
         type: number
         format: decimal
       - name: ciLower
-        title: IC 95% inferior
+        title: 95% CI lower
         type: number
         format: decimal
       - name: ciUpper
-        title: IC 95% superior
+        title: 95% CI upper
         type: number
         format: decimal
       - name: p
@@ -422,9 +422,9 @@ items:
         type: text
 
   - name: coefficientsInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: notes
-    title: Notas y recomendación
+    title: Notes and recommendation
     type: Html

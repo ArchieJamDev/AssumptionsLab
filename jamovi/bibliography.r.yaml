@@ -24,26 +24,26 @@
 
 ---
 name: bibliography
-title: Bibliografía
+title: Bibliography
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Bibliografía
+    title: Bibliography
     type: Html
 
   - name: references
-    title: Referencias en formato APA 7.ª edición
+    title: References in APA 7th Edition Format
     type: Html
 
   - name: notes
-    title: Notes / Notas
+    title: Notes
     type: Html
 
   - name: citationsTable
-    title: Citations / Citaciones
+    title: Citations
     type: Html
 
   - name: biblioSummary
-    title: Bibliometric Summary / Resumen bibliométrico
+    title: Bibliometric Summary
     type: Html

@@ -24,12 +24,12 @@
 
 ---
 name: groupCheck
-title: Grupos independientes
+title: Independent groups
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Grupos independientes
+    title: Independent groups
     type: Html
 
   - name: design
@@ -252,7 +252,7 @@ items:
         type: text
 
   - name: normalitySummaryInterpretation
-    title: Interpretación aplicada de normalidad
+    title: Applied interpretation of normality
     type: Html
   - name: homogeneity
     title: Homogeneity of variances
@@ -296,9 +296,9 @@ items:
     type: Html
 
   - name: executiveSummary
-    title: Conclusión Metodológica
+    title: Methodological Conclusion
     type: Html
 
   - name: notes
-    title: Notas y recomendación
+    title: Notes and recommendation
     type: Html

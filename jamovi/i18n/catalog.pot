@@ -1,0 +1,3052 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-07-26 12:08:06+01000\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"Language: c\n"
+
+#: regCheck/results/transformationNormality.columns.title
+#: regCheck/results/transformationFit.columns.title
+msgid "1/Y"
+msgstr ""
+
+#: logCheck/results/oddsRatios.columns.title
+#: multCheck/results/coefficients.columns.title
+#: ordCheck/results/coefficients.columns.title
+msgid "95% CI lower"
+msgstr ""
+
+#: logCheck/results/oddsRatios.columns.title
+#: multCheck/results/coefficients.columns.title
+#: ordCheck/results/coefficients.columns.title
+msgid "95% CI upper"
+msgstr ""
+
+#: package/analyses/bibliography.description
+msgid ""
+"A curated, verified bibliography of the methodological sources cited "
+"throughout AssumptionsLab, not a data analysis: it renders a topic-filtered "
+"reading list in APA 7th edition and does not read or compute anything from "
+"the user's dataset. References can be filtered by topic (statistical "
+"assumptions, normality, homoscedasticity, linearity and regression, path "
+"analysis, related groups, time series, robust methods) and displayed in "
+"English or Spanish, with citation style always fixed to APA 7th. Use it to "
+"trace a diagnostic back to its source literature or to build a reference "
+"list for a methods section."
+msgstr ""
+
+#: package/analyses/assumptionLibrary.description
+msgid ""
+"A methodological reference glossary, not a data analysis: it explains what "
+"each statistical assumption and test covered by AssumptionsLab means, why it "
+"matters, and when it applies, without computing anything from the user's "
+"dataset. Entries can be filtered by category (e.g. normality, "
+"homoscedasticity, linearity, independence, multicollinearity, "
+"outliers/influence, sphericity, proportional odds, robust alternatives) and "
+"are available in English or Spanish. Use it alongside any of the "
+"assumption-checking analyses to look up the theory behind a diagnostic, or "
+"as a stand-alone teaching aid for planning an analysis before running one."
+msgstr ""
+
+#: pathCheck/options/diagramAbbreviate/abbrev4.title
+msgid "Abbreviate to 4 Characters"
+msgstr ""
+
+#: pathCheck/options/diagramAbbreviate/abbrev8.title
+msgid "Abbreviate to 8 Characters"
+msgstr ""
+
+#: timeCheck/results/modelDescription.title
+msgid "About this model"
+msgstr ""
+
+#: pathCheck/options/relations.description
+msgid ""
+"Add one relationship for each path in the model. In each row, the first "
+"variable is the predictor and the second is the dependent variable "
+"(predictor → dependent). A dependent variable with several predictors is "
+"specified with several rows sharing the same second variable."
+msgstr ""
+
+#: anovaCheck/results/influence.columns.title
+#: regCheck/results/influence.columns.title
+msgid "Adjusted"
+msgstr ""
+
+#: pathCheck/results/rSquaredTable.columns.title
+msgid "Adjusted R²"
+msgstr ""
+
+#: assumptionLibrary/options/category/all.title
+msgid "All Categories"
+msgstr ""
+
+#: bibliography/options/topic/all.title
+msgid "All References"
+msgstr ""
+
+#: package/analyses/anovaCheck.title
+#: package/analyses/anovaCheck.menuTitle
+#: anovaCheck/options.title
+#: anovaCheck/options.menuTitle
+#: anovaCheck/ui.title
+#: anovaCheck/results.title
+#: anovaCheck/results/intro.title
+msgid "ANOVA/ANCOVA"
+msgstr ""
+
+#: anovaCheck/results/diagnosticPlotsGuide.title
+msgid "ANOVA/ANCOVA diagnostic plots"
+msgstr ""
+
+#: anovaCheck/results/designInterpretation.title
+#: anovaCheck/results/residualNormalityInterpretation.title
+#: anovaCheck/results/varianceInterpretation.title
+#: anovaCheck/results/slopesInterpretation.title
+#: anovaCheck/results/covariateLinearityInterpretation.title
+#: anovaCheck/results/multicollinearityInterpretation.title
+#: anovaCheck/results/correlationComparisonInterpretation.title
+#: anovaCheck/results/influenceInterpretation.title
+#: groupCheck/results/homogeneityInterpretation.title
+#: logCheck/results/separationInterpretation.title
+#: logCheck/results/linearityInterpretation.title
+#: logCheck/results/goodnessOfFitInterpretation.title
+#: logCheck/results/discriminationInterpretation.title
+#: logCheck/results/multicollinearityInterpretation.title
+#: logCheck/results/correlationComparisonInterpretation.title
+#: logCheck/results/influenceInterpretation.title
+#: logCheck/results/oddsRatiosInterpretation.title
+#: multCheck/results/separationInterpretation.title
+#: multCheck/results/linearityInterpretation.title
+#: multCheck/results/iiaInterpretation.title
+#: multCheck/results/goodnessOfFitInterpretation.title
+#: multCheck/results/discriminationInterpretation.title
+#: multCheck/results/classificationInterpretation.title
+#: multCheck/results/multicollinearityInterpretation.title
+#: multCheck/results/correlationComparisonInterpretation.title
+#: multCheck/results/influenceInterpretation.title
+#: multCheck/results/coefficientsInterpretation.title
+#: ordCheck/results/separationInterpretation.title
+#: ordCheck/results/linearityInterpretation.title
+#: ordCheck/results/proportionalOddsInterpretation.title
+#: ordCheck/results/goodnessOfFitInterpretation.title
+#: ordCheck/results/discriminationInterpretation.title
+#: ordCheck/results/multicollinearityInterpretation.title
+#: ordCheck/results/correlationComparisonInterpretation.title
+#: ordCheck/results/influenceInterpretation.title
+#: ordCheck/results/coefficientsInterpretation.title
+#: pathCheck/results/coefficientsInterpretation.title
+#: pathCheck/results/normalityInterpretation.title
+#: pathCheck/results/homoscedasticityInterpretation.title
+#: pathCheck/results/multicollinearityInterpretation.title
+#: pathCheck/results/mardiaInterpretation.title
+#: pathCheck/results/correlationComparisonInterpretation.title
+#: pathCheck/results/crossEntropyInterpretation.title
+#: pathCheck/results/indirectEffectsInterpretation.title
+#: pathCheck/results/sampleSizeInterpretation.title
+#: regCheck/results/linearityInterpretation.title
+#: regCheck/results/correlationComparisonInterpretation.title
+#: regCheck/results/residualNormalityInterpretation.title
+#: regCheck/results/homoscedasticityInterpretation.title
+#: regCheck/results/independenceInterpretation.title
+#: regCheck/results/multicollinearityInterpretation.title
+#: regCheck/results/influenceInterpretation.title
+#: relatedCheck/results/normalityInterpretation.title
+#: relatedCheck/results/symmetryInterpretation.title
+#: relatedCheck/results/sphericityInterpretation.title
+#: relatedCheck/results/correlationComparisonInterpretation.title
+#: relatedCheck/results/outliersInterpretation.title
+msgid "Applied interpretation"
+msgstr ""
+
+#: groupCheck/results/caseDiagnosticsInterpretation.title
+msgid "Applied interpretation of case diagnostics"
+msgstr ""
+
+#: groupCheck/results/normalitySummaryInterpretation.title
+msgid "Applied interpretation of normality"
+msgstr ""
+
+#: timeCheck/results/conditionsMatrix.columns.title
+#: timeCheck/results/decisionsMatrix.columns.title
+msgid "Area"
+msgstr ""
+
+#: timeCheck/options/model/arima.title
+msgid "ARIMA"
+msgstr ""
+
+#: timeCheck/results/decisionsMatrix.columns.title
+msgid "Associated decision"
+msgstr ""
+
+#: timeCheck/results/conditionsMatrix.columns.title
+#: timeCheck/results/decisionsMatrix.columns.title
+msgid "Assumption / condition"
+msgstr ""
+
+#: package.title
+#: package/analyses/assumptionLibrary.menuGroup
+#: package/analyses/bibliography.menuGroup
+#: package/analyses/groupCheck.menuGroup
+#: package/analyses/relatedCheck.menuGroup
+#: package/analyses/anovaCheck.menuGroup
+#: package/analyses/regCheck.menuGroup
+#: package/analyses/logCheck.menuGroup
+#: package/analyses/ordCheck.menuGroup
+#: package/analyses/multCheck.menuGroup
+#: package/analyses/pathCheck.menuGroup
+#: package/analyses/timeCheck.menuGroup
+#: anovaCheck/options.menuGroup
+#: assumptionLibrary/options.menuGroup
+#: bibliography/options.menuGroup
+#: groupCheck/options.menuGroup
+#: logCheck/options.menuGroup
+#: multCheck/options.menuGroup
+#: ordCheck/options.menuGroup
+#: pathCheck/options.menuGroup
+#: regCheck/options.menuGroup
+#: relatedCheck/options.menuGroup
+#: timeCheck/options.menuGroup
+msgid "Assumption Lab"
+msgstr ""
+
+#: package/analyses/assumptionLibrary.title
+#: package/analyses/assumptionLibrary.menuTitle
+#: assumptionLibrary/options.title
+#: assumptionLibrary/options.menuTitle
+#: assumptionLibrary/ui.title
+#: assumptionLibrary/results.title
+#: assumptionLibrary/results/intro.title
+msgid "Assumption Library"
+msgstr ""
+
+#: timeCheck/results/conditionsMatrix.title
+msgid "Assumptions and conditions to evaluate"
+msgstr ""
+
+#: package.description
+msgid ""
+"AssumptionsLab evaluates the statistical assumptions required for common "
+"analytical techniques and pairs every diagnostic with evidence-based "
+"methodological guidance, interpretation, and educational support, rather "
+"than reporting isolated test statistics. It covers group comparisons "
+"(independent and related samples, ANOVA/ANCOVA), regression (linear, "
+"logistic, ordinal logistic, multinomial logistic), path analysis and "
+"structural validation, and time series, alongside a built-in methodological "
+"library and a unified, APA-7th-referenced bibliography."
+msgstr ""
+
+#: package/datasets/AssumptionsLabTestDataset(n=450).name
+msgid "AssumptionsLab Test Dataset (n=450)"
+msgstr ""
+
+#: logCheck/options/rocShowAUCLabel.title
+msgid "AUC label"
+msgstr ""
+
+#: timeCheck/results/acfPlot.title
+msgid "Autocorrelation (ACF)"
+msgstr ""
+
+#: pathCheck/options/residBinMethod/sturges.title
+#: regCheck/options/normHistBins/sturges.title
+msgid "Automatic (Sturges)"
+msgstr ""
+
+#: anovaCheck/options/plotSet/basic.title
+msgid "Basic"
+msgstr ""
+
+#: pathCheck/results/pathCoefficients.columns.title
+msgid "Beta Est."
+msgstr ""
+
+#: pathCheck/options/diagramEdgeLabel/beta.title
+msgid "Betas (standardized)"
+msgstr ""
+
+#: package/analyses/bibliography.title
+#: package/analyses/bibliography.menuTitle
+#: bibliography/options.title
+#: bibliography/options.menuTitle
+#: bibliography/ui.title
+#: bibliography/results.title
+#: bibliography/results/intro.title
+msgid "Bibliography"
+msgstr ""
+
+#: bibliography/results/biblioSummary.title
+msgid "Bibliometric Summary"
+msgstr ""
+
+#: regCheck/results/numericBoxplotsPlot.title
+msgid "Boxplots of the dependent variable and numeric predictors"
+msgstr ""
+
+#: ordCheck/results/proportionalOdds.title
+msgid "Brant Test"
+msgstr ""
+
+#: package/analyses/pathCheck.description
+msgid ""
+"Builds a user-specified path model (a set of predictor -> dependent "
+"relationships among observed continuous variables) and evaluates the "
+"assumptions underlying its estimation, alongside a labeled path diagram, "
+"coefficients, R², correlations, and residual diagnostics. It checks "
+"normality and outliers in residuals and compares linear (Pearson) against "
+"non-linear (distance correlation, copula entropy) association strength "
+"between variables to flag relationships a linear path coefficient would "
+"misrepresent. Use it for lightweight path-analysis/SEM-style models, to "
+"validate the structural assumptions of the specified paths before trusting "
+"the estimated coefficients."
+msgstr ""
+
+#: logCheck/results/calibrationPlot.title
+msgid "Calibration by probability decile"
+msgstr ""
+
+#: logCheck/options/caliShowPlots.title
+msgid "Calibration plots"
+msgstr ""
+
+#: anovaCheck/results/influence.columns.title
+#: groupCheck/results/caseDiagnostics.columns.title
+#: logCheck/results/influence.columns.title
+#: multCheck/results/influence.columns.title
+#: ordCheck/results/influence.columns.title
+#: pathCheck/results/outlierTable.columns.title
+#: regCheck/results/influence.columns.title
+#: relatedCheck/results/outliers.columns.title
+msgid "Case"
+msgstr ""
+
+#: groupCheck/results/caseDiagnostics.title
+msgid "Case diagnostics"
+msgstr ""
+
+#: groupCheck/results/caseDiagnosticsGuide.title
+msgid "Case diagnostics guide"
+msgstr ""
+
+#: pathCheck/results/modelSummary.columns.title
+msgid "Cases per relationship"
+msgstr ""
+
+#: logCheck/options/factors.title
+#: logCheck/ui[0][2].label
+#: multCheck/options/factors.title
+#: multCheck/ui[0][2].label
+#: ordCheck/options/factors.title
+#: ordCheck/ui[0][2].label
+#: regCheck/options/factors.title
+#: regCheck/ui[0][2].label
+msgid "Categorical Predictors"
+msgstr ""
+
+#: assumptionLibrary/options/category.title
+#: multCheck/results/categoryDistribution.columns.title
+#: multCheck/results/separation.columns.title
+#: multCheck/results/coefficients.columns.title
+#: ordCheck/results/categoryDistribution.columns.title
+msgid "Category"
+msgstr ""
+
+#: anovaCheck/results/cellSummary.columns.title
+msgid "Cell / group"
+msgstr ""
+
+#: anovaCheck/results/cellSummary.title
+msgid "Cell size and balance"
+msgstr ""
+
+#: pathCheck/options/diagramShape/circle.title
+msgid "Circles"
+msgstr ""
+
+#: pathCheck/options/diagramLayout/circular.title
+msgid "Circular"
+msgstr ""
+
+#: bibliography/results/citationsTable.title
+msgid "Citations"
+msgstr ""
+
+#: multCheck/results/classificationGuide.title
+msgid "Classification table"
+msgstr ""
+
+#: logCheck/results/separation.columns.title
+#: multCheck/results/separation.columns.title
+#: ordCheck/results/separation.columns.title
+#: pathCheck/results/mardiaTable.columns.title
+msgid "Coefficient"
+msgstr ""
+
+#: pathCheck/options/showCoeffs.title
+msgid "Coefficients"
+msgstr ""
+
+#: pathCheck/options/diagramEdgeLabel/coef.title
+msgid "Coefficients (unstandardized)"
+msgstr ""
+
+#: multCheck/results/coefficients.title
+#: ordCheck/results/coefficients.title
+msgid "Coefficients and odds ratios"
+msgstr ""
+
+#: multCheck/results/coefficientsGuide.title
+msgid "Coefficients and odds ratios (by category)"
+msgstr ""
+
+#: ordCheck/results/coefficientsGuide.title
+msgid "Coefficients and odds ratios (proportional odds)"
+msgstr ""
+
+#: groupCheck/options/distColorByGroup.title
+msgid "Color by group"
+msgstr ""
+
+#: pathCheck/options/plotPalette.title
+msgid "Color Palette by Equation"
+msgstr ""
+
+#: anovaCheck/options/plotPalette.title
+#: groupCheck/options/plotPalette.title
+msgid "Color Palette by Group"
+msgstr ""
+
+#: relatedCheck/options/plotPalette.title
+msgid "Color Palette by Measurement"
+msgstr ""
+
+#: logCheck/options/plotPalette.title
+#: multCheck/options/plotPalette.title
+#: ordCheck/options/plotPalette.title
+#: regCheck/options/plotPalette.title
+msgid "Color Palette for Categories/Groups"
+msgstr ""
+
+#: timeCheck/options/plotPalette.title
+msgid "Color Palette for Series/Groups"
+msgstr ""
+
+#: anovaCheck/options/plotPalette/colorblind.title
+#: groupCheck/options/plotPalette/colorblind.title
+#: logCheck/options/plotPalette/colorblind.title
+#: multCheck/options/plotPalette/colorblind.title
+#: ordCheck/options/plotPalette/colorblind.title
+#: pathCheck/options/plotPalette/colorblind.title
+#: regCheck/options/plotPalette/colorblind.title
+#: relatedCheck/options/plotPalette/colorblind.title
+#: timeCheck/options/plotPalette/colorblind.title
+msgid "Colorblind-safe (Okabe-Ito)"
+msgstr ""
+
+#: relatedCheck/results/differenceSummary.columns.title
+#: relatedCheck/results/normalitySummary.columns.title
+#: relatedCheck/results/symmetry.columns.title
+#: relatedCheck/results/outliers.columns.title
+msgid "Comparison"
+msgstr ""
+
+#: regCheck/options/corrComparativeStyle.title
+msgid "Comparison Plot Style"
+msgstr ""
+
+#: anovaCheck/options/plotSet/complete.title
+msgid "Complete"
+msgstr ""
+
+#: pathCheck/results/modelSummary.columns.title
+msgid "Complete cases"
+msgstr ""
+
+#: logCheck/results/separationGuide.title
+#: logCheck/results/separation.title
+#: multCheck/results/separationGuide.title
+#: multCheck/results/separation.title
+#: ordCheck/results/separationGuide.title
+#: ordCheck/results/separation.title
+msgid "Complete separation"
+msgstr ""
+
+#: groupCheck/results/normalitySummary.columns.title
+msgid "Conclusion"
+msgstr ""
+
+#: groupCheck/options/qqShowBand.title
+msgid "Confidence band"
+msgstr ""
+
+#: pathCheck/results/crossEntropyTable.columns.title
+msgid "Connected in the model"
+msgstr ""
+
+#: groupCheck/results/caseDiagnostics.columns.title
+msgid "Cook alert"
+msgstr ""
+
+#: anovaCheck/results/influence.columns.title
+#: groupCheck/results/caseDiagnostics.columns.title
+#: logCheck/results/influence.columns.title
+#: regCheck/results/influence.columns.title
+msgid "Cook's D"
+msgstr ""
+
+#: anovaCheck/results/cooksDPlot.title
+#: logCheck/results/influencePlot.title
+#: regCheck/results/cooksDPlot.title
+msgid "Cook's D by case"
+msgstr ""
+
+#: pathCheck/results/outlierTable.columns.title
+msgid "Cook's distance"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Copula entropy"
+msgstr ""
+
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/crossEntropyTable.columns.title
+msgid "Copula Entropy"
+msgstr ""
+
+#: pathCheck/results/crossEntropyTable.title
+msgid "Copula Entropy Independence Test"
+msgstr ""
+
+#: pathCheck/results/residualCovarianceTable.columns.title
+msgid "Correlation"
+msgstr ""
+
+#: anovaCheck/results/correlationMatrixGuide.title
+#: logCheck/results/correlationMatrixGuide.title
+#: ordCheck/results/correlationMatrixGuide.title
+#: regCheck/results/correlationMatrixGuide.title
+#: relatedCheck/results/correlationMatrixGuide.title
+msgid "Correlation matrix"
+msgstr ""
+
+#: pathCheck/results/correlationMatrixGuide.title
+msgid "Correlation Matrix"
+msgstr ""
+
+#: multCheck/results/correlationMatrixGuide.title
+msgid "Correlation matrix (numeric predictors)"
+msgstr ""
+
+#: pathCheck/options/showCorrs.title
+msgid "Correlations"
+msgstr ""
+
+#: pathCheck/results/residualCovarianceTable.columns.title
+msgid "Covariance"
+msgstr ""
+
+#: pathCheck/options/showCovs.title
+msgid "Covariances"
+msgstr ""
+
+#: anovaCheck/results/slopesTests.columns.title
+#: anovaCheck/results/covariateLinearity.columns.title
+msgid "Covariate"
+msgstr ""
+
+#: anovaCheck/results/covariateLinearityGuide.title
+#: anovaCheck/results/covariateLinearity.title
+msgid "Covariate linearity"
+msgstr ""
+
+#: anovaCheck/options/covs.title
+#: anovaCheck/ui[0][1].label
+msgid "Covariates"
+msgstr ""
+
+#: pathCheck/results/sampleSizeTable.columns.title
+msgid "Criterion (author)"
+msgstr ""
+
+#: regCheck/results/transformationNormality.columns.title
+#: regCheck/results/transformationFit.columns.title
+msgid "Criterion / test"
+msgstr ""
+
+#: pathCheck/results/modelSummary.title
+msgid "Current model"
+msgstr ""
+
+#: pathCheck/results/sampleSizeTable.columns.title
+msgid "Current N"
+msgstr ""
+
+#: groupCheck/options/curveBandwidth.title
+msgid "Curve Smoothing (bandwidth)"
+msgstr ""
+
+#: ordCheck/results/cutpoints.columns.title
+msgid "Cutpoint"
+msgstr ""
+
+#: ordCheck/results/cutpoints.title
+msgid "Cutpoints (intercepts)"
+msgstr ""
+
+#: timeCheck/options/dateVar.title
+msgid "Date (optional)"
+msgstr ""
+
+#: timeCheck/ui[0][2].label
+msgid "Date Variable"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "dCor"
+msgstr ""
+
+#: anovaCheck/options/dep.title
+#: anovaCheck/ui[0][0].label
+#: groupCheck/options/dep.title
+#: groupCheck/ui[0][0].label
+#: pathCheck/results/residualNormality.columns.title
+#: pathCheck/results/homoscedasticity.columns.title
+#: pathCheck/results/multicollinearity.columns.title
+#: regCheck/options/dep.title
+#: regCheck/ui[0][0].label
+msgid "Dependent Variable"
+msgstr ""
+
+#: anovaCheck/results/covariateLinearity.columns.title
+#: pathCheck/results/specifiedModel.columns.title
+#: regCheck/results/linearityPredictor.columns.title
+#: regCheck/results/linearityModel.columns.title
+msgid "Dependent variable"
+msgstr ""
+
+#: logCheck/options/dep.title
+#: logCheck/ui[0][0].label
+msgid "Dependent Variable (binary)"
+msgstr ""
+
+#: multCheck/options/dep.title
+#: multCheck/ui[0][0].label
+msgid "Dependent Variable (nominal, 3+ levels)"
+msgstr ""
+
+#: ordCheck/options/dep.title
+#: ordCheck/ui[0][0].label
+msgid "Dependent Variable (ordinal, 3+ levels)"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsTable.columns.title
+msgid "Dependent Variable (Y)"
+msgstr ""
+
+#: anovaCheck/results/groupBoxplotsPlot.title
+msgid "Dependent variable by group"
+msgstr ""
+
+#: groupCheck/results/descriptives.title
+msgid "Descriptive statistics by group"
+msgstr ""
+
+#: relatedCheck/results/descriptiveSummary.title
+msgid "Descriptives by measurement"
+msgstr ""
+
+#: relatedCheck/results/methodOptions.columns.title
+msgid "Design"
+msgstr ""
+
+#: anovaCheck/results/independenceGuide.title
+msgid "Design independence"
+msgstr ""
+
+#: anovaCheck/results/designSummary.title
+#: groupCheck/results/design.title
+#: logCheck/results/design.title
+#: multCheck/results/design.title
+#: ordCheck/results/design.title
+#: relatedCheck/results/designSummary.title
+msgid "Design summary"
+msgstr ""
+
+#: pathCheck/results/modelDiagnosticConclusionTable.columns.title
+msgid "Detail"
+msgstr ""
+
+#: pathCheck/results/validationSummary.columns.title
+msgid "Details"
+msgstr ""
+
+#: anovaCheck/results/varianceTests.columns.title
+#: multCheck/results/linearity.columns.title
+#: multCheck/results/iia.columns.title
+#: multCheck/results/goodnessOfFit.columns.title
+#: ordCheck/results/proportionalOdds.columns.title
+#: ordCheck/results/goodnessOfFit.columns.title
+#: pathCheck/results/homoscedasticity.columns.title
+#: pathCheck/results/mardiaTable.columns.title
+#: regCheck/results/homoscedasticity.columns.title
+#: relatedCheck/results/sphericity.columns.title
+msgid "df"
+msgstr ""
+
+#: groupCheck/results/homogeneity.columns.title
+msgid "df1"
+msgstr ""
+
+#: groupCheck/results/homogeneity.columns.title
+msgid "df2"
+msgstr ""
+
+#: anovaCheck/results/influence.columns.title
+#: regCheck/results/influence.columns.title
+msgid "DFFITS"
+msgstr ""
+
+#: anovaCheck/results/multicollinearity.columns.title
+#: logCheck/results/multicollinearity.columns.title
+#: multCheck/results/multicollinearity.columns.title
+#: ordCheck/results/multicollinearity.columns.title
+#: pathCheck/results/multicollinearity.columns.title
+#: regCheck/results/multicollinearity.columns.title
+#: relatedCheck/results/sphericity.columns.title
+#: timeCheck/results/conditionsMatrix.columns.title
+msgid "Diagnostic"
+msgstr ""
+
+#: pathCheck/results/modelDiagnosticConclusionTable.columns.title
+msgid "Diagnostic Area"
+msgstr ""
+
+#: anovaCheck/options/showPlots.title
+#: logCheck/options/showPlots.title
+#: multCheck/options/showPlots.title
+#: ordCheck/options/showPlots.title
+#: regCheck/options/showPlots.title
+#: timeCheck/options/showPlots.title
+msgid "Diagnostic plots"
+msgstr ""
+
+#: anovaCheck/ui[2].label
+#: logCheck/ui[2].label
+#: multCheck/ui[2].label
+#: ordCheck/ui[2].label
+#: regCheck/ui[2].label
+#: relatedCheck/ui[2].label
+msgid "Diagnostic Plots"
+msgstr ""
+
+#: relatedCheck/results/outliers.columns.title
+msgid "Difference"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsTable.columns.title
+msgid "Direct Effect (β)"
+msgstr ""
+
+#: pathCheck/results/endogenousTable.columns.title
+msgid "Direct predictors"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsGuide.title
+msgid "Direct, Indirect, and Total Effects"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsTable.title
+msgid "Direct, Indirect, and Total Effects (Simple Mediation)"
+msgstr ""
+
+#: logCheck/results/discriminationGuide.title
+#: logCheck/results/discrimination.title
+msgid "Discrimination"
+msgstr ""
+
+#: logCheck/options/rocShowPlots.title
+msgid "Discrimination plots"
+msgstr ""
+
+#: groupCheck/results/caseDiagnostics.columns.title
+msgid "Distance alert"
+msgstr ""
+
+#: anovaCheck/results/dcorMatrixTable.title
+#: logCheck/results/dcorMatrixTable.title
+#: multCheck/results/dcorMatrixTable.title
+#: ordCheck/results/dcorMatrixTable.title
+#: regCheck/results/dcorMatrixTable.title
+#: relatedCheck/results/dcorMatrixTable.title
+msgid "Distance correlation matrix (dCor, APA 7 format)"
+msgstr ""
+
+#: pathCheck/results/dcorMatrixTable.title
+msgid "Distance Correlation Matrix (dCor, APA 7 Format)"
+msgstr ""
+
+#: multCheck/results/categoryDistribution.title
+#: ordCheck/results/categoryDistribution.title
+msgid "Distribution by category"
+msgstr ""
+
+#: groupCheck/options/showDistributionPlot.title
+msgid "Distribution by group"
+msgstr ""
+
+#: relatedCheck/results/differencePlot.title
+msgid "Distribution of paired differences"
+msgstr ""
+
+#: groupCheck/results/distributionPlot.title
+msgid "Distribution of the analyzed variable by group"
+msgstr ""
+
+#: groupCheck/results/distributionPlotGuide.title
+msgid "Distribution plot guide"
+msgstr ""
+
+#: regCheck/options/corrComparativeStyle/dumbbell.title
+msgid "Dumbbell (Pearson vs dCor connected)"
+msgstr ""
+
+#: pathCheck/options/diagramShape/ellipse.title
+msgid "Ellipses"
+msgstr ""
+
+#: logCheck/results/linearityPlot.title
+#: multCheck/results/linearityPlot.title
+#: ordCheck/results/linearityPlot.title
+msgid "Empirical logit vs predictor"
+msgstr ""
+
+#: pathCheck/results/pathCoefficients.columns.title
+#: pathCheck/results/rSquaredTable.columns.title
+msgid "Endogenous Variable"
+msgstr ""
+
+#: pathCheck/options/showEndogenous.title
+#: pathCheck/results/modelSummary.columns.title
+msgid "Endogenous variables"
+msgstr ""
+
+#: anovaCheck/options/reportLang/en.title
+#: assumptionLibrary/options/reportLang/en.title
+#: bibliography/options/reportLang/en.title
+#: groupCheck/options/reportLang/en.title
+#: logCheck/options/reportLang/en.title
+#: multCheck/options/reportLang/en.title
+#: ordCheck/options/reportLang/en.title
+#: pathCheck/options/reportLang/en.title
+#: regCheck/options/reportLang/en.title
+#: relatedCheck/options/reportLang/en.title
+#: timeCheck/options/reportLang/en.title
+msgid "English"
+msgstr ""
+
+#: anovaCheck/options/reportLang/es.title
+#: assumptionLibrary/options/reportLang/es.title
+#: bibliography/options/reportLang/es.title
+#: groupCheck/options/reportLang/es.title
+#: logCheck/options/reportLang/es.title
+#: multCheck/options/reportLang/es.title
+#: ordCheck/options/reportLang/es.title
+#: pathCheck/options/reportLang/es.title
+#: regCheck/options/reportLang/es.title
+#: relatedCheck/options/reportLang/es.title
+#: timeCheck/options/reportLang/es.title
+msgid "Español"
+msgstr ""
+
+#: pathCheck/results/pathCoefficients.columns.title
+msgid "Est."
+msgstr ""
+
+#: ordCheck/results/cutpoints.columns.title
+msgid "Estimate"
+msgstr ""
+
+#: timeCheck/results/volatilityPlot.title
+msgid "Estimated conditional volatility"
+msgstr ""
+
+#: timeCheck/options/model/ets.title
+msgid "ETS / Exponential Smoothing"
+msgstr ""
+
+#: package/analyses/logCheck.description
+msgid ""
+"Evaluates the assumptions and performance of a binary logistic regression "
+"model for a two-level outcome predicted by numeric and/or categorical "
+"predictors. It checks linearity in the logit (via the empirical logit and "
+"Box-Tidwell-style diagnostics), multicollinearity, calibration of predicted "
+"probabilities against observed proportions, discrimination via the ROC curve "
+"and AUC, and case influence through Cook's D. Use it whenever a binary "
+"outcome is modeled with logistic regression, to verify the model is "
+"well-specified and to judge how well it discriminates and calibrates before "
+"trusting its odds ratios."
+msgstr ""
+
+#: package/analyses/anovaCheck.description
+msgid ""
+"Evaluates the assumptions behind comparing a continuous outcome across the "
+"cells of one or more factors, with optional continuous covariates turning "
+"the design into an ANCOVA. It checks normality of residuals, homogeneity of "
+"variance across cells, and, when covariates are present, homogeneity of "
+"regression slopes, covariate linearity, and multicollinearity among "
+"covariates, backed by residual, Q-Q, and influence (leverage/Cook's D) "
+"plots. Use it before trusting an ANOVA/ANCOVA result, to confirm the design "
+"meets the conditions the omnibus F-test relies on and to flag influential "
+"cases that could be distorting group means."
+msgstr ""
+
+#: package/analyses/groupCheck.description
+msgid ""
+"Evaluates the assumptions behind comparing a continuous outcome across two "
+"independent groups (independent-samples t-test / Mann-Whitney U) before the "
+"comparison is trusted, rather than only reporting the test statistic. It "
+"checks normality within each group, homogeneity of variance, and flags "
+"extreme cases, pairing each diagnostic with distribution, Q-Q, and "
+"violin/jitter plots plus plain-language interpretation. Use it whenever two "
+"independent groups are being compared on a numeric variable, to decide "
+"whether the standard t-test, Welch's correction, or a non-parametric "
+"alternative is the more defensible choice."
+msgstr ""
+
+#: package/analyses/relatedCheck.description
+msgid ""
+"Evaluates the assumptions behind comparing paired or repeated measurements "
+"on the same subjects: two related measures are diagnosed for a paired "
+"t-test/Wilcoxon comparison, while three or more are diagnosed for a "
+"repeated-measures ANOVA/Friedman comparison. It checks normality of the "
+"paired differences and, for three or more occasions, sphericity, alongside "
+"profile plots that show whether subjects move together or diverge across "
+"occasions. Use it whenever the same units are measured more than once, to "
+"decide whether the standard parametric test or a non-parametric alternative "
+"is appropriate before interpreting the comparison."
+msgstr ""
+
+#: package/analyses/multCheck.description
+msgid ""
+"Evaluates the assumptions of a multinomial logit model (nnet::multinom) for "
+"an unordered nominal outcome with three or more categories, predicted by "
+"numeric and/or categorical predictors. It checks the independence of "
+"irrelevant alternatives via a Hausman-McFadden test, linearity in the "
+"log-odds for each non-reference category against the reference, "
+"multicollinearity, classification accuracy, and case influence through "
+"per-case Pearson residuals, warning when a two-level outcome would be better "
+"served by the binary Logistic Regression module. Use it whenever a nominal "
+"outcome with three or more unordered categories is modeled, to confirm the "
+"model's structural assumptions before interpreting its category-specific "
+"coefficients."
+msgstr ""
+
+#: package/analyses/ordCheck.description
+msgid ""
+"Evaluates the assumptions of a proportional-odds (cumulative logit) model "
+"for an ordered outcome with three or more levels, predicted by numeric "
+"and/or categorical predictors. It checks the proportional-odds assumption "
+"itself (via a Brant-style test), linearity in the cumulative logit, "
+"multicollinearity, and case influence through per-case Pearson residuals, "
+"warning when a two-level outcome would be better served by the binary "
+"Logistic Regression module. Use it whenever an ordinal outcome is modeled "
+"with MASS::polr(), to confirm the proportional-odds assumption holds before "
+"interpreting a single set of odds ratios across all thresholds."
+msgstr ""
+
+#: package/analyses/regCheck.description
+msgid ""
+"Evaluates the assumptions of ordinary least squares linear regression for a "
+"continuous outcome predicted by one or more numeric and/or categorical "
+"predictors. It checks linearity per predictor, homoscedasticity, normality "
+"of residuals, multicollinearity, and case influence (leverage, Cook's D, "
+"studentized residuals), and compares Pearson correlation against distance "
+"correlation and copula entropy to flag non-linear associations that a linear "
+"r would miss. Use it before reporting a regression model, to confirm the "
+"fitted line is trustworthy and to identify predictors or cases that need "
+"attention."
+msgstr ""
+
+#: package/analyses/timeCheck.description
+msgid ""
+"Evaluates the statistical and methodological conditions relevant to a chosen "
+"time-series modeling approach — ARIMA, SARIMA, ETS/exponential smoothing, "
+"VAR, VECM, or GARCH — for one or more numeric series, with optional external "
+"regressors and seasonal periodicity. It runs the minimum recommended set of "
+"diagnostics for the selected model (such as stationarity, autocorrelation of "
+"residuals, and seasonality checks), supported by time-series plots. Use it "
+"before finalizing a time-series model, to confirm the chosen approach and "
+"its assumptions fit the data rather than only inspecting the fitted forecast."
+msgstr ""
+
+#: anovaCheck/results/alternatives.columns.title
+#: relatedCheck/results/methodOptions.columns.title
+#: timeCheck/results/diagnosticsResults.columns.title
+msgid "Evidence"
+msgstr ""
+
+#: pathCheck/options/diagramRotate/exogTop.title
+msgid "Exogenous Above"
+msgstr ""
+
+#: pathCheck/options/diagramRotate/exogBottom.title
+msgid "Exogenous Below"
+msgstr ""
+
+#: pathCheck/options/diagramRotate/exogLeft.title
+msgid "Exogenous on the Left"
+msgstr ""
+
+#: pathCheck/options/diagramRotate/exogRight.title
+msgid "Exogenous on the Right"
+msgstr ""
+
+#: pathCheck/options/showExogenous.title
+#: pathCheck/results/modelSummary.columns.title
+msgid "Exogenous variables"
+msgstr ""
+
+#: pathCheck/results/rSquaredTable.title
+msgid "Explained Variance (R²)"
+msgstr ""
+
+#: regCheck/results/transformationsGuide.title
+msgid "Exploratory transformations"
+msgstr ""
+
+#: timeCheck/options/exogenous.description
+msgid ""
+"External numeric variables to include as model regressors (ARIMAX if the "
+"model is ARIMA, SARIMAX if it is SARIMA). Does not apply to ETS, VAR, VECM, "
+"or GARCH. If left empty, the model is fit without external regressors, as "
+"standard ARIMA/SARIMA."
+msgstr ""
+
+#: timeCheck/options/exogenous.title
+#: timeCheck/ui[0][1].label
+msgid "External Variables"
+msgstr ""
+
+#: groupCheck/results/outliers.columns.title
+msgid "Extreme"
+msgstr ""
+
+#: groupCheck/options/qqFlagOutliers.title
+msgid "Extreme cases (|z| > 2.5)"
+msgstr ""
+
+#: pathCheck/options/residFlagOutliers.title
+#: regCheck/options/normFlagOutliers.title
+msgid "Extreme residuals (|z| > 2.5)"
+msgstr ""
+
+#: anovaCheck/results/slopesTests.columns.title
+msgid "Factor"
+msgstr ""
+
+#: anovaCheck/options/factors.title
+#: anovaCheck/ui[0][2].label
+msgid "Factors"
+msgstr ""
+
+#: anovaCheck/results/varianceTests.columns.title
+#: regCheck/results/homoscedasticity.columns.title
+msgid "Family"
+msgstr ""
+
+#: pathCheck/options/isFinalized.title
+msgid "Finalize model"
+msgstr ""
+
+#: pathCheck/ui[1]/isFinalized.label
+msgid "Finalize Model"
+msgstr ""
+
+#: regCheck/results/transformationFit.title
+msgid "Fit and residual variance by transformation"
+msgstr ""
+
+#: logCheck/options/linSmoother.title
+#: multCheck/options/linSmoother.title
+#: ordCheck/options/linSmoother.title
+msgid "Fit on the Empirical Logit"
+msgstr ""
+
+#: anovaCheck/options/plotPalette/jamovi.title
+#: groupCheck/options/plotPalette/jamovi.title
+#: logCheck/options/plotPalette/jamovi.title
+#: multCheck/options/plotPalette/jamovi.title
+#: ordCheck/options/plotPalette/jamovi.title
+#: pathCheck/options/plotPalette/jamovi.title
+#: regCheck/options/plotPalette/jamovi.title
+#: relatedCheck/options/plotPalette/jamovi.title
+#: timeCheck/options/plotPalette/jamovi.title
+msgid "Follow jamovi theme (default)"
+msgstr ""
+
+#: pathCheck/options/residBinMethod/fd.title
+#: regCheck/options/normHistBins/fd.title
+msgid "Freedman-Diaconis"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Gap (dCor − |r|)"
+msgstr ""
+
+#: timeCheck/options/model/garch.title
+msgid "GARCH"
+msgstr ""
+
+#: logCheck/results/goodnessOfFitGuide.title
+#: logCheck/results/goodnessOfFit.title
+#: multCheck/results/goodnessOfFitGuide.title
+#: multCheck/results/goodnessOfFit.title
+#: ordCheck/results/goodnessOfFitGuide.title
+#: ordCheck/results/goodnessOfFit.title
+msgid "Goodness of fit"
+msgstr ""
+
+#: groupCheck/results/descriptives.columns.title
+#: groupCheck/results/outliers.columns.title
+#: groupCheck/results/caseDiagnostics.columns.title
+#: groupCheck/results/normality.columns.title
+#: groupCheck/results/normalitySummary.columns.title
+msgid "Group"
+msgstr ""
+
+#: package/analyses/groupCheck.menuSubgroup
+#: package/analyses/relatedCheck.menuSubgroup
+#: package/analyses/anovaCheck.menuSubgroup
+#: anovaCheck/options.menuSubgroup
+#: groupCheck/options.menuSubgroup
+#: relatedCheck/options.menuSubgroup
+msgid "Group Comparison"
+msgstr ""
+
+#: groupCheck/options/group.title
+#: groupCheck/ui[0][1].label
+msgid "Group Variable"
+msgstr ""
+
+#: regCheck/options/corrComparativeStyle/bar.title
+msgid "Grouped Bars"
+msgstr ""
+
+#: regCheck/results/numericBoxplotsGuide.title
+msgid "Guide: Boxplots of numeric variables"
+msgstr ""
+
+#: regCheck/results/correlationComparativeGuide.title
+msgid "Guide: Comparison of Pearson, dCor, and copula entropy"
+msgstr ""
+
+#: anovaCheck/results/cooksDGuide.title
+#: regCheck/results/cooksDGuide.title
+msgid "Guide: Cook's D by case"
+msgstr ""
+
+#: anovaCheck/results/groupBoxplotsGuide.title
+msgid "Guide: Dependent variable by group"
+msgstr ""
+
+#: anovaCheck/results/residualNormalCurveGuide.title
+#: regCheck/results/residualNormalCurveGuide.title
+msgid "Guide: Observed distribution vs theoretical normal"
+msgstr ""
+
+#: regCheck/results/observedPredictedGuide.title
+msgid "Guide: Observed vs predicted values"
+msgstr ""
+
+#: regCheck/results/correlationIndividualGuide.title
+msgid "Guide: Pairwise relationship (Pearson / dCor)"
+msgstr ""
+
+#: anovaCheck/results/residualHistogramGuide.title
+#: regCheck/results/residualHistogramGuide.title
+msgid "Guide: Residual histogram"
+msgstr ""
+
+#: anovaCheck/results/qqResidualsGuide.title
+#: regCheck/results/qqResidualsGuide.title
+msgid "Guide: Residual Q-Q plot"
+msgstr ""
+
+#: anovaCheck/results/residualsFittedGuide.title
+#: regCheck/results/residualsFittedGuide.title
+msgid "Guide: Residuals vs fitted values"
+msgstr ""
+
+#: regCheck/results/scaleLocationGuide.title
+msgid "Guide: Scale-location plot"
+msgstr ""
+
+#: anovaCheck/results/residualsLeverageGuide.title
+#: regCheck/results/residualsLeverageGuide.title
+msgid "Guide: Studentized residuals vs leverage"
+msgstr ""
+
+#: regCheck/results/predictorEffectsGuide.title
+msgid "Guide: Visual effects of numeric predictors"
+msgstr ""
+
+#: multCheck/results/iia.title
+msgid "Hausman-McFadden Test (IIA)"
+msgstr ""
+
+#: pathCheck/options/diagramLayout/hierarchical.title
+msgid "Hierarchical (mediation-type)"
+msgstr ""
+
+#: anovaCheck/options/influenceLabelMode/cooks.title
+#: logCheck/options/influenceLabelMode/cooks.title
+#: regCheck/options/influenceLabelMode/cooks.title
+msgid "High Cook's D"
+msgstr ""
+
+#: anovaCheck/options/influenceLabelMode/leverage.title
+#: logCheck/options/influenceLabelMode/leverage.title
+#: regCheck/options/influenceLabelMode/leverage.title
+msgid "High Leverage"
+msgstr ""
+
+#: multCheck/options/influenceLabelMode/highresid.title
+#: ordCheck/options/influenceLabelMode/highresid.title
+msgid "High Residual"
+msgstr ""
+
+#: anovaCheck/options/influenceLabelMode/studres.title
+#: logCheck/options/influenceLabelMode/studres.title
+#: regCheck/options/influenceLabelMode/studres.title
+msgid "High Studentized Residual"
+msgstr ""
+
+#: pathCheck/options/residBinMethod.title
+#: regCheck/options/normHistBins.title
+msgid "Histogram Binning Method"
+msgstr ""
+
+#: bibliography/options/topic/homoscedasticity.title
+msgid "Homogeneity / Homoscedasticity"
+msgstr ""
+
+#: anovaCheck/results/slopesGuide.title
+msgid "Homogeneity of slopes"
+msgstr ""
+
+#: anovaCheck/results/slopesTests.title
+msgid "Homogeneity of slopes in ANCOVA"
+msgstr ""
+
+#: anovaCheck/results/varianceGuide.title
+#: groupCheck/results/homogeneity.title
+msgid "Homogeneity of variances"
+msgstr ""
+
+#: anovaCheck/results/varianceTests.title
+msgid "Homogeneity of variances across groups"
+msgstr ""
+
+#: pathCheck/results/homoscedasticityGuide.title
+msgid "Homoscedasticity"
+msgstr ""
+
+#: assumptionLibrary/options/category/homoscedasticity.title
+msgid "Homoscedasticity / Homogeneity"
+msgstr ""
+
+#: assumptionLibrary/results/homoscedasticity.title
+msgid "Homoscedasticity / Homogeneity of variances"
+msgstr ""
+
+#: regCheck/results/homoscedasticityGuide.title
+#: regCheck/results/homoscedasticity.title
+msgid "Homoscedasticity and heteroscedasticity"
+msgstr ""
+
+#: pathCheck/results/homoscedasticity.title
+msgid "Homoscedasticity by Equation"
+msgstr ""
+
+#: regCheck/options/homoShowPlots.title
+msgid "Homoscedasticity plots"
+msgstr ""
+
+#: assumptionLibrary/options/category/independence.title
+#: assumptionLibrary/results/independence.title
+msgid "Independence"
+msgstr ""
+
+#: regCheck/results/independenceGuide.title
+#: regCheck/results/independence.title
+msgid "Independence of errors"
+msgstr ""
+
+#: assumptionLibrary/options/category/independenceIrrelevantAlternatives.title
+#: assumptionLibrary/results/independenceIrrelevantAlternatives.title
+msgid "Independence of Irrelevant Alternatives"
+msgstr ""
+
+#: multCheck/results/iiaGuide.title
+msgid "Independence of irrelevant alternatives (IIA)"
+msgstr ""
+
+#: pathCheck/results/crossEntropyGuide.title
+msgid "Independence via Copula Entropy"
+msgstr ""
+
+#: package/analyses/groupCheck.title
+#: package/analyses/groupCheck.menuTitle
+#: groupCheck/options.title
+#: groupCheck/options.menuTitle
+#: groupCheck/ui.title
+msgid "Independent Groups"
+msgstr ""
+
+#: groupCheck/results.title
+#: groupCheck/results/intro.title
+msgid "Independent groups"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsTable.columns.title
+msgid "Indirect Effect (β)"
+msgstr ""
+
+#: groupCheck/options/showJitterPoints.title
+msgid "Individual data points"
+msgstr ""
+
+#: regCheck/options/corrShowIndividual.title
+msgid "Individual scatter plot by pair"
+msgstr ""
+
+#: groupCheck/options/curveShowRug.title
+msgid "Individual values (rug)"
+msgstr ""
+
+#: anovaCheck/options/plotSet/influence.title
+msgid "Influence"
+msgstr ""
+
+#: logCheck/options/influenceShowPlots.title
+#: multCheck/options/influenceShowPlots.title
+#: ordCheck/options/influenceShowPlots.title
+#: regCheck/options/influenceShowPlots.title
+msgid "Influence plots"
+msgstr ""
+
+#: logCheck/results/influenceGuide.title
+#: logCheck/results/influence.title
+#: multCheck/results/influenceGuide.title
+#: multCheck/results/influence.title
+#: ordCheck/results/influenceGuide.title
+#: ordCheck/results/influence.title
+msgid "Influential cases"
+msgstr ""
+
+#: anovaCheck/results/slopesTests.columns.title
+msgid "Interaction"
+msgstr ""
+
+#: groupCheck/results/normality.columns.title
+#: groupCheck/results/homogeneity.columns.title
+#: relatedCheck/results/normalitySummary.columns.title
+msgid "Interpretation"
+msgstr ""
+
+#: logCheck/results/intro.title
+#: multCheck/results/intro.title
+#: ordCheck/results/intro.title
+msgid "Introduction"
+msgstr ""
+
+#: groupCheck/results/outliers.columns.title
+msgid "IQR"
+msgstr ""
+
+#: anovaCheck/results/designSummary.columns.title
+#: anovaCheck/results/multicollinearity.columns.title
+#: groupCheck/results/design.columns.title
+#: logCheck/results/design.columns.title
+#: logCheck/results/multicollinearity.columns.title
+#: multCheck/results/design.columns.title
+#: multCheck/results/multicollinearity.columns.title
+#: ordCheck/results/design.columns.title
+#: ordCheck/results/multicollinearity.columns.title
+#: pathCheck/results/multicollinearity.columns.title
+#: regCheck/results/modelSummary.columns.title
+#: regCheck/results/missingSummary.columns.title
+#: regCheck/results/multicollinearity.columns.title
+#: relatedCheck/results/designSummary.columns.title
+#: timeCheck/results/modelProfile.columns.title
+msgid "Item"
+msgstr ""
+
+#: anovaCheck/options/influenceLabelMode.title
+#: logCheck/options/influenceLabelMode.title
+#: multCheck/options/influenceLabelMode.title
+#: ordCheck/options/influenceLabelMode.title
+#: regCheck/options/influenceLabelMode.title
+msgid "Label Cases"
+msgstr ""
+
+#: pathCheck/options/diagramEdgeLabel/labels.title
+msgid "Labels (a, b, c...)"
+msgstr ""
+
+#: pathCheck/options/diagramNodeSize/large.title
+msgid "Large"
+msgstr ""
+
+#: pathCheck/ui[3][6].label
+msgid "Layout"
+msgstr ""
+
+#: pathCheck/options/diagramRotate.title
+msgid "Layout: Rotate"
+msgstr ""
+
+#: pathCheck/options/diagramLayout.title
+msgid "Layout: Type"
+msgstr ""
+
+#: anovaCheck/results/influence.columns.title
+#: logCheck/results/influence.columns.title
+#: pathCheck/results/outlierTable.columns.title
+#: regCheck/results/influence.columns.title
+msgid "Leverage"
+msgstr ""
+
+#: regCheck/options/corrIndividualFit.title
+msgid "Linear fit and smoothing (individual plot)"
+msgstr ""
+
+#: anovaCheck/options/residSmoother/linear.title
+#: logCheck/options/linSmoother/linear.title
+#: multCheck/options/linSmoother/linear.title
+#: ordCheck/options/linSmoother/linear.title
+#: regCheck/options/linSmoother/linear.title
+#: regCheck/options/homoSmoother/linear.title
+msgid "Linear Line"
+msgstr ""
+
+#: assumptionLibrary/options/category/linearity.title
+#: assumptionLibrary/results/linearity.title
+#: regCheck/results/linearityGuide.title
+msgid "Linearity"
+msgstr ""
+
+#: bibliography/options/topic/regression.title
+msgid "Linearity and Regression"
+msgstr ""
+
+#: regCheck/results/linearityPredictor.title
+msgid "Linearity by numeric predictor"
+msgstr ""
+
+#: ordCheck/results/linearityGuide.title
+msgid "Linearity in the cumulative logit"
+msgstr ""
+
+#: ordCheck/results/linearity.title
+msgid "Linearity in the cumulative logit (Box-Tidwell)"
+msgstr ""
+
+#: logCheck/results/linearityGuide.title
+msgid "Linearity in the logit"
+msgstr ""
+
+#: logCheck/results/linearity.title
+msgid "Linearity in the logit (Box-Tidwell)"
+msgstr ""
+
+#: multCheck/results/linearityGuide.title
+msgid "Linearity in the multinomial logit"
+msgstr ""
+
+#: multCheck/results/linearity.title
+msgid "Linearity in the multinomial logit (LR test)"
+msgstr ""
+
+#: logCheck/options/linShowPlots.title
+#: multCheck/options/linShowPlots.title
+#: ordCheck/options/linShowPlots.title
+#: regCheck/options/linShowPlots.title
+msgid "Linearity plots"
+msgstr ""
+
+#: pathCheck/options/isFinalized.description
+msgid ""
+"Locks the specification and enables assumption validation and estimation. "
+"While unchecked, the model remains under construction."
+msgstr ""
+
+#: anovaCheck/options/residSmoother/loess.title
+#: logCheck/options/linSmoother/loess.title
+#: multCheck/options/linSmoother/loess.title
+#: ordCheck/options/linSmoother/loess.title
+#: regCheck/options/linSmoother/loess.title
+#: regCheck/options/homoSmoother/loess.title
+msgid "LOESS"
+msgstr ""
+
+#: regCheck/results/transformationNormality.columns.title
+#: regCheck/results/transformationFit.columns.title
+msgid "log(Y)"
+msgstr ""
+
+#: package/analyses/logCheck.title
+#: package/analyses/logCheck.menuTitle
+#: logCheck/options.title
+#: logCheck/options.menuTitle
+#: logCheck/ui.title
+#: logCheck/results.title
+msgid "Logistic Regression"
+msgstr ""
+
+#: groupCheck/results/outliers.columns.title
+msgid "Lower limit"
+msgstr ""
+
+#: relatedCheck/results/differenceSummary.columns.title
+msgid "M difference"
+msgstr ""
+
+#: groupCheck/results/caseDiagnostics.columns.title
+#: pathCheck/results/outlierTable.columns.title
+msgid "Mahalanobis D²"
+msgstr ""
+
+#: pathCheck/results/mardiaTable.title
+msgid "Mardia's Multivariate Normality Test"
+msgstr ""
+
+#: groupCheck/results/descriptives.columns.title
+#: relatedCheck/results/descriptiveSummary.columns.title
+#: relatedCheck/results/differenceSummary.columns.title
+msgid "Max"
+msgstr ""
+
+#: groupCheck/results/descriptives.columns.title
+#: relatedCheck/results/descriptiveSummary.columns.title
+msgid "Mdn"
+msgstr ""
+
+#: relatedCheck/results/differenceSummary.columns.title
+msgid "Mdn difference"
+msgstr ""
+
+#: groupCheck/options/showMeanMarker.title
+msgid "Mean marker"
+msgstr ""
+
+#: pathCheck/results/mardiaTable.columns.title
+msgid "Measure"
+msgstr ""
+
+#: relatedCheck/results/descriptiveSummary.columns.title
+msgid "Measurement"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsTable.columns.title
+msgid "Mediator (M)"
+msgstr ""
+
+#: pathCheck/options/diagramNodeSize/medium.title
+msgid "Medium"
+msgstr ""
+
+#: anovaCheck/results/alternativesGuide.title
+#: anovaCheck/results/alternatives.title
+msgid "Methodological alternatives"
+msgstr ""
+
+#: groupCheck/results/executiveSummary.title
+msgid "Methodological Conclusion"
+msgstr ""
+
+#: timeCheck/results/foundations.title
+msgid "Methodological foundations and references"
+msgstr ""
+
+#: timeCheck/results/decisionsMatrix.columns.title
+msgid "Methodological function"
+msgstr ""
+
+#: timeCheck/results/decisionsMatrix.title
+msgid "Methodological function and associated decision"
+msgstr ""
+
+#: package/analyses/assumptionLibrary.menuSubgroup
+#: package/analyses/bibliography.menuSubgroup
+#: assumptionLibrary/options.menuSubgroup
+#: bibliography/options.menuSubgroup
+msgid "Methodological Guide"
+msgstr ""
+
+#: regCheck/results/robustOptionsText.title
+msgid "Methodological interpretation of robust options"
+msgstr ""
+
+#: relatedCheck/results/methodOptions.title
+msgid "Methodological options"
+msgstr ""
+
+#: timeCheck/results/interpretation.title
+msgid "Methodological reading"
+msgstr ""
+
+#: logCheck/results/discrimination.columns.title
+#: multCheck/results/discrimination.columns.title
+#: ordCheck/results/discrimination.columns.title
+msgid "Metric"
+msgstr ""
+
+#: groupCheck/results/descriptives.columns.title
+#: relatedCheck/results/descriptiveSummary.columns.title
+#: relatedCheck/results/differenceSummary.columns.title
+msgid "Min"
+msgstr ""
+
+#: groupCheck/results/descriptives.columns.title
+#: relatedCheck/results/descriptiveSummary.columns.title
+msgid "Missing"
+msgstr ""
+
+#: regCheck/results/missingSummary.title
+msgid "Missing data summary"
+msgstr ""
+
+#: anovaCheck/results/designGuide.title
+#: logCheck/results/designGuide.title
+#: multCheck/results/designGuide.title
+#: ordCheck/results/designGuide.title
+msgid "Model design"
+msgstr ""
+
+#: pathCheck/results/equationsGuide.title
+msgid "Model Design"
+msgstr ""
+
+#: pathCheck/results/modelDiagnosticConclusionGuide.title
+msgid "Model Diagnostic Conclusion"
+msgstr ""
+
+#: pathCheck/results/modelDiagnosticConclusionTable.title
+msgid "Model Diagnostics Summary"
+msgstr ""
+
+#: pathCheck/results/endogenousTable.title
+msgid "Model Endogenous Variables"
+msgstr ""
+
+#: pathCheck/results/exogenousTable.title
+msgid "Model Exogenous Variables"
+msgstr ""
+
+#: timeCheck/results/modelProfile.title
+msgid "Model methodological profile"
+msgstr ""
+
+#: pathCheck/results/validationSummary.title
+msgid "Model Methodological Validation"
+msgstr ""
+
+#: pathCheck/results/modelStructureGuide.title
+msgid "Model Structure"
+msgstr ""
+
+#: regCheck/results/modelSummary.title
+msgid "Model summary"
+msgstr ""
+
+#: pathCheck/options/vars.title
+#: pathCheck/ui[0][0].label
+msgid "Model Variables"
+msgstr ""
+
+#: anovaCheck/results/multicollinearityGuide.title
+#: anovaCheck/results/multicollinearity.title
+#: assumptionLibrary/options/category/multicollinearity.title
+#: assumptionLibrary/results/multicollinearity.title
+#: logCheck/results/multicollinearityGuide.title
+#: logCheck/results/multicollinearity.title
+#: multCheck/results/multicollinearityGuide.title
+#: multCheck/results/multicollinearity.title
+#: ordCheck/results/multicollinearityGuide.title
+#: ordCheck/results/multicollinearity.title
+#: pathCheck/results/multicollinearityGuide.title
+#: regCheck/results/multicollinearityGuide.title
+#: regCheck/results/multicollinearity.title
+msgid "Multicollinearity"
+msgstr ""
+
+#: pathCheck/results/multicollinearity.title
+msgid "Multicollinearity by Equation"
+msgstr ""
+
+#: package/analyses/multCheck.title
+#: package/analyses/multCheck.menuTitle
+#: multCheck/options.title
+#: multCheck/options.menuTitle
+#: multCheck/ui.title
+#: multCheck/results.title
+msgid "Multinomial Logistic Regression"
+msgstr ""
+
+#: groupCheck/options/curveBandwidth.description
+msgid ""
+"Multiplier for the density estimate's bandwidth (adjust in density()); lower "
+"values show more detail, higher values smooth more."
+msgstr ""
+
+#: pathCheck/results/mardiaGuide.title
+msgid "Multivariate Normality (Mardia)"
+msgstr ""
+
+#: pathCheck/results/outlierGuide.title
+msgid "Multivariate Outliers"
+msgstr ""
+
+#: pathCheck/options/diagramAbbreviate/none.title
+msgid "No Abbreviation"
+msgstr ""
+
+#: pathCheck/ui[3][9].label
+msgid "Nodes"
+msgstr ""
+
+#: pathCheck/options/diagramAbbreviate.title
+msgid "Nodes: Abbreviate"
+msgstr ""
+
+#: pathCheck/options/diagramShape.title
+msgid "Nodes: Shapes"
+msgstr ""
+
+#: pathCheck/options/diagramNodeSize.title
+msgid "Nodes: Size"
+msgstr ""
+
+#: anovaCheck/options/residSmoother/none.title
+#: anovaCheck/options/influenceLabelMode/none.title
+#: logCheck/options/linSmoother/none.title
+#: logCheck/options/influenceLabelMode/none.title
+#: multCheck/options/linSmoother/none.title
+#: multCheck/options/influenceLabelMode/none.title
+#: ordCheck/options/linSmoother/none.title
+#: ordCheck/options/influenceLabelMode/none.title
+#: pathCheck/options/diagramEdgeLabel/none.title
+#: regCheck/options/linSmoother/none.title
+#: regCheck/options/homoSmoother/none.title
+#: regCheck/options/influenceLabelMode/none.title
+msgid "None"
+msgstr ""
+
+#: anovaCheck/options/plotSet/normality.title
+#: assumptionLibrary/options/category/normality.title
+#: assumptionLibrary/results/normality.title
+#: bibliography/options/topic/normality.title
+msgid "Normality"
+msgstr ""
+
+#: groupCheck/results/normalitySummary.title
+msgid "Normality decision summary"
+msgstr ""
+
+#: groupCheck/results/normalityGuide.title
+msgid "Normality interpretation guide"
+msgstr ""
+
+#: relatedCheck/results/normalityGuide.title
+#: relatedCheck/results/normality.title
+msgid "Normality of differences/residuals"
+msgstr ""
+
+#: regCheck/options/normShowPlots.title
+#: relatedCheck/options/showNormalityPlots.title
+msgid "Normality plots"
+msgstr ""
+
+#: groupCheck/results/qqNormalityPlot.title
+msgid "Normality Q-Q plots: global and by group"
+msgstr ""
+
+#: relatedCheck/results/normalitySummary.title
+msgid "Normality summary by comparison"
+msgstr ""
+
+#: groupCheck/results/normality.title
+msgid "Normality tests by group"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Notable difference"
+msgstr ""
+
+#: multCheck/results/iia.columns.title
+msgid "Note"
+msgstr ""
+
+#: bibliography/results/notes.title
+msgid "Notes"
+msgstr ""
+
+#: anovaCheck/results/notes.title
+#: groupCheck/results/notes.title
+#: logCheck/results/notes.title
+#: multCheck/results/notes.title
+#: ordCheck/results/notes.title
+#: regCheck/results/notes.title
+#: relatedCheck/results/notes.title
+msgid "Notes and recommendation"
+msgstr ""
+
+#: timeCheck/results/runNotice.title
+msgid "Notice"
+msgstr ""
+
+#: logCheck/options/linBins.title
+#: multCheck/options/linBins.title
+#: ordCheck/options/linBins.title
+msgid "Number of Groups (bins) for the Empirical Logit"
+msgstr ""
+
+#: logCheck/options/caliBins.title
+msgid "Number of Groups (deciles) for Calibration"
+msgstr ""
+
+#: timeCheck/options/frequency.description
+msgid ""
+"Number of observations per seasonal cycle (12 = monthly, 4 = quarterly, 7 = "
+"daily with a weekly cycle, 1 = no seasonality). Used for seasonal tests and "
+"differencing in SARIMA and ETS."
+msgstr ""
+
+#: pathCheck/options/permutations.description
+msgid ""
+"Number of permutations used for the dCor and copula entropy p-value. Higher "
+"values give the p-value finer resolution (the minimum attainable is 1/(B+1)) "
+"at the cost of more computation time; 999 is reasonable for exploration, "
+"4999 or more for final results."
+msgstr ""
+
+#: logCheck/options/covs.title
+#: logCheck/ui[0][1].label
+#: multCheck/options/covs.title
+#: multCheck/ui[0][1].label
+#: ordCheck/options/covs.title
+#: ordCheck/ui[0][1].label
+#: regCheck/options/covs.title
+#: regCheck/ui[0][1].label
+msgid "Numeric Predictors"
+msgstr ""
+
+#: multCheck/results/classification.columns.title
+msgid "Observed"
+msgstr ""
+
+#: multCheck/results/influence.columns.title
+#: ordCheck/results/influence.columns.title
+msgid "Observed category"
+msgstr ""
+
+#: relatedCheck/results/normalCurvePlot.title
+msgid "Observed distribution vs theoretical normal"
+msgstr ""
+
+#: groupCheck/results/normalCurvePlot.title
+msgid "Observed distribution vs theoretical normal: global and by group"
+msgstr ""
+
+#: anovaCheck/results/residualNormalCurvePlot.title
+#: regCheck/results/residualNormalCurvePlot.title
+msgid "Observed residual distribution vs theoretical normal curve"
+msgstr ""
+
+#: multCheck/results/classification.title
+msgid "Observed vs predicted"
+msgstr ""
+
+#: regCheck/results/observedPredictedPlot.title
+msgid "Observed vs predicted values"
+msgstr ""
+
+#: groupCheck/options/showNormalCurvePlots.title
+msgid "Observed vs. theoretical normal curve"
+msgstr ""
+
+#: logCheck/results/oddsRatiosGuide.title
+#: logCheck/results/oddsRatios.title
+msgid "Odds Ratios"
+msgstr ""
+
+#: pathCheck/options/diagramOffsetLabels.title
+msgid "Offset labels"
+msgstr ""
+
+#: pathCheck/options/diagramOffsetLabels.description
+msgid ""
+"Offsets each path's label to one side of the arrow instead of centering it "
+"on the line."
+msgstr ""
+
+#: multCheck/results/iia.columns.title
+msgid "Omitted category"
+msgstr ""
+
+#: pathCheck/options/diagramRotate.description
+msgid ""
+"Only applies to the hierarchical layout; controls which end the exogenous "
+"variables are placed at."
+msgstr ""
+
+#: timeCheck/options/dateVar.description
+msgid ""
+"Optional variable with the date or timestamp of each observation, used only "
+"to label the plots' horizontal axis. It is not required: if none is "
+"selected, Time Series assumes regularly spaced observations following row "
+"order and the declared periodicity, and labels the axis with the observation "
+"index (1, 2, 3, ...). This variable is not used to check for gaps or "
+"irregularities in the time spacing."
+msgstr ""
+
+#: pathCheck/ui[6].label
+msgid "Options"
+msgstr ""
+
+#: logCheck/results/oddsRatios.columns.title
+#: multCheck/results/coefficients.columns.title
+#: ordCheck/results/coefficients.columns.title
+msgid "OR"
+msgstr ""
+
+#: package/analyses/ordCheck.title
+#: package/analyses/ordCheck.menuTitle
+#: ordCheck/options.title
+#: ordCheck/options.menuTitle
+#: ordCheck/ui.title
+#: ordCheck/results.title
+msgid "Ordinal Logistic Regression"
+msgstr ""
+
+#: regCheck/results/transformationNormality.columns.title
+#: regCheck/results/transformationFit.columns.title
+msgid "Original"
+msgstr ""
+
+#: pathCheck/results/exogenousTable.columns.title
+msgid "Outgoing paths"
+msgstr ""
+
+#: pathCheck/results/outlierTable.title
+msgid "Outlier Diagnostics"
+msgstr ""
+
+#: groupCheck/results/outliers.title
+msgid "Outlier screening by group"
+msgstr ""
+
+#: groupCheck/results/outliers.columns.title
+msgid "Outliers"
+msgstr ""
+
+#: assumptionLibrary/options/category/influence.title
+msgid "Outliers and Influence"
+msgstr ""
+
+#: assumptionLibrary/results/influence.title
+msgid "Outliers and influence"
+msgstr ""
+
+#: relatedCheck/results/outliersGuide.title
+#: relatedCheck/results/outliers.title
+msgid "Outliers in differences"
+msgstr ""
+
+#: anovaCheck/results/influenceGuide.title
+#: anovaCheck/results/influence.title
+#: regCheck/results/influenceGuide.title
+#: regCheck/results/influence.title
+msgid "Outlying and influential cases"
+msgstr ""
+
+#: regCheck/results/linearityModel.title
+msgid "Overall model linearity"
+msgstr ""
+
+#: pathCheck/results/modelDiagnosticConclusionInterpretation.title
+msgid "Overall Verdict"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "p (CE)"
+msgstr ""
+
+#: relatedCheck/results/differenceGuide.title
+msgid "Paired differences"
+msgstr ""
+
+#: relatedCheck/options/showDifferencePlots.title
+msgid "Paired differences plots"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.title
+#: logCheck/results/correlationComparisonTable.title
+#: multCheck/results/correlationComparisonTable.title
+#: ordCheck/results/correlationComparisonTable.title
+#: regCheck/results/correlationComparisonTable.title
+#: relatedCheck/results/correlationComparisonTable.title
+msgid "Pairs with a notable gap between Pearson and dCor"
+msgstr ""
+
+#: pathCheck/results/correlationComparisonTable.title
+msgid "Pairs with a Notable Gap Between Pearson and dCor"
+msgstr ""
+
+#: regCheck/options/corrHighlightDiscordant.title
+msgid "Pairs with notable Pearson/dCor difference"
+msgstr ""
+
+#: regCheck/results/correlationComparativePlot.title
+msgid "Pairwise comparison of Pearson, dCor, and copula entropy"
+msgstr ""
+
+#: regCheck/options/corrShowComparative.title
+msgid "Pairwise comparison plot"
+msgstr ""
+
+#: regCheck/results/correlationIndividualPlot.title
+msgid "Pairwise relationship (Pearson / dCor)"
+msgstr ""
+
+#: timeCheck/options/plotPalette.description
+msgid ""
+"Palette used to distinguish several series in the same plot (for example, "
+"the variables of a VAR/VECM). Follows jamovi's own theme by default; the "
+"colorblind-safe and viridis options are additive choices jamovi does not "
+"otherwise offer."
+msgstr ""
+
+#: timeCheck/results/pacfPlot.title
+msgid "Partial autocorrelation (PACF)"
+msgstr ""
+
+#: package/analyses/pathCheck.menuSubgroup
+#: package/analyses/pathCheck.menuTitle
+#: bibliography/options/topic/path.title
+#: pathCheck/options.menuSubgroup
+#: pathCheck/options.menuTitle
+#: pathCheck/results/intro.title
+msgid "Path Analysis"
+msgstr ""
+
+#: package/analyses/pathCheck.title
+#: pathCheck/options.title
+#: pathCheck/ui.title
+#: pathCheck/results.title
+msgid "Path Analysis & Structural Validation"
+msgstr ""
+
+#: pathCheck/results/pathCoefficients.title
+msgid "Path Coefficients"
+msgstr ""
+
+#: pathCheck/options/showDiagram.title
+msgid "Path diagram"
+msgstr ""
+
+#: pathCheck/results/pathDiagram.title
+msgid "Path Diagram (SVG)"
+msgstr ""
+
+#: pathCheck/options/relations.title
+msgid "Path Relationships"
+msgstr ""
+
+#: pathCheck/ui[0][1].label
+msgid "Path Relationships (predictor → dependent)"
+msgstr ""
+
+#: pathCheck/options/diagramEdgeLabel.title
+#: pathCheck/ui[3][1].label
+msgid "Paths"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonGuide.title
+#: logCheck/results/correlationComparisonGuide.title
+#: multCheck/results/correlationComparisonGuide.title
+#: ordCheck/results/correlationComparisonGuide.title
+#: regCheck/results/correlationComparisonGuide.title
+#: relatedCheck/results/correlationComparisonGuide.title
+msgid "Pearson / dCor / copula entropy discordance analysis"
+msgstr ""
+
+#: pathCheck/results/correlationComparisonGuide.title
+msgid "Pearson / dCor / Copula Entropy Discordance Analysis"
+msgstr ""
+
+#: anovaCheck/results/pearsonMatrixTable.title
+#: logCheck/results/pearsonMatrixTable.title
+#: multCheck/results/pearsonMatrixTable.title
+#: ordCheck/results/pearsonMatrixTable.title
+#: regCheck/results/pearsonMatrixTable.title
+#: relatedCheck/results/pearsonMatrixTable.title
+msgid "Pearson correlation matrix (APA 7 format)"
+msgstr ""
+
+#: pathCheck/results/pearsonMatrixTable.title
+msgid "Pearson Correlation Matrix (APA 7 Format)"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Pearson r"
+msgstr ""
+
+#: multCheck/results/influencePlot.title
+#: ordCheck/results/influencePlot.title
+msgid "Pearson residual by case"
+msgstr ""
+
+#: multCheck/results/influence.columns.title
+#: ordCheck/results/influence.columns.title
+msgid "Pearson statistic"
+msgstr ""
+
+#: logCheck/options/caliRefLine.title
+msgid "Perfect calibration reference line"
+msgstr ""
+
+#: timeCheck/options/frequency.title
+msgid "Periodicity (seasonal frequency)"
+msgstr ""
+
+#: pathCheck/options/permutationSeed.title
+msgid "Permutation Seed"
+msgstr ""
+
+#: pathCheck/ui[7].label
+msgid "Permutation Tests (dCor / Copula Entropy)"
+msgstr ""
+
+#: pathCheck/options/permutations.title
+msgid "Permutations (dCor / Copula Entropy)"
+msgstr ""
+
+#: anovaCheck/ui[3].label
+#: groupCheck/ui[5].label
+#: logCheck/ui[7].label
+#: multCheck/ui[5].label
+#: ordCheck/ui[5].label
+#: pathCheck/ui[5].label
+#: regCheck/ui[8].label
+#: relatedCheck/ui[3].label
+#: timeCheck/ui[4].label
+msgid "Plot Color Palette"
+msgstr ""
+
+#: anovaCheck/options/plotSet.title
+msgid "Plot Set"
+msgstr ""
+
+#: timeCheck/ui[3].label
+msgid "Plots"
+msgstr ""
+
+#: regCheck/ui[6].label
+msgid "Plots: Correlations"
+msgstr ""
+
+#: logCheck/ui[5].label
+msgid "Plots: Discrimination"
+msgstr ""
+
+#: groupCheck/ui[2].label
+msgid "Plots: Distribution by Group"
+msgstr ""
+
+#: logCheck/ui[4].label
+msgid "Plots: Goodness of Fit / Calibration"
+msgstr ""
+
+#: regCheck/ui[5].label
+msgid "Plots: Homoscedasticity"
+msgstr ""
+
+#: logCheck/ui[6].label
+#: multCheck/ui[4].label
+#: ordCheck/ui[4].label
+#: regCheck/ui[7].label
+msgid "Plots: Influence"
+msgstr ""
+
+#: regCheck/ui[3].label
+msgid "Plots: Linearity"
+msgstr ""
+
+#: ordCheck/ui[3].label
+msgid "Plots: Linearity in the Cumulative Logit"
+msgstr ""
+
+#: logCheck/ui[3].label
+msgid "Plots: Linearity in the Logit"
+msgstr ""
+
+#: multCheck/ui[3].label
+msgid "Plots: Linearity in the Multinomial Logit"
+msgstr ""
+
+#: groupCheck/ui[4].label
+msgid "Plots: Normal Curve"
+msgstr ""
+
+#: regCheck/ui[4].label
+msgid "Plots: Normality"
+msgstr ""
+
+#: groupCheck/ui[3].label
+msgid "Plots: Normality (Q-Q)"
+msgstr ""
+
+#: pathCheck/ui[3].label
+msgid "Plots: Path Diagram"
+msgstr ""
+
+#: pathCheck/ui[4].label
+msgid "Plots: Residuals"
+msgstr ""
+
+#: logCheck/results/separation.columns.title
+#: logCheck/results/linearity.columns.title
+#: logCheck/results/oddsRatios.columns.title
+#: multCheck/results/separation.columns.title
+#: multCheck/results/linearity.columns.title
+#: multCheck/results/coefficients.columns.title
+#: ordCheck/results/separation.columns.title
+#: ordCheck/results/linearity.columns.title
+#: ordCheck/results/coefficients.columns.title
+#: pathCheck/results/pathCoefficients.columns.title
+#: regCheck/results/linearityPredictor.columns.title
+msgid "Predictor"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsTable.columns.title
+msgid "Predictor (X)"
+msgstr ""
+
+#: pathCheck/results/specifiedModel.columns.title
+msgid "Predictors"
+msgstr ""
+
+#: anovaCheck/results/alternatives.columns.title
+msgid "Problem detected"
+msgstr ""
+
+#: relatedCheck/results/profilePlot.title
+msgid "Profile of related measurements"
+msgstr ""
+
+#: relatedCheck/options/showProfilePlot.title
+msgid "Profile plot by measurement"
+msgstr ""
+
+#: multCheck/results/categoryDistribution.columns.title
+#: ordCheck/results/categoryDistribution.columns.title
+msgid "Proportion"
+msgstr ""
+
+#: assumptionLibrary/options/category/proportionalOdds.title
+#: assumptionLibrary/results/proportionalOdds.title
+msgid "Proportional Odds"
+msgstr ""
+
+#: ordCheck/results/proportionalOddsGuide.title
+msgid "Proportional odds (parallel lines)"
+msgstr ""
+
+#: multCheck/results/discriminationGuide.title
+#: multCheck/results/discrimination.title
+#: ordCheck/results/discriminationGuide.title
+#: ordCheck/results/discrimination.title
+msgid "Pseudo-R²"
+msgstr ""
+
+#: regCheck/options/normQQBand.title
+msgid "Q-Q plot confidence band"
+msgstr ""
+
+#: groupCheck/options/showQQPlots.title
+msgid "Q-Q plots"
+msgstr ""
+
+#: relatedCheck/results/normalityPlot.title
+msgid "Q-Q plots of paired differences"
+msgstr ""
+
+#: groupCheck/results/outliers.columns.title
+msgid "Q1"
+msgstr ""
+
+#: groupCheck/results/outliers.columns.title
+msgid "Q3"
+msgstr ""
+
+#: pathCheck/options/showR2.title
+#: pathCheck/results/rSquaredTable.columns.title
+msgid "R²"
+msgstr ""
+
+#: relatedCheck/results/normalityRecommendation.title
+msgid "Recommendation"
+msgstr ""
+
+#: timeCheck/results/diagnosticsActions.columns.title
+msgid "Recommended action"
+msgstr ""
+
+#: timeCheck/results/diagnosticsActions.title
+msgid "Recommended methodological action"
+msgstr ""
+
+#: pathCheck/options/diagramShape/rectangle.title
+msgid "Rectangles"
+msgstr ""
+
+#: logCheck/options/rocRefLine.title
+msgid "Reference line (chance)"
+msgstr ""
+
+#: bibliography/results/references.title
+msgid "References in APA 7th Edition Format"
+msgstr ""
+
+#: package/analyses/regCheck.menuSubgroup
+#: package/analyses/logCheck.menuSubgroup
+#: package/analyses/ordCheck.menuSubgroup
+#: package/analyses/multCheck.menuSubgroup
+#: logCheck/options.menuSubgroup
+#: multCheck/options.menuSubgroup
+#: ordCheck/options.menuSubgroup
+#: regCheck/options.menuSubgroup
+msgid "Regression"
+msgstr ""
+
+#: regCheck/results/diagnosticPlotsGuide.title
+msgid "Regression diagnostic plots"
+msgstr ""
+
+#: regCheck/results/designGuide.title
+msgid "Regression model"
+msgstr ""
+
+#: package/analyses/relatedCheck.title
+#: package/analyses/relatedCheck.menuTitle
+#: bibliography/options/topic/related.title
+#: relatedCheck/options.title
+#: relatedCheck/options.menuTitle
+#: relatedCheck/ui.title
+msgid "Related Groups"
+msgstr ""
+
+#: relatedCheck/results.title
+#: relatedCheck/results/intro.title
+msgid "Related groups"
+msgstr ""
+
+#: relatedCheck/options/measures.title
+#: relatedCheck/ui[0][0].label
+msgid "Related Measurements"
+msgstr ""
+
+#: relatedCheck/results/designGuide.title
+msgid "Related-groups design"
+msgstr ""
+
+#: pathCheck/results/modelSummary.columns.title
+msgid "Relationships"
+msgstr ""
+
+#: anovaCheck/options/reportLang.title
+#: anovaCheck/ui[1].label
+#: assumptionLibrary/options/reportLang.title
+#: assumptionLibrary/ui[1].label
+#: bibliography/options/reportLang.title
+#: bibliography/ui[1].label
+#: groupCheck/options/reportLang.title
+#: groupCheck/ui[1].label
+#: logCheck/options/reportLang.title
+#: logCheck/ui[1].label
+#: multCheck/options/reportLang.title
+#: multCheck/ui[1].label
+#: ordCheck/options/reportLang.title
+#: ordCheck/ui[1].label
+#: pathCheck/options/reportLang.title
+#: pathCheck/ui[2].label
+#: regCheck/options/reportLang.title
+#: regCheck/ui[1].label
+#: relatedCheck/options/reportLang.title
+#: relatedCheck/ui[1].label
+#: timeCheck/options/reportLang.title
+#: timeCheck/ui[2].label
+msgid "Report Language"
+msgstr ""
+
+#: pathCheck/results/sampleSizeTable.columns.title
+msgid "Required N"
+msgstr ""
+
+#: anovaCheck/results/influence.columns.title
+#: regCheck/results/influence.columns.title
+msgid "Residual"
+msgstr ""
+
+#: pathCheck/results/residualCovarianceGuide.title
+msgid "Residual Covariances"
+msgstr ""
+
+#: pathCheck/results/residualCovarianceTable.title
+msgid "Residual Covariances Among Endogenous Variables"
+msgstr ""
+
+#: pathCheck/results/residualPlots.title
+msgid "Residual Diagnostics by Equation"
+msgstr ""
+
+#: anovaCheck/results/residualHistogramPlot.title
+#: regCheck/results/residualHistogramPlot.title
+msgid "Residual histogram"
+msgstr ""
+
+#: anovaCheck/results/residualNormalityGuide.title
+#: anovaCheck/results/residualNormality.title
+#: regCheck/results/residualNormalityGuide.title
+#: regCheck/results/residualNormality.title
+msgid "Residual normality"
+msgstr ""
+
+#: pathCheck/results/normalityGuide.title
+msgid "Residual Normality"
+msgstr ""
+
+#: pathCheck/results/residualNormality.title
+msgid "Residual Normality by Equation"
+msgstr ""
+
+#: regCheck/results/transformationNormality.title
+msgid "Residual normality by transformation"
+msgstr ""
+
+#: anovaCheck/results/qqResidualsPlot.title
+#: regCheck/results/qqResidualsPlot.title
+msgid "Residual Q-Q plot"
+msgstr ""
+
+#: pathCheck/options/showResiduals.title
+#: pathCheck/options/diagramShowErrors.title
+msgid "Residuals"
+msgstr ""
+
+#: timeCheck/results/residualsPlot.title
+msgid "Residuals over time"
+msgstr ""
+
+#: anovaCheck/results/residualsFittedPlot.title
+#: regCheck/results/residualsFittedPlot.title
+msgid "Residuals vs fitted values"
+msgstr ""
+
+#: regCheck/results/robustOptionsGuide.title
+msgid "Robust and resampling options"
+msgstr ""
+
+#: bibliography/options/topic/robust.title
+msgid "Robust Methods and Alternatives"
+msgstr ""
+
+#: logCheck/results/discriminationPlot.title
+msgid "ROC curve"
+msgstr ""
+
+#: pathCheck/results/sampleSizeTable.columns.title
+msgid "Rule"
+msgstr ""
+
+#: pathCheck/results/sampleSizeGuide.title
+msgid "Sample Size Adequacy"
+msgstr ""
+
+#: pathCheck/results/sampleSizeTable.title
+msgid "Sample Size Assessment by Model Complexity"
+msgstr ""
+
+#: timeCheck/options/model/sarima.title
+msgid "SARIMA"
+msgstr ""
+
+#: regCheck/results/scaleLocationPlot.title
+msgid "Scale-location plot"
+msgstr ""
+
+#: regCheck/results/linearityModel.columns.title
+#: relatedCheck/results/normality.columns.title
+msgid "Scope"
+msgstr ""
+
+#: timeCheck/results/implementationNotes.title
+msgid "Scope of this version"
+msgstr ""
+
+#: pathCheck/options/residBinMethod/scott.title
+#: regCheck/options/normHistBins/scott.title
+msgid "Scott"
+msgstr ""
+
+#: anovaCheck/results/cellSummary.columns.title
+#: groupCheck/results/descriptives.columns.title
+#: relatedCheck/results/descriptiveSummary.columns.title
+msgid "SD"
+msgstr ""
+
+#: relatedCheck/results/differenceSummary.columns.title
+msgid "SD difference"
+msgstr ""
+
+#: ordCheck/results/cutpoints.columns.title
+#: pathCheck/results/pathCoefficients.columns.title
+msgid "SE"
+msgstr ""
+
+#: pathCheck/options/permutationSeed.description
+msgid "Seed used for the permutation tests, for reproducibility."
+msgstr ""
+
+#: timeCheck/options/series.description
+msgid ""
+"Select the numeric variable(s) representing the time series to evaluate. "
+"Univariate models (ARIMA, SARIMA, ETS, GARCH) use a single series; "
+"multivariate models (VAR, VECM) allow several."
+msgstr ""
+
+#: pathCheck/options/vars.description
+msgid "Select the observed variables that will be part of the Path Analysis model."
+msgstr ""
+
+#: timeCheck/options/model.description
+msgid ""
+"Select the time-series modeling approach to display the relevant statistical "
+"and methodological conditions, and to run the minimum recommended set of "
+"diagnostics for that model."
+msgstr ""
+
+#: pathCheck/ui[3][3].label
+msgid "Show"
+msgstr ""
+
+#: pathCheck/options/diagramShowErrors.description
+msgid ""
+"Shows, for each endogenous variable, a small error term (e) with an incoming "
+"arrow, along with the unexplained variance (1 - R²)."
+msgstr ""
+
+#: anovaCheck/results/residualNormality.columns.title
+#: anovaCheck/results/varianceTests.columns.title
+#: anovaCheck/results/slopesTests.columns.title
+#: anovaCheck/results/covariateLinearity.columns.title
+#: groupCheck/results/caseDiagnostics.columns.title
+#: groupCheck/results/normality.columns.title
+#: groupCheck/results/homogeneity.columns.title
+#: logCheck/results/linearity.columns.title
+#: logCheck/results/goodnessOfFit.columns.title
+#: logCheck/results/oddsRatios.columns.title
+#: multCheck/results/linearity.columns.title
+#: multCheck/results/iia.columns.title
+#: multCheck/results/goodnessOfFit.columns.title
+#: multCheck/results/coefficients.columns.title
+#: ordCheck/results/linearity.columns.title
+#: ordCheck/results/proportionalOdds.columns.title
+#: ordCheck/results/goodnessOfFit.columns.title
+#: ordCheck/results/coefficients.columns.title
+#: pathCheck/results/residualNormality.columns.title
+#: pathCheck/results/homoscedasticity.columns.title
+#: pathCheck/results/mardiaTable.columns.title
+#: pathCheck/results/crossEntropyTable.columns.title
+#: pathCheck/results/indirectEffectsTable.columns.title
+#: regCheck/results/linearityPredictor.columns.title
+#: regCheck/results/linearityModel.columns.title
+#: regCheck/results/residualNormality.columns.title
+#: regCheck/results/homoscedasticity.columns.title
+#: regCheck/results/independence.columns.title
+#: relatedCheck/results/normality.columns.title
+#: relatedCheck/results/symmetry.columns.title
+#: relatedCheck/results/sphericity.columns.title
+msgid "Sig."
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Sig. (CE)"
+msgstr ""
+
+#: groupCheck/results/normalitySummary.columns.title
+#: relatedCheck/results/normalitySummary.columns.title
+msgid "Significant tests"
+msgstr ""
+
+#: package/analyses/regCheck.title
+#: package/analyses/regCheck.menuTitle
+#: regCheck/options.title
+#: regCheck/options.menuTitle
+#: regCheck/ui.title
+#: regCheck/results.title
+#: regCheck/results/intro.title
+msgid "Simple and Multiple Regression"
+msgstr ""
+
+#: pathCheck/options/diagramNodeSize/small.title
+msgid "Small"
+msgstr ""
+
+#: anovaCheck/options/residSmoother.title
+#: regCheck/options/linSmoother.title
+#: regCheck/options/homoSmoother.title
+msgid "Smoothing"
+msgstr ""
+
+#: anovaCheck/options/residShowBand.title
+#: regCheck/options/linShowBand.title
+#: regCheck/options/homoShowBand.title
+msgid "Smoothing confidence band"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsTable.columns.title
+msgid "Sobel z"
+msgstr ""
+
+#: pathCheck/results/specifiedModel.title
+msgid "Specified model"
+msgstr ""
+
+#: assumptionLibrary/options/category/sphericity.title
+#: assumptionLibrary/results/sphericity.title
+#: relatedCheck/results/sphericityGuide.title
+msgid "Sphericity"
+msgstr ""
+
+#: relatedCheck/results/sphericity.title
+msgid "Sphericity and corrections"
+msgstr ""
+
+#: pathCheck/options/diagramLayout/spring.title
+msgid "Spring"
+msgstr ""
+
+#: regCheck/results/transformationNormality.columns.title
+#: regCheck/results/transformationFit.columns.title
+msgid "sqrt(Y)"
+msgstr ""
+
+#: anovaCheck/results/residualNormality.columns.title
+#: anovaCheck/results/varianceTests.columns.title
+#: anovaCheck/results/slopesTests.columns.title
+#: anovaCheck/results/covariateLinearity.columns.title
+#: anovaCheck/results/multicollinearity.columns.title
+#: groupCheck/results/normality.columns.title
+#: groupCheck/results/homogeneity.columns.title
+#: logCheck/results/linearity.columns.title
+#: logCheck/results/goodnessOfFit.columns.title
+#: logCheck/results/multicollinearity.columns.title
+#: multCheck/results/goodnessOfFit.columns.title
+#: multCheck/results/multicollinearity.columns.title
+#: ordCheck/results/linearity.columns.title
+#: ordCheck/results/goodnessOfFit.columns.title
+#: ordCheck/results/multicollinearity.columns.title
+#: pathCheck/results/residualNormality.columns.title
+#: pathCheck/results/homoscedasticity.columns.title
+#: pathCheck/results/multicollinearity.columns.title
+#: pathCheck/results/mardiaTable.columns.title
+#: regCheck/results/linearityPredictor.columns.title
+#: regCheck/results/linearityModel.columns.title
+#: regCheck/results/residualNormality.columns.title
+#: regCheck/results/homoscedasticity.columns.title
+#: regCheck/results/independence.columns.title
+#: regCheck/results/multicollinearity.columns.title
+#: relatedCheck/results/normality.columns.title
+#: relatedCheck/results/symmetry.columns.title
+#: relatedCheck/results/sphericity.columns.title
+#: timeCheck/results/diagnosticsResults.columns.title
+msgid "Statistic"
+msgstr ""
+
+#: bibliography/options/topic/assumptions.title
+msgid "Statistical Assumptions"
+msgstr ""
+
+#: groupCheck/ui[1][1].label
+msgid ""
+"Statistical symbols remain in international format: n, M, SD, Mdn, Min, Max, "
+"IQR, CI, p, df."
+msgstr ""
+
+#: timeCheck/ui[2][1].label
+msgid ""
+"Statistical symbols remain in international format: n, p, ACF, PACF, ADF, "
+"KPSS, PP, etc."
+msgstr ""
+
+#: pathCheck/results/validationSummary.columns.title
+#: pathCheck/results/sampleSizeTable.columns.title
+#: pathCheck/results/modelDiagnosticConclusionTable.columns.title
+msgid "Status"
+msgstr ""
+
+#: anovaCheck/results/influence.columns.title
+#: regCheck/results/influence.columns.title
+msgid "Studentized residual"
+msgstr ""
+
+#: anovaCheck/results/residualsLeveragePlot.title
+#: regCheck/results/residualsLeveragePlot.title
+msgid "Studentized residuals vs leverage"
+msgstr ""
+
+#: anovaCheck/results/alternatives.columns.title
+msgid "Suggested option"
+msgstr ""
+
+#: relatedCheck/results/methodOptions.columns.title
+msgid "Suggested test"
+msgstr ""
+
+#: relatedCheck/results/differenceSummary.title
+msgid "Summary of paired differences"
+msgstr ""
+
+#: relatedCheck/results/symmetryGuide.title
+#: relatedCheck/results/symmetry.title
+msgid "Symmetry of differences"
+msgstr ""
+
+#: ordCheck/results/proportionalOdds.columns.title
+msgid "Term"
+msgstr ""
+
+#: anovaCheck/results/residualNormality.columns.title
+#: anovaCheck/results/varianceTests.columns.title
+#: groupCheck/results/normality.columns.title
+#: groupCheck/results/homogeneity.columns.title
+#: logCheck/results/goodnessOfFit.columns.title
+#: multCheck/results/goodnessOfFit.columns.title
+#: ordCheck/results/goodnessOfFit.columns.title
+#: pathCheck/results/residualNormality.columns.title
+#: pathCheck/results/homoscedasticity.columns.title
+#: regCheck/results/residualNormality.columns.title
+#: regCheck/results/homoscedasticity.columns.title
+#: regCheck/results/independence.columns.title
+#: relatedCheck/results/normality.columns.title
+#: timeCheck/results/diagnosticsResults.columns.title
+#: timeCheck/results/diagnosticsActions.columns.title
+msgid "Test"
+msgstr ""
+
+#: anovaCheck/results/covariateLinearity.columns.title
+#: regCheck/results/linearityPredictor.columns.title
+#: regCheck/results/linearityModel.columns.title
+msgid "Test / criterion"
+msgstr ""
+
+#: timeCheck/results/diagnosticsResults.title
+msgid "Test results"
+msgstr ""
+
+#: relatedCheck/results/methodGuide.title
+msgid "Test selection"
+msgstr ""
+
+#: bibliography/options/topic.title
+msgid "Theme"
+msgstr ""
+
+#: pathCheck/options/residShowNormalCurve.title
+#: regCheck/options/normCurveOverlay.title
+msgid "Theoretical normal curve overlay"
+msgstr ""
+
+#: anovaCheck/options/influenceShowThreshold.title
+#: logCheck/options/influenceShowThreshold.title
+#: multCheck/options/influenceShowThreshold.title
+#: ordCheck/options/influenceShowThreshold.title
+#: regCheck/options/influenceShowThreshold.title
+msgid "Threshold line"
+msgstr ""
+
+#: package/analyses/timeCheck.title
+#: package/analyses/timeCheck.menuSubgroup
+#: package/analyses/timeCheck.menuTitle
+#: bibliography/options/topic/time_series.title
+#: timeCheck/options.title
+#: timeCheck/options.menuSubgroup
+#: timeCheck/options.menuTitle
+#: timeCheck/ui.title
+#: timeCheck/results.title
+#: timeCheck/results/intro.title
+msgid "Time Series"
+msgstr ""
+
+#: timeCheck/options/series.title
+#: timeCheck/ui[0][0].label
+#: timeCheck/results/seriesPlot.title
+msgid "Time series"
+msgstr ""
+
+#: timeCheck/options/model.title
+#: timeCheck/ui[1].label
+msgid "Time series model"
+msgstr ""
+
+#: anovaCheck/options/influenceLabelMode/top5.title
+#: logCheck/options/influenceLabelMode/top5.title
+#: multCheck/options/influenceLabelMode/top5.title
+#: ordCheck/options/influenceLabelMode/top5.title
+#: regCheck/options/influenceLabelMode/top5.title
+msgid "Top 5 Influence"
+msgstr ""
+
+#: pathCheck/results/indirectEffectsTable.columns.title
+msgid "Total Effect (β)"
+msgstr ""
+
+#: assumptionLibrary/options/category/robust.title
+msgid "Transformations and Robust Alternatives"
+msgstr ""
+
+#: assumptionLibrary/results/robust.title
+msgid "Transformations and robust alternatives"
+msgstr ""
+
+#: package/datasets/AssumptionsLabTestDataset(n=450).description
+msgid ""
+"Translated, MCAR-missingness- and outlier-augmented survey/financial- "
+"behavior data exercising every implemented module — see data/README.md"
+msgstr ""
+
+#: anovaCheck/results/influence.columns.title
+#: pathCheck/results/outlierTable.columns.title
+#: regCheck/results/influence.columns.title
+msgid "Triggered criteria"
+msgstr ""
+
+#: relatedCheck/results/outliers.columns.title
+msgid "Triggered criterion"
+msgstr ""
+
+#: logCheck/results/separation.columns.title
+#: multCheck/results/separation.columns.title
+#: ordCheck/results/separation.columns.title
+msgid "Type"
+msgstr ""
+
+#: logCheck/options/showPlots.description
+#: multCheck/options/showPlots.description
+#: ordCheck/options/showPlots.description
+#: regCheck/options/showPlots.description
+#: timeCheck/options/showPlots.description
+msgid "Uncheck for a text-only report."
+msgstr ""
+
+#: groupCheck/results/outliers.columns.title
+msgid "Upper limit"
+msgstr ""
+
+#: assumptionLibrary/results/notes.title
+msgid "Using this library"
+msgstr ""
+
+#: relatedCheck/results/normalitySummary.columns.title
+msgid "Valid tests"
+msgstr ""
+
+#: pathCheck/results/validationSummary.columns.title
+msgid "Validation"
+msgstr ""
+
+#: anovaCheck/results/designSummary.columns.title
+#: anovaCheck/results/residualNormality.columns.title
+#: anovaCheck/results/varianceTests.columns.title
+#: anovaCheck/results/slopesTests.columns.title
+#: anovaCheck/results/covariateLinearity.columns.title
+#: anovaCheck/results/multicollinearity.columns.title
+#: groupCheck/results/design.columns.title
+#: groupCheck/results/caseDiagnostics.columns.title
+#: groupCheck/results/normality.columns.title
+#: groupCheck/results/homogeneity.columns.title
+#: logCheck/results/design.columns.title
+#: logCheck/results/discrimination.columns.title
+#: logCheck/results/multicollinearity.columns.title
+#: multCheck/results/design.columns.title
+#: multCheck/results/discrimination.columns.title
+#: multCheck/results/multicollinearity.columns.title
+#: ordCheck/results/design.columns.title
+#: ordCheck/results/discrimination.columns.title
+#: ordCheck/results/multicollinearity.columns.title
+#: pathCheck/results/homoscedasticity.columns.title
+#: pathCheck/results/multicollinearity.columns.title
+#: regCheck/results/modelSummary.columns.title
+#: regCheck/results/missingSummary.columns.title
+#: regCheck/results/linearityPredictor.columns.title
+#: regCheck/results/linearityModel.columns.title
+#: regCheck/results/residualNormality.columns.title
+#: regCheck/results/homoscedasticity.columns.title
+#: regCheck/results/independence.columns.title
+#: regCheck/results/multicollinearity.columns.title
+#: relatedCheck/results/designSummary.columns.title
+#: relatedCheck/results/normality.columns.title
+#: relatedCheck/results/symmetry.columns.title
+#: relatedCheck/results/sphericity.columns.title
+#: timeCheck/results/modelProfile.columns.title
+msgid "Value"
+msgstr ""
+
+#: timeCheck/options/model/var.title
+msgid "VAR"
+msgstr ""
+
+#: anovaCheck/results/pearsonMatrixTable.columns.title
+#: anovaCheck/results/dcorMatrixTable.columns.title
+#: logCheck/results/pearsonMatrixTable.columns.title
+#: logCheck/results/dcorMatrixTable.columns.title
+#: multCheck/results/pearsonMatrixTable.columns.title
+#: multCheck/results/dcorMatrixTable.columns.title
+#: ordCheck/results/pearsonMatrixTable.columns.title
+#: ordCheck/results/dcorMatrixTable.columns.title
+#: pathCheck/results/exogenousTable.columns.title
+#: pathCheck/results/endogenousTable.columns.title
+#: pathCheck/results/pearsonMatrixTable.columns.title
+#: pathCheck/results/dcorMatrixTable.columns.title
+#: regCheck/results/pearsonMatrixTable.columns.title
+#: regCheck/results/dcorMatrixTable.columns.title
+#: relatedCheck/results/pearsonMatrixTable.columns.title
+#: relatedCheck/results/dcorMatrixTable.columns.title
+msgid "Variable"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/residualCovarianceTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/crossEntropyTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Variable 1"
+msgstr ""
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/residualCovarianceTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/crossEntropyTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Variable 2"
+msgstr ""
+
+#: pathCheck/results/modelSummary.columns.title
+msgid "Variables"
+msgstr ""
+
+#: anovaCheck/results/cellSummary.columns.title
+msgid "Variance"
+msgstr ""
+
+#: groupCheck/results/homogeneityGuide.title
+msgid "Variance interpretation guide"
+msgstr ""
+
+#: timeCheck/options/model/vecm.title
+msgid "VECM"
+msgstr ""
+
+#: groupCheck/options/addViolinPlot.title
+msgid "Violin plot"
+msgstr ""
+
+#: anovaCheck/options/plotPalette/viridis.title
+#: groupCheck/options/plotPalette/viridis.title
+#: logCheck/options/plotPalette/viridis.title
+#: multCheck/options/plotPalette/viridis.title
+#: ordCheck/options/plotPalette/viridis.title
+#: pathCheck/options/plotPalette/viridis.title
+#: regCheck/options/plotPalette/viridis.title
+#: relatedCheck/options/plotPalette/viridis.title
+#: timeCheck/options/plotPalette/viridis.title
+msgid "Viridis"
+msgstr ""
+
+#: groupCheck/results/normalCurveGuide.title
+msgid "Visual distribution guide"
+msgstr ""
+
+#: regCheck/results/predictorEffectsPlot.title
+msgid "Visual effects of numeric predictors on the dependent variable"
+msgstr ""
+
+#: groupCheck/results/qqNormalityGuide.title
+msgid "Visual normality guide"
+msgstr ""
+
+#: multCheck/results/linearity.columns.title
+#: multCheck/results/iia.columns.title
+#: ordCheck/results/proportionalOdds.columns.title
+msgid "X²"
+msgstr ""
+
+#: anovaCheck/options/residRefLine.title
+#: regCheck/options/linRefLine.title
+msgid "Zero reference line"
+msgstr ""

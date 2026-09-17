@@ -178,11 +178,11 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Grupos independientes")
+                title="Independent groups")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Grupos independientes"))
+                title="Independent groups"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="design",
@@ -442,7 +442,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normalitySummaryInterpretation",
-                title="Interpretaci\u00F3n aplicada de normalidad"))
+                title="Applied interpretation of normality"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="homogeneity",
@@ -495,11 +495,11 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="executiveSummary",
-                title="Conclusi\u00F3n Metodol\u00F3gica"))
+                title="Methodological Conclusion"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="notes",
-                title="Notas y recomendaci\u00F3n"))}))
+                title="Notes and recommendation"))}))
 
 groupCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "groupCheckBase",

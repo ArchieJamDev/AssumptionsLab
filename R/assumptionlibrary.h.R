@@ -72,55 +72,55 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
             super$initialize(
                 options=options,
                 name="",
-                title="Biblioteca de Supuestos")
+                title="Assumption Library")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Biblioteca de Supuestos"))
+                title="Assumption Library"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normality",
-                title="Normalidad"))
+                title="Normality"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homoscedasticity",
-                title="Homocedasticidad / Homogeneidad de varianzas"))
+                title="Homoscedasticity / Homogeneity of variances"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="linearity",
-                title="Linealidad"))
+                title="Linearity"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independence",
-                title="Independencia"))
+                title="Independence"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearity",
-                title="Multicolinealidad"))
+                title="Multicollinearity"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influence",
-                title="Casos at\u00EDpicos e influencia"))
+                title="Outliers and influence"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sphericity",
-                title="Esfericidad"))
+                title="Sphericity"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="proportionalOdds",
-                title="Momios Proporcionales"))
+                title="Proportional Odds"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independenceIrrelevantAlternatives",
-                title="Independencia de Alternativas Irrelevantes"))
+                title="Independence of Irrelevant Alternatives"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="robust",
-                title="Transformaciones y alternativas robustas"))
+                title="Transformations and robust alternatives"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="notes",
-                title="Uso de esta biblioteca"))}))
+                title="Using this library"))}))
 
 assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "assumptionLibraryBase",

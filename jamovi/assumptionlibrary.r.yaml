@@ -24,54 +24,54 @@
 
 ---
 name: assumptionLibrary
-title: Biblioteca de Supuestos
+title: Assumption Library
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Biblioteca de Supuestos
+    title: Assumption Library
     type: Html
 
   - name: normality
-    title: Normalidad
+    title: Normality
     type: Html
 
   - name: homoscedasticity
-    title: Homocedasticidad / Homogeneidad de varianzas
+    title: Homoscedasticity / Homogeneity of variances
     type: Html
 
   - name: linearity
-    title: Linealidad
+    title: Linearity
     type: Html
 
   - name: independence
-    title: Independencia
+    title: Independence
     type: Html
 
   - name: multicollinearity
-    title: Multicolinealidad
+    title: Multicollinearity
     type: Html
 
   - name: influence
-    title: Casos atípicos e influencia
+    title: Outliers and influence
     type: Html
 
   - name: sphericity
-    title: Esfericidad
+    title: Sphericity
     type: Html
 
   - name: proportionalOdds
-    title: Momios Proporcionales
+    title: Proportional Odds
     type: Html
 
   - name: independenceIrrelevantAlternatives
-    title: Independencia de Alternativas Irrelevantes
+    title: Independence of Irrelevant Alternatives
     type: Html
 
   - name: robust
-    title: Transformaciones y alternativas robustas
+    title: Transformations and robust alternatives
     type: Html
 
   - name: notes
-    title: Uso de esta biblioteca
+    title: Using this library
     type: Html

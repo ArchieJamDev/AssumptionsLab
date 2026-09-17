@@ -338,19 +338,19 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Regresión simple y múltiple")
+                title="Simple and Multiple Regression")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Regresi\u00F3n simple y m\u00FAltiple"))
+                title="Simple and Multiple Regression"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="designGuide",
-                title="Modelo de regresi\u00F3n"))
+                title="Regression model"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="modelSummary",
-                title="Resumen del modelo",
+                title="Model summary",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -359,16 +359,16 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="item", 
-                        `title`="Elemento", 
+                        `title`="Item", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="missingSummary",
-                title="Resumen de datos faltantes",
+                title="Missing data summary",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -377,20 +377,20 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="item", 
-                        `title`="Elemento", 
+                        `title`="Item", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="linearityGuide",
-                title="Linealidad"))
+                title="Linearity"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="linearityPredictor",
-                title="Linealidad por predictor num\u00E9rico",
+                title="Linearity by numeric predictor",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -403,19 +403,19 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="dependent", 
-                        `title`="Variable dependiente", 
+                        `title`="Dependent variable", 
                         `type`="text"),
                     list(
                         `name`="test", 
-                        `title`="Prueba / criterio", 
+                        `title`="Test / criterion", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="number"),
                     list(
                         `name`="p", 
@@ -429,7 +429,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="linearityModel",
-                title="Linealidad global del modelo",
+                title="Overall model linearity",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -438,23 +438,23 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="scope", 
-                        `title`="Alcance", 
+                        `title`="Scope", 
                         `type`="text"),
                     list(
                         `name`="dependent", 
-                        `title`="Variable dependiente", 
+                        `title`="Dependent variable", 
                         `type`="text"),
                     list(
                         `name`="test", 
-                        `title`="Prueba / criterio", 
+                        `title`="Test / criterion", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="number"),
                     list(
                         `name`="p", 
@@ -468,16 +468,16 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="linearityInterpretation",
-                title="Interpretaci\u00F3n Aplicada"))
+                title="Applied interpretation"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationMatrixGuide",
-                title="Matriz de correlaciones",
+                title="Correlation matrix",
                 visible=FALSE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pearsonMatrixTable",
-                title="Matriz de correlaciones de Pearson (formato APA 7)",
+                title="Pearson correlation matrix (APA 7 format)",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -493,7 +493,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="dcorMatrixTable",
-                title="Matriz de correlaci\u00F3n de distancia (dCor, formato APA 7)",
+                title="Distance correlation matrix (dCor, APA 7 format)",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -514,12 +514,12 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonGuide",
-                title="An\u00E1lisis de discordancia Pearson / dCor / entrop\u00EDa copular",
+                title="Pearson / dCor / copula entropy discordance analysis",
                 visible=FALSE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="correlationComparisonTable",
-                title="Pares con diferencia notable entre Pearson y dCor",
+                title="Pairs with a notable gap between Pearson and dCor",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -546,11 +546,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="gap", 
-                        `title`="Brecha (dCor \u2212 |r|)", 
+                        `title`="Gap (dCor \u2212 |r|)", 
                         `type`="number"),
                     list(
                         `name`="ce", 
-                        `title`="Entrop\u00EDa copular", 
+                        `title`="Copula entropy", 
                         `type`="number"),
                     list(
                         `name`="ceP", 
@@ -563,17 +563,17 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="text"),
                     list(
                         `name`="flag", 
-                        `title`="Diferencia notable", 
+                        `title`="Notable difference", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible=FALSE))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="correlationIndividualPlot",
-                title="Relaci\u00F3n por par (Pearson / dCor)",
+                title="Pairwise relationship (Pearson / dCor)",
                 width=620,
                 height=380,
                 renderFun=".plotCorrelationIndividual",
@@ -581,12 +581,12 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationIndividualGuide",
-                title="Gu\u00EDa: Relaci\u00F3n por par (Pearson / dCor)",
+                title="Guide: Pairwise relationship (Pearson / dCor)",
                 visible=FALSE))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="correlationComparativePlot",
-                title="Comparaci\u00F3n de Pearson, dCor y entrop\u00EDa copular entre pares",
+                title="Pairwise comparison of Pearson, dCor, and copula entropy",
                 width=620,
                 height=380,
                 renderFun=".plotCorrelationComparative",
@@ -594,53 +594,53 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparativeGuide",
-                title="Gu\u00EDa: Comparaci\u00F3n de Pearson, dCor y entrop\u00EDa copular",
+                title="Guide: Comparison of Pearson, dCor, and copula entropy",
                 visible=FALSE))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="diagnosticPlotsGuide",
-                title="Gr\u00E1ficos diagn\u00F3sticos de regresi\u00F3n"))
+                title="Regression diagnostic plots"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualsFittedPlot",
-                title="Residuos vs valores ajustados",
+                title="Residuals vs fitted values",
                 width=560,
                 height=315,
                 renderFun=".plotResidualsFitted"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsFittedGuide",
-                title="Gu\u00EDa: Residuos vs valores ajustados"))
+                title="Guide: Residuals vs fitted values"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="observedPredictedPlot",
-                title="Valores observados vs predichos",
+                title="Observed vs predicted values",
                 width=560,
                 height=315,
                 renderFun=".plotObservedPredicted"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="observedPredictedGuide",
-                title="Gu\u00EDa: Valores observados vs predichos"))
+                title="Guide: Observed vs predicted values"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="predictorEffectsPlot",
-                title="Efectos visuales de predictores num\u00E9ricos sobre la dependiente",
+                title="Visual effects of numeric predictors on the dependent variable",
                 width=620,
                 height=350,
                 renderFun=".plotPredictorEffects"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="predictorEffectsGuide",
-                title="Gu\u00EDa: Efectos visuales de predictores num\u00E9ricos"))
+                title="Guide: Visual effects of numeric predictors"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalityGuide",
-                title="Normalidad de residuos"))
+                title="Residual normality"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="residualNormality",
-                title="Normalidad de residuos",
+                title="Residual normality",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -649,15 +649,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="test", 
-                        `title`="Prueba", 
+                        `title`="Test", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="number"),
                     list(
                         `name`="p", 
@@ -671,48 +671,48 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalityInterpretation",
-                title="Interpretaci\u00F3n Aplicada"))
+                title="Applied interpretation"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="qqResidualsPlot",
-                title="Q-Q plot de residuos",
+                title="Residual Q-Q plot",
                 width=560,
                 height=310,
                 renderFun=".plotQQResiduals"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="qqResidualsGuide",
-                title="Gu\u00EDa: Q-Q plot de residuos"))
+                title="Guide: Residual Q-Q plot"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualHistogramPlot",
-                title="Histograma de residuos",
+                title="Residual histogram",
                 width=560,
                 height=300,
                 renderFun=".plotResidualHistogram"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualHistogramGuide",
-                title="Gu\u00EDa: Histograma de residuos"))
+                title="Guide: Residual histogram"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualNormalCurvePlot",
-                title="Distribuci\u00F3n observada de residuos vs curva normal te\u00F3rica",
+                title="Observed residual distribution vs theoretical normal curve",
                 width=560,
                 height=315,
                 renderFun=".plotResidualNormalCurve"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalCurveGuide",
-                title="Gu\u00EDa: Distribuci\u00F3n observada vs normal te\u00F3rica"))
+                title="Guide: Observed distribution vs theoretical normal"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homoscedasticityGuide",
-                title="Homoscedasticidad y heterocedasticidad"))
+                title="Homoscedasticity and heteroscedasticity"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="homoscedasticity",
-                title="Homoscedasticidad y heterocedasticidad",
+                title="Homoscedasticity and heteroscedasticity",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -721,19 +721,19 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="family", 
-                        `title`="Familia", 
+                        `title`="Family", 
                         `type`="text"),
                     list(
                         `name`="test", 
-                        `title`="Prueba", 
+                        `title`="Test", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="number"),
                     list(
                         `name`="df", 
@@ -751,7 +751,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homoscedasticityInterpretation",
-                title="Interpretaci\u00F3n Aplicada"))
+                title="Applied interpretation"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="scaleLocationPlot",
@@ -762,15 +762,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="scaleLocationGuide",
-                title="Gu\u00EDa: Scale-location plot"))
+                title="Guide: Scale-location plot"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independenceGuide",
-                title="Independencia de errores"))
+                title="Independence of errors"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="independence",
-                title="Independencia de errores",
+                title="Independence of errors",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -779,15 +779,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="test", 
-                        `title`="Prueba", 
+                        `title`="Test", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="number"),
                     list(
                         `name`="p", 
@@ -800,16 +800,16 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independenceInterpretation",
-                title="Interpretaci\u00F3n Aplicada"))
+                title="Applied interpretation"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityGuide",
-                title="Multicolinealidad",
+                title="Multicollinearity",
                 visible=FALSE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="multicollinearity",
-                title="Multicolinealidad",
+                title="Multicollinearity",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -819,33 +819,33 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="diagnostic", 
-                        `title`="Diagn\u00F3stico", 
+                        `title`="Diagnostic", 
                         `type`="text"),
                     list(
                         `name`="item", 
-                        `title`="Elemento", 
+                        `title`="Item", 
                         `type`="text"),
                     list(
                         `name`="statistic", 
-                        `title`="Estad\u00EDstico", 
+                        `title`="Statistic", 
                         `type`="text"),
                     list(
                         `name`="value", 
-                        `title`="Valor", 
+                        `title`="Value", 
                         `type`="number"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityInterpretation",
-                title="Interpretaci\u00F3n Aplicada",
+                title="Applied interpretation",
                 visible=FALSE))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influenceGuide",
-                title="Casos at\u00EDpicos e influyentes"))
+                title="Outlying and influential cases"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="influence",
-                title="Casos at\u00EDpicos e influyentes",
+                title="Outlying and influential cases",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -854,19 +854,19 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="case", 
-                        `title`="Caso", 
+                        `title`="Case", 
                         `type`="integer"),
                     list(
                         `name`="fitted", 
-                        `title`="Ajustado", 
+                        `title`="Adjusted", 
                         `type`="number"),
                     list(
                         `name`="residual", 
-                        `title`="Residuo", 
+                        `title`="Residual", 
                         `type`="number"),
                     list(
                         `name`="studResidual", 
-                        `title`="Residuo studentizado", 
+                        `title`="Studentized residual", 
                         `type`="number"),
                     list(
                         `name`="leverage", 
@@ -882,53 +882,53 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"),
                     list(
                         `name`="criteria", 
-                        `title`="Criterios activados", 
+                        `title`="Triggered criteria", 
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influenceInterpretation",
-                title="Interpretaci\u00F3n Aplicada"))
+                title="Applied interpretation"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="numericBoxplotsPlot",
-                title="Boxplots de la variable dependiente y predictores num\u00E9ricos",
+                title="Boxplots of the dependent variable and numeric predictors",
                 width=620,
                 height=360,
                 renderFun=".plotNumericBoxplots"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="numericBoxplotsGuide",
-                title="Gu\u00EDa: Boxplots de variables num\u00E9ricas"))
+                title="Guide: Boxplots of numeric variables"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualsLeveragePlot",
-                title="Residuos studentizados vs leverage",
+                title="Studentized residuals vs leverage",
                 width=600,
                 height=350,
                 renderFun=".plotResidualsLeverage"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsLeverageGuide",
-                title="Gu\u00EDa: Residuos studentizados vs leverage"))
+                title="Guide: Studentized residuals vs leverage"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="cooksDPlot",
-                title="Cook's D por caso",
+                title="Cook's D by case",
                 width=560,
                 height=300,
                 renderFun=".plotCooksD"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="cooksDGuide",
-                title="Gu\u00EDa: Cook's D por caso"))
+                title="Guide: Cook's D by case"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="transformationsGuide",
-                title="Transformaciones exploratorias"))
+                title="Exploratory transformations"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="transformationNormality",
-                title="Normalidad de residuos por transformaci\u00F3n",
+                title="Residual normality by transformation",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -937,7 +937,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="criterion", 
-                        `title`="Criterio / prueba", 
+                        `title`="Criterion / test", 
                         `type`="text"),
                     list(
                         `name`="original", 
@@ -958,7 +958,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="transformationFit",
-                title="Ajuste y varianza residual por transformaci\u00F3n",
+                title="Fit and residual variance by transformation",
                 clearWith=list(
                     "dep",
                     "covs",
@@ -967,7 +967,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 columns=list(
                     list(
                         `name`="criterion", 
-                        `title`="Criterio / prueba", 
+                        `title`="Criterion / test", 
                         `type`="text"),
                     list(
                         `name`="original", 
@@ -988,15 +988,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="robustOptionsGuide",
-                title="Opciones robustas y de remuestreo"))
+                title="Robust and resampling options"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="robustOptionsText",
-                title="Interpretaci\u00F3n metodol\u00F3gica de opciones robustas"))
+                title="Methodological interpretation of robust options"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="notes",
-                title="Notas y recomendaci\u00F3n"))}))
+                title="Notes and recommendation"))}))
 
 regCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "regCheckBase",

@@ -33,11 +33,11 @@ items:
     type: Html
 
   - name: designGuide
-    title: Diseño del modelo
+    title: Model design
     type: Html
 
   - name: designSummary
-    title: Resumen del diseño
+    title: Design summary
     type: Table
     clearWith:
       - dep
@@ -46,14 +46,14 @@ items:
       - reportLang
     columns:
       - name: item
-        title: Elemento
+        title: Item
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: text
 
   - name: cellSummary
-    title: Tamaño de celdas y balance
+    title: Cell size and balance
     type: Table
     clearWith:
       - dep
@@ -62,7 +62,7 @@ items:
       - reportLang
     columns:
       - name: cell
-        title: Celda / grupo
+        title: Cell / group
         type: text
       - name: n
         title: n
@@ -74,34 +74,34 @@ items:
         title: SD
         type: number
       - name: variance
-        title: Varianza
+        title: Variance
         type: number
 
   - name: designInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: diagnosticPlotsGuide
-    title: Gráficos diagnósticos de ANOVA/ANCOVA
+    title: ANOVA/ANCOVA diagnostic plots
     type: Html
 
   - name: groupBoxplotsPlot
-    title: Variable dependiente por grupo
+    title: Dependent variable by group
     type: Image
     width: 600
     height: 340
     renderFun: .plotGroupBoxplots
 
   - name: groupBoxplotsGuide
-    title: 'Guía: Variable dependiente por grupo'
+    title: 'Guide: Dependent variable by group'
     type: Html
 
   - name: residualNormalityGuide
-    title: Normalidad de residuos
+    title: Residual normality
     type: Html
 
   - name: residualNormality
-    title: Normalidad de residuos
+    title: Residual normality
     type: Table
     clearWith:
       - dep
@@ -110,13 +110,13 @@ items:
       - reportLang
     columns:
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: p
         title: p
@@ -127,59 +127,59 @@ items:
         type: text
 
   - name: residualNormalityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: residualsFittedPlot
-    title: Residuos vs valores ajustados
+    title: Residuals vs fitted values
     type: Image
     width: 560
     height: 315
     renderFun: .plotResidualsFitted
 
   - name: residualsFittedGuide
-    title: 'Guía: Residuos vs valores ajustados'
+    title: 'Guide: Residuals vs fitted values'
     type: Html
 
   - name: qqResidualsPlot
-    title: Q-Q plot de residuos
+    title: Residual Q-Q plot
     type: Image
     width: 560
     height: 310
     renderFun: .plotQQResiduals
 
   - name: qqResidualsGuide
-    title: 'Guía: Q-Q plot de residuos'
+    title: 'Guide: Residual Q-Q plot'
     type: Html
 
   - name: residualHistogramPlot
-    title: Histograma de residuos
+    title: Residual histogram
     type: Image
     width: 560
     height: 300
     renderFun: .plotResidualHistogram
 
   - name: residualHistogramGuide
-    title: 'Guía: Histograma de residuos'
+    title: 'Guide: Residual histogram'
     type: Html
 
   - name: residualNormalCurvePlot
-    title: Distribución observada de residuos vs curva normal teórica
+    title: Observed residual distribution vs theoretical normal curve
     type: Image
     width: 560
     height: 315
     renderFun: .plotResidualNormalCurve
 
   - name: residualNormalCurveGuide
-    title: 'Guía: Distribución observada vs normal teórica'
+    title: 'Guide: Observed distribution vs theoretical normal'
     type: Html
 
   - name: varianceGuide
-    title: Homogeneidad de varianzas
+    title: Homogeneity of variances
     type: Html
 
   - name: varianceTests
-    title: Homogeneidad de varianzas entre grupos
+    title: Homogeneity of variances across groups
     type: Table
     clearWith:
       - dep
@@ -188,16 +188,16 @@ items:
       - reportLang
     columns:
       - name: family
-        title: Familia
+        title: Family
         type: text
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: df
         title: df
@@ -211,16 +211,16 @@ items:
         type: text
 
   - name: varianceInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: slopesGuide
-    title: Homogeneidad de pendientes
+    title: Homogeneity of slopes
     type: Html
     visible: (covs)
 
   - name: slopesTests
-    title: Homogeneidad de pendientes en ANCOVA
+    title: Homogeneity of slopes in ANCOVA
     type: Table
     clearWith:
       - dep
@@ -233,16 +233,16 @@ items:
         title: Factor
         type: text
       - name: covariate
-        title: Covariable
+        title: Covariate
         type: text
       - name: interaction
-        title: Interacción
+        title: Interaction
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: p
         title: p
@@ -253,17 +253,17 @@ items:
         type: text
 
   - name: slopesInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (covs)
 
   - name: covariateLinearityGuide
-    title: Linealidad de covariables
+    title: Covariate linearity
     type: Html
     visible: (covs)
 
   - name: covariateLinearity
-    title: Linealidad de covariables
+    title: Covariate linearity
     type: Table
     clearWith:
       - dep
@@ -273,19 +273,19 @@ items:
     visible: (covs)
     columns:
       - name: covariate
-        title: Covariable
+        title: Covariate
         type: text
       - name: dependent
-        title: Variable dependiente
+        title: Dependent variable
         type: text
       - name: test
-        title: Prueba / criterio
+        title: Test / criterion
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: p
         title: p
@@ -296,17 +296,17 @@ items:
         type: text
 
   - name: covariateLinearityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (covs)
 
   - name: multicollinearityGuide
-    title: Multicolinealidad
+    title: Multicollinearity
     type: Html
     visible: (covs)
 
   - name: multicollinearity
-    title: Multicolinealidad
+    title: Multicollinearity
     type: Table
     clearWith:
       - dep
@@ -316,30 +316,30 @@ items:
     visible: (covs)
     columns:
       - name: diagnostic
-        title: Diagnóstico
+        title: Diagnostic
         type: text
       - name: item
-        title: Elemento
+        title: Item
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
 
   - name: multicollinearityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (covs)
 
   - name: correlationMatrixGuide
-    title: Matriz de correlaciones
+    title: Correlation matrix
     type: Html
     visible: (covs)
 
   - name: pearsonMatrixTable
-    title: Matriz de correlaciones de Pearson (formato APA 7)
+    title: Pearson correlation matrix (APA 7 format)
     type: Table
     clearWith:
       - dep
@@ -354,7 +354,7 @@ items:
         type: text
 
   - name: dcorMatrixTable
-    title: Matriz de correlación de distancia (dCor, formato APA 7)
+    title: Distance correlation matrix (dCor, APA 7 format)
     type: Table
     clearWith:
       - dep
@@ -374,12 +374,12 @@ items:
     visible: (covs)
 
   - name: correlationComparisonGuide
-    title: Análisis de discordancia Pearson / dCor / entropía copular
+    title: Pearson / dCor / copula entropy discordance analysis
     type: Html
     visible: (covs)
 
   - name: correlationComparisonTable
-    title: Pares con diferencia notable entre Pearson y dCor
+    title: Pairs with a notable gap between Pearson and dCor
     type: Table
     clearWith:
       - dep
@@ -402,10 +402,10 @@ items:
         title: dCor
         type: text
       - name: gap
-        title: Brecha (dCor − |r|)
+        title: Gap (dCor − |r|)
         type: number
       - name: ce
-        title: Entropía copular
+        title: Copula entropy
         type: number
       - name: ceP
         title: p (CE)
@@ -415,20 +415,20 @@ items:
         title: Sig. (CE)
         type: text
       - name: flag
-        title: Diferencia notable
+        title: Notable difference
         type: text
 
   - name: correlationComparisonInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (covs)
 
   - name: influenceGuide
-    title: Casos atípicos e influyentes
+    title: Outlying and influential cases
     type: Html
 
   - name: influence
-    title: Casos atípicos e influyentes
+    title: Outlying and influential cases
     type: Table
     clearWith:
       - dep
@@ -437,16 +437,16 @@ items:
       - reportLang
     columns:
       - name: case
-        title: Caso
+        title: Case
         type: integer
       - name: fitted
-        title: Ajustado
+        title: Adjusted
         type: number
       - name: residual
-        title: Residuo
+        title: Residual
         type: number
       - name: studResidual
-        title: Residuo studentizado
+        title: Studentized residual
         type: number
       - name: leverage
         title: Leverage
@@ -458,45 +458,45 @@ items:
         title: DFFITS
         type: number
       - name: criteria
-        title: Criterios activados
+        title: Triggered criteria
         type: text
 
   - name: influenceInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
 
   - name: residualsLeveragePlot
-    title: Residuos studentizados vs leverage
+    title: Studentized residuals vs leverage
     type: Image
     width: 600
     height: 350
     renderFun: .plotResidualsLeverage
 
   - name: residualsLeverageGuide
-    title: 'Guía: Residuos studentizados vs leverage'
+    title: 'Guide: Studentized residuals vs leverage'
     type: Html
 
   - name: cooksDPlot
-    title: Cook's D por caso
+    title: "Cook's D by case"
     type: Image
     width: 560
     height: 300
     renderFun: .plotCooksD
 
   - name: cooksDGuide
-    title: "Guía: Cook's D por caso"
+    title: "Guide: Cook's D by case"
     type: Html
 
   - name: independenceGuide
-    title: Independencia del diseño
+    title: Design independence
     type: Html
 
   - name: alternativesGuide
-    title: Alternativas metodológicas
+    title: Methodological alternatives
     type: Html
 
   - name: alternatives
-    title: Alternativas metodológicas
+    title: Methodological alternatives
     type: Table
     clearWith:
       - dep
@@ -505,13 +505,13 @@ items:
       - reportLang
     columns:
       - name: problem
-        title: Problema detectado
+        title: Problem detected
         type: text
       - name: evidence
-        title: Evidencia
+        title: Evidence
         type: text
       - name: suggestion
-        title: Opción sugerida
+        title: Suggested option
         type: text
 
   - name: alternativesWhen
@@ -519,5 +519,5 @@ items:
     type: Html
 
   - name: notes
-    title: Notas y recomendación
+    title: Notes and recommendation
     type: Html

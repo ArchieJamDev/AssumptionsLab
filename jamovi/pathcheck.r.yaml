@@ -29,11 +29,11 @@ jrs: '1.1'
 
 items:
   - name: intro
-    title: Análisis de Rutas
+    title: Path Analysis
     type: Html
 
   - name: modelSummary
-    title: Modelo actual
+    title: Current model
     type: Table
     clearWith:
       - vars
@@ -48,23 +48,23 @@ items:
         title: Variables
         type: integer
       - name: nRelations
-        title: Relaciones
+        title: Relationships
         type: integer
       - name: nEndog
-        title: Variables endógenas
+        title: Endogenous variables
         type: integer
       - name: nExog
-        title: Variables exógenas
+        title: Exogenous variables
         type: integer
       - name: nCases
-        title: Casos completos
+        title: Complete cases
         type: integer
       - name: casesPerRelation
-        title: Casos por relación
+        title: Cases per relationship
         type: number
 
   - name: specifiedModel
-    title: Modelo especificado
+    title: Specified model
     type: Table
     clearWith:
       - vars
@@ -76,19 +76,19 @@ items:
     rows: 0
     columns:
       - name: dependent
-        title: Variable dependiente
+        title: Dependent variable
         type: text
       - name: predictors
-        title: Predictores
+        title: Predictors
         type: text
 
   - name: modelStructureGuide
-    title: Estructura del Modelo
+    title: Model Structure
     type: Html
     visible: (showExogenous || showEndogenous)
 
   - name: exogenousTable
-    title: Variables Exógenas del Modelo
+    title: Model Exogenous Variables
     type: Table
     clearWith:
       - vars
@@ -104,11 +104,11 @@ items:
         title: Variable
         type: text
       - name: outgoingPaths
-        title: Rutas salientes
+        title: Outgoing paths
         type: integer
 
   - name: endogenousTable
-    title: Variables Endógenas del Modelo
+    title: Model Endogenous Variables
     type: Table
     clearWith:
       - vars
@@ -124,11 +124,11 @@ items:
         title: Variable
         type: text
       - name: incomingPaths
-        title: Predictores directos
+        title: Direct predictors
         type: integer
 
   - name: validationSummary
-    title: Validación Metodológica del Modelo
+    title: Model Methodological Validation
     type: Table
     clearWith:
       - vars
@@ -140,17 +140,17 @@ items:
     rows: 0
     columns:
       - name: check
-        title: Validación
+        title: Validation
         type: text
       - name: status
-        title: Estado
+        title: Status
         type: text
       - name: details
-        title: Detalles
+        title: Details
         type: text
 
   - name: pathDiagram
-    title: Diagrama de Ruta (Path Diagram SVG)
+    title: Path Diagram (SVG)
     type: Image
     width: 600
     height: 400
@@ -158,12 +158,12 @@ items:
     visible: (showDiagram)
 
   - name: outlierGuide
-    title: Valores Atípicos Multivariados
+    title: Multivariate Outliers
     type: Html
     visible: (isFinalized)
 
   - name: outlierTable
-    title: Diagnóstico de Casos Atípicos
+    title: Outlier Diagnostics
     type: Table
     clearWith:
       - vars
@@ -176,10 +176,10 @@ items:
     visible: (isFinalized)
     columns:
       - name: case
-        title: Caso
+        title: Case
         type: integer
       - name: d2
-        title: D² Mahalanobis
+        title: Mahalanobis D²
         type: number
       - name: pD2
         title: p
@@ -189,19 +189,19 @@ items:
         title: Leverage
         type: number
       - name: cooksD
-        title: Distancia de Cook
+        title: "Cook's distance"
         type: number
       - name: criteria
-        title: Criterios activados
+        title: Triggered criteria
         type: text
 
   - name: equationsGuide
-    title: Diseño del Modelo
+    title: Model Design
     type: Html
     visible: (isFinalized)
 
   - name: pathCoefficients
-    title: Coeficientes de Ruta (Path Coefficients)
+    title: Path Coefficients
     type: Table
     clearWith:
       - vars
@@ -214,7 +214,7 @@ items:
     visible: (isFinalized && showCoeffs)
     columns:
       - name: dep
-        title: Variable Endógena
+        title: Endogenous Variable
         type: text
       - name: pred
         title: Predictor
@@ -223,7 +223,7 @@ items:
         title: Est.
         type: number
       - name: se
-        title: E.E.
+        title: SE
         type: number
       - name: t
         title: t
@@ -237,12 +237,12 @@ items:
         type: number
 
   - name: coefficientsInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized && showCoeffs)
 
   - name: rSquaredTable
-    title: Varianza Explicada (R²)
+    title: Explained Variance (R²)
     type: Table
     clearWith:
       - vars
@@ -255,22 +255,22 @@ items:
     visible: (isFinalized && showR2)
     columns:
       - name: var
-        title: Variable Endógena
+        title: Endogenous Variable
         type: text
       - name: r2
         title: R²
         type: number
       - name: adjR2
-        title: R² Ajustado
+        title: Adjusted R²
         type: number
 
   - name: residualCovarianceGuide
-    title: Covarianzas Residuales
+    title: Residual Covariances
     type: Html
     visible: (isFinalized && showCovs)
 
   - name: residualCovarianceTable
-    title: Covarianzas Residuales entre Variables Endógenas
+    title: Residual Covariances Among Endogenous Variables
     type: Table
     clearWith:
       - vars
@@ -289,14 +289,14 @@ items:
         title: Variable 2
         type: text
       - name: covariance
-        title: Covarianza
+        title: Covariance
         type: number
       - name: correlation
-        title: Correlación
+        title: Correlation
         type: number
 
   - name: residualPlots
-    title: Diagnóstico de Residuos por Ecuación
+    title: Residual Diagnostics by Equation
     type: Image
     width: 700
     height: 350
@@ -304,12 +304,12 @@ items:
     visible: (isFinalized && showResiduals)
 
   - name: normalityGuide
-    title: Normalidad de Residuos
+    title: Residual Normality
     type: Html
     visible: (isFinalized && showResiduals)
 
   - name: residualNormality
-    title: Normalidad de Residuos por Ecuación
+    title: Residual Normality by Equation
     type: Table
     clearWith:
       - vars
@@ -322,13 +322,13 @@ items:
     visible: (isFinalized && showResiduals)
     columns:
       - name: dep
-        title: Variable Dependiente
+        title: Dependent Variable
         type: text
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: number
       - name: p
         title: p
@@ -339,17 +339,17 @@ items:
         type: text
 
   - name: normalityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized && showResiduals)
 
   - name: homoscedasticityGuide
-    title: Homoscedasticidad
+    title: Homoscedasticity
     type: Html
     visible: (isFinalized)
 
   - name: homoscedasticity
-    title: Homoscedasticidad por Ecuación
+    title: Homoscedasticity by Equation
     type: Table
     clearWith:
       - vars
@@ -362,19 +362,19 @@ items:
     visible: (isFinalized)
     columns:
       - name: dep
-        title: Variable Dependiente
+        title: Dependent Variable
         type: text
       - name: test
-        title: Prueba
+        title: Test
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
       - name: df
-        title: gl
+        title: df
         type: text
       - name: p
         title: p
@@ -385,17 +385,17 @@ items:
         type: text
 
   - name: homoscedasticityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized)
 
   - name: multicollinearityGuide
-    title: Multicolinealidad
+    title: Multicollinearity
     type: Html
     visible: (isFinalized)
 
   - name: multicollinearity
-    title: Multicolinealidad por Ecuación
+    title: Multicollinearity by Equation
     type: Table
     clearWith:
       - vars
@@ -408,33 +408,33 @@ items:
     visible: (isFinalized)
     columns:
       - name: dep
-        title: Variable Dependiente
+        title: Dependent Variable
         type: text
       - name: diagnostic
-        title: Diagnóstico
+        title: Diagnostic
         type: text
       - name: item
-        title: Elemento
+        title: Item
         type: text
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: text
       - name: value
-        title: Valor
+        title: Value
         type: number
 
   - name: multicollinearityInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized)
 
   - name: mardiaGuide
-    title: Normalidad Multivariada (Mardia)
+    title: Multivariate Normality (Mardia)
     type: Html
     visible: (isFinalized)
 
   - name: mardiaTable
-    title: Prueba de Normalidad Multivariada de Mardia
+    title: "Mardia's Multivariate Normality Test"
     type: Table
     clearWith:
       - vars
@@ -447,16 +447,16 @@ items:
     visible: (isFinalized)
     columns:
       - name: measure
-        title: Medida
+        title: Measure
         type: text
       - name: value
-        title: Coeficiente
+        title: Coefficient
         type: number
       - name: statistic
-        title: Estadístico
+        title: Statistic
         type: number
       - name: df
-        title: gl
+        title: df
         type: text
       - name: p
         title: p
@@ -467,17 +467,17 @@ items:
         type: text
 
   - name: mardiaInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized)
 
   - name: correlationMatrixGuide
-    title: Matriz de Correlaciones
+    title: Correlation Matrix
     type: Html
     visible: (isFinalized && showCorrs)
 
   - name: pearsonMatrixTable
-    title: Matriz de Correlaciones de Pearson (formato APA 7)
+    title: Pearson Correlation Matrix (APA 7 Format)
     type: Table
     clearWith:
       - vars
@@ -494,7 +494,7 @@ items:
         type: text
 
   - name: dcorMatrixTable
-    title: Matriz de Correlación de Distancia (dCor, formato APA 7)
+    title: Distance Correlation Matrix (dCor, APA 7 Format)
     type: Table
     clearWith:
       - vars
@@ -516,12 +516,12 @@ items:
     visible: (isFinalized && showCorrs)
 
   - name: correlationComparisonGuide
-    title: Análisis de Discordancia Pearson / dCor / Entropía Copular
+    title: Pearson / dCor / Copula Entropy Discordance Analysis
     type: Html
     visible: (isFinalized && showCorrs)
 
   - name: correlationComparisonTable
-    title: Pares con Diferencia Notable entre Pearson y dCor
+    title: Pairs with a Notable Gap Between Pearson and dCor
     type: Table
     clearWith:
       - vars
@@ -546,10 +546,10 @@ items:
         title: dCor
         type: text
       - name: gap
-        title: Brecha (dCor − |r|)
+        title: Gap (dCor − |r|)
         type: number
       - name: ce
-        title: Entropía Copular
+        title: Copula Entropy
         type: number
       - name: ceP
         title: p (CE)
@@ -559,21 +559,21 @@ items:
         title: Sig. (CE)
         type: text
       - name: flag
-        title: Diferencia notable
+        title: Notable difference
         type: text
 
   - name: correlationComparisonInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized && showCorrs)
 
   - name: crossEntropyGuide
-    title: Independencia por Entropía Copular
+    title: Independence via Copula Entropy
     type: Html
     visible: (isFinalized && showCorrs)
 
   - name: crossEntropyTable
-    title: Prueba de Independencia por Entropía Copular
+    title: Copula Entropy Independence Test
     type: Table
     clearWith:
       - vars
@@ -592,10 +592,10 @@ items:
         title: Variable 2
         type: text
       - name: connected
-        title: Conectadas en el modelo
+        title: Connected in the model
         type: text
       - name: ce
-        title: Entropía Copular
+        title: Copula Entropy
         type: number
       - name: p
         title: p
@@ -606,17 +606,17 @@ items:
         type: text
 
   - name: crossEntropyInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized && showCorrs)
 
   - name: indirectEffectsGuide
-    title: Efectos Directos, Indirectos y Totales
+    title: Direct, Indirect, and Total Effects
     type: Html
     visible: (isFinalized)
 
   - name: indirectEffectsTable
-    title: Efectos Directos, Indirectos y Totales (Mediación Simple)
+    title: Direct, Indirect, and Total Effects (Simple Mediation)
     type: Table
     clearWith:
       - vars
@@ -632,22 +632,22 @@ items:
         title: Predictor (X)
         type: text
       - name: m
-        title: Mediador (M)
+        title: Mediator (M)
         type: text
       - name: y
-        title: Variable Dependiente (Y)
+        title: Dependent Variable (Y)
         type: text
       - name: directBeta
-        title: Efecto Directo (β)
+        title: Direct Effect (β)
         type: number
       - name: indirectBeta
-        title: Efecto Indirecto (β)
+        title: Indirect Effect (β)
         type: number
       - name: totalBeta
-        title: Efecto Total (β)
+        title: Total Effect (β)
         type: number
       - name: sobelZ
-        title: z de Sobel
+        title: Sobel z
         type: number
       - name: sobelP
         title: p
@@ -658,17 +658,17 @@ items:
         type: text
 
   - name: indirectEffectsInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized)
 
   - name: sampleSizeGuide
-    title: Adecuación del Tamaño de Muestra
+    title: Sample Size Adequacy
     type: Html
     visible: (isFinalized)
 
   - name: sampleSizeTable
-    title: Valoración del Tamaño de Muestra según la Complejidad del Modelo
+    title: Sample Size Assessment by Model Complexity
     type: Table
     clearWith:
       - vars
@@ -681,33 +681,33 @@ items:
     visible: (isFinalized)
     columns:
       - name: criterion
-        title: Criterio (autor)
+        title: Criterion (author)
         type: text
       - name: rule
-        title: Regla
+        title: Rule
         type: text
       - name: required
-        title: N requerido
+        title: Required N
         type: number
       - name: actual
-        title: N actual
+        title: Current N
         type: integer
       - name: status
-        title: Estado
+        title: Status
         type: text
 
   - name: sampleSizeInterpretation
-    title: Interpretación Aplicada
+    title: Applied interpretation
     type: Html
     visible: (isFinalized)
 
   - name: modelDiagnosticConclusionGuide
-    title: Conclusión Diagnóstica del Modelo
+    title: Model Diagnostic Conclusion
     type: Html
     visible: (isFinalized)
 
   - name: modelDiagnosticConclusionTable
-    title: Resumen de Diagnósticos del Modelo
+    title: Model Diagnostics Summary
     type: Table
     clearWith:
       - vars
@@ -720,16 +720,16 @@ items:
     visible: (isFinalized)
     columns:
       - name: area
-        title: Área Diagnóstica
+        title: Diagnostic Area
         type: text
       - name: status
-        title: Estado
+        title: Status
         type: text
       - name: detail
-        title: Detalle
+        title: Detail
         type: text
 
   - name: modelDiagnosticConclusionInterpretation
-    title: Veredicto General
+    title: Overall Verdict
     type: Html
     visible: (isFinalized)
