@@ -1995,59 +1995,54 @@ self$results$notes$setContent(html_block(
                 en
         },
 
-        # Delegates entirely to the shared .al_plot_palette_base()
-        # (shared-helpers.R) — the same base style palette used by every
-        # other module in the suite — so a given Plot Style ("Clean
-        # Academic", "Black and White", etc.) looks identical regardless
-        # of which module renders it. Previously this was a local
-        # reimplementation with slightly different color values than the
-        # shared one; consolidating removes that inconsistency and the
-        # duplicated maintenance burden.
-        # ES: Delega por completo en la función base compartida
-        # .al_plot_palette_base() (shared-helpers.R) — la misma paleta de
-        # estilo que usa el resto de la suite — para que un mismo Plot
-        # Style ("Académico limpio", "Blanco y negro", etc.) se vea igual
-        # sin importar qué módulo lo renderiza. Antes esto era una
-        # reimplementación local con valores de color ligeramente
-        # distintos a la compartida; consolidar elimina esa inconsistencia
-        # y la carga de mantenimiento duplicada.
-        .relatedPlotPalette = function() {
-            style <- tryCatch(self$options$plotStyle, error = function(e) "clean")
-            if (is.null(style) || length(style) == 0 || !nzchar(style))
-                style <- "clean"
+        # Plot theme/palette migrated to jamovi's native ggtheme/theme
+        # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
+        # (the pilot for this change, 2026-09-17) for the full rationale.
+        # .plotColors(theme) derives base/accent colors from jamovi's own
+        # theme (its plain $color/$fill list) instead of a local plotStyle
+        # option that duplicated jamovi's Theme setting. .plotSeriesColors()
+        # returns NULL for the default "follow jamovi's theme" choice (the
+        # profile/difference plots then apply no manual scale_fill_manual,
+        # letting ggtheme's own embedded discrete fill scale color the
+        # measurements/comparisons), and the Okabe-Ito/viridis set
+        # otherwise - still via the shared .al_plot_series_palette()
+        # (shared-helpers.R), the same function every other migrated module
+        # uses for this override.
+        # ES: Tema/paleta de gráficos migrado al mecanismo nativo
+        # ggtheme/theme de jamovi - ver .plotColors()/.plotSeriesColors()
+        # de logcheck.b.R (el piloto de este cambio, 2026-09-17) para el
+        # razonamiento completo. .plotColors(theme) deriva colores
+        # base/acento del propio tema de jamovi (su lista simple
+        # $color/$fill) en vez de una opción local plotStyle que duplicaba
+        # el ajuste de Tema de jamovi. .plotSeriesColors() devuelve NULL
+        # para la opción por defecto "seguir el tema de jamovi" (los
+        # gráficos de perfil/diferencias entonces no aplican ningún
+        # scale_fill_manual manual, dejando que la escala discreta de
+        # relleno embebida en ggtheme coloree las mediciones/comparaciones),
+        # y el conjunto Okabe-Ito/viridis en caso contrario - todavía vía
+        # la función compartida .al_plot_series_palette() (shared-
+        # helpers.R), la misma que usa cada otro módulo migrado para esta
+        # opción.
+        .plotColors = function(theme) {
+            base_color <- if (!is.null(theme$color) && length(theme$color) >= 1) theme$color[1] else "#333333"
+            accent_color <- if (!is.null(theme$color) && length(theme$color) >= 2) theme$color[2] else "#2C7FB8"
+            accent_fill <- if (!is.null(theme$fill) && length(theme$fill) >= 2) theme$fill[2] else "#A6CEE3"
 
-            .al_plot_palette_base(style)
+            list(
+                point = base_color, line = base_color, ref = "gray50",
+                alert = accent_color, smooth = accent_color, fill = accent_fill,
+                grid = "grey90"
+            )
         },
 
-        # Categorical palette used to color measurement occasions (profile
-        # plot summary points) and pairwise comparisons (paired-differences
-        # plot panels). Delegates to the shared .al_plot_series_palette()
-        # (shared-helpers.R), the same function logCheck/regCheck/
-        # timeCheck/anovaCheck use for their plotPalette option, so
-        # "Blue-Orange"/"Viridis"/"Grayscale"/"High Contrast" produce the
-        # same colors here as everywhere else in the suite. That function
-        # returns a fixed-length qualitative color set (it doesn't take a
-        # category count); rep_len() cycles it to the number of
-        # measurements/comparisons actually being plotted.
-        # ES: Paleta categórica usada para colorear ocasiones de medición
-        # (puntos de resumen del gráfico de perfil) y comparaciones
-        # pareadas (paneles del gráfico de diferencias). Delega en la
-        # función compartida .al_plot_series_palette() (shared-helpers.R),
-        # la misma que usan logCheck/regCheck/timeCheck/anovaCheck para su
-        # opción plotPalette, para que "Blue-Orange"/"Viridis"/"Grayscale"/
-        # "High Contrast" den los mismos colores acá que en el resto de la
-        # suite. Esa función devuelve un set de colores cualitativo de
-        # largo fijo (no recibe cantidad de categorías); rep_len() lo cicla
-        # a la cantidad real de mediciones/comparaciones que se grafican.
-        .categoricalPalette = function(n) {
-            key <- tryCatch(self$options$plotPalette, error = function(e) "blueOrange")
-            if (is.null(key) || length(key) == 0 || !nzchar(key))
-                key <- "blueOrange"
-
-            rep_len(.al_plot_series_palette(key), n)
+        .plotSeriesColors = function() {
+            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
+            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
+                return(NULL)
+            .al_plot_series_palette(choice)
         },
 
-        .plotProfile = function(image, ...) {
+        .plotProfile = function(image, ggtheme, theme, ...) {
             if (!isTRUE(self$options$showProfilePlot))
                 return()
 
@@ -2129,9 +2124,12 @@ self$results$notes$setContent(html_block(
                 return()
             }
 
-            pal <- private$.relatedPlotPalette()
-            cat_pal <- private$.categoricalPalette(length(measures))
-            names(cat_pal) <- as.character(measures)
+            pal <- private$.plotColors(theme)
+            cat_pal <- private$.plotSeriesColors()
+            if (!is.null(cat_pal)) {
+                cat_pal <- rep_len(cat_pal, length(measures))
+                names(cat_pal) <- as.character(measures)
+            }
 
             case_id <- unique(long_df$case[is.finite(long_df$case)])
             n_cases <- length(case_id)
@@ -2252,7 +2250,6 @@ self$results$notes$setContent(html_block(
                     color = pal$line,
                     show.legend = FALSE
                 ) +
-                ggplot2::scale_fill_manual(values = cat_pal) +
                 ggplot2::geom_point(
                     data = stats_df,
                     mapping = ggplot2::aes(x = measure, y = median),
@@ -2283,7 +2280,7 @@ self$results$notes$setContent(html_block(
                     expand = ggplot2::expansion(mult = c(0.06, 0.40))
                 ) +
                 ggplot2::coord_cartesian(clip = "off") +
-                ggplot2::theme_minimal(base_size = 11) +
+                ggtheme +
                 ggplot2::theme(
                     plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                     plot.subtitle = ggplot2::element_text(size = 10),
@@ -2297,10 +2294,24 @@ self$results$notes$setContent(html_block(
                     plot.margin = ggplot2::margin(12, 30, 16, 12)
                 )
 
+            # scale_fill_manual must be added AFTER ggtheme - ggtheme
+            # carries its own discrete fill scale, and whichever scale is
+            # added last wins for a given aesthetic (see logcheck.b.R's
+            # .plotLinearity for the same ordering, and the fix commit that
+            # caught this ordering mistake elsewhere in the suite).
+            # ES: scale_fill_manual debe agregarse DESPUÉS de ggtheme -
+            # ggtheme trae su propia escala discreta de relleno, y para una
+            # misma estética gana la escala agregada al final (ver
+            # .plotLinearity en logcheck.b.R para el mismo orden, y el
+            # commit de corrección que detectó este error de orden en otra
+            # parte de la suite).
+            if (!is.null(cat_pal))
+                p <- p + ggplot2::scale_fill_manual(values = cat_pal)
+
             print(p)
         },
 
-        .plotDifferences = function(image, ...) {
+        .plotDifferences = function(image, ggtheme, theme, ...) {
             if (!isTRUE(self$options$showDifferencePlots))
                 return()
 
@@ -2370,9 +2381,12 @@ self$results$notes$setContent(html_block(
             obs_df$comparison <- factor(obs_df$comparison, levels = comparisons)
             stats_df$comparison <- factor(stats_df$comparison, levels = comparisons)
 
-            pal <- private$.relatedPlotPalette()
-            cat_pal <- private$.categoricalPalette(length(comparisons))
-            names(cat_pal) <- as.character(comparisons)
+            pal <- private$.plotColors(theme)
+            cat_pal <- private$.plotSeriesColors()
+            if (!is.null(cat_pal)) {
+                cat_pal <- rep_len(cat_pal, length(comparisons))
+                names(cat_pal) <- as.character(comparisons)
+            }
 
             y_all <- c(obs_df$difference, stats_df$min, stats_df$max, stats_df$mean, stats_df$median)
             y_all <- y_all[is.finite(y_all)]
@@ -2406,7 +2420,6 @@ self$results$notes$setContent(html_block(
                     alpha = 0.75,
                     show.legend = FALSE
                 ) +
-                ggplot2::scale_fill_manual(values = cat_pal) +
                 ggplot2::geom_jitter(
                     width = 0.10,
                     height = 0,
@@ -2456,7 +2469,7 @@ self$results$notes$setContent(html_block(
                     expand = ggplot2::expansion(mult = c(0.08, 0.34))
                 ) +
                 ggplot2::coord_cartesian(clip = "off") +
-                ggplot2::theme_minimal(base_size = 11) +
+                ggtheme +
                 ggplot2::theme(
                     plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                     plot.subtitle = ggplot2::element_text(size = 10),
@@ -2470,10 +2483,17 @@ self$results$notes$setContent(html_block(
                     plot.margin = ggplot2::margin(12, 30, 18, 12)
                 )
 
+            # scale_fill_manual must be added AFTER ggtheme - see the same
+            # note in .plotProfile above.
+            # ES: scale_fill_manual debe agregarse DESPUÉS de ggtheme - ver
+            # la misma nota en .plotProfile arriba.
+            if (!is.null(cat_pal))
+                p <- p + ggplot2::scale_fill_manual(values = cat_pal)
+
             print(p)
         },
 
-        .plotNormality = function(image, ...) {
+        .plotNormality = function(image, ggtheme, theme, ...) {
             if (!isTRUE(self$options$showNormalityPlots))
                 return()
 
@@ -2532,7 +2552,7 @@ self$results$notes$setContent(html_block(
             st <- st[st$comparison %in% keep, , drop = FALSE]
             st$comparison <- factor(st$comparison, levels = keep)
 
-            pal <- private$.relatedPlotPalette()
+            pal <- private$.plotColors(theme)
 
             caption_text <- paste(
                 plot_tr("Points close to the line suggest approximate normality.", "Puntos cercanos a la línea sugieren normalidad aproximada."),
@@ -2563,7 +2583,7 @@ self$results$notes$setContent(html_block(
                     y = plot_tr("Observed quantiles", "Cuantiles observados"),
                     caption = caption_text
                 ) +
-                ggplot2::theme_minimal(base_size = 10.5) +
+                ggtheme +
                 ggplot2::theme(
                     plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                     plot.subtitle = ggplot2::element_text(size = 9.5),
@@ -2579,7 +2599,7 @@ self$results$notes$setContent(html_block(
             print(p)
         },
 
-        .plotNormalCurve = function(image, ...) {
+        .plotNormalCurve = function(image, ggtheme, theme, ...) {
             if (!isTRUE(self$options$showNormalityPlots))
                 return()
 
@@ -2680,7 +2700,7 @@ self$results$notes$setContent(html_block(
             curve_df$comparison <- factor(curve_df$comparison, levels = keep)
             curve_df$curve <- factor(curve_df$curve, levels = c(plot_tr("Observed density", "Densidad observada"), plot_tr("Theoretical normal", "Normal teórica")))
 
-            pal <- private$.relatedPlotPalette()
+            pal <- private$.plotColors(theme)
 
             caption_text <- paste(
                 plot_tr("The solid line shows the observed density.", "La línea continua muestra la densidad observada."),
@@ -2713,7 +2733,7 @@ self$results$notes$setContent(html_block(
                     linetype = "",
                     caption = caption_text
                 ) +
-                ggplot2::theme_minimal(base_size = 10.5) +
+                ggtheme +
                 ggplot2::theme(
                     plot.title = ggplot2::element_text(face = "bold", hjust = 0),
                     plot.subtitle = ggplot2::element_text(size = 9.5),
