@@ -201,6 +201,10 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="design",
                 title="Design summary",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -214,6 +218,10 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="descriptives",
                 title="Descriptive statistics by group",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="group", 
@@ -262,6 +270,10 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="outliers",
                 title="Outlier screening by group",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="group", 
@@ -303,6 +315,10 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="caseDiagnostics",
                 title="Case diagnostics",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -353,6 +369,10 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="normality",
                 title="Normality tests by group",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="group", 
@@ -416,6 +436,10 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="normalitySummary",
                 title="Normality decision summary",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="group", 
@@ -437,6 +461,10 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="homogeneity",
                 title="Homogeneity of variances",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="test", 

@@ -172,9 +172,10 @@ options:
     default: en
 
   - name: showPlots
-    title: Show Plots (uncheck for text-only report)
+    title: Diagnostic plots
     type: Bool
     default: true
+    description: Uncheck for a text-only report.
 
   # Visual style of the plots (background, line type): clean academic,
   # black and white for print, high contrast for accessibility, or full

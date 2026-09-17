@@ -353,6 +353,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="modelSummary",
                 title="Modelo actual",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=1,
                 columns=list(
                     list(
@@ -383,6 +390,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="specifiedModel",
                 title="Modelo especificado",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 columns=list(
                     list(
@@ -402,6 +416,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="exogenousTable",
                 title="Variables Ex\u00F3genas del Modelo",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(showExogenous)",
                 columns=list(
@@ -417,6 +438,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="endogenousTable",
                 title="Variables End\u00F3genas del Modelo",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(showEndogenous)",
                 columns=list(
@@ -432,6 +460,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="validationSummary",
                 title="Validaci\u00F3n Metodol\u00F3gica del Modelo",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 columns=list(
                     list(
@@ -463,6 +498,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="outlierTable",
                 title="Diagn\u00F3stico de Casos At\u00EDpicos",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -500,6 +542,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="pathCoefficients",
                 title="Coeficientes de Ruta (Path Coefficients)",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized && showCoeffs)",
                 columns=list(
@@ -541,6 +590,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="rSquaredTable",
                 title="Varianza Explicada (R\u00B2)",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized && showR2)",
                 columns=list(
@@ -565,6 +621,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="residualCovarianceTable",
                 title="Covarianzas Residuales entre Variables End\u00F3genas",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized && showCovs)",
                 columns=list(
@@ -601,6 +664,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="residualNormality",
                 title="Normalidad de Residuos por Ecuaci\u00F3n",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized && showResiduals)",
                 columns=list(
@@ -639,6 +709,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="homoscedasticity",
                 title="Homoscedasticidad por Ecuaci\u00F3n",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -685,6 +762,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="multicollinearity",
                 title="Multicolinealidad por Ecuaci\u00F3n",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -722,6 +806,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="mardiaTable",
                 title="Prueba de Normalidad Multivariada de Mardia",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -764,6 +855,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="pearsonMatrixTable",
                 title="Matriz de Correlaciones de Pearson (formato APA 7)",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized && showCorrs)",
                 columns=list(
@@ -775,6 +873,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="dcorMatrixTable",
                 title="Matriz de Correlaci\u00F3n de Distancia (dCor, formato APA 7)",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized && showCorrs)",
                 columns=list(
@@ -796,6 +901,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationComparisonTable",
                 title="Pares con Diferencia Notable entre Pearson y dCor",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized && showCorrs)",
                 columns=list(
@@ -850,6 +962,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="crossEntropyTable",
                 title="Prueba de Independencia por Entrop\u00EDa Copular",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized && showCorrs)",
                 columns=list(
@@ -892,6 +1011,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="indirectEffectsTable",
                 title="Efectos Directos, Indirectos y Totales (Mediaci\u00F3n Simple)",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -946,6 +1072,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="sampleSizeTable",
                 title="Valoraci\u00F3n del Tama\u00F1o de Muestra seg\u00FAn la Complejidad del Modelo",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -983,6 +1116,13 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="modelDiagnosticConclusionTable",
                 title="Resumen de Diagn\u00F3sticos del Modelo",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "reportLang"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(

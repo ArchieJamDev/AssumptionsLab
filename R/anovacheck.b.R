@@ -696,17 +696,11 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             covs <- self$options$covs
 
             if (is.null(dep) || dep == "") {
-                self$results$intro$setContent(
-                    tr("Select a numeric dependent variable.", "Seleccione una variable dependiente numérica.")
-                )
-                return()
+                jmvcore::reject(tr("Select a numeric dependent variable.", "Seleccione una variable dependiente numérica."))
             }
 
             if (length(factors) == 0) {
-                self$results$intro$setContent(
-                    tr("Select at least one categorical factor for ANOVA/ANCOVA.", "Seleccione al menos un factor categórico para ANOVA/ANCOVA.")
-                )
-                return()
+                jmvcore::reject(tr("Select at least one categorical factor for ANOVA/ANCOVA.", "Seleccione al menos un factor categórico para ANOVA/ANCOVA."))
             }
 
             vars <- c(dep, factors, covs)
@@ -719,10 +713,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n_excluded <- n_total - n_used
 
             if (n_used < 5) {
-                self$results$intro$setContent(
-                    tr("There are not enough complete cases to fit the model.", "No hay suficientes casos completos para ajustar el modelo.")
-                )
-                return()
+                jmvcore::reject(tr("There are not enough complete cases to fit the model.", "No hay suficientes casos completos para ajustar el modelo."))
             }
 
             for (f in factors)
@@ -742,13 +733,17 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             formula_text <- paste(qname(dep), "~", rhs)
             model_formula <- stats::as.formula(formula_text)
 
-            fit <- tryCatch(stats::lm(model_formula, data = dat2), error = function(e) NULL)
+            fit_error <- NULL
+            fit <- tryCatch(stats::lm(model_formula, data = dat2), error = function(e) {
+                fit_error <<- conditionMessage(e)
+                NULL
+            })
 
             if (is.null(fit)) {
-                self$results$intro$setContent(
-                    tr("It was not possible to fit the ANOVA/ANCOVA model.", "No fue posible ajustar el modelo ANOVA/ANCOVA.")
-                )
-                return()
+                jmvcore::reject(paste0(
+                    tr("It was not possible to fit the ANOVA/ANCOVA model: ", "No fue posible ajustar el modelo ANOVA/ANCOVA: "),
+                    fit_error
+                ))
             }
 
             residuals_raw <- tryCatch(stats::residuals(fit), error = function(e) NA_real_)
@@ -901,14 +896,14 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
                 tr("Assumption check for ANOVA/ANCOVA", "Revisión de supuestos para ANOVA/ANCOVA"),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
                 tr(
                     "Use this analysis when you want to review whether an ANOVA/ANCOVA has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
                     "Use este análisis cuando quiera revisar si un ANOVA/ANCOVA tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
                 ),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
                 tr("<b>Dependent variable:</b> ", "<b>Variable dependiente:</b> "), html_escape(dep),
                 "</p>",

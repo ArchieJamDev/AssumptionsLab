@@ -365,6 +365,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="modelSummary",
                 title="Resumen del modelo",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -378,6 +383,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="missingSummary",
                 title="Resumen de datos faltantes",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -395,6 +405,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="linearityPredictor",
                 title="Linealidad por predictor num\u00E9rico",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -429,6 +444,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="linearityModel",
                 title="Linealidad global del modelo",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="scope", 
@@ -472,6 +492,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="pearsonMatrixTable",
                 title="Matriz de correlaciones de Pearson (formato APA 7)",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 rows=0,
                 visible=FALSE,
                 columns=list(
@@ -483,6 +508,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="dcorMatrixTable",
                 title="Matriz de correlaci\u00F3n de distancia (dCor, formato APA 7)",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 rows=0,
                 visible=FALSE,
                 columns=list(
@@ -504,6 +534,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationComparisonTable",
                 title="Pares con diferencia notable entre Pearson y dCor",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 rows=0,
                 visible=FALSE,
                 columns=list(
@@ -620,6 +655,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="residualNormality",
                 title="Normalidad de residuos",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -687,6 +727,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="homoscedasticity",
                 title="Homoscedasticidad y heterocedasticidad",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="family", 
@@ -740,6 +785,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="independence",
                 title="Independencia de errores",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -774,6 +824,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="multicollinearity",
                 title="Multicolinealidad",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 visible=FALSE,
                 columns=list(
                     list(
@@ -805,6 +860,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="influence",
                 title="Casos at\u00EDpicos e influyentes",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -883,6 +943,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="transformationNormality",
                 title="Normalidad de residuos por transformaci\u00F3n",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="criterion", 
@@ -908,6 +973,11 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="transformationFit",
                 title="Ajuste y varianza residual por transformaci\u00F3n",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="criterion", 
@@ -971,7 +1041,7 @@ regCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covs .
 #' @param factors .
 #' @param reportLang .
-#' @param showPlots .
+#' @param showPlots Uncheck for a text-only report.
 #' @param linShowPlots .
 #' @param linSmoother .
 #' @param linShowBand .

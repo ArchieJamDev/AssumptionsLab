@@ -48,35 +48,35 @@ options:
         name: es
     default: en
   - name: showDistributionPlot
-    title: Show Distribution by Group
+    title: Distribution by group
     type: Bool
     default: false
   - name: addViolinPlot
-    title: Add Violin Plot
+    title: Violin plot
     type: Bool
     default: false
   - name: showJitterPoints
-    title: Show Individual Data
+    title: Individual data points
     type: Bool
     default: false
   - name: showMeanMarker
-    title: Mark Mean
+    title: Mean marker
     type: Bool
     default: true
   - name: showQQPlots
-    title: Show Q-Q Plots
+    title: Q-Q plots
     type: Bool
     default: false
   - name: qqShowBand
-    title: Show Confidence Band
+    title: Confidence band
     type: Bool
     default: true
   - name: qqFlagOutliers
-    title: Highlight Extreme Cases (|z| > 2.5)
+    title: Extreme cases (|z| > 2.5)
     type: Bool
     default: true
   - name: showNormalCurvePlots
-    title: Show Observed vs. Theoretical Normal Curve
+    title: Observed vs. theoretical normal curve
     type: Bool
     default: false
   - name: curveBandwidth
@@ -87,11 +87,11 @@ options:
     max: 3
     description: Multiplier for the density estimate's bandwidth (adjust in density()); lower values show more detail, higher values smooth more.
   - name: curveShowRug
-    title: Show Individual Values (rug)
+    title: Individual values (rug)
     type: Bool
     default: false
   - name: distColorByGroup
-    title: Color by Group
+    title: Color by group
     type: Bool
     default: true
   - name: plotPalette

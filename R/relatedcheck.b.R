@@ -567,17 +567,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             self$results$correlationComparisonInterpretation$setVisible(k >= 2)
 
             if (length(measures) < 2) {
-                self$results$intro$setContent(paste0(
-                "<div style=\"line-height:1.25; margin:0.05em 0 0.35em 0;\">",
-                "<p style=\"font-weight:700; margin:0 0 0.10em 0;\">AssumptionsLab</p>",
-                paste0("<p style=\"margin:0 0 0.20em 0;\">", tr("Assumption check for related groups", "Revisión de supuestos para grupos relacionados"), "</p>"),
-                "<p style=\"margin:0 0 0.20em 0;\">&nbsp;</p>",
-                paste0("<p style=\"margin:0 0 0.20em 0;\">", tr("Use this analysis when you want to review whether a comparison between related groups has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.", "Use este análisis cuando quiera revisar si una comparación entre grupos relacionados tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."), "</p>"),
-                "<p style=\"margin:0 0 0.20em 0;\">&nbsp;</p>",
-                paste0("<p style=\"margin:0;\">", tr("Select at least two related numeric variables.", "Seleccione al menos dos variables numéricas relacionadas."), "</p>"),
-                "</div>"
-            ))
-                return()
+                jmvcore::reject(tr("Select at least two related numeric variables.", "Seleccione al menos dos variables numéricas relacionadas."))
             }
 
             dat <- self$data[, measures, drop = FALSE]
@@ -589,17 +579,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             n_excluded <- n_total - n_used
 
             if (n_used < 3) {
-                self$results$intro$setContent(paste0(
-                "<div style=\"line-height:1.25; margin:0.05em 0 0.35em 0;\">",
-                "<p style=\"font-weight:700; margin:0 0 0.10em 0;\">AssumptionsLab</p>",
-                paste0("<p style=\"margin:0 0 0.20em 0;\">", tr("Assumption check for related groups", "Revisión de supuestos para grupos relacionados"), "</p>"),
-                "<p style=\"margin:0 0 0.20em 0;\">&nbsp;</p>",
-                paste0("<p style=\"margin:0 0 0.20em 0;\">", tr("Use this analysis when you want to review whether a comparison between related groups has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.", "Use este análisis cuando quiera revisar si una comparación entre grupos relacionados tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."), "</p>"),
-                "<p style=\"margin:0 0 0.20em 0;\">&nbsp;</p>",
-                paste0("<p style=\"margin:0;\">", tr("There are not enough complete cases to evaluate related groups.", "No hay suficientes casos completos para evaluar grupos relacionados."), "</p>"),
-                "</div>"
-            ))
-                return()
+                jmvcore::reject(tr("There are not enough complete cases to evaluate related groups.", "No hay suficientes casos completos para evaluar grupos relacionados."))
             }
 
             normality_problem <- FALSE
@@ -622,9 +602,9 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             "<div style=\"line-height:1.25; margin:0.05em 0 0.35em 0;\">",
             "<p style=\"font-weight:700; margin:0 0 0.10em 0;\">AssumptionsLab</p>",
             paste0("<p style=\"margin:0 0 0.20em 0;\">", tr("Assumption check for related groups", "Revisión de supuestos para grupos relacionados"), "</p>"),
-            "<p style=\"margin:0 0 0.20em 0;\">&nbsp;</p>",
+            "<p style=\"margin:0 0 0.20em 0;\">\u00A0</p>",
             paste0("<p style=\"margin:0 0 0.20em 0;\">", tr("Use this analysis when you want to review whether a comparison between related groups has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.", "Use este análisis cuando quiera revisar si una comparación entre grupos relacionados tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."), "</p>"),
-            "<p style=\"margin:0 0 0.20em 0;\">&nbsp;</p>",
+            "<p style=\"margin:0 0 0.20em 0;\">\u00A0</p>",
             paste0("<p style=\"margin:0 0 0.08em 0;\">", tr("<b>Number of related measurements:</b> ", "<b>Número de mediciones relacionadas:</b> "), k, "</p>"),
             paste0("<p style=\"margin:0 0 0.08em 0;\">", tr("<b>Measurements:</b> ", "<b>Mediciones:</b> "), html_escape(paste(measures, collapse = ", ")), "</p>"),
             paste0("<p style=\"margin:0 0 0.08em 0;\">", tr("<b>Design type:</b> ", "<b>Tipo de diseño:</b> ")),

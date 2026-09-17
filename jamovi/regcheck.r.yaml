@@ -39,6 +39,11 @@ items:
   - name: modelSummary
     title: Resumen del modelo
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: item
         title: Elemento
@@ -50,6 +55,11 @@ items:
   - name: missingSummary
     title: Resumen de datos faltantes
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: item
         title: Elemento
@@ -65,6 +75,11 @@ items:
   - name: linearityPredictor
     title: Linealidad por predictor numérico
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: predictor
         title: Predictor
@@ -92,6 +107,11 @@ items:
   - name: linearityModel
     title: Linealidad global del modelo
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: scope
         title: Alcance
@@ -128,6 +148,11 @@ items:
   - name: pearsonMatrixTable
     title: Matriz de correlaciones de Pearson (formato APA 7)
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     rows: 0
     visible: false
     columns:
@@ -138,6 +163,11 @@ items:
   - name: dcorMatrixTable
     title: Matriz de correlación de distancia (dCor, formato APA 7)
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     rows: 0
     visible: false
     columns:
@@ -158,6 +188,11 @@ items:
   - name: correlationComparisonTable
     title: Pares con diferencia notable entre Pearson y dCor
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     rows: 0
     visible: false
     columns:
@@ -266,6 +301,11 @@ items:
   - name: residualNormality
     title: Normalidad de residuos
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: test
         title: Prueba
@@ -329,6 +369,11 @@ items:
   - name: homoscedasticity
     title: Homoscedasticidad y heterocedasticidad
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: family
         title: Familia
@@ -376,6 +421,11 @@ items:
   - name: independence
     title: Independencia de errores
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: test
         title: Prueba
@@ -405,6 +455,11 @@ items:
   - name: multicollinearity
     title: Multicolinealidad
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     visible: false
     columns:
       - name: diagnostic
@@ -432,6 +487,11 @@ items:
   - name: influence
     title: Casos atípicos e influyentes
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: case
         title: Caso
@@ -502,6 +562,11 @@ items:
   - name: transformationNormality
     title: Normalidad de residuos por transformación
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: criterion
         title: Criterio / prueba
@@ -523,6 +588,11 @@ items:
   - name: transformationFit
     title: Ajuste y varianza residual por transformación
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: criterion
         title: Criterio / prueba

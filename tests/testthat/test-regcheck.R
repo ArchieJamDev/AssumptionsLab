@@ -58,11 +58,11 @@ test_that("regCheck tolerates accented and symbol variable names", {
     )
 })
 
-test_that("regCheck shows its own guidance for a single-row data set", {
+test_that("regCheck rejects a single-row data set", {
 
     data <- edgeSingleRowData()
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::regCheck(
             data = data,
             dep  = "dep",
@@ -71,11 +71,11 @@ test_that("regCheck shows its own guidance for a single-row data set", {
     )
 })
 
-test_that("regCheck shows its own guidance when the dependent variable is entirely NA", {
+test_that("regCheck rejects when the dependent variable is entirely NA", {
 
     data <- edgeAllNaData("dep", n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::regCheck(
             data = data,
             dep  = "dep",
@@ -97,12 +97,12 @@ test_that("regCheck tolerates a zero-variance numeric predictor", {
     )
 })
 
-test_that("regCheck tolerates a categorical predictor with a single level", {
+test_that("regCheck rejects a categorical predictor with a single level (lm() cannot build contrasts)", {
 
     data <- edgeBaseData(n = 30)
     data$group3 <- edgeLevelFactor(nrow(data), 1)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::regCheck(
             data    = data,
             dep     = "dep",
@@ -111,11 +111,11 @@ test_that("regCheck tolerates a categorical predictor with a single level", {
     )
 })
 
-test_that("regCheck shows its own guidance when no predictor is selected", {
+test_that("regCheck rejects when no predictor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::regCheck(
             data = data,
             dep  = "dep"

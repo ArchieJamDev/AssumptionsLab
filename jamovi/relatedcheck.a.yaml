@@ -68,7 +68,7 @@ options:
   # juntos o divergen entre ocasiones, más allá de lo que transmite por sí
   # solo el resumen de diferencias pareadas.
   - name: showProfilePlot
-    title: Profile Plot by Measurement
+    title: Profile plot by measurement
     type: Bool
     default: false
 
@@ -77,7 +77,7 @@ options:
   # ES: Interruptor maestro para el gráfico de distribución de diferencias
   # pareadas (un panel por comparación).
   - name: showDifferencePlots
-    title: Paired Differences Plots
+    title: Paired differences plots
     type: Bool
     default: false
 
@@ -86,7 +86,7 @@ options:
   # ES: Interruptor maestro para los gráficos de normalidad (Q-Q y
   # densidad observada vs normal) de las diferencias pareadas.
   - name: showNormalityPlots
-    title: Normality Plots
+    title: Normality plots
     type: Bool
     default: false
 

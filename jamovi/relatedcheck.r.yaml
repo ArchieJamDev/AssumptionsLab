@@ -79,7 +79,6 @@ items:
   - name: profilePlot
     title: Perfil de mediciones relacionadas
     type: Image
-    requiresData: true
     width: 560
     height: 315
     renderFun: .plotProfile
@@ -94,7 +93,6 @@ items:
   - name: differencePlot
     title: Distribución de diferencias pareadas
     type: Image
-    requiresData: true
     width: 560
     height: 315
     renderFun: .plotDifferences
@@ -109,7 +107,6 @@ items:
   - name: normalityPlot
     title: Q-Q plots de diferencias pareadas
     type: Image
-    requiresData: true
     width: 620
     height: 360
     renderFun: .plotNormality
@@ -124,7 +121,6 @@ items:
   - name: normalCurvePlot
     title: Distribución observada vs normal teórica
     type: Image
-    requiresData: true
     width: 620
     height: 360
     renderFun: .plotNormalCurve

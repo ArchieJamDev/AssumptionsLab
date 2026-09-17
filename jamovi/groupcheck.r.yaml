@@ -35,6 +35,10 @@ items:
   - name: design
     title: Design summary
     type: Table
+    clearWith:
+      - dep
+      - group
+      - reportLang
     columns:
       - name: item
         title: Item
@@ -46,6 +50,10 @@ items:
   - name: descriptives
     title: Descriptive statistics by group
     type: Table
+    clearWith:
+      - dep
+      - group
+      - reportLang
     columns:
       - name: group
         title: Group
@@ -86,6 +94,10 @@ items:
   - name: outliers
     title: Outlier screening by group
     type: Table
+    clearWith:
+      - dep
+      - group
+      - reportLang
     columns:
       - name: group
         title: Group
@@ -118,6 +130,10 @@ items:
   - name: caseDiagnostics
     title: Case diagnostics
     type: Table
+    clearWith:
+      - dep
+      - group
+      - reportLang
     columns:
       - name: case
         title: Case
@@ -159,6 +175,10 @@ items:
   - name: normality
     title: Normality tests by group
     type: Table
+    clearWith:
+      - dep
+      - group
+      - reportLang
     columns:
       - name: group
         title: Group
@@ -216,6 +236,10 @@ items:
   - name: normalitySummary
     title: Normality decision summary
     type: Table
+    clearWith:
+      - dep
+      - group
+      - reportLang
     columns:
       - name: group
         title: Group
@@ -233,6 +257,10 @@ items:
   - name: homogeneity
     title: Homogeneity of variances
     type: Table
+    clearWith:
+      - dep
+      - group
+      - reportLang
     columns:
       - name: test
         title: Test

@@ -73,7 +73,7 @@ options:
   # la estimación. Mientras esté desmarcado, el modelo permanece en
   # construcción.
   - name: isFinalized
-    title: Finalize Model
+    title: Finalize model
     type: Bool
     default: false
     description: >-
@@ -81,37 +81,37 @@ options:
       estimation. While unchecked, the model remains under construction.
 
   - name: showCoeffs
-    title: Show Coefficients
+    title: Coefficients
     type: Bool
     default: true
 
   - name: showR2
-    title: Show R²
+    title: R²
     type: Bool
     default: true
 
   - name: showCorrs
-    title: Show Correlations
+    title: Correlations
     type: Bool
     default: false
 
   - name: showCovs
-    title: Show Covariances
+    title: Covariances
     type: Bool
     default: false
 
   - name: showResiduals
-    title: Show Residuals
+    title: Residuals
     type: Bool
     default: false
 
   - name: showExogenous
-    title: Show Exogenous Variables
+    title: Exogenous variables
     type: Bool
     default: true
 
   - name: showEndogenous
-    title: Show Endogenous Variables
+    title: Endogenous variables
     type: Bool
     default: true
 
@@ -160,12 +160,12 @@ options:
     default: sturges
 
   - name: residShowNormalCurve
-    title: Overlay Theoretical Normal Curve
+    title: Theoretical normal curve overlay
     type: Bool
     default: true
 
   - name: residFlagOutliers
-    title: Flag Extreme Residuals (|z| > 2.5)
+    title: Extreme residuals (|z| > 2.5)
     type: Bool
     default: true
 
@@ -212,7 +212,7 @@ options:
     default: clean
 
   - name: showDiagram
-    title: Show Path Diagram
+    title: Path diagram
     type: Bool
     default: true
 
@@ -248,7 +248,7 @@ options:
   # ES: Desplaza la etiqueta de cada ruta a un costado de la flecha en
   # vez de centrarla sobre la línea.
   - name: diagramOffsetLabels
-    title: Offset Labels
+    title: Offset labels
     type: Bool
     default: false
     description: Offsets each path's label to one side of the arrow instead of centering it on the line.

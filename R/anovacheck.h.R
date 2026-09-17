@@ -236,6 +236,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="designSummary",
                 title="Resumen del dise\u00F1o",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -249,6 +254,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="cellSummary",
                 title="Tama\u00F1o de celdas y balance",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="cell", 
@@ -297,6 +307,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="residualNormality",
                 title="Normalidad de residuos",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -375,6 +390,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="varianceTests",
                 title="Homogeneidad de varianzas entre grupos",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="family", 
@@ -418,6 +438,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="slopesTests",
                 title="Homogeneidad de pendientes en ANCOVA",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 visible="(covs)",
                 columns=list(
                     list(
@@ -463,6 +488,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="covariateLinearity",
                 title="Linealidad de covariables",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 visible="(covs)",
                 columns=list(
                     list(
@@ -508,6 +538,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="multicollinearity",
                 title="Multicolinealidad",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 visible="(covs)",
                 columns=list(
                     list(
@@ -540,6 +575,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="pearsonMatrixTable",
                 title="Matriz de correlaciones de Pearson (formato APA 7)",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 visible="(covs)",
                 rows=0,
                 columns=list(
@@ -551,6 +591,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="dcorMatrixTable",
                 title="Matriz de correlaci\u00F3n de distancia (dCor, formato APA 7)",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 visible="(covs)",
                 rows=0,
                 columns=list(
@@ -572,6 +617,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationComparisonTable",
                 title="Pares con diferencia notable entre Pearson y dCor",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 visible="(covs)",
                 rows=0,
                 columns=list(
@@ -625,6 +675,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="influence",
                 title="Casos at\u00EDpicos e influyentes",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -696,6 +751,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="alternatives",
                 title="Alternativas metodol\u00F3gicas",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "reportLang"),
                 columns=list(
                     list(
                         `name`="problem", 

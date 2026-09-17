@@ -61,12 +61,12 @@ test_that("multCheck tolerates accented and symbol variable names", {
     )
 })
 
-test_that("multCheck shows its own guidance for a single-row data set (declared levels, one observed)", {
+test_that("multCheck rejects a single-row data set (declared levels, one observed)", {
 
     data <- edgeSingleRowData()
     data$group3 <- factor("A", levels = c("A", "B", "C"))
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::multCheck(
             data = data,
             dep  = "group3",
@@ -75,11 +75,11 @@ test_that("multCheck shows its own guidance for a single-row data set (declared 
     )
 })
 
-test_that("multCheck shows its own guidance when the dependent variable is entirely NA", {
+test_that("multCheck rejects when the dependent variable is entirely NA", {
 
     data <- edgeAllNaData("group3", n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::multCheck(
             data = data,
             dep  = "group3",
@@ -101,11 +101,11 @@ test_that("multCheck tolerates a zero-variance numeric predictor", {
     )
 })
 
-test_that("multCheck shows its own redirect message for a two-level dependent variable", {
+test_that("multCheck rejects a two-level dependent variable (redirects to logCheck)", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::multCheck(
             data = data,
             dep  = "group2",
@@ -114,12 +114,12 @@ test_that("multCheck shows its own redirect message for a two-level dependent va
     )
 })
 
-test_that("multCheck shows its own guidance for a dependent variable with a single level", {
+test_that("multCheck rejects a dependent variable with a single level", {
 
     data <- edgeBaseData(n = 30)
     data$group3 <- edgeLevelFactor(nrow(data), 1)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::multCheck(
             data = data,
             dep  = "group3",
@@ -128,11 +128,11 @@ test_that("multCheck shows its own guidance for a dependent variable with a sing
     )
 })
 
-test_that("multCheck shows its own guidance when no predictor is selected", {
+test_that("multCheck rejects when no predictor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::multCheck(
             data = data,
             dep  = "group3"

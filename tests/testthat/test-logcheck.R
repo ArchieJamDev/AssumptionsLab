@@ -117,11 +117,11 @@ test_that("logCheck tolerates a single-row data set (declared levels, one observ
     )
 })
 
-test_that("logCheck shows its own guidance when the dependent variable is entirely NA", {
+test_that("logCheck rejects when the dependent variable is entirely NA (0 complete cases)", {
 
     data <- edgeAllNaData("bin", n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::logCheck(
             data = data,
             dep  = "bin",
@@ -143,12 +143,12 @@ test_that("logCheck tolerates a zero-variance numeric predictor", {
     )
 })
 
-test_that("logCheck shows its own guidance for a dependent variable with a single level", {
+test_that("logCheck rejects a dependent variable with a single level", {
 
     data <- edgeBaseData(n = 30)
     data$bin <- edgeLevelFactor(nrow(data), 1)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::logCheck(
             data = data,
             dep  = "bin",
@@ -157,11 +157,11 @@ test_that("logCheck shows its own guidance for a dependent variable with a singl
     )
 })
 
-test_that("logCheck shows its own guidance for a dependent variable with three levels", {
+test_that("logCheck rejects a dependent variable with three levels", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::logCheck(
             data = data,
             dep  = "group3",
@@ -170,11 +170,11 @@ test_that("logCheck shows its own guidance for a dependent variable with three l
     )
 })
 
-test_that("logCheck shows its own guidance when no predictor is selected", {
+test_that("logCheck rejects when no predictor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::logCheck(
             data = data,
             dep  = "bin"

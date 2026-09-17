@@ -357,14 +357,14 @@ pathCheckClass <- R6::R6Class(
                 "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
                 tr("Assumption check for path analysis", "Revisión de supuestos para análisis de rutas"),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0; line-height: 1.35;\">",
                 tr(
                     "Use this analysis when you want to review whether a path model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
                     "Use este análisis cuando quiera revisar si un modelo de rutas tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
                 ),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "</div>"
             ))
 
@@ -847,19 +847,28 @@ pathCheckClass <- R6::R6Class(
             private$.edgeStats <- edgeStats
 
             # Only the pieces the two plots actually read (coefficient table,
-            # R², residuals, and the small per-equation data frame) are kept -
-            # not the raw lm() fit objects - matching how state is packaged
-            # elsewhere in the suite (e.g. ordcheck.b.R/groupcheck.b.R).
+            # R², and residuals) are kept - not the raw lm() fit objects, and
+            # not the per-equation source data (fitted model objects carry an
+            # environment, a call record and a copy of their data, so they -
+            # and any of their pieces that isn't actually drawn - serialize
+            # far larger than they look; jamovi's review flagged storing more
+            # than a plot needs as unnecessary bloat in every exported/saved
+            # results file). Matches how state is packaged elsewhere in the
+            # suite (e.g. ordcheck.b.R/groupcheck.b.R).
             # ES: solo se conservan las piezas que ambos gráficos realmente leen
-            # (tabla de coeficientes, R², residuos, y el pequeño data frame por
-            # ecuación) - no los objetos de ajuste lm() crudos - siguiendo cómo se
-            # empaqueta el estado en el resto de la suite (p. ej.
-            # ordcheck.b.R/groupcheck.b.R).
+            # (tabla de coeficientes, R², y residuos) - no los objetos de ajuste
+            # lm() crudos, ni los datos fuente por ecuación (los objetos de
+            # ajuste llevan un entorno, un registro de la llamada y una copia de
+            # sus datos, así que ellos - y cualquier pieza suya que no se dibuje
+            # realmente - se serializan mucho más grandes de lo que parecen; la
+            # revisión de jamovi señaló que guardar más de lo que un gráfico
+            # necesita es peso innecesario en cada archivo de resultados
+            # exportado o guardado). Coincide con cómo se empaqueta el estado en
+            # el resto de la suite (p. ej. ordcheck.b.R/groupcheck.b.R).
             pathFitsForPlots <- lapply(fits, function(f) list(
                 coefficients = summary(f$fit)$coefficients,
                 r2           = summary(f$fit)$r.squared,
-                residuals    = stats::residuals(f$fit),
-                data         = f$data
+                residuals    = stats::residuals(f$fit)
             ))
             self$results$pathDiagram$setState(list(fits = pathFitsForPlots))
             self$results$residualPlots$setState(list(fits = pathFitsForPlots))

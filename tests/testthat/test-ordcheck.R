@@ -63,11 +63,11 @@ test_that("ordCheck tolerates accented and symbol variable names", {
     )
 })
 
-test_that("ordCheck shows its own guidance for a single-row data set (declared levels, one observed)", {
+test_that("ordCheck rejects a single-row data set (declared levels, one observed)", {
 
     data <- edgeSingleRowData()
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::ordCheck(
             data = data,
             dep  = "ord3",
@@ -76,11 +76,11 @@ test_that("ordCheck shows its own guidance for a single-row data set (declared l
     )
 })
 
-test_that("ordCheck shows its own guidance when the dependent variable is entirely NA", {
+test_that("ordCheck rejects when the dependent variable is entirely NA", {
 
     data <- edgeAllNaData("ord3", n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::ordCheck(
             data = data,
             dep  = "ord3",
@@ -102,12 +102,12 @@ test_that("ordCheck tolerates a zero-variance numeric predictor", {
     )
 })
 
-test_that("ordCheck shows its own redirect message for a two-level dependent variable", {
+test_that("ordCheck rejects a two-level dependent variable (redirects to logCheck)", {
 
     data <- edgeBaseData(n = 30)
     data$ord3 <- edgeLevelFactor(nrow(data), 2, ordered = TRUE)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::ordCheck(
             data = data,
             dep  = "ord3",
@@ -116,12 +116,12 @@ test_that("ordCheck shows its own redirect message for a two-level dependent var
     )
 })
 
-test_that("ordCheck shows its own guidance for a dependent variable with a single level", {
+test_that("ordCheck rejects a dependent variable with a single level", {
 
     data <- edgeBaseData(n = 30)
     data$ord3 <- edgeLevelFactor(nrow(data), 1, ordered = TRUE)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::ordCheck(
             data = data,
             dep  = "ord3",
@@ -130,11 +130,11 @@ test_that("ordCheck shows its own guidance for a dependent variable with a singl
     )
 })
 
-test_that("ordCheck shows its own guidance when no predictor is selected", {
+test_that("ordCheck rejects when no predictor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::ordCheck(
             data = data,
             dep  = "ord3"

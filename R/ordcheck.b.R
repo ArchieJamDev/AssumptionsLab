@@ -421,45 +421,34 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             data <- self$data
             if (is.null(data) || nrow(data) == 0) {
-                self$results$intro$setContent(html_block(NULL, tr(
-                    "No data are available.", "No hay datos disponibles."
-                ), paragraphs = FALSE))
-                return()
+                jmvcore::reject(tr("No data are available.", "No hay datos disponibles."))
             }
 
             if (is.null(dep_var) || !nzchar(dep_var) || !(dep_var %in% names(data))) {
-                self$results$intro$setContent(html_block(NULL, tr(
-                    "Dependent variable not selected.", "Variable dependiente no seleccionada."
-                ), paragraphs = FALSE))
-                return()
+                jmvcore::reject(tr("Dependent variable not selected.", "Variable dependiente no seleccionada."))
             }
 
             dep_raw <- data[[dep_var]]
             if (!is.factor(dep_raw)) {
-                self$results$intro$setContent(html_block(NULL, tr(
+                jmvcore::reject(tr(
                     "The dependent variable must be an ordinal (ordered factor) variable.",
                     "La variable dependiente debe ser una variable ordinal (factor ordenado)."
-                ), paragraphs = FALSE))
-                return()
+                ))
             }
 
             dep_levels <- levels(droplevels(dep_raw))
             n_levels <- length(dep_levels)
 
             if (n_levels < 3) {
-                self$results$intro$setContent(html_block(NULL, tr(
+                jmvcore::reject(tr(
                     "The dependent variable has fewer than 3 categories. Use logCheck for a binary (2-category) dependent variable instead - it gives richer binary-specific diagnostics (ROC/AUC, Hosmer-Lemeshow, odds ratios).",
                     "La variable dependiente tiene menos de 3 categorías. Use logCheck en cambio para una variable dependiente binaria (2 categorías) - da diagnósticos binarios más ricos (ROC/AUC, Hosmer-Lemeshow, odds ratios)."
-                ), paragraphs = FALSE))
-                return()
+                ))
             }
 
             predictors <- c(covs, factors)
             if (length(predictors) == 0) {
-                self$results$intro$setContent(html_block(NULL, tr(
-                    "Select at least one predictor.", "Seleccione al menos un predictor."
-                ), paragraphs = FALSE))
-                return()
+                jmvcore::reject(tr("Select at least one predictor.", "Seleccione al menos un predictor."))
             }
 
             model_data <- data
@@ -479,16 +468,22 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             formula <- stats::as.formula(formula_str)
             null_formula <- stats::as.formula("dep_ord ~ 1")
 
+            model_error <- NULL
             model <- tryCatch({
                 MASS::polr(formula, data = model_data_complete, Hess = TRUE, method = "logistic")
-            }, error = function(e) NULL)
+            }, error = function(e) {
+                model_error <<- conditionMessage(e)
+                NULL
+            })
 
             if (is.null(model)) {
-                self$results$notes$setContent(html_block(NULL, tr(
-                    "Error fitting the model. Check for near-perfect separation or a predictor with an unused level in a subset of the data.",
-                    "Error al ajustar el modelo. Revise si hay cuasi-separación o un predictor con un nivel no usado en un subconjunto de los datos."
-                ), paragraphs = FALSE))
-                return()
+                jmvcore::reject(paste0(
+                    tr(
+                        "Error fitting the model (check for near-perfect separation or a predictor with an unused level in a subset of the data): ",
+                        "Error al ajustar el modelo (revise si hay cuasi-separación o un predictor con un nivel no usado en un subconjunto de los datos): "
+                    ),
+                    model_error
+                ))
             }
 
             null_model <- tryCatch({
@@ -523,14 +518,14 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
                 tr("Assumption check for ordinal logistic regression (proportional odds)", "Revisión de supuestos para regresión logística ordinal (momios proporcionales)"),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">",
                 tr(
                     "Use this analysis when you want to review whether a proportional-odds (ordinal logistic) model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
                     "Use este análisis cuando quiera revisar si un modelo de momios proporcionales (regresión logística ordinal) tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
                 ),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 html_block(NULL, c(
                     paste0(
                         tr("<b>Categories (low to high):</b> ", "<b>Categorías (de menor a mayor):</b> "),
@@ -1357,25 +1352,36 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             ), paragraphs = TRUE))
 
             # -----------------------------------------------------------------------------
-            # State for the plots.
-            # ES: Estado para los gráficos.
+            # State for the plots. Each image gets only the fields its own render
+            # function reads - not one shared list for both plots - since jamovi's review
+            # flagged that repeating the same (potentially large) state across images
+            # multiplies what gets written into every exported/saved results file.
+            # model_data (the full complete-case data frame) is only needed for the
+            # linearity plot's per-predictor empirical-logit binning; the influence plot
+            # only draws Pearson residuals against case number.
+            # ES: Estado para los gráficos. Cada imagen recibe solo los campos que su
+            # propia función de render lee - no una lista compartida para ambos gráficos -
+            # ya que la revisión de jamovi señaló que repetir el mismo estado
+            # (potencialmente grande) en varias imágenes multiplica lo que se escribe en
+            # cada archivo de resultados exportado o guardado. model_data (el data frame
+            # completo de casos completos) solo hace falta para el binning de logit
+            # empírico por predictor del gráfico de linealidad; el gráfico de influencia
+            # solo dibuja residuos de Pearson contra el número de caso.
             # -----------------------------------------------------------------------------
             mid_cut <- ceiling(n_levels / 2)
             dep_binary_mid <- as.integer(as.integer(model_data_complete$dep_ord) > mid_cut)
 
-            plot_state <- list(
+            self$results$linearityPlot$setState(list(
                 reportLang = lang,
-                model_data = model_data_complete,
-                dep_binary_mid = dep_binary_mid,
                 covs = covs,
-                n = n_complete,
-                p = n_model_params,
+                model_data = model_data_complete,
+                dep_binary_mid = dep_binary_mid
+            ))
+            self$results$influencePlot$setState(list(
+                reportLang = lang,
                 pearson_resid = if (!is.null(fitted_probs)) pearson_resid else rep(NA_real_, n_complete),
-                obs_category = as.character(model_data_complete$dep_ord)
-            )
-
-            self$results$linearityPlot$setState(plot_state)
-            self$results$influencePlot$setState(plot_state)
+                n = n_complete
+            ))
 
             lin_show <- tryCatch(isTRUE(self$options$linShowPlots), error = function(e) TRUE)
             infl_show <- tryCatch(isTRUE(self$options$influenceShowPlots), error = function(e) TRUE)

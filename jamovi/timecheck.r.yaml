@@ -37,6 +37,13 @@ items:
   - name: modelProfile
     title: Perfil metodológico del modelo
     type: Table
+    clearWith:
+      - dateVar
+      - exogenous
+      - frequency
+      - model
+      - series
+      - reportLang
     rows: 0
     columns:
       - name: element
@@ -53,6 +60,13 @@ items:
   - name: conditionsMatrix
     title: Supuestos y condiciones a evaluar
     type: Table
+    clearWith:
+      - dateVar
+      - exogenous
+      - frequency
+      - model
+      - series
+      - reportLang
     rows: 0
     columns:
       - name: area
@@ -68,6 +82,13 @@ items:
   - name: decisionsMatrix
     title: Función metodológica y decisión asociada
     type: Table
+    clearWith:
+      - dateVar
+      - exogenous
+      - frequency
+      - model
+      - series
+      - reportLang
     rows: 0
     columns:
       - name: area
@@ -99,6 +120,13 @@ items:
   - name: diagnosticsResults
     title: Resultados de las pruebas
     type: Table
+    clearWith:
+      - dateVar
+      - exogenous
+      - frequency
+      - model
+      - series
+      - reportLang
     rows: 0
     columns:
       - name: test
@@ -157,6 +185,13 @@ items:
   - name: diagnosticsActions
     title: Acción metodológica recomendada
     type: Table
+    clearWith:
+      - dateVar
+      - exogenous
+      - frequency
+      - model
+      - series
+      - reportLang
     rows: 0
     columns:
       - name: test

@@ -58,11 +58,11 @@ test_that("anovaCheck tolerates accented and symbol variable names", {
     )
 })
 
-test_that("anovaCheck shows its own guidance for a single-row data set", {
+test_that("anovaCheck rejects a single-row data set", {
 
     data <- edgeSingleRowData()
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::anovaCheck(
             data    = data,
             dep     = "dep",
@@ -71,11 +71,11 @@ test_that("anovaCheck shows its own guidance for a single-row data set", {
     )
 })
 
-test_that("anovaCheck shows its own guidance when the dependent variable is entirely NA", {
+test_that("anovaCheck rejects when the dependent variable is entirely NA", {
 
     data <- edgeAllNaData("dep", n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::anovaCheck(
             data    = data,
             dep     = "dep",
@@ -98,12 +98,12 @@ test_that("anovaCheck tolerates a zero-variance covariate", {
     )
 })
 
-test_that("anovaCheck tolerates a single-level factor", {
+test_that("anovaCheck rejects a single-level factor (lm() cannot build contrasts)", {
 
     data <- edgeBaseData(n = 30)
     data$group3 <- edgeLevelFactor(nrow(data), 1)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::anovaCheck(
             data    = data,
             dep     = "dep",
@@ -112,11 +112,11 @@ test_that("anovaCheck tolerates a single-level factor", {
     )
 })
 
-test_that("anovaCheck shows its own guidance when no factor is selected", {
+test_that("anovaCheck rejects when no factor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::anovaCheck(
             data = data,
             dep  = "dep"

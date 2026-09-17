@@ -91,9 +91,10 @@ options:
   # ES: Interruptor maestro para todo el bloque de gráficos diagnósticos.
   # Desmarcarlo produce un informe solo de texto.
   - name: showPlots
-    title: Show Plots (uncheck for text-only report)
+    title: Diagnostic plots
     type: Bool
     default: true
+    description: Uncheck for a text-only report.
 
   # -----------------------------------------------------------------------------
   # Area: linearity in the logit — controls the empirical-logit-vs-predictor plot.
@@ -101,7 +102,7 @@ options:
   # predictor.
   # -----------------------------------------------------------------------------
   - name: linShowPlots
-    title: Show Linearity Plots
+    title: Linearity plots
     type: Bool
     default: true
 
@@ -147,7 +148,7 @@ options:
   # Master switch for the calibration plot.
   # ES: Interruptor maestro para el gráfico de calibración.
   - name: caliShowPlots
-    title: Show Calibration Plots
+    title: Calibration plots
     type: Bool
     default: true
 
@@ -171,7 +172,7 @@ options:
   # desviaciones sean visibles de un vistazo en vez de requerir una
   # comparación mental.
   - name: caliRefLine
-    title: Perfect Calibration Reference Line
+    title: Perfect calibration reference line
     type: Bool
     default: true
 
@@ -180,7 +181,7 @@ options:
   # ES: Área: discriminación — controla el gráfico de curva ROC / AUC.
   # -----------------------------------------------------------------------------
   - name: rocShowPlots
-    title: Show Discrimination Plots
+    title: Discrimination plots
     type: Bool
     default: true
 
@@ -190,7 +191,7 @@ options:
   # al gráfico ROC, la línea base que todo modelo debería superar
   # claramente.
   - name: rocRefLine
-    title: Reference Line (chance)
+    title: Reference line (chance)
     type: Bool
     default: true
 
@@ -199,7 +200,7 @@ options:
   # ES: Imprime el valor numérico de AUC directamente en el gráfico ROC,
   # para que el lector no necesite consultar la tabla de discriminación.
   - name: rocShowAUCLabel
-    title: Show AUC Label on Plot
+    title: AUC label
     type: Bool
     default: true
 
@@ -208,7 +209,7 @@ options:
   # ES: Área: influencia — controla el gráfico de Cook's D por caso.
   # -----------------------------------------------------------------------------
   - name: influenceShowPlots
-    title: Show Influence Plots
+    title: Influence plots
     type: Bool
     default: true
 
@@ -243,7 +244,7 @@ options:
   # ES: Dibuja el umbral numérico de cribado de Cook's D como una línea de
   # referencia horizontal en el gráfico.
   - name: influenceShowThreshold
-    title: Show Threshold Line
+    title: Threshold line
     type: Bool
     default: true
 

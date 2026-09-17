@@ -381,17 +381,11 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             data <- self$data
             if (is.null(data) || nrow(data) == 0) {
-                self$results$intro$setContent(html_block(NULL, tr(
-                    "No data are available.", "No hay datos disponibles."
-                ), paragraphs = FALSE))
-                return()
+                jmvcore::reject(tr("No data are available.", "No hay datos disponibles."))
             }
 
             if (is.null(dep_var) || !(dep_var %in% names(data))) {
-                self$results$intro$setContent(html_block(NULL, tr(
-                    "Dependent variable not selected.", "Variable dependiente no seleccionada."
-                ), paragraphs = FALSE))
-                return()
+                jmvcore::reject(tr("Dependent variable not selected.", "Variable dependiente no seleccionada."))
             }
 
             dep_data <- data[[dep_var]]
@@ -406,11 +400,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (is.factor(dep_data)) {
                 levels_dep <- levels(dep_data)
                 if (length(levels_dep) != 2) {
-                    self$results$intro$setContent(html_block(NULL, tr(
+                    jmvcore::reject(tr(
                         "The variable must have exactly 2 levels.",
                         "La variable debe tener 2 niveles."
-                    ), paragraphs = FALSE))
-                    return()
+                    ))
                 }
                 reference_label <- levels_dep[1]
                 event_label <- levels_dep[2]
@@ -418,29 +411,24 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             } else if (is.numeric(dep_data)) {
                 unique_vals <- sort(unique(na.omit(dep_data)))
                 if (length(unique_vals) != 2) {
-                    self$results$intro$setContent(html_block(NULL, tr(
+                    jmvcore::reject(tr(
                         "The variable must have exactly 2 unique values.",
                         "La variable debe tener 2 valores únicos."
-                    ), paragraphs = FALSE))
-                    return()
+                    ))
                 }
                 reference_label <- as.character(unique_vals[1])
                 event_label <- as.character(unique_vals[2])
                 dep_binary <- as.integer(dep_data == unique_vals[2])
             } else {
-                self$results$intro$setContent(html_block(NULL, tr(
+                jmvcore::reject(tr(
                     "The variable must be binary or a 2-level factor.",
                     "Variable debe ser binaria o factor de 2 niveles."
-                ), paragraphs = FALSE))
-                return()
+                ))
             }
 
             predictors <- c(covs, factors)
             if (length(predictors) == 0) {
-                self$results$intro$setContent(html_block(NULL, tr(
-                    "Select at least one predictor.", "Seleccione al menos un predictor."
-                ), paragraphs = FALSE))
-                return()
+                jmvcore::reject(tr("Select at least one predictor.", "Seleccione al menos un predictor."))
             }
 
             model_data <- data
@@ -458,15 +446,19 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             formula_str <- paste("dep_binary ~", paste(qname(predictors), collapse = " + "))
             formula <- as.formula(formula_str)
 
+            model_error <- NULL
             model <- tryCatch({
                 glm(formula, data = model_data_complete, family = binomial(link = "logit"))
-            }, error = function(e) NULL)
+            }, error = function(e) {
+                model_error <<- conditionMessage(e)
+                NULL
+            })
 
             if (is.null(model)) {
-                self$results$notes$setContent(html_block(NULL, tr(
-                    "Error fitting the model.", "Error al ajustar el modelo."
-                ), paragraphs = FALSE))
-                return()
+                jmvcore::reject(paste0(
+                    tr("Error fitting the model: ", "Error al ajustar el modelo: "),
+                    model_error
+                ))
             }
 
             model_summary <- summary(model)
@@ -484,14 +476,14 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
                 tr("Assumption check for logistic regression", "Revisión de supuestos para regresión logística"),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">",
                 tr(
                     "Use this analysis when you want to review whether a logistic regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
                     "Use este análisis cuando quiera revisar si un modelo de regresión logística tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
                 ),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 html_block(NULL, c(
                 paste0(
                     tr("<b>Reference level (0):</b> ", "<b>Nivel de referencia (0):</b> "),
@@ -633,20 +625,36 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     # The interaction term was built with qname() above, so
                     # its coefficient name comes back from glm() with the
                     # same backticks (R preserves them whenever a term
-                    # needed quoting to parse) - the lookup regex has to
-                    # match that, not the bare predictor name, or it always
-                    # misses.
+                    # needed quoting to parse), and the resulting rowname is
+                    # deterministic - a plain "`x`:log(`x`)" string, verified
+                    # empirically - so this looks it up by exact match
+                    # instead of building a regex from the predictor name:
+                    # jamovi's review team flagged that a name containing
+                    # regex metacharacters (parentheses, ".", "+", etc. -
+                    # e.g. "Income (2024)") would silently break a
+                    # regex-based lookup even after backtick-quoting, since
+                    # quoting makes a term parse as R syntax but does not
+                    # escape it for grep().
                     # ES: el término de interacción se construyó con
                     # qname() arriba, así que su nombre de coeficiente
                     # vuelve de glm() con las mismas comillas invertidas (R
                     # las conserva siempre que un término las necesitó para
-                    # analizarse) - el regex de búsqueda tiene que
-                    # coincidir con eso, no con el nombre desnudo del
-                    # predictor, o nunca lo encuentra.
-                    bt_term_pattern <- paste0(
-                        "^", qname(predictor), ":log\\(", qname(predictor), "\\)$"
+                    # analizarse), y el nombre resultante es determinístico
+                    # - una cadena simple "`x`:log(`x`)", verificado
+                    # empíricamente - así que aquí se busca por coincidencia
+                    # exacta en vez de construir un regex a partir del
+                    # nombre del predictor: el equipo de revisión de jamovi
+                    # señaló que un nombre con metacaracteres de regex
+                    # (paréntesis, ".", "+", etc. - p. ej. "Income (2024)")
+                    # rompería silenciosamente una búsqueda basada en regex
+                    # incluso después de citarlo con comillas invertidas, ya
+                    # que citarlo lo hace válido como sintaxis de R pero no
+                    # lo escapa para grep().
+                    bt_term_expected <- paste0(
+                        qname(predictor), ":log(", qname(predictor), ")"
                     )
-                    idx <- grep(bt_term_pattern, rownames(bt_coefs), fixed = FALSE)
+                    idx <- match(bt_term_expected, rownames(bt_coefs))
+                    idx <- if (is.na(idx)) integer(0) else idx
 
                     if (length(idx) == 1) {
                         bt_tested <- bt_tested + 1
@@ -1409,28 +1417,47 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             # -----------------------------------------------------------------------------
             # State for the plots (defensive pattern: language and data persist with the
-            # image, so they do not depend on .run() being re-triggered).
+            # image, so they do not depend on .run() being re-triggered). Each image gets
+            # only the fields its own render function reads - not one shared list with
+            # every field for every plot - since jamovi's review flagged that repeating
+            # the same (potentially large) state across images multiplies what gets
+            # written into every exported/saved results file. In particular, the plotted
+            # ROC curve only needs the sensitivity/specificity vectors, not the full pROC
+            # `roc` object, which keeps its own copies of the predictor and response data.
             # ES: Estado para los gráficos (patrón defensivo: idioma y datos persisten con
-            # la imagen, no dependen de que .run() se repita).
+            # la imagen, no dependen de que .run() se repita). Cada imagen recibe solo los
+            # campos que su propia función de render lee - no una lista compartida con
+            # todos los campos para todos los gráficos - ya que la revisión de jamovi
+            # señaló que repetir el mismo estado (potencialmente grande) en varias
+            # imágenes multiplica lo que se escribe en cada archivo de resultados
+            # exportado o guardado. En particular, la curva ROC graficada solo necesita
+            # los vectores de sensibilidad/especificidad, no el objeto `roc` completo de
+            # pROC, que guarda sus propias copias de los datos de predictor y respuesta.
             # -----------------------------------------------------------------------------
-            plot_state <- list(
+            self$results$linearityPlot$setState(list(
                 reportLang = lang,
-                model_data = model_data_complete,
-                dep_binary = model_data_complete$dep_binary,
                 covs = covs,
+                model_data = model_data_complete,
+                dep_binary = model_data_complete$dep_binary
+            ))
+            self$results$calibrationPlot$setState(list(
+                reportLang = lang,
                 fitted = fitted(model),
+                dep_binary = model_data_complete$dep_binary
+            ))
+            self$results$discriminationPlot$setState(list(
+                reportLang = lang,
+                roc_specificities = if (!is.null(roc_obj)) roc_obj$specificities else NULL,
+                roc_sensitivities = if (!is.null(roc_obj)) roc_obj$sensitivities else NULL,
+                auc_val = auc_val
+            ))
+            self$results$influencePlot$setState(list(
+                reportLang = lang,
                 cooks_d = cooks_d,
                 leverage = leverage_vals,
                 n = n_complete,
-                p = n_model_params,
-                roc_obj = roc_obj,
-                auc_val = auc_val
-            )
-
-            self$results$linearityPlot$setState(plot_state)
-            self$results$calibrationPlot$setState(plot_state)
-            self$results$discriminationPlot$setState(plot_state)
-            self$results$influencePlot$setState(plot_state)
+                p = n_model_params
+            ))
 
             lin_show <- tryCatch(isTRUE(self$options$linShowPlots), error = function(e) TRUE)
             cali_show <- tryCatch(isTRUE(self$options$caliShowPlots), error = function(e) TRUE)
@@ -1706,8 +1733,9 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             tr_p <- function(en, es) private$.plotTr(en, es, image)
             pal <- private$.plotPalette()
 
-            roc_obj <- st$roc_obj
-            if (is.null(roc_obj)) {
+            specificities <- st$roc_specificities
+            sensitivities <- st$roc_sensitivities
+            if (is.null(specificities) || is.null(sensitivities)) {
                 return(private$.emptyLogPlot(tr_p(
                     "ROC curve unavailable ('pROC' package required).",
                     "Curva ROC no disponible (se requiere el paquete 'pROC')."
@@ -1718,8 +1746,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             show_auc <- tryCatch(isTRUE(self$options$rocShowAUCLabel), error = function(e) TRUE)
 
             plot_df <- data.frame(
-                fpr = 1 - roc_obj$specificities,
-                tpr = roc_obj$sensitivities
+                fpr = 1 - specificities,
+                tpr = sensitivities
             )
             plot_df <- plot_df[order(plot_df$fpr), ]
 

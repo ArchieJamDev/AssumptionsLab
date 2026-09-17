@@ -309,7 +309,6 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="linearityPlot",
                 title="Logit emp\u00EDrico vs predictor",
-                requiresData=TRUE,
                 width=560,
                 height=340,
                 renderFun=".plotLinearity",
@@ -570,7 +569,6 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="influencePlot",
                 title="Residuo de Pearson por caso",
-                requiresData=TRUE,
                 width=560,
                 height=320,
                 renderFun=".plotInfluence",
@@ -678,7 +676,7 @@ ordCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covs .
 #' @param factors .
 #' @param reportLang .
-#' @param showPlots .
+#' @param showPlots Uncheck for a text-only report.
 #' @param linShowPlots .
 #' @param linSmoother .
 #' @param linBins .

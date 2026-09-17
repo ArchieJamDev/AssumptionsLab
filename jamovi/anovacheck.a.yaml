@@ -97,7 +97,7 @@ options:
   # metodológica rápida, o cuando los gráficos no son necesarios para el
   # público objetivo).
   - name: showPlots
-    title: Show Diagnostic Plots
+    title: Diagnostic plots
     type: Bool
     default: true
 
@@ -160,7 +160,7 @@ options:
   # para que el usuario pueda juzgar si una curva aparente está dentro de la
   # variación muestral o es una señal real.
   - name: residShowBand
-    title: Smoothing Confidence Band
+    title: Smoothing confidence band
     type: Bool
     default: false
 
@@ -169,7 +169,7 @@ options:
   # ES: Dibuja una línea de referencia horizontal en residuo = 0, el valor
   # sobre el que se ubicaría un modelo perfectamente bien especificado.
   - name: residRefLine
-    title: Zero Reference Line
+    title: Zero reference line
     type: Bool
     default: true
 
@@ -210,7 +210,7 @@ options:
   # gráfico) como línea de referencia, para que el corte usado en la tabla
   # sea visible directamente en el gráfico.
   - name: influenceShowThreshold
-    title: Show Threshold Line
+    title: Threshold line
     type: Bool
     default: true
 

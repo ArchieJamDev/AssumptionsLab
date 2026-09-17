@@ -101,9 +101,10 @@ options:
   # ES: Interruptor maestro para todo el bloque de gráficos diagnósticos.
   # Desmarcarlo produce un informe solo de texto.
   - name: showPlots
-    title: Show Plots (uncheck for text-only report)
+    title: Diagnostic plots
     type: Bool
     default: true
+    description: Uncheck for a text-only report.
 
   # -----------------------------------------------------------------------------
   # Area: linearity in the cumulative logit — controls the empirical-logit-
@@ -116,7 +117,7 @@ options:
   # logit empírico binario).
   # -----------------------------------------------------------------------------
   - name: linShowPlots
-    title: Show Linearity Plots
+    title: Linearity plots
     type: Bool
     default: true
 
@@ -145,7 +146,7 @@ options:
   # caso.
   # -----------------------------------------------------------------------------
   - name: influenceShowPlots
-    title: Show Influence Plots
+    title: Influence plots
     type: Bool
     default: true
 
@@ -162,7 +163,7 @@ options:
     default: top5
 
   - name: influenceShowThreshold
-    title: Show Threshold Line
+    title: Threshold line
     type: Bool
     default: true
 

@@ -116,7 +116,6 @@ items:
   - name: linearityPlot
     title: Logit empírico vs predictor
     type: Image
-    requiresData: true
     width: 560
     height: 340
     renderFun: .plotLinearity
@@ -346,7 +345,6 @@ items:
   - name: influencePlot
     title: Residuo de Pearson por caso
     type: Image
-    requiresData: true
     width: 560
     height: 320
     renderFun: .plotInfluence

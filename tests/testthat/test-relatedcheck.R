@@ -56,11 +56,11 @@ test_that("relatedCheck tolerates accented and symbol variable names", {
     )
 })
 
-test_that("relatedCheck tolerates a single-row data set", {
+test_that("relatedCheck rejects a single-row data set (too few complete cases)", {
 
     data <- edgeSingleRowData()
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::relatedCheck(
             data     = data,
             measures = c("dep", "outcome")
@@ -68,11 +68,11 @@ test_that("relatedCheck tolerates a single-row data set", {
     )
 })
 
-test_that("relatedCheck tolerates a measure that is entirely NA", {
+test_that("relatedCheck rejects when a measure is entirely NA (0 complete cases)", {
 
     data <- edgeAllNaData("outcome")
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::relatedCheck(
             data     = data,
             measures = c("dep", "outcome")
@@ -104,11 +104,11 @@ test_that("relatedCheck tolerates three or more related measures (sphericity pat
     )
 })
 
-test_that("relatedCheck shows its own guidance when only one measure is selected", {
+test_that("relatedCheck rejects when only one measure is selected", {
 
     data <- edgeBaseData()
 
-    expect_no_error(
+    expect_error(
         AssumptionsLab::relatedCheck(
             data     = data,
             measures = "dep"

@@ -39,6 +39,11 @@ items:
   - name: designSummary
     title: Resumen del diseño
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: item
         title: Elemento
@@ -50,6 +55,11 @@ items:
   - name: cellSummary
     title: Tamaño de celdas y balance
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: cell
         title: Celda / grupo
@@ -93,6 +103,11 @@ items:
   - name: residualNormality
     title: Normalidad de residuos
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: test
         title: Prueba
@@ -166,6 +181,11 @@ items:
   - name: varianceTests
     title: Homogeneidad de varianzas entre grupos
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: family
         title: Familia
@@ -202,6 +222,11 @@ items:
   - name: slopesTests
     title: Homogeneidad de pendientes en ANCOVA
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     visible: (covs)
     columns:
       - name: factor
@@ -240,6 +265,11 @@ items:
   - name: covariateLinearity
     title: Linealidad de covariables
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     visible: (covs)
     columns:
       - name: covariate
@@ -278,6 +308,11 @@ items:
   - name: multicollinearity
     title: Multicolinealidad
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     visible: (covs)
     columns:
       - name: diagnostic
@@ -306,6 +341,11 @@ items:
   - name: pearsonMatrixTable
     title: Matriz de correlaciones de Pearson (formato APA 7)
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     visible: (covs)
     rows: 0
     columns:
@@ -316,6 +356,11 @@ items:
   - name: dcorMatrixTable
     title: Matriz de correlación de distancia (dCor, formato APA 7)
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     visible: (covs)
     rows: 0
     columns:
@@ -336,6 +381,11 @@ items:
   - name: correlationComparisonTable
     title: Pares con diferencia notable entre Pearson y dCor
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     visible: (covs)
     rows: 0
     columns:
@@ -380,6 +430,11 @@ items:
   - name: influence
     title: Casos atípicos e influyentes
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: case
         title: Caso
@@ -443,6 +498,11 @@ items:
   - name: alternatives
     title: Alternativas metodológicas
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - reportLang
     columns:
       - name: problem
         title: Problema detectado

@@ -35,6 +35,13 @@ items:
   - name: modelSummary
     title: Modelo actual
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 1
     columns:
       - name: nVars
@@ -59,6 +66,13 @@ items:
   - name: specifiedModel
     title: Modelo especificado
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     columns:
       - name: dependent
@@ -76,6 +90,13 @@ items:
   - name: exogenousTable
     title: Variables Exógenas del Modelo
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (showExogenous)
     columns:
@@ -89,6 +110,13 @@ items:
   - name: endogenousTable
     title: Variables Endógenas del Modelo
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (showEndogenous)
     columns:
@@ -102,6 +130,13 @@ items:
   - name: validationSummary
     title: Validación Metodológica del Modelo
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     columns:
       - name: check
@@ -130,6 +165,13 @@ items:
   - name: outlierTable
     title: Diagnóstico de Casos Atípicos
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -161,6 +203,13 @@ items:
   - name: pathCoefficients
     title: Coeficientes de Ruta (Path Coefficients)
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized && showCoeffs)
     columns:
@@ -195,6 +244,13 @@ items:
   - name: rSquaredTable
     title: Varianza Explicada (R²)
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized && showR2)
     columns:
@@ -216,6 +272,13 @@ items:
   - name: residualCovarianceTable
     title: Covarianzas Residuales entre Variables Endógenas
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized && showCovs)
     columns:
@@ -248,6 +311,13 @@ items:
   - name: residualNormality
     title: Normalidad de Residuos por Ecuación
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized && showResiduals)
     columns:
@@ -281,6 +351,13 @@ items:
   - name: homoscedasticity
     title: Homoscedasticidad por Ecuación
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -320,6 +397,13 @@ items:
   - name: multicollinearity
     title: Multicolinealidad por Ecuación
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -352,6 +436,13 @@ items:
   - name: mardiaTable
     title: Prueba de Normalidad Multivariada de Mardia
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -388,6 +479,13 @@ items:
   - name: pearsonMatrixTable
     title: Matriz de Correlaciones de Pearson (formato APA 7)
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized && showCorrs)
     columns:
@@ -398,6 +496,13 @@ items:
   - name: dcorMatrixTable
     title: Matriz de Correlación de Distancia (dCor, formato APA 7)
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized && showCorrs)
     columns:
@@ -418,6 +523,13 @@ items:
   - name: correlationComparisonTable
     title: Pares con Diferencia Notable entre Pearson y dCor
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized && showCorrs)
     columns:
@@ -463,6 +575,13 @@ items:
   - name: crossEntropyTable
     title: Prueba de Independencia por Entropía Copular
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized && showCorrs)
     columns:
@@ -499,6 +618,13 @@ items:
   - name: indirectEffectsTable
     title: Efectos Directos, Indirectos y Totales (Mediación Simple)
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -544,6 +670,13 @@ items:
   - name: sampleSizeTable
     title: Valoración del Tamaño de Muestra según la Complejidad del Modelo
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -576,6 +709,13 @@ items:
   - name: modelDiagnosticConclusionTable
     title: Resumen de Diagnósticos del Modelo
     type: Table
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:

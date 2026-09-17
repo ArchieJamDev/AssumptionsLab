@@ -340,7 +340,6 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="linearityPlot",
                 title="Logit emp\u00EDrico vs predictor",
-                requiresData=TRUE,
                 width=560,
                 height=340,
                 renderFun=".plotLinearity",
@@ -388,7 +387,6 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="calibrationPlot",
                 title="Calibraci\u00F3n por deciles de probabilidad",
-                requiresData=TRUE,
                 width=560,
                 height=340,
                 renderFun=".plotCalibration",
@@ -427,7 +425,6 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="discriminationPlot",
                 title="Curva ROC",
-                requiresData=TRUE,
                 width=460,
                 height=460,
                 renderFun=".plotROC",
@@ -589,7 +586,6 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="influencePlot",
                 title="Cook's D por caso",
-                requiresData=TRUE,
                 width=560,
                 height=320,
                 renderFun=".plotInfluence",
@@ -677,7 +673,7 @@ logCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covs .
 #' @param factors .
 #' @param reportLang .
-#' @param showPlots .
+#' @param showPlots Uncheck for a text-only report.
 #' @param linShowPlots .
 #' @param linSmoother .
 #' @param linBins .

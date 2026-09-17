@@ -785,10 +785,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             if (is.null(self$options$dep) || self$options$dep == "") {
-                self$results$intro$setContent(
+                jmvcore::reject(private$.plotTr(
+                    "Select a numeric dependent variable.",
                     "Seleccione una variable dependiente numérica."
-                )
-                return()
+                ))
             }
 
             dep <- self$options$dep
@@ -797,10 +797,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             predictors <- c(covs, factors)
 
             if (length(predictors) == 0) {
-                self$results$intro$setContent(
+                jmvcore::reject(private$.plotTr(
+                    "Select at least one numeric or categorical predictor.",
                     "Seleccione al menos un predictor numérico o categórico."
-                )
-                return()
+                ))
             }
 
             data <- self$data
@@ -815,10 +815,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n_excluded <- n_total - n_used
 
             if (n_used < 5) {
-                self$results$intro$setContent(
+                jmvcore::reject(private$.plotTr(
+                    "There are not enough complete cases to fit the model.",
                     "No hay suficientes casos completos para ajustar el modelo."
-                )
-                return()
+                ))
             }
 
             formula_text <- paste(
@@ -829,16 +829,23 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             model_formula <- stats::as.formula(formula_text)
 
+            fit_error <- NULL
             fit <- tryCatch(
                 stats::lm(model_formula, data = dat2),
-                error = function(e) NULL
+                error = function(e) {
+                    fit_error <<- conditionMessage(e)
+                    NULL
+                }
             )
 
             if (is.null(fit)) {
-                self$results$intro$setContent(
-                    "No fue posible ajustar el modelo de regresión lineal."
-                )
-                return()
+                jmvcore::reject(paste0(
+                    private$.plotTr(
+                        "It was not possible to fit the linear regression model: ",
+                        "No fue posible ajustar el modelo de regresión lineal: "
+                    ),
+                    fit_error
+                ))
             }
 
             model_sum <- summary(fit)
@@ -1014,14 +1021,14 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
                 tr("Assumption check for simple &amp; multiple regression", "Revisión de supuestos para regresión simple y múltiple"),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
                 tr(
                     "Use this analysis when you want to review whether a linear regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
                     "Use este análisis cuando quiera revisar si un modelo de regresión lineal tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
                 ),
                 "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">&nbsp;</p>",
+                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
                 tr("<b>Dependent variable:</b> ", "<b>Variable dependiente:</b> "), html_escape(dep),
                 "</p>",
@@ -1471,9 +1478,25 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 private$.corrData <- dat2[, matVars, drop = FALSE]
                 private$.corrMatVars <- matVars
 
-                corr_plot_state <- list(corrPairResults = pairResults, corrData = private$.corrData)
-                self$results$correlationIndividualPlot$setState(corr_plot_state)
-                self$results$correlationComparativePlot$setState(corr_plot_state)
+                # correlationComparativePlot only ever reads corrPairResults
+                # (summary statistics per pair), never the raw columns, so it
+                # gets its own smaller state instead of a second copy of
+                # corrData - jamovi's review flagged storing more than a
+                # plot draws as unnecessary bloat in every exported/saved
+                # results file.
+                # ES: correlationComparativePlot solo lee corrPairResults
+                # (estadísticas resumen por par), nunca las columnas crudas,
+                # así que recibe su propio estado más pequeño en vez de una
+                # segunda copia de corrData - la revisión de jamovi señaló
+                # que guardar más de lo que un gráfico dibuja es peso
+                # innecesario en cada archivo de resultados exportado o
+                # guardado.
+                self$results$correlationIndividualPlot$setState(list(
+                    corrPairResults = pairResults, corrData = private$.corrData
+                ))
+                self$results$correlationComparativePlot$setState(list(
+                    corrPairResults = pairResults
+                ))
 
                 for (i in seq_len(k)) {
                     rowVar <- matVars[i]

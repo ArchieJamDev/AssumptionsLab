@@ -331,9 +331,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 paste0(
                     "<div style=\"max-width:7.25in; width:100%; box-sizing:border-box;  text-align: justify; margin:0.20em 0 1.05em 0;\">",
                     title_block,
-                    "<p style=\"margin:0 0 0.55em 0;\">&nbsp;</p>",
+                    "<p style=\"margin:0 0 0.55em 0;\">\u00A0</p>",
                     "<p style=\"margin:0 0 0.55em 0; line-height:1.32;\">", html_escape(use_paragraph), "</p>",
-                    "<p style=\"margin:0 0 0.55em 0;\">&nbsp;</p>",
+                    "<p style=\"margin:0 0 0.55em 0;\">\u00A0</p>",
                     if (length(var_lines) > 0)
                         paste0(
                             "<p style=\"margin:0 0 0.25em 0; line-height:1.32;\">",
@@ -387,10 +387,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                 out <- sprintf("%.3f", p)
                 sub("^0", "", out)
-            }
-
-            set_empty_message <- function(message) {
-                self$results$intro$setContent(render_groupcheck_intro(show_vars = FALSE))
             }
 
             # -----------------------------------------------------------------------------
@@ -528,32 +524,21 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # selección de variables esté incompleta o no sea adecuada.
             # -----------------------------------------------------------------------------
             if (is.null(dep) || is.null(group)) {
-                set_empty_message(
-                    paste(
-                        tr("AssumptionsLab - Group Comparison Check", "AssumptionsLab - Revisión de comparación de grupos"),
-                        "",
-                        tr("Select a dependent variable and a grouping variable to begin.", "Seleccione una variable dependiente y una variable de grupo para comenzar."),
-                        sep = "\n\n"
-                    )
-                )
-                return()
+                jmvcore::reject(tr(
+                    "Select a dependent variable and a grouping variable to begin.",
+                    "Seleccione una variable dependiente y una variable de grupo para comenzar."
+                ))
             }
 
             if (! dep %in% names(data) || ! group %in% names(data)) {
-                set_empty_message(
-                    tr("Selected variables were not found in the data.", "Las variables seleccionadas no se encontraron en los datos.")
-                )
-                return()
+                jmvcore::reject(tr("Selected variables were not found in the data.", "Las variables seleccionadas no se encontraron en los datos."))
             }
 
             y <- data[[dep]]
             g <- data[[group]]
 
             if (! is.numeric(y)) {
-                set_empty_message(
-                    tr("The dependent variable must be numeric.", "La variable dependiente debe ser numérica.")
-                )
-                return()
+                jmvcore::reject(tr("The dependent variable must be numeric.", "La variable dependiente debe ser numérica."))
             }
 
             translate_titles_and_columns()
