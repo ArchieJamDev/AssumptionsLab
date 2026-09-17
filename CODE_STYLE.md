@@ -1,6 +1,8 @@
 # AssumptionsLab Code Style Guide
 
-Version: 1.0
+Version: 1.1 (2026-09-17: added §19.1 Category A/B error handling, native
+jamovi plot themes to §18, native jamovi i18n catalog to §20 — lessons
+from jamovi's official module review)
 Project: AssumptionsLab
 License: GNU GPL v3
 Author: Arquímedes De León Chacón Chacón
@@ -382,6 +384,34 @@ Appearance
 
 Never by plotting library.
 
+Never reimplement jamovi's own Theme/Palette controls. Every render function
+receives `ggtheme`/`theme` from jamovi itself — build on `+ ggtheme`, never
+a parallel `plotStyle` option. A module-level palette option is only
+justified when it is genuinely additive to what jamovi already offers (a
+colorblind-safe or viridis set jamovi does not ship) — verify with
+`jmvcore::colorPalette()` before adding one, don't assume.
+
+A manual `scale_color_manual()`/`scale_fill_manual()` must be added to the
+plot *after* `+ ggtheme`, never before — ggtheme carries its own discrete
+scale, and whichever scale is added last to the ggplot object wins.
+
+-------------------------------------------------------------------------------
+
+# ES:
+
+Nunca reimplementar los propios controles de Tema/Paleta de jamovi. Cada
+función de render recibe `ggtheme`/`theme` desde el propio jamovi —
+construir sobre `+ ggtheme`, nunca una opción `plotStyle` paralela. Una
+opción de paleta a nivel de módulo solo se justifica cuando es genuinamente
+aditiva respecto a lo que jamovi ya ofrece (un conjunto apto para
+daltonismo o viridis que jamovi no trae) — verificar con
+`jmvcore::colorPalette()` antes de agregar una, no asumir.
+
+Un `scale_color_manual()`/`scale_fill_manual()` manual debe agregarse al
+gráfico *después* de `+ ggtheme`, nunca antes — ggtheme trae su propia
+escala discreta, y para una misma estética gana la escala agregada al
+final del objeto ggplot.
+
 -------------------------------------------------------------------------------
 
 # 19. Error Messages
@@ -393,6 +423,57 @@ Error messages should
 • explain why it occurred;
 
 • indicate how to solve it.
+
+## 19.1 Category A vs. Category B
+
+Not every failure is the same failure. Distinguish the two before writing a
+`tryCatch`.
+
+**Category A** — a condition that blocks the entire analysis (no dependent
+variable, wrong factor-level count, no predictors, a model that fails to
+fit). Call `jmvcore::reject(message)` with the real reason, including
+`conditionMessage(e)` where relevant. Never let the analysis render a
+completed-looking report with the explanation buried in the intro text.
+
+**Category B** — one diagnostic test fails while the rest of the analysis
+succeeds (too few observations, a constant series, a near-singular
+sub-model). The row must always render — never silently vanish — tiered
+"Not computable," with a footnote naming the *specific* methodological
+reason. A generic "could not be computed" is barely better than a vanished
+row.
+
+A sharp trap for Category B: many R statistical functions do not throw on
+degenerate input — they warn and return a result with a non-finite
+statistic or p-value instead. `!is.null(result)` is not enough; also check
+`is.finite(result$p.value)` before treating a result as real.
+
+-------------------------------------------------------------------------------
+
+# ES: 19.1 Categoría A vs. Categoría B
+
+No toda falla es la misma falla. Distinguir las dos antes de escribir un
+`tryCatch`.
+
+**Categoría A** — una condición que bloquea todo el análisis (falta la
+variable dependiente, número incorrecto de niveles del factor, sin
+predictores, un modelo que no logra ajustarse). Llamar a
+`jmvcore::reject(mensaje)` con la razón real, incluyendo
+`conditionMessage(e)` cuando corresponda. Nunca dejar que el análisis
+muestre un informe con apariencia completa mientras la explicación queda
+enterrada en el texto introductorio.
+
+**Categoría B** — una prueba diagnóstica falla mientras el resto del
+análisis se completa (muy pocas observaciones, una serie constante, un
+submodelo casi singular). La fila siempre debe renderizarse — nunca
+desaparecer en silencio — como "No computable", con una nota al pie que
+nombre la razón metodológica *específica*. Un mensaje genérico de "no se
+pudo calcular" apenas es mejor que una fila desaparecida.
+
+Una trampa frecuente para la Categoría B: muchas funciones estadísticas de
+R no lanzan error ante datos degenerados — advierten y devuelven un
+resultado con estadístico o p-valor no finito. `!is.null(resultado)` no
+basta; verificar también `is.finite(resultado$p.value)` antes de tratar un
+resultado como real.
 
 -------------------------------------------------------------------------------
 
@@ -407,6 +488,30 @@ YAML comments should explain
 • how it is used.
 
 Avoid comments that merely repeat field names.
+
+Every `title`/`description`/`label`/`menuTitle` value in `.a.yaml`,
+`.u.yaml`, `.r.yaml`, and `0000.yaml` is automatically extracted by
+jamovi's own compiler into its translation catalog — no `.()` markup
+needed. Write these fields in English only. A string in any other
+language there is not translated on the fly; it becomes the untranslatable
+source text jamovi's catalog serves to every language, including English.
+Regenerate the catalog (`jmvtools::i18nUpdate("es")`) whenever such text
+changes.
+
+-------------------------------------------------------------------------------
+
+# ES:
+
+Evitar comentarios que solo repiten nombres de campo.
+
+Todo valor `title`/`description`/`label`/`menuTitle` en `.a.yaml`,
+`.u.yaml`, `.r.yaml` y `0000.yaml` es extraído automáticamente por el
+propio compilador de jamovi hacia su catálogo de traducción — no se
+necesita ninguna marca `.()`. Escribir estos campos solo en inglés. Un
+texto en otro idioma ahí no se traduce sobre la marcha; se convierte en el
+texto fuente no traducible que el catálogo de jamovi sirve a todo idioma,
+incluido el inglés. Regenerar el catálogo
+(`jmvtools::i18nUpdate("es")`) cada vez que ese texto cambie.
 
 -------------------------------------------------------------------------------
 

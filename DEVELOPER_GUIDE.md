@@ -1,6 +1,9 @@
 # AssumptionsLab Developer Guide
 
-**Version:** 1.0  
+**Version:** 1.1 (2026-09-17: native jamovi plot themes, the three
+bilingual mechanisms, shared-helpers consolidation, Category A/B pointer,
+testing/release checklist items — lessons from jamovi's official module
+review)  
 **Project:** AssumptionsLab  
 **License:** GNU General Public License v3.0  
 **Author:** Arquímedes De León Chacón Chacón
@@ -499,6 +502,13 @@ What should the researcher do next?
 
 Never report numbers without interpretation.
 
+A blocking condition (missing variable, wrong factor-level count, a model
+that fails to fit entirely) is not the same failure as one diagnostic test
+failing while the rest of the analysis succeeds. See CODE_STYLE.md §19.1
+for the Category A/Category B distinction — the first calls
+`jmvcore::reject()`, the second always renders its row as "Not computable"
+with a specific footnote. Never silently drop a row.
+
 -------------------------------------------------------------------------------
 
 # Generación del informe
@@ -506,6 +516,13 @@ Never report numbers without interpretation.
 El informe constituye el principal producto del análisis.
 
 Debe ser útil tanto para estudiantes como para investigadores.
+
+Una condición bloqueante no es la misma falla que una prueba diagnóstica
+individual que falla mientras el resto del análisis se completa. Ver
+CODE_STYLE.md §19.1 para la distinción entre Categoría A y Categoría B —
+la primera llama a `jmvcore::reject()`, la segunda siempre renderiza su
+fila como "No computable" con una nota al pie específica. Nunca descartar
+una fila en silencio.
 
 -------------------------------------------------------------------------------
 
@@ -545,6 +562,19 @@ Final diagnostic
 
 All graphics should maintain a consistent visual identity.
 
+Visual identity comes from jamovi itself, not from a module-level
+reimplementation. Every render function signature is
+`function(image, ggtheme, theme, ...)`; build the plot on `+ ggtheme` so it
+follows the user's own jamovi Theme/Palette settings. Derive fixed colors
+(point, line, alert, ref) from `theme$color`/`theme$fill` via a small
+`.plotColors(theme)` helper — see `logcheck.b.R` for the reference pattern.
+Offer a module-level `plotPalette` option only for choices jamovi does not
+itself provide (colorblind-safe, viridis) — never a `plotStyle` option,
+which only duplicates jamovi's own Theme control. When a manual N-category
+scale is needed, apply it via `scale_color_manual()`/`scale_fill_manual()`
+placed *after* `+ ggtheme` in the chain — ggtheme's own discrete scale
+otherwise silently wins.
+
 -------------------------------------------------------------------------------
 
 # Estándares gráficos
@@ -552,6 +582,21 @@ All graphics should maintain a consistent visual identity.
 Los gráficos deben apoyar la interpretación metodológica.
 
 Nunca deben incluirse únicamente por motivos estéticos.
+
+La identidad visual proviene del propio jamovi, no de una reimplementación
+a nivel de módulo. Toda función de render tiene la firma
+`function(image, ggtheme, theme, ...)`; construir el gráfico sobre
+`+ ggtheme` para que siga los ajustes de Tema/Paleta que el usuario ya
+tiene configurados en jamovi. Derivar los colores fijos (punto, línea,
+alerta, referencia) desde `theme$color`/`theme$fill` mediante un pequeño
+ayudante `.plotColors(theme)` — ver `logcheck.b.R` como patrón de
+referencia. Ofrecer una opción `plotPalette` a nivel de módulo solo para
+opciones que jamovi mismo no ofrece (apta para daltonismo, viridis) —
+nunca una opción `plotStyle`, que solo duplica el propio control de Tema
+de jamovi. Cuando se necesite una escala manual de N categorías, aplicarla
+vía `scale_color_manual()`/`scale_fill_manual()` colocada *después* de
+`+ ggtheme` en la cadena — de lo contrario, la escala discreta propia de
+ggtheme gana en silencio.
 
 -------------------------------------------------------------------------------
 
@@ -615,6 +660,41 @@ English
 
 Spanish
 
+AssumptionsLab has three separate bilingual mechanisms — do not confuse
+them.
+
+1. **Source comments.** Every `.R`/`.yaml` comment: English, then a
+   Spanish `# ES:` block immediately below. Governed by CODE_STYLE.md.
+2. **Report content.** The `reportLang` option, `tr()`, and `texts.R`.
+   Controls the language of the analytical content the user sees inside a
+   running analysis's results — chosen per-analysis by the user,
+   independent of jamovi's own interface language.
+3. **Interface catalog.** jamovi's own native i18n mechanism
+   (`jamovi/i18n/catalog.pot` + `es.po`). Controls option-panel titles,
+   descriptions, and result/table headers — follows jamovi's own
+   UI-language setting, entirely independent of `reportLang`. See
+   ARCHITECTURE.md §12.
+
+-------------------------------------------------------------------------------
+
+# ES:
+
+AssumptionsLab tiene tres mecanismos bilingües separados — no
+confundirlos.
+
+1. **Comentarios de código fuente.** Cada comentario `.R`/`.yaml`: inglés,
+   seguido de un bloque `# ES:` en español inmediatamente debajo. Regido
+   por CODE_STYLE.md.
+2. **Contenido del informe.** La opción `reportLang`, `tr()` y `texts.R`.
+   Controla el idioma del contenido analítico que el usuario ve dentro de
+   los resultados de un análisis en ejecución — elegido por el usuario
+   para cada análisis, independiente del idioma de interfaz de jamovi.
+3. **Catálogo de interfaz.** El propio mecanismo nativo de i18n de jamovi
+   (`jamovi/i18n/catalog.pot` + `es.po`). Controla los títulos del panel
+   de opciones, descripciones y encabezados de resultado/tabla — sigue el
+   propio ajuste de idioma de interfaz de jamovi, totalmente independiente
+   de `reportLang`. Ver ARCHITECTURE.md §12.
+
 -------------------------------------------------------------------------------
 
 # 13. Coding Standards
@@ -637,6 +717,16 @@ Prefer explicit names.
 
 Document methodological decisions.
 
+A small helper (formula-quoting, a `Table$addRow()` wrapper, an HTML
+block builder) declared identically as a local closure in two or more
+`.b.R` files belongs in `shared-helpers.R` instead, as a top-level `.al_*()`
+function. This is not only style: a formula-quoting bug that crashed on
+variable names with spaces went unnoticed for months because one file's
+local copy of the fix was simply never written — a duplicated helper is a
+duplicated place to forget the fix. Alias it locally
+(`qname <- .al_qname`) rather than rewriting every call site, so the
+shared logic still reads with a short name.
+
 -------------------------------------------------------------------------------
 
 # Estándares de programación
@@ -644,6 +734,17 @@ Document methodological decisions.
 El objetivo no es escribir menos código.
 
 El objetivo es escribir mejor código.
+
+Un ayudante pequeño (entrecomillado de fórmulas, un envoltorio de
+`Table$addRow()`, un constructor de bloque HTML) declarado idéntico como
+closure local en dos o más archivos `.b.R` pertenece en `shared-helpers.R`
+en su lugar, como función `.al_*()` de nivel superior. Esto no es solo
+estilo: un bug de entrecomillado de fórmulas que se caía con nombres de
+variable con espacio pasó desapercibido por meses porque a un archivo
+simplemente le faltaba la copia local del arreglo — un ayudante duplicado
+es un lugar duplicado donde olvidar el arreglo. Crear un alias local
+(`qname <- .al_qname`) en vez de reescribir cada punto de llamada, para
+que la lógica compartida se siga leyendo con un nombre corto.
 
 -------------------------------------------------------------------------------
 
@@ -668,6 +769,12 @@ Before releasing any module verify
 □ Translation verified.
 
 □ User interface reviewed.
+
+□ Plots render correctly under jamovi's default theme and at least one
+  non-default palette (colorblind-safe or viridis).
+
+□ If any `.a.yaml`/`.u.yaml`/`.r.yaml` text changed, `jmvtools::i18nUpdate("es")`
+  was run and every new string has a translation.
 
 -------------------------------------------------------------------------------
 
@@ -752,6 +859,9 @@ Before publishing a new version verify
 □ Examples verified.
 
 □ Repository synchronized.
+
+□ `jamovi/i18n/catalog.pot`/`es.po` regenerated if any interface text
+  changed (`jmvtools::i18nUpdate("es")`).
 
 -------------------------------------------------------------------------------
 

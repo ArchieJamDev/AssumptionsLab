@@ -1,6 +1,10 @@
 # AssumptionsLab Architecture
 
-**Version:** 1.0  
+**Version:** 1.1 (2026-09-17: §12 Internationalization rewritten around
+the three actual bilingual mechanisms now implemented; §11 extended to
+Bibliography and the "why an analysis, not a passive reference" rationale;
+§4, §8, §10 cross-referenced to the native plot-theme, shared-helpers, and
+Category A/B mechanisms — lessons from jamovi's official module review)  
 **Project:** AssumptionsLab  
 **License:** GNU General Public License v3.0  
 **Author:** Arquímedes De León Chacón Chacón
@@ -213,7 +217,12 @@ AssumptionsLab/
 
 ### R/
 
-Implements every statistical algorithm.
+Implements every statistical algorithm. `R/shared-helpers.R` holds every
+small function (`.al_*()`) duplicated identically across two or more
+analysis files — formula-quoting, row-adding wrappers, HTML block
+builders, plot color derivation, the normality/stationarity batteries.
+A new duplicate belongs there, not copy-pasted into a third file. See
+DEVELOPER_GUIDE.md §13.
 
 ### jamovi/
 
@@ -462,11 +471,22 @@ References
 
 Each section should be generated independently.
 
+A report is only ever fully blocked (`jmvcore::reject()`) by a condition
+that prevents the whole analysis from running. A single failed diagnostic
+test never blocks the report — its row always renders, tiered "Not
+computable" with a specific footnote. See CODE_STYLE.md §19.1.
+
 -------------------------------------------------------------------------------
 
 # Arquitectura del informe
 
 La generación del informe nunca debe mezclarse con los cálculos estadísticos.
+
+Un informe solo queda completamente bloqueado (`jmvcore::reject()`) por
+una condición que impide ejecutar todo el análisis. Una única prueba
+diagnóstica fallida nunca bloquea el informe — su fila siempre se
+renderiza, como "No computable" con una nota al pie específica. Ver
+CODE_STYLE.md §19.1.
 
 -------------------------------------------------------------------------------
 
@@ -550,6 +570,11 @@ Final Diagnostics
 
 Graphs should reinforce interpretation rather than duplicate numerical results.
 
+Every plot's visual identity (theme, colors) is inherited from jamovi's
+own Theme/Palette settings via its native `ggtheme`/`theme` mechanism,
+never reimplemented as a module-level style system. See DEVELOPER_GUIDE.md
+§10 for the render-function contract.
+
 -------------------------------------------------------------------------------
 
 # Arquitectura gráfica
@@ -558,13 +583,18 @@ Los gráficos constituyen herramientas metodológicas.
 
 No elementos decorativos.
 
+La identidad visual de cada gráfico se hereda de los propios ajustes de
+Tema/Paleta de jamovi vía su mecanismo nativo `ggtheme`/`theme`, nunca
+reimplementada como un sistema de estilo a nivel de módulo. Ver
+DEVELOPER_GUIDE.md §10 para el contrato de las funciones de render.
+
 -------------------------------------------------------------------------------
 
 # 11. Methodological Library
 
-The Library is an independent educational subsystem.
+The Library and Bibliography are independent educational subsystems.
 
-Its objectives are
+Their objectives are
 
 • explain concepts;
 
@@ -574,57 +604,134 @@ Its objectives are
 
 • support learning;
 
-• complement reports.
+• complement reports;
 
-The Library should remain independent from statistical computations.
+• trace a diagnostic back to its source literature (Bibliography).
+
+Both should remain independent from statistical computations — neither
+reads nor computes anything from the user's dataset.
+
+Independent from computations does not mean they belong outside jamovi's
+*analysis* framework. Both are implemented as jamovi analyses on purpose:
+each has its own filterable options (topic/category, language) and
+produces results that render dynamically from those options — the same
+shape as any other analysis, regardless of whether it touches `self$data`.
+jamovi's own passive citation mechanism (`00refs.yaml` + `refs:`) solves a
+different problem — a fixed, non-interactive list of the packages/methods
+an analysis used — and would drop the topic filter and the language
+toggle entirely. Keeping Library and Bibliography as menu analyses is also
+what lets their content appear in the user's exported report alongside
+the rest of their results, which a native help/about panel does not.
 
 -------------------------------------------------------------------------------
 
 # Biblioteca metodológica
 
-La Library constituye un diccionario metodológico integrado.
+La Library y la Bibliography constituyen subsistemas educativos
+independientes.
 
-No realiza cálculos.
+No realizan cálculos.
 
-Explica resultados.
+Explican resultados.
+
+Independiente de los cálculos no significa que deban quedar fuera del
+marco de *analysis* de jamovi. Ambas se implementan como análisis de
+jamovi a propósito: cada una tiene sus propias opciones filtrables
+(tema/categoría, idioma) y produce resultados que se generan
+dinámicamente a partir de esas opciones — la misma forma que cualquier
+otro análisis, sin importar si toca `self$data`. El propio mecanismo
+pasivo de citación de jamovi (`00refs.yaml` + `refs:`) resuelve un
+problema distinto — una lista fija y no interactiva de los
+paquetes/métodos que usó un análisis — y perdería por completo el filtro
+por tema y el selector de idioma. Mantener Library y Bibliography como
+análisis del menú es también lo que permite que su contenido aparezca en
+el informe exportado del usuario junto al resto de sus resultados, algo
+que un panel nativo de ayuda/acerca de no ofrece.
 
 -------------------------------------------------------------------------------
 
 # 12. Internationalization
 
-AssumptionsLab follows a bilingual philosophy.
+AssumptionsLab follows a bilingual philosophy, implemented as three
+separate mechanisms that must not be confused with one another.
 
-Source code
+```
+Source code                Report content              Interface
+comments                   (reportLang)                 (jamovi i18n)
 
-English
+English, then       Chosen per-analysis by    Follows jamovi's own
+a Spanish "# ES:"    the user, independent     UI-language setting,
+block below          of jamovi's own UI        independent of
+(CODE_STYLE.md)       language (tr()/          reportLang
+                       texts.R)
+                                                jamovi/i18n/catalog.pot
+                                                + es.po, auto-extracted
+                                                from every title/
+                                                description/label in
+                                                .a.yaml/.u.yaml/.r.yaml/
+                                                0000.yaml — no markup
+                                                needed in the yaml
+                                                itself
+```
 
-↓
+The interface catalog is jamovi's own native mechanism, not a custom
+reimplementation: its compiler scans every yaml definition file and
+extracts translatable strings automatically. `jmvtools::i18nCreate("es")`
+seeds a translation file; `jmvtools::i18nUpdate("es")` re-syncs it as
+strings change. Because gettext's model is one source string to one
+translation, every yaml source string must be written in one consistent
+language (English) — a module with mixed-language yaml text produces a
+mixed-language catalog no translation file can fix.
 
-Spanish comments
-
-User interface
-
-Language files
-
-↓
-
-Translations
-
-Reports
-
-Localized text
-
-↓
-
-User language
-
-Future translations should not require architectural modifications.
+A future language added to any of the three mechanisms should not require
+architectural modification — source comments simply gain no new language
+(bilingual is fixed), report content gains a new `reportLang` choice plus
+`texts.R` entries, and the interface gains one more `.po` file.
 
 -------------------------------------------------------------------------------
 
 # Internacionalización
 
-La arquitectura está preparada para incorporar nuevos idiomas.
+La arquitectura de AssumptionsLab sigue una filosofía bilingüe,
+implementada como tres mecanismos separados que no deben confundirse entre
+sí.
+
+```
+Comentarios de           Contenido del informe        Interfaz
+código fuente             (reportLang)                 (i18n de jamovi)
+
+Inglés, seguido de   Elegido por el usuario     Sigue el propio ajuste
+un bloque "# ES:"     para cada análisis,        de idioma de interfaz
+en español debajo     independiente del idioma   de jamovi, independiente
+(CODE_STYLE.md)        de interfaz de jamovi      de reportLang
+                        (tr()/texts.R)
+                                                   jamovi/i18n/catalog.pot
+                                                   + es.po, extraídos
+                                                   automáticamente de
+                                                   cada title/
+                                                   description/label en
+                                                   .a.yaml/.u.yaml/
+                                                   .r.yaml/0000.yaml —
+                                                   sin necesitar ninguna
+                                                   marca en el yaml
+```
+
+El catálogo de interfaz es el propio mecanismo nativo de jamovi, no una
+reimplementación propia: su compilador escanea cada archivo de definición
+yaml y extrae los strings traducibles automáticamente.
+`jmvtools::i18nCreate("es")` siembra un archivo de traducción;
+`jmvtools::i18nUpdate("es")` lo resincroniza a medida que cambian los
+strings. Como el modelo de gettext es un string fuente por cada
+traducción, todo string fuente del yaml debe escribirse en un solo idioma
+consistente (inglés) — un módulo con texto yaml en idiomas mezclados
+produce un catálogo mezclado que ningún archivo de traducción puede
+arreglar.
+
+Un idioma futuro agregado a cualquiera de los tres mecanismos no debería
+requerir modificación arquitectónica — los comentarios de código
+simplemente no ganan un idioma nuevo (el bilingüismo es fijo), el
+contenido del informe gana una nueva opción de `reportLang` más entradas
+en `texts.R`, y la interfaz gana un archivo `.po` más.
 
 -------------------------------------------------------------------------------
 

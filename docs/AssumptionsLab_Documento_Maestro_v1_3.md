@@ -94,6 +94,19 @@ Características:
 Función principal:
 Permitir al estudiante profundizar directamente en las fuentes originales.
 
+### 3.4 Por qué Library y Bibliography son análisis, no documentación pasiva
+La revisión oficial de jamovi (16 de septiembre de 2026) sugirió migrar
+`Bibliography` al mecanismo pasivo nativo de `00refs.yaml`/`refs:` (citación
+fija de paquetes usados por un análisis). Se decidió mantener ambos módulos
+como análisis del menú, con el mismo argumento que sostiene esta sección:
+ambos son subsistemas educativos con opciones filtrables propias (tema,
+categoría, idioma) cuyo resultado se genera dinámicamente — exactamente lo
+que un *analysis* de jamovi está diseñado para ser. Migrarlos a un
+mecanismo pasivo perdería el filtrado interactivo y el cambio de idioma, y
+dejaría de poder incluirse su contenido en el informe exportado del
+estudiante junto al resto de sus resultados. Ver ARCHITECTURE.md §11 para
+el detalle técnico completo.
+
 ---
 
 ## 4. Sistema de Bibliografía
@@ -149,14 +162,16 @@ El aprendizaje sigue este ciclo:
 ## 7. Versión del sistema
 
 - Versión del documento: 1.3
-- Versión de software correspondiente: AssumptionsLab 1.5.0
-- Estado: expansión de módulos completada — estructura base, integración
-  bibliográfica y Library funcional, más los diez módulos de análisis
-  (Comparación de Grupos independientes y relacionados, ANOVA/ANCOVA,
-  la familia completa de Regresión — lineal, logística, logística
-  ordinal y logística multinomial —, Path Analysis y Series de Tiempo)
+- Versión de software correspondiente: AssumptionsLab 1.6.0
+- Estado: expansión de módulos completada (diez módulos de análisis) más
+  la respuesta a la revisión oficial de jamovi (16 de septiembre de
+  2026): manejo de errores Categoría A/B en los 9 módulos de
+  diagnóstico, migración de gráficos al mecanismo nativo de tema/paleta
+  de jamovi, catálogo de traducción i18n nativo de jamovi (inglés +
+  español), y consolidación de ayudantes compartidos
 - Alcance: estructura base + integración bibliográfica + Library
-  funcional + suite completa de módulos de análisis
+  funcional + suite completa de módulos de análisis + alineación con los
+  mecanismos nativos de jamovi (tema de gráficos, i18n)
 - Próximo paso: ver la Sección 14 "Future Expansion" de
   ARCHITECTURE.md (métodos bayesianos, SEM/PLS-SEM, modelos
   multinivel, análisis de supervivencia, meta-análisis, diagnósticos
@@ -168,5 +183,6 @@ El aprendizaje sigue este ciclo:
 
 Este documento actúa como base estructural del sistema AssumptionsLab y debe actualizarse de forma incremental conforme se incorporen nuevos módulos, mejoras pedagógicas y expansión de la Library.
 
-Última revisión de contenido: 2026-09-04, con motivo del cierre de la
-expansión de módulos descrita en la Sección 7 (AssumptionsLab 1.5.0).
+Última revisión de contenido: 2026-09-17, con motivo de la respuesta a la
+revisión oficial de jamovi y el release de AssumptionsLab 1.6.0 descritos
+en la Sección 7.
