@@ -131,10 +131,7 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
                     c("robust",
                       "Transformations and Robust Alternatives",
                       "Transformaciones y alternativas robustas"),
-                    c("notes", "Recommended Use of Assumption Library", "Uso de esta biblioteca"),
-                    c("totalBibliography",
-                      "Complete Bibliography (All Categories)",
-                      "Bibliografía Completa (Todas las Categorías)")
+                    c("notes", "Recommended Use of Assumption Library", "Uso de esta biblioteca")
                 )
 
                 for (t in titles)
@@ -513,35 +510,6 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
             hide_if_needed(self$results$robust, "robust")
 
             self$results$notes$setContent(.al_render(txt("notes")))
-
-            # -----------------------------------------------------------------------------
-            # Consolidated bibliography across every category in this library.
-            # Each category's own Html item above already carries its own refs:
-            # (jamovi/assumptionlibrary.r.yaml), so jamovi renders that
-            # category's numbered reference list right below it; this final
-            # item's refs: is the union of all of them, giving one combined
-            # numbered list for the whole library. Shown only for "all", since
-            # a single-category view already has its own list right above.
-            #
-            # ES: Bibliografía consolidada de todas las categorías de esta
-            # biblioteca. Cada Html de categoría de arriba ya tiene su propio
-            # refs: (jamovi/assumptionlibrary.r.yaml), así que jamovi renderiza
-            # la lista numerada de esa categoría justo debajo; el refs: de este
-            # último ítem es la unión de todos, dando una sola lista numerada
-            # combinada para toda la biblioteca. Se muestra solo con "all", ya
-            # que una vista de una sola categoría ya tiene su propia lista
-            # arriba.
-            # -----------------------------------------------------------------------------
-            self$results$totalBibliography$setContent(.al_render(c(
-                tr("Complete Bibliography (All Categories)", "Bibliografía Completa (Todas las Categorías)"),
-                "",
-                tr(
-                    "Every source cited across the categories of this library, combined into one numbered list. The full APA 7th edition reference for each entry, along with its bibliometric profile, is available in docs/Bibliography.md.",
-                    "Todas las fuentes citadas en las categorías de esta biblioteca, combinadas en una sola lista numerada. La referencia completa en APA 7.ª edición de cada entrada, junto con su perfil bibliométrico, está disponible en docs/Bibliography.md."
-                )
-            )))
-            if (category != "all")
-                self$results$totalBibliography$setVisible(FALSE)
         }
     )
 )
