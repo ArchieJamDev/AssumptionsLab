@@ -293,6 +293,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="residualNormality",
                 title="Residual normality",
+                refs=list(
+                    "shapiro_1965",
+                    "lilliefors_1967",
+                    "anderson_1952",
+                    "shapiro_1972"),
                 clearWith=list(
                     "dep",
                     "covs",
@@ -376,6 +381,11 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="varianceTests",
                 title="Homogeneity of variances across groups",
+                refs=list(
+                    "levene_1960",
+                    "brown_1974",
+                    "bartlett_1937",
+                    "fligner_1976"),
                 clearWith=list(
                     "dep",
                     "covs",
@@ -424,6 +434,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="slopesTests",
                 title="Homogeneity of slopes in ANCOVA",
+                refs=list(
+                    "huitema_2011"),
                 clearWith=list(
                     "dep",
                     "covs",
@@ -474,6 +486,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="covariateLinearity",
                 title="Covariate linearity",
+                refs=list(
+                    "box_1962"),
                 clearWith=list(
                     "dep",
                     "covs",
@@ -524,6 +538,9 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="multicollinearity",
                 title="Multicollinearity",
+                refs=list(
+                    "marquardt_1970",
+                    "belsley_1980"),
                 clearWith=list(
                     "dep",
                     "covs",
@@ -577,6 +594,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="dcorMatrixTable",
                 title="Distance correlation matrix (dCor, APA 7 format)",
+                refs=list(
+                    "sz_kely_2007"),
                 clearWith=list(
                     "dep",
                     "covs",
@@ -603,6 +622,9 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationComparisonTable",
                 title="Pairs with a notable gap between Pearson and dCor",
+                refs=list(
+                    "sz_kely_2007",
+                    "ma_2011"),
                 clearWith=list(
                     "dep",
                     "covs",
@@ -661,6 +683,9 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="influence",
                 title="Outlying and influential cases",
+                refs=list(
+                    "cook_1977",
+                    "belsley_1980"),
                 clearWith=list(
                     "dep",
                     "covs",

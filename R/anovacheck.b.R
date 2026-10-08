@@ -1061,8 +1061,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         "Por qué importa: los tamaños de celda desiguales interactúan con la heterogeneidad de varianzas. Cuando la celda con menor n también tiene la mayor varianza, la prueba F clásica se vuelve anticonservadora (el error Tipo I real queda por encima del nominal); cuando la celda más pequeña tiene la menor varianza, la prueba se vuelve conservadora en cambio."
                     ),
                     tr(
-                        "Common error: treating any degree of design imbalance as automatically invalidating the ANOVA. With homogeneous variances, moderate imbalance has limited practical impact; the real risk appears specifically when imbalance and variance heterogeneity occur together, so this result should be read alongside the \"Homogeneity of Variances\" section (Maxwell & Delaney, 2004).",
-                        "Error común: tratar cualquier grado de desbalance del diseño como algo que invalida automáticamente el ANOVA. Con varianzas homogéneas, un desbalance moderado tiene impacto práctico limitado; el riesgo real aparece específicamente cuando el desbalance y la heterogeneidad de varianzas ocurren juntos, por lo que este resultado debe leerse junto con la sección \"Homogeneidad de varianzas\" (Maxwell & Delaney, 2004)."
+                        "Common error: treating any degree of design imbalance as automatically invalidating the ANOVA. With homogeneous variances, moderate imbalance has limited practical impact; the real risk appears specifically when imbalance and variance heterogeneity occur together, so this result should be read alongside the \"Homogeneity of Variances\" section (Maxwell & Delaney, 2004; see references).",
+                        "Error común: tratar cualquier grado de desbalance del diseño como algo que invalida automáticamente el ANOVA. Con varianzas homogéneas, un desbalance moderado tiene impacto práctico limitado; el riesgo real aparece específicamente cuando el desbalance y la heterogeneidad de varianzas ocurren juntos, por lo que este resultado debe leerse junto con la sección \"Homogeneidad de varianzas\" (Maxwell & Delaney, 2004; ver referencias)."
                     )
                 )
             )
@@ -1230,8 +1230,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     paste(normality_texts, collapse = "\n"),
                     normality_integration,
                     tr(
-                        "Shapiro-Wilk is used because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason.",
-                        "Se usa Shapiro-Wilk porque mantiene el mayor poder estadístico entre las pruebas de normalidad más comunes para prácticamente todo rango de tamaño muestral (Razali & Wah, 2011). La recomendación extendida de preferir Kolmogorov-Smirnov cuando n crece es un remanente de limitaciones de software antiguo, no una razón estadística."
+                        "Shapiro-Wilk is used because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason.",
+                        "Se usa Shapiro-Wilk porque mantiene el mayor poder estadístico entre las pruebas de normalidad más comunes para prácticamente todo rango de tamaño muestral (Razali & Wah, 2011; ver referencias). La recomendación extendida de preferir Kolmogorov-Smirnov cuando n crece es un remanente de limitaciones de software antiguo, no una razón estadística."
                     ),
                     tr(
                         "Why it matters: residual normality mainly affects the precision of classical inference (confidence intervals, p-values) in small samples; point estimates of group means remain valid even with moderate non-normality.",
@@ -1471,8 +1471,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     tr("Applied Interpretation", "Interpretación Aplicada"),
                     paste(slope_texts, collapse = "\n"),
                     if (length(covs) > 0) tr(
-                        "Why it matters: if slopes are not homogeneous, a single averaged covariate adjustment misrepresents the group differences, because the covariate-response relationship itself differs by group (Huitema, 2011).",
-                        "Por qué importa: si las pendientes no son homogéneas, un ajuste promedio por la covariable representa mal las diferencias entre grupos, porque la relación covariable-respuesta cambia según el grupo (Huitema, 2011)."
+                        "Why it matters: if slopes are not homogeneous, a single averaged covariate adjustment misrepresents the group differences, because the covariate-response relationship itself differs by group (Huitema, 2011; see references).",
+                        "Por qué importa: si las pendientes no son homogéneas, un ajuste promedio por la covariable representa mal las diferencias entre grupos, porque la relación covariable-respuesta cambia según el grupo (Huitema, 2011; ver referencias)."
                     ) else "",
                     if (length(covs) > 0) tr(
                         "Common error: running standard ANCOVA anyway and reporting adjusted means as if the covariate effect were the same for every group, when the interaction test says otherwise.",

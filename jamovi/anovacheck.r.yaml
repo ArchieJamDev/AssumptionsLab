@@ -103,6 +103,11 @@ items:
   - name: residualNormality
     title: Residual normality
     type: Table
+    refs:
+      - shapiro_1965
+      - lilliefors_1967
+      - anderson_1952
+      - shapiro_1972
     clearWith:
       - dep
       - covs
@@ -181,6 +186,11 @@ items:
   - name: varianceTests
     title: Homogeneity of variances across groups
     type: Table
+    refs:
+      - levene_1960
+      - brown_1974
+      - bartlett_1937
+      - fligner_1976
     clearWith:
       - dep
       - covs
@@ -222,6 +232,8 @@ items:
   - name: slopesTests
     title: Homogeneity of slopes in ANCOVA
     type: Table
+    refs:
+      - huitema_2011
     clearWith:
       - dep
       - covs
@@ -265,6 +277,8 @@ items:
   - name: covariateLinearity
     title: Covariate linearity
     type: Table
+    refs:
+      - box_1962
     clearWith:
       - dep
       - covs
@@ -308,6 +322,9 @@ items:
   - name: multicollinearity
     title: Multicollinearity
     type: Table
+    refs:
+      - marquardt_1970
+      - belsley_1980
     clearWith:
       - dep
       - covs
@@ -356,6 +373,8 @@ items:
   - name: dcorMatrixTable
     title: Distance correlation matrix (dCor, APA 7 format)
     type: Table
+    refs:
+      - sz_kely_2007
     clearWith:
       - dep
       - covs
@@ -381,6 +400,9 @@ items:
   - name: correlationComparisonTable
     title: Pairs with a notable gap between Pearson and dCor
     type: Table
+    refs:
+      - sz_kely_2007
+      - ma_2011
     clearWith:
       - dep
       - covs
@@ -430,6 +452,9 @@ items:
   - name: influence
     title: Outlying and influential cases
     type: Table
+    refs:
+      - cook_1977
+      - belsley_1980
     clearWith:
       - dep
       - covs
