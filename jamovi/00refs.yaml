@@ -1,0 +1,821 @@
+---
+refs:
+    shapiro_1965:
+        type: 'article'
+        author: 'Shapiro, S. S., & Wilk, M. B.'
+        year: 1965
+        title: 'An analysis of variance test for normality (complete samples)'
+        publisher: 'Biometrika'
+        volume: '52'
+        issue: '3-4'
+        pages: '591-611'
+        url: https://doi.org/10.1093/biomet/52.3-4.591
+
+    razali_2011:
+        type: 'article'
+        author: 'Razali, N. M., & Wah, Y. B.'
+        year: 2011
+        title: 'Power comparisons of Shapiro-Wilk, Kolmogorov-Smirnov, Lilliefors and Anderson-Darling tests'
+        publisher: 'Journal of Statistical Modeling and Analytics'
+        volume: '2'
+        issue: '1'
+        pages: '21-33'
+        url: https://www.nrc.gov/docs/ml1714/ml17143a100.pdf
+
+    breusch_1979:
+        type: 'article'
+        author: 'Breusch, T. S., & Pagan, A. R.'
+        year: 1979
+        title: 'A simple test for heteroscedasticity and random coefficient variation'
+        publisher: 'Econometrica'
+        volume: '47'
+        issue: '5'
+        pages: '1287-1294'
+        url: https://doi.org/10.2307/1911963
+
+    white_1980:
+        type: 'article'
+        author: 'White, H.'
+        year: 1980
+        title: 'A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity'
+        publisher: 'Econometrica'
+        volume: '48'
+        issue: '4'
+        pages: '817-838'
+        url: https://doi.org/10.2307/1912934
+
+    lilliefors_1967:
+        type: 'article'
+        author: 'Lilliefors, H. W.'
+        year: 1967
+        title: 'On the Kolmogorov-Smirnov test for normality with mean and variance unknown'
+        publisher: 'Journal of the American Statistical Association'
+        volume: '62'
+        issue: '318'
+        pages: '399-402'
+        url: https://doi.org/10.1080/01621459.1967.10482916
+
+    shapiro_1972:
+        type: 'article'
+        author: 'Shapiro, S. S., & Francia, R. S.'
+        year: 1972
+        title: 'An approximate analysis of variance test for normality'
+        publisher: 'Journal of the American Statistical Association'
+        volume: '67'
+        issue: '337'
+        pages: '215-216'
+        url: https://doi.org/10.1080/01621459.1972.10481232
+
+    bartlett_1937:
+        type: 'article'
+        author: 'Bartlett, M. S.'
+        year: 1937
+        title: 'Properties of sufficiency and statistical tests'
+        publisher: 'Proceedings of the Royal Society of London, Series A'
+        volume: '160'
+        issue: '901'
+        pages: '268-282'
+        url: https://doi.org/10.1098/rspa.1937.0109
+
+    brown_1974:
+        type: 'article'
+        author: 'Brown, M. B., & Forsythe, A. B.'
+        year: 1974
+        title: 'Robust tests for the equality of variances'
+        publisher: 'Journal of the American Statistical Association'
+        volume: '69'
+        issue: '346'
+        pages: '364-367'
+        url: https://doi.org/10.1080/01621459.1974.10482955
+
+    fligner_1976:
+        type: 'article'
+        author: 'Fligner, M. A., & Killeen, T. J.'
+        year: 1976
+        title: 'Distribution-free two-sample tests for scale'
+        publisher: 'Journal of the American Statistical Association'
+        volume: '71'
+        issue: '353'
+        pages: '210-213'
+        url: https://doi.org/10.1080/01621459.1976.10480351
+
+    hartley_1950:
+        type: 'article'
+        author: 'Hartley, H. O.'
+        year: 1950
+        title: 'The maximum F-ratio as a short-cut test for heterogeneity of variance'
+        publisher: 'Biometrika'
+        volume: '37'
+        issue: '3-4'
+        pages: '308-312'
+        url: https://doi.org/10.1093/biomet/37.3-4.308
+
+    goldfeld_1965:
+        type: 'article'
+        author: 'Goldfeld, S. M., & Quandt, R. E.'
+        year: 1965
+        title: 'Some tests for homoscedasticity'
+        publisher: 'Journal of the American Statistical Association'
+        volume: '60'
+        issue: '310'
+        pages: '539-547'
+        url: https://doi.org/10.2307/2282689
+
+    mackinnon_1985:
+        type: 'article'
+        author: 'MacKinnon, J. G., & White, H.'
+        year: 1985
+        title: 'Some heteroskedasticity-consistent covariance matrix estimators with improved finite sample properties'
+        publisher: 'Journal of Econometrics'
+        volume: '29'
+        issue: '3'
+        pages: '305-325'
+        url: https://doi.org/10.1016/0304-4076(85)90158-7
+
+    welch_1947:
+        type: 'article'
+        author: 'Welch, B. L.'
+        year: 1947
+        title: 'The generalization of ''Student''s'' problem when several different population variances are involved'
+        publisher: 'Biometrika'
+        volume: '34'
+        issue: '1-2'
+        pages: '28-35'
+        url: https://doi.org/10.1093/biomet/34.1-2.28
+
+    mauchly_1940:
+        type: 'article'
+        author: 'Mauchly, J. W.'
+        year: 1940
+        title: 'Significance test for sphericity of a normal n-variate distribution'
+        publisher: 'The Annals of Mathematical Statistics'
+        volume: '11'
+        issue: '2'
+        pages: '204-209'
+        url: https://doi.org/10.1214/aoms/1177731915
+
+    greenhouse_1959:
+        type: 'article'
+        author: 'Greenhouse, S. W., & Geisser, S.'
+        year: 1959
+        title: 'On methods in the analysis of profile data'
+        publisher: 'Psychometrika'
+        volume: '24'
+        issue: '2'
+        pages: '95-112'
+        url: https://doi.org/10.1007/BF02289823
+
+    huynh_1976:
+        type: 'article'
+        author: 'Huynh, H., & Feldt, L. S.'
+        year: 1976
+        title: 'Estimation of the Box correction for degrees of freedom from sample data in randomized block and split-plot designs'
+        publisher: 'Journal of Educational Statistics'
+        volume: '1'
+        issue: '1'
+        pages: '69-82'
+        url: https://doi.org/10.2307/1164736
+
+    mahalanobis_1936:
+        type: 'article'
+        author: 'Mahalanobis, P. C.'
+        year: 1936
+        title: 'On the generalized distance in statistics'
+        publisher: 'Proceedings of the National Institute of Sciences of India'
+        volume: '2'
+        issue: '1'
+        pages: '49-55'
+
+    wilcoxon_1945:
+        type: 'article'
+        author: 'Wilcoxon, F.'
+        year: 1945
+        title: 'Individual comparisons by ranking methods'
+        publisher: 'Biometrics Bulletin'
+        volume: '1'
+        issue: '6'
+        pages: '80-83'
+        url: https://doi.org/10.2307/3001968
+
+    friedman_1937:
+        type: 'article'
+        author: 'Friedman, M.'
+        year: 1937
+        title: 'The use of ranks to avoid the assumption of normality implicit in the analysis of variance'
+        publisher: 'Journal of the American Statistical Association'
+        volume: '32'
+        issue: '200'
+        pages: '675-701'
+        url: https://doi.org/10.2307/2279372
+
+    ramsey_1969:
+        type: 'article'
+        author: 'Ramsey, J. B.'
+        year: 1969
+        title: 'Tests for specification errors in classical linear least-squares regression analysis'
+        publisher: 'Journal of the Royal Statistical Society, Series B'
+        volume: '31'
+        issue: '2'
+        pages: '350-371'
+        url: https://doi.org/10.1111/j.2517-6161.1969.tb00796.x
+
+    marquardt_1970:
+        type: 'article'
+        author: 'Marquardt, D. W.'
+        year: 1970
+        title: 'Generalized inverses, ridge regression, biased linear estimation, and nonlinear estimation'
+        publisher: 'Technometrics'
+        volume: '12'
+        issue: '3'
+        pages: '591-612'
+        url: https://doi.org/10.1080/00401706.1970.10488699
+
+    o_brien_2007:
+        type: 'article'
+        author: 'O''Brien, R. M.'
+        year: 2007
+        title: 'A caution regarding rules of thumb for variance inflation factors'
+        publisher: 'Quality & Quantity'
+        volume: '41'
+        issue: '5'
+        pages: '673-690'
+        url: https://doi.org/10.1007/s11135-006-9018-6
+
+    durbin_1951:
+        type: 'article'
+        author: 'Durbin, J., & Watson, G. S.'
+        year: 1951
+        title: 'Testing for serial correlation in least squares regression II'
+        publisher: 'Biometrika'
+        volume: '38'
+        issue: '1-2'
+        pages: '159-178'
+        url: https://doi.org/10.1093/biomet/38.1-2.159
+
+    breusch_1978:
+        type: 'article'
+        author: 'Breusch, T. S.'
+        year: 1978
+        title: 'Testing for autocorrelation in dynamic linear models'
+        publisher: 'Australian Economic Papers'
+        volume: '17'
+        issue: '31'
+        pages: '334-355'
+        url: https://doi.org/10.1111/j.1467-8454.1978.tb00635.x
+
+    godfrey_1978:
+        type: 'article'
+        author: 'Godfrey, L. G.'
+        year: 1978
+        title: 'Testing against general autoregressive and moving average error models when the regressors include lagged dependent variables'
+        publisher: 'Econometrica'
+        volume: '46'
+        issue: '6'
+        pages: '1293-1302'
+        url: https://www.jstor.org/stable/1913829
+
+    cook_1977:
+        type: 'article'
+        author: 'Cook, R. D.'
+        year: 1977
+        title: 'Detection of influential observation in linear regression'
+        publisher: 'Technometrics'
+        volume: '19'
+        issue: '1'
+        pages: '15-18'
+        url: https://doi.org/10.1080/00401706.1977.10489493
+
+    levene_1960:
+        type: 'book'
+        author: 'Levene, H.'
+        year: 1960
+        title: 'Robust tests for equality of variances. In I. Olkin (Ed.), Contributions to Probability and Statistics (pp. 278-292)'
+        publisher: 'Stanford University Press'
+
+    huitema_2011:
+        type: 'book'
+        author: 'Huitema, B. E.'
+        year: 2011
+        title: 'The Analysis of Covariance and Alternatives (2nd ed.)'
+        publisher: 'Wiley'
+
+    maxwell_2004:
+        type: 'book'
+        author: 'Maxwell, S. E., & Delaney, H. D.'
+        year: 2004
+        title: 'Designing Experiments and Analyzing Data: A Model Comparison Perspective (2nd ed.)'
+        publisher: 'Lawrence Erlbaum Associates'
+
+    tukey_1977:
+        type: 'book'
+        author: 'Tukey, J. W.'
+        year: 1977
+        title: 'Exploratory Data Analysis'
+        publisher: 'Addison-Wesley'
+
+    belsley_1980:
+        type: 'book'
+        author: 'Belsley, D. A., Kuh, E., & Welsch, R. E.'
+        year: 1980
+        title: 'Regression Diagnostics: Identifying Influential Data and Sources of Collinearity'
+        publisher: 'Wiley'
+        url: https://doi.org/10.1002/0471725153
+
+    hosmer_1980:
+        type: 'article'
+        author: 'Hosmer, D. W., & Lemeshow, S.'
+        year: 1980
+        title: 'Goodness of fit tests for the multiple logistic regression model'
+        publisher: 'Communications in Statistics - Theory and Methods'
+        volume: '9'
+        issue: '10'
+        pages: '1043-1069'
+        url: https://doi.org/10.1080/03610928008827941
+
+    peduzzi_1996:
+        type: 'article'
+        author: 'Peduzzi, P., Concato, J., Kemper, E., Holford, T. R., & Feinstein, A. R.'
+        year: 1996
+        title: 'A simulation study of the number of events per variable in logistic regression analysis'
+        publisher: 'Journal of Clinical Epidemiology'
+        volume: '49'
+        issue: '12'
+        pages: '1373-1379'
+        url: https://doi.org/10.1016/S0895-4356(96)00236-3
+
+    firth_1993:
+        type: 'article'
+        author: 'Firth, D.'
+        year: 1993
+        title: 'Bias reduction of maximum likelihood estimates'
+        publisher: 'Biometrika'
+        volume: '80'
+        issue: '1'
+        pages: '27-38'
+        url: https://doi.org/10.1093/biomet/80.1.27
+
+    box_1962:
+        type: 'article'
+        author: 'Box, G. E. P., & Tidwell, P. W.'
+        year: 1962
+        title: 'Transformation of the independent variables'
+        publisher: 'Technometrics'
+        volume: '4'
+        issue: '4'
+        pages: '531-550'
+        url: https://doi.org/10.1080/00401706.1962.10490038
+
+    pregibon_1981:
+        type: 'article'
+        author: 'Pregibon, D.'
+        year: 1981
+        title: 'Logistic regression diagnostics'
+        publisher: 'The Annals of Statistics'
+        volume: '9'
+        issue: '4'
+        pages: '705-724'
+        url: https://doi.org/10.1214/aos/1176345513
+
+    hanley_1982:
+        type: 'article'
+        author: 'Hanley, J. A., & McNeil, B. J.'
+        year: 1982
+        title: 'The meaning and use of the area under a receiver operating characteristic (ROC) curve'
+        publisher: 'Radiology'
+        volume: '143'
+        issue: '1'
+        pages: '29-36'
+        url: https://doi.org/10.1148/radiology.143.1.7063747
+
+    zhang_1998:
+        type: 'article'
+        author: 'Zhang, J., & Yu, K. F.'
+        year: 1998
+        title: 'What''s the relative risk? A method of correcting the odds ratio in cohort studies of common outcomes'
+        publisher: 'JAMA'
+        volume: '280'
+        issue: '19'
+        pages: '1690-1691'
+        url: https://doi.org/10.1001/jama.280.19.1690
+
+    brant_1990:
+        type: 'article'
+        author: 'Brant, R.'
+        year: 1990
+        title: 'Assessing proportionality in the proportional odds model for ordinal logistic regression'
+        publisher: 'Biometrics'
+        volume: '46'
+        issue: '4'
+        pages: '1171-1178'
+        url: https://doi.org/10.2307/2532457
+
+    mccullagh_1980:
+        type: 'article'
+        author: 'McCullagh, P.'
+        year: 1980
+        title: 'Regression models for ordinal data'
+        publisher: 'Journal of the Royal Statistical Society: Series B (Methodological)'
+        volume: '42'
+        issue: '2'
+        pages: '109-127'
+        url: https://doi.org/10.1111/j.2517-6161.1980.tb01109.x
+
+    pulkstenis_2004:
+        type: 'article'
+        author: 'Pulkstenis, E., & Robinson, T. J.'
+        year: 2004
+        title: 'Goodness-of-fit tests for ordinal response regression models'
+        publisher: 'Statistics in Medicine'
+        volume: '23'
+        issue: '6'
+        pages: '999-1014'
+        url: https://doi.org/10.1002/sim.1659
+
+    fagerland_2013:
+        type: 'article'
+        author: 'Fagerland, M. W., & Hosmer, D. W.'
+        year: 2013
+        title: 'A goodness-of-fit test for the proportional odds regression model'
+        publisher: 'Statistics in Medicine'
+        volume: '32'
+        issue: '13'
+        pages: '2235-2249'
+        url: https://doi.org/10.1002/sim.5645
+
+    liu_2009:
+        type: 'article'
+        author: 'Liu, I., Mukherjee, B., Suesse, T., Sparrow, D., & Park, S. K.'
+        year: 2009
+        title: 'Graphical diagnostics to check model misspecification for the proportional odds regression model'
+        publisher: 'Statistics in Medicine'
+        volume: '28'
+        issue: ''
+        pages: '412-429'
+        url: https://doi.org/10.1002/sim.3386
+
+    hausman_1984:
+        type: 'article'
+        author: 'Hausman, J., & McFadden, D.'
+        year: 1984
+        title: 'Specification tests for the multinomial logit model'
+        publisher: 'Econometrica'
+        volume: '52'
+        issue: '5'
+        pages: '1219-1240'
+        url: https://doi.org/10.2307/1910997
+
+    small_1985:
+        type: 'article'
+        author: 'Small, K. A., & Hsiao, C.'
+        year: 1985
+        title: 'Multinomial logit specification tests'
+        publisher: 'International Economic Review'
+        volume: '26'
+        issue: '3'
+        pages: '619-627'
+        url: https://doi.org/10.2307/2526707
+
+    cheng_2007:
+        type: 'article'
+        author: 'Cheng, S., & Long, J. S.'
+        year: 2007
+        title: 'Testing for IIA in the multinomial logit model'
+        publisher: 'Sociological Methods & Research'
+        volume: '35'
+        issue: '4'
+        pages: '583-600'
+        url: https://doi.org/10.1177/0049124106292361
+
+    mardia_1970:
+        type: 'article'
+        author: 'Mardia, K. V.'
+        year: 1970
+        title: 'Measures of multivariate skewness and kurtosis with applications'
+        publisher: 'Biometrika'
+        volume: '57'
+        issue: '3'
+        pages: '519-530'
+        url: https://doi.org/10.1093/biomet/57.3.519
+
+    wright_1934:
+        type: 'article'
+        author: 'Wright, S.'
+        year: 1934
+        title: 'The method of path coefficients'
+        publisher: 'Annals of Mathematical Statistics'
+        volume: '5'
+        issue: '3'
+        pages: '161-215'
+        url: https://doi.org/10.1214/aoms/1177732676
+
+    duncan_1966:
+        type: 'article'
+        author: 'Duncan, O. D.'
+        year: 1966
+        title: 'Path analysis: Sociological examples'
+        publisher: 'American Journal of Sociology'
+        volume: '72'
+        issue: '1'
+        pages: '1-16'
+        url: https://doi.org/10.1086/224256
+
+    baron_1986:
+        type: 'article'
+        author: 'Baron, R. M., & Kenny, D. A.'
+        year: 1986
+        title: 'The moderator-mediator variable distinction in social psychological research: conceptual, strategic, and statistical considerations'
+        publisher: 'Journal of Personality and Social Psychology'
+        volume: '51'
+        issue: '6'
+        pages: '1173-1182'
+        url: https://doi.org/10.1037/0022-3514.51.6.1173
+
+    sobel_1982:
+        type: 'article'
+        author: 'Sobel, M. E.'
+        year: 1982
+        title: 'Asymptotic confidence intervals for indirect effects in structural equation models'
+        publisher: 'Sociological Methodology'
+        volume: '13'
+        pages: '290-312'
+        url: https://doi.org/10.2307/270723
+
+    green_1991:
+        type: 'article'
+        author: 'Green, S. B.'
+        year: 1991
+        title: 'How many subjects does it take to do a regression analysis?'
+        publisher: 'Multivariate Behavioral Research'
+        volume: '26'
+        issue: '3'
+        pages: '499-510'
+        url: https://doi.org/10.1207/s15327906mbr2603_7
+
+    bentler_1987:
+        type: 'article'
+        author: 'Bentler, P. M., & Chou, C.-P.'
+        year: 1987
+        title: 'Practical issues in structural equation modeling'
+        publisher: 'Sociological Methods & Research'
+        volume: '16'
+        issue: '1'
+        pages: '78-117'
+        url: https://doi.org/10.1177/0049124187016001004
+
+    jackson_2003:
+        type: 'article'
+        author: 'Jackson, D. L.'
+        year: 2003
+        title: 'Revisiting sample size and number of parameter estimates: Some support for the N:q hypothesis'
+        publisher: 'Structural Equation Modeling'
+        volume: '10'
+        issue: '1'
+        pages: '128-141'
+        url: https://doi.org/10.1207/S15328007SEM1001_6
+
+    kline_2023:
+        type: 'book'
+        author: 'Kline, R. B.'
+        year: 2023
+        title: 'Principles and Practice of Structural Equation Modeling (5th ed.)'
+        publisher: 'The Guilford Press'
+
+    sz_kely_2007:
+        type: 'article'
+        author: 'Székely, G. J., Rizzo, M. L., & Bakirov, N. K.'
+        year: 2007
+        title: 'Measuring and testing dependence by correlation of distances'
+        publisher: 'The Annals of Statistics'
+        volume: '35'
+        issue: '6'
+        pages: '2769-2794'
+        url: https://doi.org/10.1214/009053607000000505
+
+    anderson_1952:
+        type: 'article'
+        author: 'Anderson, T. W., & Darling, D. A.'
+        year: 1952
+        title: 'Asymptotic theory of certain ''goodness of fit'' criteria based on stochastic processes'
+        publisher: 'Annals of Mathematical Statistics'
+        volume: '23'
+        issue: '2'
+        pages: '193-212'
+        url: https://doi.org/10.1214/aoms/1177729437
+
+    ma_2011:
+        type: 'article'
+        author: 'Ma, J., & Sun, Z.'
+        year: 2011
+        title: 'Mutual information is copula entropy'
+        publisher: 'Tsinghua Science and Technology'
+        volume: '16'
+        issue: '1'
+        pages: '51-54'
+        url: https://doi.org/10.1016/S1007-0214(11)70008-6
+
+    kozachenko_1987:
+        type: 'article'
+        author: 'Kozachenko, L. F., & Leonenko, N. N.'
+        year: 1987
+        title: 'Sample estimate of the entropy of a random vector'
+        publisher: 'Problems of Information Transmission'
+        volume: '23'
+        issue: '2'
+        pages: '95-101'
+        url: http://mi.mathnet.ru/eng/ppi/v23/i2/p9
+
+    dickey_1979:
+        type: 'article'
+        author: 'Dickey, D. A., & Fuller, W. A.'
+        year: 1979
+        title: 'Distribution of the estimators for autoregressive time series with a unit root'
+        publisher: 'Journal of the American Statistical Association'
+        volume: '74'
+        issue: '366a'
+        pages: '427-431'
+        url: https://doi.org/10.1080/01621459.1979.10482531
+
+    phillips_1988:
+        type: 'article'
+        author: 'Phillips, P. C. B., & Perron, P.'
+        year: 1988
+        title: 'Testing for a unit root in time series regression'
+        publisher: 'Biometrika'
+        volume: '75'
+        issue: '2'
+        pages: '335-346'
+        url: https://doi.org/10.1093/biomet/75.2.335
+
+    kwiatkowski_1992:
+        type: 'article'
+        author: 'Kwiatkowski, D., Phillips, P. C. B., Schmidt, P., & Shin, Y.'
+        year: 1992
+        title: 'Testing the null hypothesis of stationarity against the alternative of a unit root'
+        publisher: 'Journal of Econometrics'
+        volume: '54'
+        issue: '1-3'
+        pages: '159-178'
+        url: https://doi.org/10.1016/0304-4076(92)90104-Y
+
+    canova_1995:
+        type: 'article'
+        author: 'Canova, F., & Hansen, B. E.'
+        year: 1995
+        title: 'Are seasonal patterns constant over time? A test for seasonal stability'
+        publisher: 'Journal of Business & Economic Statistics'
+        volume: '13'
+        issue: '3'
+        pages: '237-252'
+        url: https://doi.org/10.1080/07350015.1995.10524598
+
+    osborn_1988:
+        type: 'article'
+        author: 'Osborn, D. R., Chui, A. P. L., Smith, J. P., & Birchenhall, C. R.'
+        year: 1988
+        title: 'Seasonality and the order of integration for consumption'
+        publisher: 'Oxford Bulletin of Economics and Statistics'
+        volume: '50'
+        issue: '4'
+        pages: '361-377'
+        url: https://doi.org/10.1111/j.1468-0084.1988.mp50004002.x
+
+    ljung_1978:
+        type: 'article'
+        author: 'Ljung, G. M., & Box, G. E. P.'
+        year: 1978
+        title: 'On a measure of lack of fit in time series models'
+        publisher: 'Biometrika'
+        volume: '65'
+        issue: '2'
+        pages: '297-303'
+        url: https://doi.org/10.1093/biomet/65.2.297
+
+    engle_1982:
+        type: 'article'
+        author: 'Engle, R. F.'
+        year: 1982
+        title: 'Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation'
+        publisher: 'Econometrica'
+        volume: '50'
+        issue: '4'
+        pages: '987-1007'
+        url: https://doi.org/10.2307/1912773
+
+    bollerslev_1986:
+        type: 'article'
+        author: 'Bollerslev, T.'
+        year: 1986
+        title: 'Generalized autoregressive conditional heteroskedasticity'
+        publisher: 'Journal of Econometrics'
+        volume: '31'
+        issue: '3'
+        pages: '307-327'
+        url: https://doi.org/10.1016/0304-4076(86)90063-1
+
+    jarque_1987:
+        type: 'article'
+        author: 'Jarque, C. M., & Bera, A. K.'
+        year: 1987
+        title: 'A test for normality of observations and regression residuals'
+        publisher: 'International Statistical Review'
+        volume: '55'
+        issue: '2'
+        pages: '163-172'
+        url: https://doi.org/10.2307/1403192
+
+    johansen_1991:
+        type: 'article'
+        author: 'Johansen, S.'
+        year: 1991
+        title: 'Estimation and hypothesis testing of cointegration vectors in Gaussian vector autoregressive models'
+        publisher: 'Econometrica'
+        volume: '59'
+        issue: '6'
+        pages: '1551-1580'
+        url: https://doi.org/10.2307/2938278
+
+    engle_1987:
+        type: 'article'
+        author: 'Engle, R. F., & Granger, C. W. J.'
+        year: 1987
+        title: 'Co-integration and error correction: Representation, estimation, and testing'
+        publisher: 'Econometrica'
+        volume: '55'
+        issue: '2'
+        pages: '251-276'
+        url: https://doi.org/10.2307/1913236
+
+    nyblom_1989:
+        type: 'article'
+        author: 'Nyblom, J.'
+        year: 1989
+        title: 'Testing for the constancy of parameters over time'
+        publisher: 'Journal of the American Statistical Association'
+        volume: '84'
+        issue: '405'
+        pages: '223-230'
+        url: https://doi.org/10.1080/01621459.1989.10478759
+
+    brown_1975:
+        type: 'article'
+        author: 'Brown, R. L., Durbin, J., & Evans, J. M.'
+        year: 1975
+        title: 'Techniques for testing the constancy of regression relationships over time'
+        publisher: 'Journal of the Royal Statistical Society, Series B'
+        volume: '37'
+        issue: '2'
+        pages: '149-192'
+        url: https://doi.org/10.1111/j.2517-6161.1975.tb01532.x
+
+    engle_1993:
+        type: 'article'
+        author: 'Engle, R. F., & Ng, V. K.'
+        year: 1993
+        title: 'Measuring and testing the impact of news on volatility'
+        publisher: 'Journal of Finance'
+        volume: '48'
+        issue: '5'
+        pages: '1749-1778'
+        url: https://doi.org/10.1111/j.1540-6261.1993.tb05127.x
+
+    glosten_1993:
+        type: 'article'
+        author: 'Glosten, L. R., Jagannathan, R., & Runkle, D. E.'
+        year: 1993
+        title: 'On the relation between the expected value and the volatility of the nominal excess return on stocks'
+        publisher: 'Journal of Finance'
+        volume: '48'
+        issue: '5'
+        pages: '1779-1801'
+        url: https://doi.org/10.1111/j.1540-6261.1993.tb05128.x
+
+    nelson_1991:
+        type: 'article'
+        author: 'Nelson, D. B.'
+        year: 1991
+        title: 'Conditional heteroskedasticity in asset returns: A new approach'
+        publisher: 'Econometrica'
+        volume: '59'
+        issue: '2'
+        pages: '347-370'
+        url: https://doi.org/10.2307/2938260
+
+    hyndman_2008:
+        type: 'article'
+        author: 'Hyndman, R. J., & Khandakar, Y.'
+        year: 2008
+        title: 'Automatic time series forecasting: The forecast package for R'
+        publisher: 'Journal of Statistical Software'
+        volume: '27'
+        issue: '3'
+        pages: '1-22'
+        url: https://doi.org/10.18637/jss.v027.i03
+
+    l_tkepohl_2005:
+        type: 'book'
+        author: 'Lütkepohl, H.'
+        year: 2005
+        title: 'New Introduction to Multiple Time Series Analysis'
+        publisher: 'Springer'
+        url: https://doi.org/10.1007/978-3-540-27752-1
+
