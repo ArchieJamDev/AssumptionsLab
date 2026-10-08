@@ -4,7 +4,10 @@ Version: 1.2 (2026-10-08: added to §21 that `refs:` only renders for
 `Table`-type results in jamovi's own client, never `Html`/`Image` —
 confirmed by reading the Electron client source directly, after Assumption
 Library's own category sections tried it and silently showed nothing;
-2026-09-17: added §19.1 Category A/B error handling, native jamovi plot
+added to §20 that static `content:`/`notes` fields are extracted and
+translated the same way as `title`, and that this is only safe for text
+that never varies at runtime — Assumption Library's guide text moved to it,
+its comparison tables did not; 2026-09-17: added §19.1 Category A/B error handling, native jamovi plot
 themes to §18, native jamovi i18n catalog to §20 — lessons from jamovi's
 official module review)
 Project: AssumptionsLab
@@ -493,14 +496,25 @@ YAML comments should explain
 
 Avoid comments that merely repeat field names.
 
-Every `title`/`description`/`label`/`menuTitle` value in `.a.yaml`,
-`.u.yaml`, `.r.yaml`, and `0000.yaml` is automatically extracted by
-jamovi's own compiler into its translation catalog — no `.()` markup
+Every `title`/`description`/`label`/`menuTitle`/`content`/`notes` value in
+`.a.yaml`, `.u.yaml`, `.r.yaml`, and `0000.yaml` is automatically extracted
+by jamovi's own compiler into its translation catalog — no `.()` markup
 needed. Write these fields in English only. A string in any other
 language there is not translated on the fly; it becomes the untranslatable
 source text jamovi's catalog serves to every language, including English.
 Regenerate the catalog (`jmvtools::i18nUpdate("es")`) whenever such text
 changes.
+
+An `Html` result's static `content:` field (resolved natively, like
+`title`) is the right place for text that never changes once compiled —
+`Assumption Library`'s category guides are the precedent: fully static
+glossary text, translated through `jamovi/i18n/es.po` instead of
+`reportLang`, with zero risk of the `.()`-from-R caching bug (§21), since
+nothing is ever assembled in R for it. The moment text needs to vary at
+runtime (per row, per computed value, per dataset), it no longer qualifies
+for a static `content:` field and must go through `tr()`/`reportLang`
+like everything else in this project — never through `.()` called from
+`.b.R`.
 
 -------------------------------------------------------------------------------
 
@@ -508,14 +522,26 @@ changes.
 
 Evitar comentarios que solo repiten nombres de campo.
 
-Todo valor `title`/`description`/`label`/`menuTitle` en `.a.yaml`,
-`.u.yaml`, `.r.yaml` y `0000.yaml` es extraído automáticamente por el
-propio compilador de jamovi hacia su catálogo de traducción — no se
+Todo valor `title`/`description`/`label`/`menuTitle`/`content`/`notes` en
+`.a.yaml`, `.u.yaml`, `.r.yaml` y `0000.yaml` es extraído automáticamente
+por el propio compilador de jamovi hacia su catálogo de traducción — no se
 necesita ninguna marca `.()`. Escribir estos campos solo en inglés. Un
 texto en otro idioma ahí no se traduce sobre la marcha; se convierte en el
 texto fuente no traducible que el catálogo de jamovi sirve a todo idioma,
 incluido el inglés. Regenerar el catálogo
 (`jmvtools::i18nUpdate("es")`) cada vez que ese texto cambie.
+
+El campo `content:` estático de un resultado `Html` (resuelto de forma
+nativa, igual que `title`) es el lugar correcto para texto que nunca
+cambia una vez compilado — las guías por categoría de `Assumption
+Library` son el precedente: texto de glosario completamente estático,
+traducido vía `jamovi/i18n/es.po` en vez de `reportLang`, sin ningún
+riesgo del bug de caché de `.()` llamado desde R (§21), porque nada se
+ensambla en R para ese contenido. En el momento en que el texto necesita
+variar en tiempo de ejecución (por fila, por valor calculado, por
+dataset), ya no califica para un `content:` estático y debe pasar por
+`tr()`/`reportLang` como todo lo demás en este proyecto — nunca por
+`.()` llamado desde `.b.R`.
 
 -------------------------------------------------------------------------------
 

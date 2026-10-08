@@ -4,7 +4,10 @@
 analysis removed from the menu, `refs:` wired into all 9 analysis modules,
 and the attempt to do the same inside Assumption Library reverted once
 jamovi's client turned out to render `refs:` only for `Table`-type
-results, never `Html`; 2026-09-17: §12 Internationalization rewritten
+results, never `Html`; Library's own guide text then moved to jamovi's
+native i18n catalog via static `content:` fields instead, while its
+comparison tables stayed on `reportLang` to avoid the `.()`-from-R
+caching bug; 2026-09-17: §12 Internationalization rewritten
 around the three actual bilingual mechanisms now implemented; §11
 extended to Bibliography and the "why an analysis, not a passive
 reference" rationale; §4, §8, §10 cross-referenced to the native
@@ -643,6 +646,29 @@ why, and CODE_STYLE.md §21 for the citation-style consequence of this
 split (jamovi's own numbered format in-app, APA 7th in
 `docs/Bibliography.md`).
 
+**Library's guide text moved to jamovi's native i18n catalog; its
+comparison tables did not.** A separate part of the same review asked
+Library to use jamovi's translation catalog instead of its own
+`reportLang` option. This was only partly achievable, and for a precise
+reason, not a vague one: jamovi's `.()` function, called from R, is
+literally `self$options$translate()` — the same cached call behind the
+FiabilityLab regression (§12). Calling it from `.b.R` to populate a
+table's rows would reintroduce that exact bug. But every category's
+narrative guide text never changes at runtime — it is the same text on
+every run, regardless of the user's data — so it was moved out of R
+entirely: each category's guide paragraphs are now a static `content:`
+field defined directly in `jamovi/assumptionlibrary.r.yaml`, extracted
+and translated through `jamovi/i18n/es.po` exactly like `title`, with
+`.run()` never touching it (see CODE_STYLE.md §20). Each category's
+comparison table, by contrast, needs a different row of text on every
+line, and jamovi has no YAML-level way to express that (a column's own
+`content:` field holds one fixed value repeated down the whole column,
+never distinct per-row text) — so the tables are still built in `.b.R`
+via `tr()`/`reportLang`, unchanged. The result is a deliberate split
+within Library itself: its prose follows jamovi's own UI language
+automatically; its tables still follow the module's own report-language
+option, same as every analysis module.
+
 -------------------------------------------------------------------------------
 
 # Biblioteca metodológica
@@ -696,6 +722,31 @@ simple puntero de texto a `docs/Bibliography.md`. Ver el propio
 consecuencia de estilo de citación de esta división (el propio formato
 numerado de jamovi dentro de la app, APA 7.ª edición en
 `docs/Bibliography.md`).
+
+**El texto de guía de Library se mudó al catálogo i18n nativo de jamovi;
+sus tablas comparativas no.** Otra parte de la misma revisión pidió que
+Library usara el catálogo de traducción de jamovi en vez de su propia
+opción `reportLang`. Esto solo se logró parcialmente, y por una razón
+precisa, no vaga: la función `.()` de jamovi, llamada desde R, es
+literalmente `self$options$translate()` — la misma llamada cacheada
+detrás de la regresión de FiabilityLab (§12). Llamarla desde `.b.R` para
+poblar las filas de una tabla reintroduciría exactamente ese bug. Pero el
+texto narrativo de guía de cada categoría nunca cambia en tiempo de
+ejecución — es el mismo texto en cada corrida, sin importar los datos del
+usuario — así que se sacó de R por completo: los párrafos de guía de cada
+categoría son ahora un campo `content:` estático definido directamente en
+`jamovi/assumptionlibrary.r.yaml`, extraído y traducido vía
+`jamovi/i18n/es.po` exactamente igual que `title`, sin que `.run()` lo
+toque nunca (ver CODE_STYLE.md §20). La tabla comparativa de cada
+categoría, en cambio, necesita un texto distinto en cada fila, y jamovi
+no tiene forma a nivel YAML de expresar eso (el propio campo `content:`
+de una columna solo lleva un valor fijo repetido en toda la columna,
+nunca texto distinto por fila) — así que las tablas siguen construyéndose
+en `.b.R` vía `tr()`/`reportLang`, sin cambios. El resultado es una
+división deliberada dentro de la propia Library: su prosa sigue
+automáticamente el idioma de la interfaz de jamovi; sus tablas siguen
+dependiendo de la opción de idioma de informe del módulo, igual que
+cualquier módulo de análisis.
 
 -------------------------------------------------------------------------------
 

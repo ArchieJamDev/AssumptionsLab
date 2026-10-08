@@ -85,6 +85,17 @@
   `refs:` reference list for `Table`-type results, never for `Html`,
   so Library's narrative category sections cannot carry their own
   native citation list the way an analysis module's tables do.
+- `Assumption Library`'s category guide text (the narrative explanation
+  of each assumption/test) moved from its own `reportLang` option to
+  jamovi's native i18n catalog: it is now a static `content:` field per
+  category, defined directly in `jamovi/assumptionlibrary.r.yaml` and
+  translated through `jamovi/i18n/es.po`, following jamovi's own UI
+  language automatically. Each category's comparison table stayed on
+  `tr()`/`reportLang`, unchanged, since jamovi has no YAML-level way to
+  express a table whose rows hold different static text per row, and
+  `.()` called from R is the exact cached call behind the FiabilityLab
+  translator regression — using it to populate table rows would
+  reintroduce that bug (see `CODE_STYLE.md` §20/§21).
 
 ## New features
 
