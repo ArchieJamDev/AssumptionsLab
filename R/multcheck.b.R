@@ -980,13 +980,13 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 tr(
                     c(
                         "The multinomial-logit model assumes the relative odds between any two categories do not depend on which OTHER categories are also available - Independence of Irrelevant Alternatives (IIA), the one assumption unique to this model family.",
-                        "The Hausman-McFadden (1984) test checks this by refitting the model after removing every case belonging to one category at a time; if IIA holds, the coefficients shared with the full model should not change beyond sampling error.",
+                        "The Hausman-McFadden (1984; see references) test checks this by refitting the model after removing every case belonging to one category at a time; if IIA holds, the coefficients shared with the full model should not change beyond sampling error.",
                         "One row is shown per omitted category. A significant test for an omitted category is evidence against IIA; a non-significant test is compatible with it.",
                         "In finite samples, the test statistic's denominator (a covariance-matrix difference) is not always invertible - a well-documented degeneracy of this specific test, not a coding error - and is reported here as 'not computable' rather than a misleading number."
                     ),
                     c(
                         "El modelo logit multinomial asume que los momios relativos entre dos categorías cualesquiera no dependen de qué OTRAS categorías también estén disponibles - Independencia de Alternativas Irrelevantes (IIA), el único supuesto propio de esta familia de modelos.",
-                        "La prueba de Hausman-McFadden (1984) revisa esto reajustando el modelo tras eliminar, de a una, todos los casos que pertenecen a una categoría; si la IIA se sostiene, los coeficientes compartidos con el modelo completo no deberían cambiar más allá del error de muestreo.",
+                        "La prueba de Hausman-McFadden (1984; ver referencias) revisa esto reajustando el modelo tras eliminar, de a una, todos los casos que pertenecen a una categoría; si la IIA se sostiene, los coeficientes compartidos con el modelo completo no deberían cambiar más allá del error de muestreo.",
                         "Se muestra una fila por categoría omitida. Una prueba significativa para una categoría omitida es evidencia en contra de la IIA; una prueba no significativa es compatible con ella.",
                         "En muestras finitas, el denominador del estadístico de prueba (una diferencia de matrices de covarianza) no siempre es invertible - una degeneración bien documentada de esta prueba específica, no un error de programación - y se reporta aquí como 'no calculable' en vez de un número engañoso."
                     )
@@ -1136,13 +1136,13 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$goodnessOfFitGuide$setContent(html_guide(tr("Goodness of fit", "Bondad de ajuste"), tr(
                 c(
                     "Goodness of fit evaluates whether the model, as a whole, reasonably reproduces the observed category frequencies.",
-                    "The Lipsitz (1996) and Pulkstenis-Robinson (2004) tests were developed for the proportional-odds model but generalhoslem documents support for 'multinom' fitted objects as well; they are used here for consistency with ordCheck's battery, since no goodness-of-fit test specific to the unordered multinomial case is as widely implemented.",
+                    "The Lipsitz (1996; see references) and Pulkstenis-Robinson (2004; see references) tests were developed for the proportional-odds model but generalhoslem documents support for 'multinom' fitted objects as well; they are used here for consistency with ordCheck's battery, since no goodness-of-fit test specific to the unordered multinomial case is as widely implemented.",
                     "The Pulkstenis-Robinson test needs at least one categorical predictor to partition cases into covariate patterns; it is not shown when only numeric predictors are selected. It also needs at least as many distinct covariate patterns as groups to be valid (Fagerland & Hosmer, 2013) - with very few categorical predictors or very few levels, treat a result from this test with extra caution.",
                     "As with any chi-square-based fit test, these lose power with very small samples and can flag trivially small lack of fit with very large ones - read them together with the IIA result and substantive knowledge of the data."
                 ),
                 c(
                     "La bondad de ajuste evalúa si el modelo, en conjunto, reproduce razonablemente las frecuencias de categoría observadas.",
-                    "Las pruebas de Lipsitz (1996) y Pulkstenis-Robinson (2004) se desarrollaron para el modelo de momios proporcionales, pero generalhoslem documenta soporte también para objetos ajustados 'multinom'; se usan aquí por consistencia con la batería de ordCheck, ya que no hay una prueba de bondad de ajuste específica para el caso multinomial no ordenado tan ampliamente implementada.",
+                    "Las pruebas de Lipsitz (1996; ver referencias) y Pulkstenis-Robinson (2004; ver referencias) se desarrollaron para el modelo de momios proporcionales, pero generalhoslem documenta soporte también para objetos ajustados 'multinom'; se usan aquí por consistencia con la batería de ordCheck, ya que no hay una prueba de bondad de ajuste específica para el caso multinomial no ordenado tan ampliamente implementada.",
                     "La prueba de Pulkstenis-Robinson necesita al menos un predictor categórico para particionar los casos en patrones de covariables; no se muestra cuando solo hay predictores numéricos seleccionados. También necesita al menos tantos patrones de covariables distintos como grupos para ser válida (Fagerland & Hosmer, 2013) - con muy pocos predictores categóricos o muy pocos niveles, trate un resultado de esta prueba con cautela adicional.",
                     "Como cualquier prueba de ajuste basada en ji-cuadrado, estas pierden poder con muestras muy pequeñas y pueden marcar una falta de ajuste trivial con muestras muy grandes - léalas junto con el resultado de IIA y el conocimiento sustantivo de los datos."
                 )
@@ -1614,13 +1614,13 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 c(
                     "nnet::multinom() does not expose Cook's D or leverage the way a linear or binary logistic model does, so influence here is screened with a simpler, case-level Pearson-type residual instead: how far the model's fitted probability for the case's OWN observed category falls from a perfect fit.",
                     "Cases are flagged at |residual| > 2.5, the same convention used elsewhere in this suite for standardized-residual screening.",
-                    "This is a reasonable approximation, not a single canonical published statistic for this model family - for a fuller graphical treatment of an analogous ordinal case, see Liu et al. (2009).",
+                    "This is a reasonable approximation, not a single canonical published statistic for this model family - for a fuller graphical treatment of an analogous ordinal case, see Liu et al. (2009; see references).",
                     "A flagged case should not be removed automatically; check whether it is a recording error, a valid but extreme case, or a sign the model does not represent all subgroups well."
                 ),
                 c(
                     "nnet::multinom() no expone Cook's D ni leverage como sí lo hace un modelo lineal o logístico binario, así que aquí la influencia se criba con un residuo tipo Pearson por caso más simple en cambio: qué tan lejos está la probabilidad ajustada del modelo para la categoría REALMENTE OBSERVADA del caso de un ajuste perfecto.",
                     "Los casos se marcan en |residuo| > 2.5, la misma convención usada en otra parte de esta suite para el cribado de residuos estandarizados.",
-                    "Esta es una aproximación razonable, no un único estadístico canónico publicado para esta familia de modelos - para un tratamiento gráfico más completo de un caso ordinal análogo, ver Liu et al. (2009).",
+                    "Esta es una aproximación razonable, no un único estadístico canónico publicado para esta familia de modelos - para un tratamiento gráfico más completo de un caso ordinal análogo, ver Liu et al. (2009; ver referencias).",
                     "Un caso marcado no debe eliminarse automáticamente; revise si es un error de registro, un caso válido pero extremo, o una señal de que el modelo no representa bien a todos los subgrupos."
                 )
             )))

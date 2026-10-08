@@ -535,8 +535,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             paste0("Contexto de tamaño de muestra: con ", n_events, " eventos y ", n_non_events, " no eventos, los subgrupos pequeños o muy desiguales dentro de un predictor son la causa más frecuente de este patrón.")
                         ),
                         tr(
-                            "Consider Firth's (1993) penalized logistic regression, which corrects the maximum-likelihood bias and yields finite estimates under separation, or combine rare categories before trusting these coefficients.",
-                            "Considere la regresión logística penalizada de Firth (1993), que corrige el sesgo de máxima verosimilitud y produce estimaciones finitas bajo separación, o combine categorías poco frecuentes antes de confiar en estos coeficientes."
+                            "Consider Firth's (1993; see references) penalized logistic regression, which corrects the maximum-likelihood bias and yields finite estimates under separation, or combine rare categories before trusting these coefficients.",
+                            "Considere la regresión logística penalizada de Firth (1993; ver referencias), que corrige el sesgo de máxima verosimilitud y produce estimaciones finitas bajo separación, o combine categorías poco frecuentes antes de confiar en estos coeficientes."
                         )
                     )
                 } else {
@@ -782,7 +782,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (!is.null(hl_test)) {
                         hl_p_str <- if (hl_test$p.value < .001) "< .001" else paste0("= ", fmt_num(hl_test$p.value, 3))
                         paste0(
-                            "Hosmer-Lemeshow (1980): p ", hl_p_str, ". ",
+                            "Hosmer-Lemeshow (1980; ", tr("see references", "ver referencias"), "): p ", hl_p_str, ". ",
                             tr(
                                 if (hl_test$p.value >= .05)
                                     "Compatible with adequate fit across probability groups."

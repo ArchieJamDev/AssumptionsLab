@@ -93,6 +93,8 @@ items:
   - name: linearity
     title: Linearity in the cumulative logit (Box-Tidwell)
     type: Table
+    refs:
+      - box_1962
     columns:
       - name: predictor
         title: Predictor
@@ -136,6 +138,8 @@ items:
   - name: proportionalOdds
     title: Brant Test
     type: Table
+    refs:
+      - brant_1990
     rows: 0
     columns:
       - name: term
@@ -167,6 +171,9 @@ items:
   - name: goodnessOfFit
     title: Goodness of fit
     type: Table
+    refs:
+      - pulkstenis_2004
+      - fagerland_2013
     rows: 0
     columns:
       - name: test
@@ -220,6 +227,9 @@ items:
     title: Multicollinearity
     type: Table
     visible: false
+    refs:
+      - marquardt_1970
+      - belsley_1980
     columns:
       - name: diagnostic
         title: Diagnostic
@@ -259,6 +269,8 @@ items:
     type: Table
     rows: 0
     visible: false
+    refs:
+      - sz_kely_2007
     columns:
       - name: var
         title: Variable
@@ -279,6 +291,9 @@ items:
     type: Table
     rows: 0
     visible: false
+    refs:
+      - sz_kely_2007
+      - ma_2011
     columns:
       - name: var1
         title: Variable 1

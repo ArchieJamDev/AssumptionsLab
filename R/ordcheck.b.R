@@ -739,13 +739,13 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 tr(
                     c(
                         "The proportional-odds model assumes each predictor has the SAME effect on every cutpoint of the outcome - the 'parallel lines' or 'proportional odds' assumption, and the one assumption unique to this model family.",
-                        "Brant's (1990) test compares the coefficients from separate binary logits fit at each cutpoint against the single, pooled coefficient the proportional-odds model reports; a significant term means that predictor's effect is not constant across cutpoints.",
+                        "Brant's (1990; see references) test compares the coefficients from separate binary logits fit at each cutpoint against the single, pooled coefficient the proportional-odds model reports; a significant term means that predictor's effect is not constant across cutpoints.",
                         "If the omnibus test is significant but only one or two predictors drive it, consider a partial-proportional-odds model that lets just those predictors vary by cutpoint, rather than abandoning the ordinal approach entirely.",
                         "This test has limited power in small samples or with sparse categories; a non-significant result there is weaker evidence of proportionality than the same result with a larger, better-balanced sample."
                     ),
                     c(
                         "El modelo de momios proporcionales asume que cada predictor tiene el MISMO efecto en todos los puntos de corte del desenlace - el supuesto de \"líneas paralelas\" o \"momios proporcionales\", y el único supuesto propio de esta familia de modelos.",
-                        "La prueba de Brant (1990) compara los coeficientes de logits binarios separados ajustados en cada punto de corte contra el coeficiente único y agrupado que reporta el modelo de momios proporcionales; un término significativo significa que el efecto de ese predictor no es constante entre puntos de corte.",
+                        "La prueba de Brant (1990; ver referencias) compara los coeficientes de logits binarios separados ajustados en cada punto de corte contra el coeficiente único y agrupado que reporta el modelo de momios proporcionales; un término significativo significa que el efecto de ese predictor no es constante entre puntos de corte.",
                         "Si la prueba ómnibus es significativa pero solo uno o dos predictores la explican, considere un modelo de momios parcialmente proporcionales que deje variar solo esos predictores por punto de corte, en vez de abandonar el enfoque ordinal por completo.",
                         "Esta prueba tiene poder limitado en muestras pequeñas o con categorías escasas; un resultado no significativo ahí es evidencia más débil de proporcionalidad que el mismo resultado con una muestra más grande y balanceada."
                     )
@@ -821,14 +821,14 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$goodnessOfFitGuide$setContent(html_guide(tr("Goodness of fit", "Bondad de ajuste"), tr(
                 c(
                     "Goodness of fit evaluates whether the model, as a whole, reasonably reproduces the observed category frequencies.",
-                    "The Hosmer-Lemeshow test does not generalize directly to an ordinal response; the Lipsitz (1996) and Pulkstenis-Robinson (2004) tests are the ordinal-specific analogues used here instead.",
-                    "The Pulkstenis-Robinson test needs at least one categorical predictor to partition cases into covariate patterns; it is not shown when only numeric predictors are selected. It also needs at least as many distinct covariate patterns as groups to be valid (Fagerland & Hosmer, 2013) - with very few categorical predictors or very few levels, treat a result from this test with extra caution.",
+                    "The Hosmer-Lemeshow test does not generalize directly to an ordinal response; the Lipsitz (1996; see references) and Pulkstenis-Robinson (2004; see references) tests are the ordinal-specific analogues used here instead.",
+                    "The Pulkstenis-Robinson test needs at least one categorical predictor to partition cases into covariate patterns; it is not shown when only numeric predictors are selected. It also needs at least as many distinct covariate patterns as groups to be valid (Fagerland & Hosmer, 2013; see references) - with very few categorical predictors or very few levels, treat a result from this test with extra caution.",
                     "As with any chi-square-based fit test, these lose power with very small samples and can flag trivially small lack of fit with very large ones - read them together with the proportional-odds result and substantive knowledge of the data."
                 ),
                 c(
                     "La bondad de ajuste evalúa si el modelo, en conjunto, reproduce razonablemente las frecuencias de categoría observadas.",
-                    "La prueba de Hosmer-Lemeshow no generaliza directamente a un desenlace ordinal; las pruebas de Lipsitz (1996) y Pulkstenis-Robinson (2004) son los análogos específicos para lo ordinal usados aquí en cambio.",
-                    "La prueba de Pulkstenis-Robinson necesita al menos un predictor categórico para particionar los casos en patrones de covariables; no se muestra cuando solo hay predictores numéricos seleccionados. También necesita al menos tantos patrones de covariables distintos como grupos para ser válida (Fagerland & Hosmer, 2013) - con muy pocos predictores categóricos o muy pocos niveles, trate un resultado de esta prueba con cautela adicional.",
+                    "La prueba de Hosmer-Lemeshow no generaliza directamente a un desenlace ordinal; las pruebas de Lipsitz (1996; ver referencias) y Pulkstenis-Robinson (2004; ver referencias) son los análogos específicos para lo ordinal usados aquí en cambio.",
+                    "La prueba de Pulkstenis-Robinson necesita al menos un predictor categórico para particionar los casos en patrones de covariables; no se muestra cuando solo hay predictores numéricos seleccionados. También necesita al menos tantos patrones de covariables distintos como grupos para ser válida (Fagerland & Hosmer, 2013; ver referencias) - con muy pocos predictores categóricos o muy pocos niveles, trate un resultado de esta prueba con cautela adicional.",
                     "Como cualquier prueba de ajuste basada en ji-cuadrado, estas pierden poder con muestras muy pequeñas y pueden marcar una falta de ajuste trivial con muestras muy grandes - léalas junto con el resultado de momios proporcionales y el conocimiento sustantivo de los datos."
                 )
             )))
@@ -1219,13 +1219,13 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 c(
                     "polr() does not expose Cook's D or leverage the way a linear or binary logistic model does, so influence here is screened with a simpler, case-level Pearson-type residual instead: how far the model's fitted probability for the case's OWN observed category falls from a perfect fit.",
                     "Cases are flagged at |residual| > 2.5, the same convention used elsewhere in this suite for standardized-residual screening.",
-                    "This is a reasonable approximation, not a single canonical published statistic for this model family - for a fuller graphical treatment, see Liu et al. (2009).",
+                    "This is a reasonable approximation, not a single canonical published statistic for this model family - for a fuller graphical treatment, see Liu et al. (2009; see references).",
                     "A flagged case should not be removed automatically; check whether it is a recording error, a valid but extreme case, or a sign the model does not represent all subgroups well."
                 ),
                 c(
                     "polr() no expone Cook's D ni leverage como sí lo hace un modelo lineal o logístico binario, así que aquí la influencia se criba con un residuo tipo Pearson por caso más simple en cambio: qué tan lejos está la probabilidad ajustada del modelo para la categoría REALMENTE OBSERVADA del caso de un ajuste perfecto.",
                     "Los casos se marcan en |residuo| > 2.5, la misma convención usada en otra parte de esta suite para el cribado de residuos estandarizados.",
-                    "Esta es una aproximación razonable, no un único estadístico canónico publicado para esta familia de modelos - para un tratamiento gráfico más completo, ver Liu et al. (2009).",
+                    "Esta es una aproximación razonable, no un único estadístico canónico publicado para esta familia de modelos - para un tratamiento gráfico más completo, ver Liu et al. (2009; ver referencias).",
                     "Un caso marcado no debe eliminarse automáticamente; revise si es un error de registro, un caso válido pero extremo, o una señal de que el modelo no representa bien a todos los subgrupos."
                 )
             )))
