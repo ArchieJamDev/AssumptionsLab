@@ -275,6 +275,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="linearity",
                 title="Linearity in the multinomial logit (LR test)",
+                refs=list(
+                    "box_1962"),
                 rows=0,
                 columns=list(
                     list(
@@ -327,6 +329,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="iia",
                 title="Hausman-McFadden Test (IIA)",
+                refs=list(
+                    "hausman_1984"),
                 rows=0,
                 columns=list(
                     list(
@@ -367,6 +371,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="goodnessOfFit",
                 title="Goodness of fit",
+                refs=list(
+                    "pulkstenis_2004"),
                 rows=0,
                 columns=list(
                     list(
@@ -445,6 +451,9 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="multicollinearity",
                 title="Multicollinearity",
                 visible=FALSE,
+                refs=list(
+                    "marquardt_1970",
+                    "belsley_1980"),
                 columns=list(
                     list(
                         `name`="diagnostic", 
@@ -489,6 +498,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Distance correlation matrix (dCor, APA 7 format)",
                 rows=0,
                 visible=FALSE,
+                refs=list(
+                    "sz_kely_2007"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -510,6 +521,9 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Pairs with a notable gap between Pearson and dCor",
                 rows=0,
                 visible=FALSE,
+                refs=list(
+                    "sz_kely_2007",
+                    "ma_2011"),
                 columns=list(
                     list(
                         `name`="var1", 
