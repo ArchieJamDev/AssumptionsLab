@@ -301,6 +301,9 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="caseDiagnostics",
                 title="Case diagnostics",
+                refs=list(
+                    "cook_1977",
+                    "mahalanobis_1936"),
                 clearWith=list(
                     "dep",
                     "group",
@@ -355,6 +358,12 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="normality",
                 title="Normality tests by group",
+                refs=list(
+                    "shapiro_1965",
+                    "lilliefors_1967",
+                    "anderson_1952",
+                    "shapiro_1972",
+                    "jarque_1987"),
                 clearWith=list(
                     "dep",
                     "group",
@@ -447,6 +456,11 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="homogeneity",
                 title="Homogeneity of variances",
+                refs=list(
+                    "levene_1960",
+                    "brown_1974",
+                    "bartlett_1937",
+                    "fligner_1976"),
                 clearWith=list(
                     "dep",
                     "group",

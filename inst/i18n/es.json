@@ -1,0 +1,1602 @@
+{
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "es",
+                "plural_forms": "nplurals=2; plural=(n!=1);"
+            },
+            "1/Y": [
+                "1/Y"
+            ],
+            "95% CI lower": [
+                "IC 95% inferior"
+            ],
+            "95% CI upper": [
+                "IC 95% superior"
+            ],
+            "A curated, verified bibliography of the methodological sources cited throughout AssumptionsLab, not a data analysis: it renders a topic-filtered reading list in APA 7th edition and does not read or compute anything from the user's dataset. References can be filtered by topic (statistical assumptions, normality, homoscedasticity, linearity and regression, path analysis, related groups, time series, robust methods) and displayed in English or Spanish, with citation style always fixed to APA 7th. Use it to trace a diagnostic back to its source literature or to build a reference list for a methods section.": [
+                "Una bibliografía curada y verificada de las fuentes metodológicas citadas a lo largo de AssumptionsLab, no un análisis de datos: presenta una lista de lectura filtrable por tema en formato APA 7.ª edición y no lee ni calcula nada a partir del conjunto de datos del usuario. Las referencias pueden filtrarse por tema (supuestos estadísticos, normalidad, homoscedasticidad, linealidad y regresión, análisis de rutas, grupos relacionados, series temporales, métodos robustos) y mostrarse en inglés o español, con el estilo de citación siempre fijo en APA 7.ª edición. Úsela para rastrear un diagnóstico hasta su literatura fuente o para construir una lista de referencias para una sección de métodos."
+            ],
+            "A methodological reference glossary, not a data analysis: it explains what each statistical assumption and test covered by AssumptionsLab means, why it matters, and when it applies, without computing anything from the user's dataset. Entries can be filtered by category (e.g. normality, homoscedasticity, linearity, independence, multicollinearity, outliers/influence, sphericity, proportional odds, robust alternatives) and are available in English or Spanish. Use it alongside any of the assumption-checking analyses to look up the theory behind a diagnostic, or as a stand-alone teaching aid for planning an analysis before running one.": [
+                "Un glosario metodológico de referencia, no un análisis de datos: explica qué significa cada supuesto estadístico y prueba cubiertos por AssumptionsLab, por qué importa y cuándo aplica, sin calcular nada a partir del conjunto de datos del usuario. Las entradas pueden filtrarse por categoría (p. ej. normalidad, homoscedasticidad, linealidad, independencia, multicolinealidad, atípicos/influencia, esfericidad, momios proporcionales, alternativas robustas) y están disponibles en inglés o español. Úselo junto con cualquiera de los análisis de verificación de supuestos para consultar la teoría detrás de un diagnóstico, o como material didáctico independiente para planificar un análisis antes de ejecutarlo."
+            ],
+            "Abbreviate to 4 Characters": [
+                "Abreviar a 4 Caracteres"
+            ],
+            "Abbreviate to 8 Characters": [
+                "Abreviar a 8 Caracteres"
+            ],
+            "About this model": [
+                "Sobre este modelo"
+            ],
+            "Add one relationship for each path in the model. In each row, the first variable is the predictor and the second is the dependent variable (predictor → dependent). A dependent variable with several predictors is specified with several rows sharing the same second variable.": [
+                "Agregue una relación por cada ruta del modelo. En cada fila, la primera variable es el predictor y la segunda es la variable dependiente (predictor → dependiente). Una variable dependiente con varios predictores se especifica con varias filas que comparten la misma segunda variable."
+            ],
+            "Adjusted": [
+                "Ajustado"
+            ],
+            "Adjusted R²": [
+                "R² Ajustado"
+            ],
+            "All Categories": [
+                "Todas las Categorías"
+            ],
+            "All References": [
+                "Todas las Referencias"
+            ],
+            "ANOVA/ANCOVA": [
+                "ANOVA/ANCOVA"
+            ],
+            "ANOVA/ANCOVA diagnostic plots": [
+                "Gráficos diagnósticos de ANOVA/ANCOVA"
+            ],
+            "Applied interpretation": [
+                "Interpretación Aplicada"
+            ],
+            "Applied interpretation of case diagnostics": [
+                "Interpretación aplicada de los diagnósticos de casos"
+            ],
+            "Applied interpretation of normality": [
+                "Interpretación aplicada de normalidad"
+            ],
+            "Area": [
+                "Área"
+            ],
+            "ARIMA": [
+                "ARIMA"
+            ],
+            "Associated decision": [
+                "Decisión asociada"
+            ],
+            "Assumption / condition": [
+                "Supuesto / condición"
+            ],
+            "Assumption Lab": [
+                "Assumption Lab"
+            ],
+            "Assumption Library": [
+                "Biblioteca de Supuestos"
+            ],
+            "Assumptions and conditions to evaluate": [
+                "Supuestos y condiciones a evaluar"
+            ],
+            "AssumptionsLab evaluates the statistical assumptions required for common analytical techniques and pairs every diagnostic with evidence-based methodological guidance, interpretation, and educational support, rather than reporting isolated test statistics. It covers group comparisons (independent and related samples, ANOVA/ANCOVA), regression (linear, logistic, ordinal logistic, multinomial logistic), path analysis and structural validation, and time series, alongside a built-in methodological library and a unified, APA-7th-referenced bibliography.": [
+                "AssumptionsLab evalúa los supuestos estadísticos requeridos por las técnicas analíticas más comunes y empareja cada diagnóstico con orientación metodológica basada en evidencia, interpretación y apoyo educativo, en vez de solo reportar estadísticos de prueba aislados. Cubre comparaciones de grupos (muestras independientes y relacionadas, ANOVA/ANCOVA), regresión (lineal, logística, logística ordinal, logística multinomial), análisis de rutas y validación estructural, y series temporales, junto con una biblioteca metodológica incorporada y una bibliografía unificada referenciada en APA 7.ª edición."
+            ],
+            "AssumptionsLab Test Dataset (n=450)": [
+                "Conjunto de Datos de Prueba de AssumptionsLab (n=450)"
+            ],
+            "AUC label": [
+                "Etiqueta de AUC"
+            ],
+            "Autocorrelation (ACF)": [
+                "Autocorrelación (ACF)"
+            ],
+            "Automatic (Sturges)": [
+                "Automático (Sturges)"
+            ],
+            "Basic": [
+                "Básico"
+            ],
+            "Beta Est.": [
+                "Beta Est."
+            ],
+            "Betas (standardized)": [
+                "Betas (estandarizados)"
+            ],
+            "Bibliography": [
+                "Bibliografía"
+            ],
+            "Bibliometric Summary": [
+                "Resumen Bibliométrico"
+            ],
+            "Boxplots of the dependent variable and numeric predictors": [
+                "Boxplots de la variable dependiente y predictores numéricos"
+            ],
+            "Brant Test": [
+                "Prueba de Brant"
+            ],
+            "Builds a user-specified path model (a set of predictor -> dependent relationships among observed continuous variables) and evaluates the assumptions underlying its estimation, alongside a labeled path diagram, coefficients, R², correlations, and residual diagnostics. It checks normality and outliers in residuals and compares linear (Pearson) against non-linear (distance correlation, copula entropy) association strength between variables to flag relationships a linear path coefficient would misrepresent. Use it for lightweight path-analysis/SEM-style models, to validate the structural assumptions of the specified paths before trusting the estimated coefficients.": [
+                "Construye un modelo de rutas especificado por el usuario (un conjunto de relaciones predictor -> dependiente entre variables continuas observadas) y evalúa los supuestos que sustentan su estimación, junto con un diagrama de ruta etiquetado, coeficientes, R², correlaciones y diagnósticos de residuos. Verifica la normalidad y los atípicos en los residuos, y compara la fuerza de asociación lineal (Pearson) frente a la no lineal (correlación de distancia, entropía copular) entre variables para señalar relaciones que un coeficiente de ruta lineal representaría mal. Úselo para modelos ligeros de tipo análisis de rutas/SEM, para validar los supuestos estructurales de las rutas especificadas antes de confiar en los coeficientes estimados."
+            ],
+            "Calibration by probability decile": [
+                "Calibración por deciles de probabilidad"
+            ],
+            "Calibration plots": [
+                "Gráficos de calibración"
+            ],
+            "Case": [
+                "Caso"
+            ],
+            "Case diagnostics": [
+                "Diagnóstico de casos"
+            ],
+            "Case diagnostics guide": [
+                "Guía de diagnóstico de casos"
+            ],
+            "Cases per relationship": [
+                "Casos por relación"
+            ],
+            "Categorical Predictors": [
+                "Predictores Categóricos"
+            ],
+            "Category": [
+                "Categoría"
+            ],
+            "Cell / group": [
+                "Celda / grupo"
+            ],
+            "Cell size and balance": [
+                "Tamaño de celdas y balance"
+            ],
+            "Circles": [
+                "Círculos"
+            ],
+            "Circular": [
+                "Circular"
+            ],
+            "Citations": [
+                "Citas"
+            ],
+            "Classification table": [
+                "Tabla de clasificación"
+            ],
+            "Coefficient": [
+                "Coeficiente"
+            ],
+            "Coefficients": [
+                "Coeficientes"
+            ],
+            "Coefficients (unstandardized)": [
+                "Coeficientes (no estandarizados)"
+            ],
+            "Coefficients and odds ratios": [
+                "Coeficientes y odds ratios"
+            ],
+            "Coefficients and odds ratios (by category)": [
+                "Coeficientes y odds ratios (por categoría)"
+            ],
+            "Coefficients and odds ratios (proportional odds)": [
+                "Coeficientes y odds ratios (momios proporcionales)"
+            ],
+            "Color by group": [
+                "Colorear por grupo"
+            ],
+            "Color Palette by Equation": [
+                "Paleta de Color por Ecuación"
+            ],
+            "Color Palette by Group": [
+                "Paleta de Color por Grupo"
+            ],
+            "Color Palette by Measurement": [
+                "Paleta de Color por Medición"
+            ],
+            "Color Palette for Categories/Groups": [
+                "Paleta de Color para Categorías/Grupos"
+            ],
+            "Color Palette for Series/Groups": [
+                "Paleta de Color para Series/Grupos"
+            ],
+            "Colorblind-safe (Okabe-Ito)": [
+                "Apta para daltonismo (Okabe-Ito)"
+            ],
+            "Comparison": [
+                "Comparación"
+            ],
+            "Comparison Plot Style": [
+                "Estilo del Gráfico de Comparación"
+            ],
+            "Complete": [
+                "Completo"
+            ],
+            "Complete cases": [
+                "Casos completos"
+            ],
+            "Complete separation": [
+                "Separación completa"
+            ],
+            "Conclusion": [
+                "Conclusión"
+            ],
+            "Confidence band": [
+                "Banda de confianza"
+            ],
+            "Connected in the model": [
+                "Conectadas en el modelo"
+            ],
+            "Cook alert": [
+                "Alerta de Cook"
+            ],
+            "Cook's D": [
+                "Cook's D"
+            ],
+            "Cook's D by case": [
+                "Cook's D por caso"
+            ],
+            "Cook's distance": [
+                "Distancia de Cook"
+            ],
+            "Copula entropy": [
+                "Entropía copular"
+            ],
+            "Copula Entropy": [
+                "Entropía Copular"
+            ],
+            "Copula Entropy Independence Test": [
+                "Prueba de Independencia por Entropía Copular"
+            ],
+            "Correlation": [
+                "Correlación"
+            ],
+            "Correlation matrix": [
+                "Matriz de correlaciones"
+            ],
+            "Correlation Matrix": [
+                "Matriz de Correlaciones"
+            ],
+            "Correlation matrix (numeric predictors)": [
+                "Matriz de correlaciones (predictores numéricos)"
+            ],
+            "Correlations": [
+                "Correlaciones"
+            ],
+            "Covariance": [
+                "Covarianza"
+            ],
+            "Covariances": [
+                "Covarianzas"
+            ],
+            "Covariate": [
+                "Covariable"
+            ],
+            "Covariate linearity": [
+                "Linealidad de covariables"
+            ],
+            "Covariates": [
+                "Covariables"
+            ],
+            "Criterion (author)": [
+                "Criterio (autor)"
+            ],
+            "Criterion / test": [
+                "Criterio / prueba"
+            ],
+            "Current model": [
+                "Modelo actual"
+            ],
+            "Current N": [
+                "N actual"
+            ],
+            "Curve Smoothing (bandwidth)": [
+                "Suavizado de la Curva (ancho de banda)"
+            ],
+            "Cutpoint": [
+                "Punto de corte"
+            ],
+            "Cutpoints (intercepts)": [
+                "Puntos de corte (intercepts)"
+            ],
+            "Date (optional)": [
+                "Fecha (opcional)"
+            ],
+            "Date Variable": [
+                "Variable de Fecha"
+            ],
+            "dCor": [
+                "dCor"
+            ],
+            "Dependent Variable": [
+                "Variable Dependiente"
+            ],
+            "Dependent variable": [
+                "Variable dependiente"
+            ],
+            "Dependent Variable (binary)": [
+                "Variable Dependiente (binaria)"
+            ],
+            "Dependent Variable (nominal, 3+ levels)": [
+                "Variable Dependiente (nominal, 3+ niveles)"
+            ],
+            "Dependent Variable (ordinal, 3+ levels)": [
+                "Variable Dependiente (ordinal, 3+ niveles)"
+            ],
+            "Dependent Variable (Y)": [
+                "Variable Dependiente (Y)"
+            ],
+            "Dependent variable by group": [
+                "Variable dependiente por grupo"
+            ],
+            "Descriptive statistics by group": [
+                "Estadísticos descriptivos por grupo"
+            ],
+            "Descriptives by measurement": [
+                "Descriptivos por medición"
+            ],
+            "Design": [
+                "Diseño"
+            ],
+            "Design independence": [
+                "Independencia del diseño"
+            ],
+            "Design summary": [
+                "Resumen del diseño"
+            ],
+            "Detail": [
+                "Detalle"
+            ],
+            "Details": [
+                "Detalles"
+            ],
+            "df": [
+                "gl"
+            ],
+            "df1": [
+                "df1"
+            ],
+            "df2": [
+                "df2"
+            ],
+            "DFFITS": [
+                "DFFITS"
+            ],
+            "Diagnostic": [
+                "Diagnóstico"
+            ],
+            "Diagnostic Area": [
+                "Área Diagnóstica"
+            ],
+            "Diagnostic plots": [
+                "Gráficos diagnósticos"
+            ],
+            "Diagnostic Plots": [
+                "Gráficos Diagnósticos"
+            ],
+            "Difference": [
+                "Diferencia"
+            ],
+            "Direct Effect (β)": [
+                "Efecto Directo (β)"
+            ],
+            "Direct predictors": [
+                "Predictores directos"
+            ],
+            "Direct, Indirect, and Total Effects": [
+                "Efectos Directos, Indirectos y Totales"
+            ],
+            "Direct, Indirect, and Total Effects (Simple Mediation)": [
+                "Efectos Directos, Indirectos y Totales (Mediación Simple)"
+            ],
+            "Discrimination": [
+                "Discriminación"
+            ],
+            "Discrimination plots": [
+                "Gráficos de discriminación"
+            ],
+            "Distance alert": [
+                "Alerta de distancia"
+            ],
+            "Distance correlation matrix (dCor, APA 7 format)": [
+                "Matriz de correlación de distancia (dCor, formato APA 7)"
+            ],
+            "Distance Correlation Matrix (dCor, APA 7 Format)": [
+                "Matriz de Correlación de Distancia (dCor, formato APA 7)"
+            ],
+            "Distribution by category": [
+                "Distribución por categoría"
+            ],
+            "Distribution by group": [
+                "Distribución por grupo"
+            ],
+            "Distribution of paired differences": [
+                "Distribución de diferencias pareadas"
+            ],
+            "Distribution of the analyzed variable by group": [
+                "Distribución de la variable analizada por grupo"
+            ],
+            "Distribution plot guide": [
+                "Guía del gráfico de distribución"
+            ],
+            "Dumbbell (Pearson vs dCor connected)": [
+                "Mancuerna (Pearson vs dCor conectados)"
+            ],
+            "Ellipses": [
+                "Elipses"
+            ],
+            "Empirical logit vs predictor": [
+                "Logit empírico vs predictor"
+            ],
+            "Endogenous Variable": [
+                "Variable Endógena"
+            ],
+            "Endogenous variables": [
+                "Variables endógenas"
+            ],
+            "English": [
+                "English"
+            ],
+            "Español": [
+                "Español"
+            ],
+            "Est.": [
+                "Est."
+            ],
+            "Estimate": [
+                "Estimación"
+            ],
+            "Estimated conditional volatility": [
+                "Volatilidad condicional estimada"
+            ],
+            "ETS / Exponential Smoothing": [
+                "ETS / Suavizado Exponencial"
+            ],
+            "Evaluates the assumptions and performance of a binary logistic regression model for a two-level outcome predicted by numeric and/or categorical predictors. It checks linearity in the logit (via the empirical logit and Box-Tidwell-style diagnostics), multicollinearity, calibration of predicted probabilities against observed proportions, discrimination via the ROC curve and AUC, and case influence through Cook's D. Use it whenever a binary outcome is modeled with logistic regression, to verify the model is well-specified and to judge how well it discriminates and calibrates before trusting its odds ratios.": [
+                "Evalúa los supuestos y el desempeño de un modelo de regresión logística binaria para un desenlace de dos niveles predicho por predictores numéricos y/o categóricos. Verifica la linealidad en el logit (vía el logit empírico y diagnósticos tipo Box-Tidwell), la multicolinealidad, la calibración de las probabilidades predichas frente a las proporciones observadas, la discriminación vía la curva ROC y el AUC, y la influencia de casos mediante la D de Cook. Úselo siempre que se modele un desenlace binario con regresión logística, para verificar que el modelo esté bien especificado y juzgar qué tan bien discrimina y calibra antes de confiar en sus odds ratios."
+            ],
+            "Evaluates the assumptions behind comparing a continuous outcome across the cells of one or more factors, with optional continuous covariates turning the design into an ANCOVA. It checks normality of residuals, homogeneity of variance across cells, and, when covariates are present, homogeneity of regression slopes, covariate linearity, and multicollinearity among covariates, backed by residual, Q-Q, and influence (leverage/Cook's D) plots. Use it before trusting an ANOVA/ANCOVA result, to confirm the design meets the conditions the omnibus F-test relies on and to flag influential cases that could be distorting group means.": [
+                "Evalúa los supuestos detrás de comparar un desenlace continuo entre las celdas de uno o más factores, con covariables continuas opcionales que convierten el diseño en un ANCOVA. Verifica la normalidad de los residuos, la homogeneidad de varianza entre celdas y, cuando hay covariables presentes, la homogeneidad de las pendientes de regresión, la linealidad de las covariables y la multicolinealidad entre covariables, respaldado por gráficos de residuos, Q-Q e influencia (leverage/D de Cook). Úselo antes de confiar en un resultado de ANOVA/ANCOVA, para confirmar que el diseño cumple las condiciones de las que depende la prueba F ómnibus y para señalar casos influyentes que podrían estar distorsionando las medias de grupo."
+            ],
+            "Evaluates the assumptions behind comparing a continuous outcome across two independent groups (independent-samples t-test / Mann-Whitney U) before the comparison is trusted, rather than only reporting the test statistic. It checks normality within each group, homogeneity of variance, and flags extreme cases, pairing each diagnostic with distribution, Q-Q, and violin/jitter plots plus plain-language interpretation. Use it whenever two independent groups are being compared on a numeric variable, to decide whether the standard t-test, Welch's correction, or a non-parametric alternative is the more defensible choice.": [
+                "Evalúa los supuestos detrás de comparar un desenlace continuo entre dos grupos independientes (prueba t para muestras independientes / U de Mann-Whitney) antes de confiar en la comparación, en vez de solo reportar el estadístico de prueba. Verifica la normalidad dentro de cada grupo, la homogeneidad de varianza y señala casos extremos, emparejando cada diagnóstico con gráficos de distribución, Q-Q y violín/jitter más interpretación en lenguaje llano. Úselo siempre que se comparen dos grupos independientes en una variable numérica, para decidir si la prueba t estándar, la corrección de Welch o una alternativa no paramétrica es la opción más defendible."
+            ],
+            "Evaluates the assumptions behind comparing paired or repeated measurements on the same subjects: two related measures are diagnosed for a paired t-test/Wilcoxon comparison, while three or more are diagnosed for a repeated-measures ANOVA/Friedman comparison. It checks normality of the paired differences and, for three or more occasions, sphericity, alongside profile plots that show whether subjects move together or diverge across occasions. Use it whenever the same units are measured more than once, to decide whether the standard parametric test or a non-parametric alternative is appropriate before interpreting the comparison.": [
+                "Evalúa los supuestos detrás de comparar mediciones pareadas o repetidas en los mismos sujetos: dos mediciones relacionadas se diagnostican para una comparación de prueba t pareada/Wilcoxon, mientras que tres o más se diagnostican para una comparación de ANOVA de medidas repetidas/Friedman. Verifica la normalidad de las diferencias pareadas y, para tres o más ocasiones, la esfericidad, junto con gráficos de perfil que muestran si los sujetos se mueven juntos o divergen entre ocasiones. Úselo siempre que las mismas unidades se midan más de una vez, para decidir si la prueba paramétrica estándar o una alternativa no paramétrica es apropiada antes de interpretar la comparación."
+            ],
+            "Evaluates the assumptions of a multinomial logit model (nnet::multinom) for an unordered nominal outcome with three or more categories, predicted by numeric and/or categorical predictors. It checks the independence of irrelevant alternatives via a Hausman-McFadden test, linearity in the log-odds for each non-reference category against the reference, multicollinearity, classification accuracy, and case influence through per-case Pearson residuals, warning when a two-level outcome would be better served by the binary Logistic Regression module. Use it whenever a nominal outcome with three or more unordered categories is modeled, to confirm the model's structural assumptions before interpreting its category-specific coefficients.": [
+                "Evalúa los supuestos de un modelo logit multinomial (nnet::multinom) para un desenlace nominal no ordenado con tres o más categorías, predicho por predictores numéricos y/o categóricos. Verifica la independencia de alternativas irrelevantes vía una prueba de Hausman-McFadden, la linealidad en el log-odds de cada categoría no de referencia frente a la de referencia, la multicolinealidad, la precisión de clasificación y la influencia de casos mediante residuos de Pearson por caso, advirtiendo cuando un desenlace de dos niveles estaría mejor servido por el módulo de Regresión Logística binaria. Úselo siempre que se modele un desenlace nominal con tres o más categorías no ordenadas, para confirmar los supuestos estructurales del modelo antes de interpretar sus coeficientes específicos por categoría."
+            ],
+            "Evaluates the assumptions of a proportional-odds (cumulative logit) model for an ordered outcome with three or more levels, predicted by numeric and/or categorical predictors. It checks the proportional-odds assumption itself (via a Brant-style test), linearity in the cumulative logit, multicollinearity, and case influence through per-case Pearson residuals, warning when a two-level outcome would be better served by the binary Logistic Regression module. Use it whenever an ordinal outcome is modeled with MASS::polr(), to confirm the proportional-odds assumption holds before interpreting a single set of odds ratios across all thresholds.": [
+                "Evalúa los supuestos de un modelo de momios proporcionales (logit acumulativo) para un desenlace ordenado con tres o más niveles, predicho por predictores numéricos y/o categóricos. Verifica el propio supuesto de momios proporcionales (vía una prueba tipo Brant), la linealidad en el logit acumulativo, la multicolinealidad y la influencia de casos mediante residuos de Pearson por caso, advirtiendo cuando un desenlace de dos niveles estaría mejor servido por el módulo de Regresión Logística binaria. Úselo siempre que se modele un desenlace ordinal con MASS::polr(), para confirmar que el supuesto de momios proporcionales se sostiene antes de interpretar un único conjunto de odds ratios a través de todos los umbrales."
+            ],
+            "Evaluates the assumptions of ordinary least squares linear regression for a continuous outcome predicted by one or more numeric and/or categorical predictors. It checks linearity per predictor, homoscedasticity, normality of residuals, multicollinearity, and case influence (leverage, Cook's D, studentized residuals), and compares Pearson correlation against distance correlation and copula entropy to flag non-linear associations that a linear r would miss. Use it before reporting a regression model, to confirm the fitted line is trustworthy and to identify predictors or cases that need attention.": [
+                "Evalúa los supuestos de la regresión lineal por mínimos cuadrados ordinarios para un desenlace continuo predicho por uno o más predictores numéricos y/o categóricos. Verifica la linealidad por predictor, la homoscedasticidad, la normalidad de los residuos, la multicolinealidad y la influencia de casos (leverage, D de Cook, residuos studentizados), y compara la correlación de Pearson frente a la correlación de distancia y la entropía copular para señalar asociaciones no lineales que una r lineal pasaría por alto. Úselo antes de reportar un modelo de regresión, para confirmar que la línea ajustada es confiable e identificar predictores o casos que necesitan atención."
+            ],
+            "Evaluates the statistical and methodological conditions relevant to a chosen time-series modeling approach — ARIMA, SARIMA, ETS/exponential smoothing, VAR, VECM, or GARCH — for one or more numeric series, with optional external regressors and seasonal periodicity. It runs the minimum recommended set of diagnostics for the selected model (such as stationarity, autocorrelation of residuals, and seasonality checks), supported by time-series plots. Use it before finalizing a time-series model, to confirm the chosen approach and its assumptions fit the data rather than only inspecting the fitted forecast.": [
+                "Evalúa las condiciones estadísticas y metodológicas relevantes para un enfoque de modelado de series temporales elegido — ARIMA, SARIMA, ETS/suavizado exponencial, VAR, VECM o GARCH — para una o más series numéricas, con regresores externos y periodicidad estacional opcionales. Ejecuta el conjunto mínimo recomendado de diagnósticos para el modelo seleccionado (como estacionariedad, autocorrelación de residuos y verificaciones de estacionalidad), respaldado por gráficos de series temporales. Úselo antes de finalizar un modelo de series temporales, para confirmar que el enfoque elegido y sus supuestos se ajustan a los datos en vez de solo inspeccionar el pronóstico ajustado."
+            ],
+            "Evidence": [
+                "Evidencia"
+            ],
+            "Exogenous Above": [
+                "Exógenas Arriba"
+            ],
+            "Exogenous Below": [
+                "Exógenas Abajo"
+            ],
+            "Exogenous on the Left": [
+                "Exógenas a la Izquierda"
+            ],
+            "Exogenous on the Right": [
+                "Exógenas a la Derecha"
+            ],
+            "Exogenous variables": [
+                "Variables exógenas"
+            ],
+            "Explained Variance (R²)": [
+                "Varianza Explicada (R²)"
+            ],
+            "Exploratory transformations": [
+                "Transformaciones exploratorias"
+            ],
+            "External numeric variables to include as model regressors (ARIMAX if the model is ARIMA, SARIMAX if it is SARIMA). Does not apply to ETS, VAR, VECM, or GARCH. If left empty, the model is fit without external regressors, as standard ARIMA/SARIMA.": [
+                "Variables numéricas externas a incluir como regresores del modelo (ARIMAX si el modelo es ARIMA, SARIMAX si es SARIMA). No aplica a ETS, VAR, VECM ni GARCH. Si se deja vacío, el modelo se ajusta sin regresores externos, como ARIMA/SARIMA estándar."
+            ],
+            "External Variables": [
+                "Variables Externas"
+            ],
+            "Extreme": [
+                "Extremo"
+            ],
+            "Extreme cases (|z| > 2.5)": [
+                "Casos extremos (|z| > 2.5)"
+            ],
+            "Extreme residuals (|z| > 2.5)": [
+                "Residuos extremos (|z| > 2.5)"
+            ],
+            "Factor": [
+                "Factor"
+            ],
+            "Factors": [
+                "Factores"
+            ],
+            "Family": [
+                "Familia"
+            ],
+            "Finalize model": [
+                "Finalizar modelo"
+            ],
+            "Finalize Model": [
+                "Finalizar Modelo"
+            ],
+            "Fit and residual variance by transformation": [
+                "Ajuste y varianza residual por transformación"
+            ],
+            "Fit on the Empirical Logit": [
+                "Ajuste sobre el Logit Empírico"
+            ],
+            "Follow jamovi theme (default)": [
+                "Seguir el tema de jamovi (por defecto)"
+            ],
+            "Freedman-Diaconis": [
+                "Freedman-Diaconis"
+            ],
+            "Gap (dCor − |r|)": [
+                "Brecha (dCor − |r|)"
+            ],
+            "GARCH": [
+                "GARCH"
+            ],
+            "Goodness of fit": [
+                "Bondad de ajuste"
+            ],
+            "Group": [
+                "Grupo"
+            ],
+            "Group Comparison": [
+                "Comparación de Grupos"
+            ],
+            "Group Variable": [
+                "Variable de Grupo"
+            ],
+            "Grouped Bars": [
+                "Barras Agrupadas"
+            ],
+            "Guide: Boxplots of numeric variables": [
+                "Guía: Boxplots de variables numéricas"
+            ],
+            "Guide: Comparison of Pearson, dCor, and copula entropy": [
+                "Guía: Comparación de Pearson, dCor y entropía copular"
+            ],
+            "Guide: Cook's D by case": [
+                "Guía: Cook's D por caso"
+            ],
+            "Guide: Dependent variable by group": [
+                "Guía: Variable dependiente por grupo"
+            ],
+            "Guide: Observed distribution vs theoretical normal": [
+                "Guía: Distribución observada vs normal teórica"
+            ],
+            "Guide: Observed vs predicted values": [
+                "Guía: Valores observados vs predichos"
+            ],
+            "Guide: Pairwise relationship (Pearson / dCor)": [
+                "Guía: Relación por par (Pearson / dCor)"
+            ],
+            "Guide: Residual histogram": [
+                "Guía: Histograma de residuos"
+            ],
+            "Guide: Residual Q-Q plot": [
+                "Guía: Q-Q plot de residuos"
+            ],
+            "Guide: Residuals vs fitted values": [
+                "Guía: Residuos vs valores ajustados"
+            ],
+            "Guide: Scale-location plot": [
+                "Guía: Scale-location plot"
+            ],
+            "Guide: Studentized residuals vs leverage": [
+                "Guía: Residuos studentizados vs leverage"
+            ],
+            "Guide: Visual effects of numeric predictors": [
+                "Guía: Efectos visuales de predictores numéricos"
+            ],
+            "Hausman-McFadden Test (IIA)": [
+                "Prueba de Hausman-McFadden (IIA)"
+            ],
+            "Hierarchical (mediation-type)": [
+                "Jerárquico (tipo mediación)"
+            ],
+            "High Cook's D": [
+                "Cook's D Alto"
+            ],
+            "High Leverage": [
+                "Leverage Alto"
+            ],
+            "High Residual": [
+                "Residuo Alto"
+            ],
+            "High Studentized Residual": [
+                "Residuo Studentizado Alto"
+            ],
+            "Histogram Binning Method": [
+                "Método de Agrupación del Histograma"
+            ],
+            "Homogeneity / Homoscedasticity": [
+                "Homogeneidad / Homoscedasticidad"
+            ],
+            "Homogeneity of slopes": [
+                "Homogeneidad de pendientes"
+            ],
+            "Homogeneity of slopes in ANCOVA": [
+                "Homogeneidad de pendientes en ANCOVA"
+            ],
+            "Homogeneity of variances": [
+                "Homogeneidad de varianzas"
+            ],
+            "Homogeneity of variances across groups": [
+                "Homogeneidad de varianzas entre grupos"
+            ],
+            "Homoscedasticity": [
+                "Homoscedasticidad"
+            ],
+            "Homoscedasticity / Homogeneity": [
+                "Homoscedasticidad / Homogeneidad"
+            ],
+            "Homoscedasticity / Homogeneity of variances": [
+                "Homocedasticidad / Homogeneidad de varianzas"
+            ],
+            "Homoscedasticity and heteroscedasticity": [
+                "Homoscedasticidad y heterocedasticidad"
+            ],
+            "Homoscedasticity by Equation": [
+                "Homoscedasticidad por Ecuación"
+            ],
+            "Homoscedasticity plots": [
+                "Gráficos de homoscedasticidad"
+            ],
+            "Independence": [
+                "Independencia"
+            ],
+            "Independence of errors": [
+                "Independencia de errores"
+            ],
+            "Independence of Irrelevant Alternatives": [
+                "Independencia de Alternativas Irrelevantes"
+            ],
+            "Independence of irrelevant alternatives (IIA)": [
+                "Independencia de alternativas irrelevantes (IIA)"
+            ],
+            "Independence via Copula Entropy": [
+                "Independencia por Entropía Copular"
+            ],
+            "Independent Groups": [
+                "Grupos Independientes"
+            ],
+            "Independent groups": [
+                "Grupos independientes"
+            ],
+            "Indirect Effect (β)": [
+                "Efecto Indirecto (β)"
+            ],
+            "Individual data points": [
+                "Puntos de datos individuales"
+            ],
+            "Individual scatter plot by pair": [
+                "Diagrama de dispersión individual por par"
+            ],
+            "Individual values (rug)": [
+                "Valores individuales (rug)"
+            ],
+            "Influence": [
+                "Influencia"
+            ],
+            "Influence plots": [
+                "Gráficos de influencia"
+            ],
+            "Influential cases": [
+                "Casos influyentes"
+            ],
+            "Interaction": [
+                "Interacción"
+            ],
+            "Interpretation": [
+                "Interpretación"
+            ],
+            "Introduction": [
+                "Introducción"
+            ],
+            "IQR": [
+                "IQR"
+            ],
+            "Item": [
+                "Elemento"
+            ],
+            "Label Cases": [
+                "Etiquetar Casos"
+            ],
+            "Labels (a, b, c...)": [
+                "Etiquetas (a, b, c...)"
+            ],
+            "Large": [
+                "Grande"
+            ],
+            "Layout": [
+                "Disposición"
+            ],
+            "Layout: Rotate": [
+                "Disposición: Rotar"
+            ],
+            "Layout: Type": [
+                "Disposición: Tipo"
+            ],
+            "Leverage": [
+                "Leverage"
+            ],
+            "Linear fit and smoothing (individual plot)": [
+                "Ajuste lineal y suavizado (gráfico individual)"
+            ],
+            "Linear Line": [
+                "Línea Lineal"
+            ],
+            "Linearity": [
+                "Linealidad"
+            ],
+            "Linearity and Regression": [
+                "Linealidad y Regresión"
+            ],
+            "Linearity by numeric predictor": [
+                "Linealidad por predictor numérico"
+            ],
+            "Linearity in the cumulative logit": [
+                "Linealidad en el logit acumulativo"
+            ],
+            "Linearity in the cumulative logit (Box-Tidwell)": [
+                "Linealidad en el logit acumulativo (Box-Tidwell)"
+            ],
+            "Linearity in the logit": [
+                "Linealidad en el logit"
+            ],
+            "Linearity in the logit (Box-Tidwell)": [
+                "Linealidad en el logit (Box-Tidwell)"
+            ],
+            "Linearity in the multinomial logit": [
+                "Linealidad en el logit multinomial"
+            ],
+            "Linearity in the multinomial logit (LR test)": [
+                "Linealidad en el logit multinomial (prueba LR)"
+            ],
+            "Linearity plots": [
+                "Gráficos de linealidad"
+            ],
+            "Locks the specification and enables assumption validation and estimation. While unchecked, the model remains under construction.": [
+                "Bloquea la especificación y habilita la validación de supuestos y la estimación. Mientras esté desmarcado, el modelo permanece en construcción."
+            ],
+            "LOESS": [
+                "LOESS"
+            ],
+            "log(Y)": [
+                "log(Y)"
+            ],
+            "Logistic Regression": [
+                "Regresión logística"
+            ],
+            "Lower limit": [
+                "Límite inferior"
+            ],
+            "M difference": [
+                "M diferencia"
+            ],
+            "Mahalanobis D²": [
+                "D² Mahalanobis"
+            ],
+            "Mardia's Multivariate Normality Test": [
+                "Prueba de Normalidad Multivariada de Mardia"
+            ],
+            "Max": [
+                "Max"
+            ],
+            "Mdn": [
+                "Mdn"
+            ],
+            "Mdn difference": [
+                "Mdn diferencia"
+            ],
+            "Mean marker": [
+                "Marca de la media"
+            ],
+            "Measure": [
+                "Medida"
+            ],
+            "Measurement": [
+                "Medición"
+            ],
+            "Mediator (M)": [
+                "Mediador (M)"
+            ],
+            "Medium": [
+                "Medio"
+            ],
+            "Methodological alternatives": [
+                "Alternativas metodológicas"
+            ],
+            "Methodological Conclusion": [
+                "Conclusión Metodológica"
+            ],
+            "Methodological foundations and references": [
+                "Fundamentos metodológicos y referencias"
+            ],
+            "Methodological function": [
+                "Función metodológica"
+            ],
+            "Methodological function and associated decision": [
+                "Función metodológica y decisión asociada"
+            ],
+            "Methodological Guide": [
+                "Guía Metodológica"
+            ],
+            "Methodological interpretation of robust options": [
+                "Interpretación metodológica de opciones robustas"
+            ],
+            "Methodological options": [
+                "Opciones metodológicas"
+            ],
+            "Methodological reading": [
+                "Lectura metodológica"
+            ],
+            "Metric": [
+                "Métrica"
+            ],
+            "Min": [
+                "Min"
+            ],
+            "Missing": [
+                "Faltantes"
+            ],
+            "Missing data summary": [
+                "Resumen de datos faltantes"
+            ],
+            "Model design": [
+                "Diseño del modelo"
+            ],
+            "Model Design": [
+                "Diseño del Modelo"
+            ],
+            "Model Diagnostic Conclusion": [
+                "Conclusión Diagnóstica del Modelo"
+            ],
+            "Model Diagnostics Summary": [
+                "Resumen de Diagnósticos del Modelo"
+            ],
+            "Model Endogenous Variables": [
+                "Variables Endógenas del Modelo"
+            ],
+            "Model Exogenous Variables": [
+                "Variables Exógenas del Modelo"
+            ],
+            "Model methodological profile": [
+                "Perfil metodológico del modelo"
+            ],
+            "Model Methodological Validation": [
+                "Validación Metodológica del Modelo"
+            ],
+            "Model Structure": [
+                "Estructura del Modelo"
+            ],
+            "Model summary": [
+                "Resumen del modelo"
+            ],
+            "Model Variables": [
+                "Variables del Modelo"
+            ],
+            "Multicollinearity": [
+                "Multicolinealidad"
+            ],
+            "Multicollinearity by Equation": [
+                "Multicolinealidad por Ecuación"
+            ],
+            "Multinomial Logistic Regression": [
+                "Regresión logística multinomial"
+            ],
+            "Multiplier for the density estimate's bandwidth (adjust in density()); lower values show more detail, higher values smooth more.": [
+                "Multiplicador para el ancho de banda de la estimación de densidad (se ajusta en density()); valores más bajos muestran más detalle, valores más altos suavizan más."
+            ],
+            "Multivariate Normality (Mardia)": [
+                "Normalidad Multivariada (Mardia)"
+            ],
+            "Multivariate Outliers": [
+                "Valores Atípicos Multivariados"
+            ],
+            "No Abbreviation": [
+                "Sin Abreviar"
+            ],
+            "Nodes": [
+                "Nodos"
+            ],
+            "Nodes: Abbreviate": [
+                "Nodos: Abreviar"
+            ],
+            "Nodes: Shapes": [
+                "Nodos: Formas"
+            ],
+            "Nodes: Size": [
+                "Nodos: Tamaño"
+            ],
+            "None": [
+                "Ninguno"
+            ],
+            "Normality": [
+                "Normalidad"
+            ],
+            "Normality decision summary": [
+                "Resumen de decisión de normalidad"
+            ],
+            "Normality interpretation guide": [
+                "Guía de interpretación de normalidad"
+            ],
+            "Normality of differences/residuals": [
+                "Normalidad de diferencias/residuos"
+            ],
+            "Normality plots": [
+                "Gráficos de normalidad"
+            ],
+            "Normality Q-Q plots: global and by group": [
+                "Q-Q plots de normalidad: global y por grupo"
+            ],
+            "Normality summary by comparison": [
+                "Resumen de normalidad por comparación"
+            ],
+            "Normality tests by group": [
+                "Pruebas de normalidad por grupo"
+            ],
+            "Notable difference": [
+                "Diferencia notable"
+            ],
+            "Note": [
+                "Nota"
+            ],
+            "Notes": [
+                "Notas"
+            ],
+            "Notes and recommendation": [
+                "Notas y recomendación"
+            ],
+            "Notice": [
+                "Aviso"
+            ],
+            "Number of Groups (bins) for the Empirical Logit": [
+                "Número de Grupos (bins) para el Logit Empírico"
+            ],
+            "Number of Groups (deciles) for Calibration": [
+                "Número de Grupos (deciles) para la Calibración"
+            ],
+            "Number of observations per seasonal cycle (12 = monthly, 4 = quarterly, 7 = daily with a weekly cycle, 1 = no seasonality). Used for seasonal tests and differencing in SARIMA and ETS.": [
+                "Número de observaciones por ciclo estacional (12 = mensual, 4 = trimestral, 7 = diario con ciclo semanal, 1 = sin estacionalidad). Se usa para pruebas estacionales y diferenciación en SARIMA y ETS."
+            ],
+            "Number of permutations used for the dCor and copula entropy p-value. Higher values give the p-value finer resolution (the minimum attainable is 1/(B+1)) at the cost of more computation time; 999 is reasonable for exploration, 4999 or more for final results.": [
+                "Número de permutaciones usadas para el p-valor de dCor y entropía copular. Valores más altos dan al p-valor una resolución más fina (el mínimo alcanzable es 1/(B+1)) a costa de mayor tiempo de cómputo; 999 es razonable para exploración, 4999 o más para resultados finales."
+            ],
+            "Numeric Predictors": [
+                "Predictores Numéricos"
+            ],
+            "Observed": [
+                "Observado"
+            ],
+            "Observed category": [
+                "Categoría observada"
+            ],
+            "Observed distribution vs theoretical normal": [
+                "Distribución observada vs normal teórica"
+            ],
+            "Observed distribution vs theoretical normal: global and by group": [
+                "Distribución observada vs normal teórica: global y por grupo"
+            ],
+            "Observed residual distribution vs theoretical normal curve": [
+                "Distribución observada de residuos vs curva normal teórica"
+            ],
+            "Observed vs predicted": [
+                "Observado vs. predicho"
+            ],
+            "Observed vs predicted values": [
+                "Valores observados vs predichos"
+            ],
+            "Observed vs. theoretical normal curve": [
+                "Curva normal observada vs. teórica"
+            ],
+            "Odds Ratios": [
+                "Odds Ratios"
+            ],
+            "Offset labels": [
+                "Desplazar etiquetas"
+            ],
+            "Offsets each path's label to one side of the arrow instead of centering it on the line.": [
+                "Desplaza la etiqueta de cada ruta hacia un lado de la flecha en vez de centrarla sobre la línea."
+            ],
+            "Omitted category": [
+                "Categoría omitida"
+            ],
+            "Only applies to the hierarchical layout; controls which end the exogenous variables are placed at.": [
+                "Solo aplica a la disposición jerárquica; controla en qué extremo se colocan las variables exógenas."
+            ],
+            "Optional variable with the date or timestamp of each observation, used only to label the plots' horizontal axis. It is not required: if none is selected, Time Series assumes regularly spaced observations following row order and the declared periodicity, and labels the axis with the observation index (1, 2, 3, ...). This variable is not used to check for gaps or irregularities in the time spacing.": [
+                "Variable opcional con la fecha o marca temporal de cada observación, usada solo para etiquetar el eje horizontal de los gráficos. No es obligatoria: si no se selecciona ninguna, Series Temporales asume observaciones regularmente espaciadas siguiendo el orden de las filas y la periodicidad declarada, y etiqueta el eje con el índice de observación (1, 2, 3, ...). Esta variable no se usa para verificar vacíos o irregularidades en el espaciado temporal."
+            ],
+            "Options": [
+                "Opciones"
+            ],
+            "OR": [
+                "OR"
+            ],
+            "Ordinal Logistic Regression": [
+                "Regresión logística ordinal"
+            ],
+            "Original": [
+                "Original"
+            ],
+            "Outgoing paths": [
+                "Rutas salientes"
+            ],
+            "Outlier Diagnostics": [
+                "Diagnóstico de Casos Atípicos"
+            ],
+            "Outlier screening by group": [
+                "Detección de atípicos por grupo"
+            ],
+            "Outliers": [
+                "Atípicos"
+            ],
+            "Outliers and Influence": [
+                "Atípicos e Influencia"
+            ],
+            "Outliers and influence": [
+                "Casos atípicos e influencia"
+            ],
+            "Outliers in differences": [
+                "Casos atípicos en diferencias"
+            ],
+            "Outlying and influential cases": [
+                "Casos atípicos e influyentes"
+            ],
+            "Overall model linearity": [
+                "Linealidad global del modelo"
+            ],
+            "Overall Verdict": [
+                "Veredicto General"
+            ],
+            "p (CE)": [
+                "p (CE)"
+            ],
+            "Paired differences": [
+                "Diferencias pareadas"
+            ],
+            "Paired differences plots": [
+                "Gráficos de diferencias pareadas"
+            ],
+            "Pairs with a notable gap between Pearson and dCor": [
+                "Pares con diferencia notable entre Pearson y dCor"
+            ],
+            "Pairs with a Notable Gap Between Pearson and dCor": [
+                "Pares con Diferencia Notable entre Pearson y dCor"
+            ],
+            "Pairs with notable Pearson/dCor difference": [
+                "Pares con diferencia notable Pearson/dCor"
+            ],
+            "Pairwise comparison of Pearson, dCor, and copula entropy": [
+                "Comparación de Pearson, dCor y entropía copular entre pares"
+            ],
+            "Pairwise comparison plot": [
+                "Gráfico de comparación por pares"
+            ],
+            "Pairwise relationship (Pearson / dCor)": [
+                "Relación por par (Pearson / dCor)"
+            ],
+            "Palette used to distinguish several series in the same plot (for example, the variables of a VAR/VECM). Follows jamovi's own theme by default; the colorblind-safe and viridis options are additive choices jamovi does not otherwise offer.": [
+                "Paleta usada para distinguir varias series en un mismo gráfico (por ejemplo, las variables de un VAR/VECM). Sigue el propio tema de jamovi por defecto; las opciones apta para daltonismo y viridis son opciones aditivas que jamovi no ofrece de otro modo."
+            ],
+            "Partial autocorrelation (PACF)": [
+                "Autocorrelación parcial (PACF)"
+            ],
+            "Path Analysis": [
+                "Análisis de Rutas"
+            ],
+            "Path Analysis & Structural Validation": [
+                "Análisis de Rutas y Validación Estructural"
+            ],
+            "Path Coefficients": [
+                "Coeficientes de Ruta (Path Coefficients)"
+            ],
+            "Path diagram": [
+                "Diagrama de ruta"
+            ],
+            "Path Diagram (SVG)": [
+                "Diagrama de Ruta (Path Diagram SVG)"
+            ],
+            "Path Relationships": [
+                "Relaciones de Ruta"
+            ],
+            "Path Relationships (predictor → dependent)": [
+                "Relaciones de Ruta (predictor → dependiente)"
+            ],
+            "Paths": [
+                "Rutas"
+            ],
+            "Pearson / dCor / copula entropy discordance analysis": [
+                "Análisis de discordancia Pearson / dCor / entropía copular"
+            ],
+            "Pearson / dCor / Copula Entropy Discordance Analysis": [
+                "Análisis de Discordancia Pearson / dCor / Entropía Copular"
+            ],
+            "Pearson correlation matrix (APA 7 format)": [
+                "Matriz de correlaciones de Pearson (formato APA 7)"
+            ],
+            "Pearson Correlation Matrix (APA 7 Format)": [
+                "Matriz de Correlaciones de Pearson (formato APA 7)"
+            ],
+            "Pearson r": [
+                "Pearson r"
+            ],
+            "Pearson residual by case": [
+                "Residuo de Pearson por caso"
+            ],
+            "Pearson statistic": [
+                "Estadístico de Pearson"
+            ],
+            "Perfect calibration reference line": [
+                "Línea de referencia de calibración perfecta"
+            ],
+            "Periodicity (seasonal frequency)": [
+                "Periodicidad (frecuencia estacional)"
+            ],
+            "Permutation Seed": [
+                "Semilla de Permutación"
+            ],
+            "Permutation Tests (dCor / Copula Entropy)": [
+                "Pruebas de Permutación (dCor / Entropía Copular)"
+            ],
+            "Permutations (dCor / Copula Entropy)": [
+                "Permutaciones (dCor / Entropía Copular)"
+            ],
+            "Plot Color Palette": [
+                "Paleta de Color del Gráfico"
+            ],
+            "Plot Set": [
+                "Conjunto de Gráficos"
+            ],
+            "Plots": [
+                "Gráficos"
+            ],
+            "Plots: Correlations": [
+                "Gráficos: Correlaciones"
+            ],
+            "Plots: Discrimination": [
+                "Gráficos: Discriminación"
+            ],
+            "Plots: Distribution by Group": [
+                "Gráficos: Distribución por Grupo"
+            ],
+            "Plots: Goodness of Fit / Calibration": [
+                "Gráficos: Bondad de Ajuste / Calibración"
+            ],
+            "Plots: Homoscedasticity": [
+                "Gráficos: Homoscedasticidad"
+            ],
+            "Plots: Influence": [
+                "Gráficos: Influencia"
+            ],
+            "Plots: Linearity": [
+                "Gráficos: Linealidad"
+            ],
+            "Plots: Linearity in the Cumulative Logit": [
+                "Gráficos: Linealidad en el Logit Acumulativo"
+            ],
+            "Plots: Linearity in the Logit": [
+                "Gráficos: Linealidad en el Logit"
+            ],
+            "Plots: Linearity in the Multinomial Logit": [
+                "Gráficos: Linealidad en el Logit Multinomial"
+            ],
+            "Plots: Normal Curve": [
+                "Gráficos: Curva Normal"
+            ],
+            "Plots: Normality": [
+                "Gráficos: Normalidad"
+            ],
+            "Plots: Normality (Q-Q)": [
+                "Gráficos: Normalidad (Q-Q)"
+            ],
+            "Plots: Path Diagram": [
+                "Gráficos: Diagrama de Ruta"
+            ],
+            "Plots: Residuals": [
+                "Gráficos: Residuos"
+            ],
+            "Predictor": [
+                "Predictor"
+            ],
+            "Predictor (X)": [
+                "Predictor (X)"
+            ],
+            "Predictors": [
+                "Predictores"
+            ],
+            "Problem detected": [
+                "Problema detectado"
+            ],
+            "Profile of related measurements": [
+                "Perfil de mediciones relacionadas"
+            ],
+            "Profile plot by measurement": [
+                "Gráfico de perfil por medición"
+            ],
+            "Proportion": [
+                "Proporción"
+            ],
+            "Proportional Odds": [
+                "Momios Proporcionales"
+            ],
+            "Proportional odds (parallel lines)": [
+                "Momios proporcionales (líneas paralelas)"
+            ],
+            "Pseudo-R²": [
+                "Pseudo-R²"
+            ],
+            "Q-Q plot confidence band": [
+                "Banda de confianza del Q-Q plot"
+            ],
+            "Q-Q plots": [
+                "Q-Q plots"
+            ],
+            "Q-Q plots of paired differences": [
+                "Q-Q plots de diferencias pareadas"
+            ],
+            "Q1": [
+                "Q1"
+            ],
+            "Q3": [
+                "Q3"
+            ],
+            "R²": [
+                "R²"
+            ],
+            "Recommendation": [
+                "Recomendación"
+            ],
+            "Recommended action": [
+                "Acción recomendada"
+            ],
+            "Recommended methodological action": [
+                "Acción metodológica recomendada"
+            ],
+            "Rectangles": [
+                "Rectángulos"
+            ],
+            "Reference line (chance)": [
+                "Línea de referencia (azar)"
+            ],
+            "References in APA 7th Edition Format": [
+                "Referencias en formato APA 7.ª edición"
+            ],
+            "Regression": [
+                "Regresión"
+            ],
+            "Regression diagnostic plots": [
+                "Gráficos diagnósticos de regresión"
+            ],
+            "Regression model": [
+                "Modelo de regresión"
+            ],
+            "Related Groups": [
+                "Grupos Relacionados"
+            ],
+            "Related groups": [
+                "Grupos relacionados"
+            ],
+            "Related Measurements": [
+                "Mediciones Relacionadas"
+            ],
+            "Related-groups design": [
+                "Diseño de grupos relacionados"
+            ],
+            "Relationships": [
+                "Relaciones"
+            ],
+            "Report Language": [
+                "Idioma del Informe"
+            ],
+            "Required N": [
+                "N requerido"
+            ],
+            "Residual": [
+                "Residuo"
+            ],
+            "Residual Covariances": [
+                "Covarianzas Residuales"
+            ],
+            "Residual Covariances Among Endogenous Variables": [
+                "Covarianzas Residuales entre Variables Endógenas"
+            ],
+            "Residual Diagnostics by Equation": [
+                "Diagnóstico de Residuos por Ecuación"
+            ],
+            "Residual histogram": [
+                "Histograma de residuos"
+            ],
+            "Residual normality": [
+                "Normalidad de residuos"
+            ],
+            "Residual Normality": [
+                "Normalidad de Residuos"
+            ],
+            "Residual Normality by Equation": [
+                "Normalidad de Residuos por Ecuación"
+            ],
+            "Residual normality by transformation": [
+                "Normalidad de residuos por transformación"
+            ],
+            "Residual Q-Q plot": [
+                "Q-Q plot de residuos"
+            ],
+            "Residuals": [
+                "Residuos"
+            ],
+            "Residuals over time": [
+                "Residuos en el tiempo"
+            ],
+            "Residuals vs fitted values": [
+                "Residuos vs valores ajustados"
+            ],
+            "Robust and resampling options": [
+                "Opciones robustas y de remuestreo"
+            ],
+            "Robust Methods and Alternatives": [
+                "Métodos y Alternativas Robustas"
+            ],
+            "ROC curve": [
+                "Curva ROC"
+            ],
+            "Rule": [
+                "Regla"
+            ],
+            "Sample Size Adequacy": [
+                "Adecuación del Tamaño de Muestra"
+            ],
+            "Sample Size Assessment by Model Complexity": [
+                "Valoración del Tamaño de Muestra según la Complejidad del Modelo"
+            ],
+            "SARIMA": [
+                "SARIMA"
+            ],
+            "Scale-location plot": [
+                "Scale-location plot"
+            ],
+            "Scope": [
+                "Alcance"
+            ],
+            "Scope of this version": [
+                "Alcance de esta versión"
+            ],
+            "Scott": [
+                "Scott"
+            ],
+            "SD": [
+                "SD"
+            ],
+            "SD difference": [
+                "SD diferencia"
+            ],
+            "SE": [
+                "EE"
+            ],
+            "Seed used for the permutation tests, for reproducibility.": [
+                "Semilla usada para las pruebas de permutación, para reproducibilidad."
+            ],
+            "Select the numeric variable(s) representing the time series to evaluate. Univariate models (ARIMA, SARIMA, ETS, GARCH) use a single series; multivariate models (VAR, VECM) allow several.": [
+                "Seleccione la(s) variable(s) numérica(s) que representan la serie temporal a evaluar. Los modelos univariados (ARIMA, SARIMA, ETS, GARCH) usan una sola serie; los modelos multivariados (VAR, VECM) permiten varias."
+            ],
+            "Select the observed variables that will be part of the Path Analysis model.": [
+                "Seleccione las variables observadas que formarán parte del modelo de Análisis de Rutas."
+            ],
+            "Select the time-series modeling approach to display the relevant statistical and methodological conditions, and to run the minimum recommended set of diagnostics for that model.": [
+                "Seleccione el enfoque de modelado de series temporales para mostrar las condiciones estadísticas y metodológicas relevantes, y ejecutar el conjunto mínimo recomendado de diagnósticos para ese modelo."
+            ],
+            "Show": [
+                "Mostrar"
+            ],
+            "Shows, for each endogenous variable, a small error term (e) with an incoming arrow, along with the unexplained variance (1 - R²).": [
+                "Muestra, para cada variable endógena, un pequeño término de error (e) con una flecha entrante, junto con la varianza no explicada (1 - R²)."
+            ],
+            "Sig.": [
+                "Sig."
+            ],
+            "Sig. (CE)": [
+                "Sig. (CE)"
+            ],
+            "Significant tests": [
+                "Pruebas significativas"
+            ],
+            "Simple and Multiple Regression": [
+                "Regresión simple y múltiple"
+            ],
+            "Small": [
+                "Pequeño"
+            ],
+            "Smoothing": [
+                "Suavizado"
+            ],
+            "Smoothing confidence band": [
+                "Banda de confianza del suavizado"
+            ],
+            "Sobel z": [
+                "z de Sobel"
+            ],
+            "Specified model": [
+                "Modelo especificado"
+            ],
+            "Sphericity": [
+                "Esfericidad"
+            ],
+            "Sphericity and corrections": [
+                "Esfericidad y correcciones"
+            ],
+            "Spring": [
+                "Resorte"
+            ],
+            "sqrt(Y)": [
+                "sqrt(Y)"
+            ],
+            "Statistic": [
+                "Estadístico"
+            ],
+            "Statistical Assumptions": [
+                "Supuestos Estadísticos"
+            ],
+            "Statistical symbols remain in international format: n, M, SD, Mdn, Min, Max, IQR, CI, p, df.": [
+                "Los símbolos estadísticos permanecen en formato internacional: n, M, SD, Mdn, Min, Max, IQR, IC, p, df."
+            ],
+            "Statistical symbols remain in international format: n, p, ACF, PACF, ADF, KPSS, PP, etc.": [
+                "Los símbolos estadísticos permanecen en formato internacional: n, p, ACF, PACF, ADF, KPSS, PP, etc."
+            ],
+            "Status": [
+                "Estado"
+            ],
+            "Studentized residual": [
+                "Residuo studentizado"
+            ],
+            "Studentized residuals vs leverage": [
+                "Residuos studentizados vs leverage"
+            ],
+            "Suggested option": [
+                "Opción sugerida"
+            ],
+            "Suggested test": [
+                "Prueba sugerida"
+            ],
+            "Summary of paired differences": [
+                "Resumen de diferencias pareadas"
+            ],
+            "Symmetry of differences": [
+                "Simetría de diferencias"
+            ],
+            "Term": [
+                "Término"
+            ],
+            "Test": [
+                "Prueba"
+            ],
+            "Test / criterion": [
+                "Prueba / criterio"
+            ],
+            "Test results": [
+                "Resultados de las pruebas"
+            ],
+            "Test selection": [
+                "Selección de prueba"
+            ],
+            "Theme": [
+                "Tema"
+            ],
+            "Theoretical normal curve overlay": [
+                "Superposición de curva normal teórica"
+            ],
+            "Threshold line": [
+                "Línea de umbral"
+            ],
+            "Time Series": [
+                "Series Temporales"
+            ],
+            "Time series": [
+                "Serie(s) temporal(es)"
+            ],
+            "Time series model": [
+                "Modelo de series temporales"
+            ],
+            "Top 5 Influence": [
+                "Top 5 de Influencia"
+            ],
+            "Total Effect (β)": [
+                "Efecto Total (β)"
+            ],
+            "Transformations and Robust Alternatives": [
+                "Transformaciones y Alternativas Robustas"
+            ],
+            "Transformations and robust alternatives": [
+                "Transformaciones y alternativas robustas"
+            ],
+            "Translated, MCAR-missingness- and outlier-augmented survey/financial- behavior data exercising every implemented module — see data/README.md": [
+                "Datos de comportamiento de encuesta/financieros traducidos, aumentados con datos faltantes MCAR y atípicos, que ejercitan cada módulo implementado — ver data/README.md"
+            ],
+            "Triggered criteria": [
+                "Criterios activados"
+            ],
+            "Triggered criterion": [
+                "Criterio activado"
+            ],
+            "Type": [
+                "Tipo"
+            ],
+            "Uncheck for a text-only report.": [
+                "Desmarque para un informe de solo texto."
+            ],
+            "Upper limit": [
+                "Límite superior"
+            ],
+            "Using this library": [
+                "Uso de esta biblioteca"
+            ],
+            "Valid tests": [
+                "Pruebas válidas"
+            ],
+            "Validation": [
+                "Validación"
+            ],
+            "Value": [
+                "Valor"
+            ],
+            "VAR": [
+                "VAR"
+            ],
+            "Variable": [
+                "Variable"
+            ],
+            "Variable 1": [
+                "Variable 1"
+            ],
+            "Variable 2": [
+                "Variable 2"
+            ],
+            "Variables": [
+                "Variables"
+            ],
+            "Variance": [
+                "Varianza"
+            ],
+            "Variance interpretation guide": [
+                "Guía de interpretación de la varianza"
+            ],
+            "VECM": [
+                "VECM"
+            ],
+            "Violin plot": [
+                "Gráfico de violín"
+            ],
+            "Viridis": [
+                "Viridis"
+            ],
+            "Visual distribution guide": [
+                "Guía visual de distribución"
+            ],
+            "Visual effects of numeric predictors on the dependent variable": [
+                "Efectos visuales de predictores numéricos sobre la dependiente"
+            ],
+            "Visual normality guide": [
+                "Guía visual de normalidad"
+            ],
+            "X²": [
+                "X²"
+            ],
+            "Zero reference line": [
+                "Línea de referencia en cero"
+            ]
+        }
+    }
+}
