@@ -238,6 +238,16 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="diagnosticsResults",
                 title="Test results",
+                refs=list(
+                    "dickey_1979",
+                    "phillips_1988",
+                    "kwiatkowski_1992",
+                    "ljung_1978",
+                    "engle_1982",
+                    "jarque_1987",
+                    "johansen_1991",
+                    "bollerslev_1986",
+                    "engle_1993"),
                 clearWith=list(
                     "dateVar",
                     "exogenous",
