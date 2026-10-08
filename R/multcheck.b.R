@@ -1453,8 +1453,8 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     tr("Applied Interpretation", "Interpretación Aplicada"),
                     if (!is.na(max_vif)) {
                         tr(
-                            paste0("Maximum VIF: ", fmt_num(max_vif, 2), " (predictor: ", max_vif_name, "). Values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970)."),
-                            paste0("VIF máximo: ", fmt_num(max_vif, 2), " (predictor: ", max_vif_name, "). Valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970).")
+                            paste0("Maximum VIF: ", fmt_num(max_vif, 2), " (predictor: ", max_vif_name, "). Values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references)."),
+                            paste0("VIF máximo: ", fmt_num(max_vif, 2), " (predictor: ", max_vif_name, "). Valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970; ver referencias).")
                         )
                     } else {
                         tr("Multicollinearity could not be assessed for this predictor set.",

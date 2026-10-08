@@ -663,8 +663,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 linearity_interp <- c(
                     paste0(
                         tr(
-                            paste0(bt_significant, " of ", bt_tested, " numeric predictor(s) showed a significant Box-Tidwell interaction (Box & Tidwell, 1962), suggesting the relationship with the logit may not be linear for those predictors."),
-                            paste0(bt_significant, " de ", bt_tested, " predictor(es) numérico(s) mostraron una interacción de Box-Tidwell significativa (Box & Tidwell, 1962), lo que sugiere que la relación con el logit podría no ser lineal para esos predictores.")
+                            paste0(bt_significant, " of ", bt_tested, " numeric predictor(s) showed a significant Box-Tidwell interaction (Box & Tidwell, 1962; see references), suggesting the relationship with the logit may not be linear for those predictors."),
+                            paste0(bt_significant, " de ", bt_tested, " predictor(es) numérico(s) mostraron una interacción de Box-Tidwell significativa (Box & Tidwell, 1962; ver referencias), lo que sugiere que la relación con el logit podría no ser lineal para esos predictores.")
                         )
                     ),
                     tr(
@@ -867,7 +867,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     c(
                         paste0(
                             tr("AUC = ", "AUC = "), fmt_num(auc_val, 3),
-                            tr(" (approx. 95% CI ", " (IC 95% aprox. "), fmt_num(auc_ci_lo, 3), "-", fmt_num(auc_ci_hi, 3), "; Hanley & McNeil, 1982). ",
+                            tr(" (approx. 95% CI ", " (IC 95% aprox. "), fmt_num(auc_ci_lo, 3), "-", fmt_num(auc_ci_hi, 3), tr("; Hanley & McNeil, 1982; see references). ", "; Hanley & McNeil, 1982; ver referencias). "),
                             tr(
                                 if (auc_val >= .8) "Good discrimination between events and non-events."
                                 else if (auc_val >= .7) "Acceptable discrimination."
@@ -991,8 +991,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             tr("Maximum VIF: ", "VIF máximo: "), fmt_num(max_vif, 2),
                             tr(" (predictor: ", " (predictor: "), max_vif_name, ")",
                             tr(
-                                ". Values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970).",
-                                ". Valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970)."
+                                ". Values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references).",
+                                ". Valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970; ver referencias)."
                             )
                         ),
                         paste0(
@@ -1264,8 +1264,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 c(
                     paste0(
                         tr(
-                            paste0(n_influential, " of ", n_complete, " cases (", fmt_num(pct_influential, 1), "%) exceed the Cook's D or leverage cutoffs used here (Pregibon, 1981)."),
-                            paste0(n_influential, " de ", n_complete, " casos (", fmt_num(pct_influential, 1), "%) superan los umbrales de Cook's D o leverage usados aquí (Pregibon, 1981).")
+                            paste0(n_influential, " of ", n_complete, " cases (", fmt_num(pct_influential, 1), "%) exceed the Cook's D or leverage cutoffs used here (Pregibon, 1981; see references)."),
+                            paste0(n_influential, " de ", n_complete, " casos (", fmt_num(pct_influential, 1), "%) superan los umbrales de Cook's D o leverage usados aquí (Pregibon, 1981; ver referencias).")
                         )
                     ),
                     paste0(
@@ -1374,8 +1374,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ),
                     paste0(
                         tr(
-                            paste0("Common error: interpreting the OR as a relative risk. They coincide only when the event is rare; here the event prevalence is ", fmt_num(event_prevalence, 1), "%, so with common events like this the OR systematically overstates the real relative effect (Zhang & Yu, 1998)."),
-                            paste0("Error común: interpretar el OR como un riesgo relativo. Coinciden solo cuando el evento es poco frecuente; aquí la prevalencia del evento es ", fmt_num(event_prevalence, 1), "%, así que con eventos frecuentes como este el OR exagera sistemáticamente el efecto relativo real (Zhang & Yu, 1998).")
+                            paste0("Common error: interpreting the OR as a relative risk. They coincide only when the event is rare; here the event prevalence is ", fmt_num(event_prevalence, 1), "%, so with common events like this the OR systematically overstates the real relative effect (Zhang & Yu, 1998; see references)."),
+                            paste0("Error común: interpretar el OR como un riesgo relativo. Coinciden solo cuando el evento es poco frecuente; aquí la prevalencia del evento es ", fmt_num(event_prevalence, 1), "%, así que con eventos frecuentes como este el OR exagera sistemáticamente el efecto relativo real (Zhang & Yu, 1998; ver referencias).")
                         )
                     ),
                     tr(

@@ -1460,8 +1460,8 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                             paste0("Levene (prueba principal): p = ", fmt_p(lev_mean_p), " (n = ", n_total, ", ", n_groups, " grupos).")
                         ),
                         tr(
-                            "Levene's test is used as the primary test because it is the classical, most widely recognized test for equality of variances across groups (Levene, 1960). Brown-Forsythe (median-centered) and Fligner-Killeen are more robust when normality is doubtful, and are reported alongside for comparison.",
-                            "La prueba de Levene se usa como prueba principal por ser la más clásica y ampliamente reconocida para igualdad de varianzas entre grupos (Levene, 1960). Brown-Forsythe (centrada en la mediana) y Fligner-Killeen son más robustas cuando la normalidad es dudosa, y se reportan junto a esta para comparar."
+                            "Levene's test is used as the primary test because it is the classical, most widely recognized test for equality of variances across groups (Levene, 1960; see references). Brown-Forsythe (median-centered) and Fligner-Killeen are more robust when normality is doubtful, and are reported alongside for comparison.",
+                            "La prueba de Levene se usa como prueba principal por ser la más clásica y ampliamente reconocida para igualdad de varianzas entre grupos (Levene, 1960; ver referencias). Brown-Forsythe (centrada en la mediana) y Fligner-Killeen son más robustas cuando la normalidad es dudosa, y se reportan junto a esta para comparar."
                         ),
                         if (homog_coh_total > 0) {
                             if (homog_coh_agree_dir == homog_coh_total) {

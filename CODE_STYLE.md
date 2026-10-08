@@ -525,9 +525,19 @@ Never remove observations automatically.
 
 Always document methodological decisions.
 
-AssumptionsLab always cites in APA 7th edition. This is fixed, not a user
-preference — there is no citation-style or reference-style selector anywhere
-in the interface (Bibliography, Assumption Library, or any analysis).
+AssumptionsLab always cites in APA 7th edition in `docs/Bibliography.md`,
+the module's single authoritative reference list. This is fixed, not a
+user preference — there is no citation-style or reference-style selector
+anywhere in the interface.
+
+Per-analysis citations shown *inside* jamovi (via `00refs.yaml`/`refs:`)
+render in jamovi's own numbered, order-of-appearance format — a
+constraint of jamovi's own reference renderer, not an AssumptionsLab
+choice, and the same for every module in the jamovi ecosystem. Never try
+to write a specific bracket number (`[7]`) anywhere in source text —
+jamovi assigns it at render time and it is not stable across runs. Where
+report prose mentions a source by name (e.g. "Levene, 1960"), append
+"see references" / "ver referencias", never a number.
 
 ---
 
@@ -541,10 +551,20 @@ Nunca eliminar observaciones automáticamente.
 
 Documentar siempre las decisiones metodológicas.
 
-AssumptionsLab siempre cita en APA 7.ª edición. Esto es fijo, no una
-preferencia del usuario — no existe ningún selector de estilo de citación o
-de referencia en ninguna parte de la interfaz (Bibliography, Assumption
-Library, ni ningún análisis).
+AssumptionsLab siempre cita en APA 7.ª edición en `docs/Bibliography.md`,
+la lista de referencias única y oficial del módulo. Esto es fijo, no una
+preferencia del usuario — no existe ningún selector de estilo de citación
+o de referencia en ninguna parte de la interfaz.
+
+Las citas por análisis mostradas *dentro* de jamovi (vía
+`00refs.yaml`/`refs:`) se renderizan en el propio formato numerado por
+orden de aparición de jamovi — una restricción del propio renderizador de
+referencias de jamovi, no una elección de AssumptionsLab, y la misma para
+cualquier módulo del ecosistema jamovi. Nunca escribir un número de
+corchete específico (`[7]`) en ningún texto fuente — jamovi lo asigna en
+tiempo de render y no es estable entre corridas. Donde el texto del
+informe mencione una fuente por su nombre (p. ej. "Levene, 1960"),
+agregar "see references" / "ver referencias", nunca un número.
 
 -------------------------------------------------------------------------------
 

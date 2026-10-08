@@ -1376,8 +1376,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     tr("Applied Interpretation", "Interpretación Aplicada"),
                     paste(variance_texts, collapse = "\n"),
                     tr(
-                        "Levene's test is treated as the primary reference because it is the classical, most widely recognized test for equality of variances across groups (Levene, 1960); Brown-Forsythe and Bartlett are reported alongside for comparison.",
-                        "La prueba de Levene se trata como referencia principal por ser la más clásica y ampliamente reconocida para igualdad de varianzas entre grupos (Levene, 1960); Brown-Forsythe y Bartlett se reportan junto a esta para comparar."
+                        "Levene's test is treated as the primary reference because it is the classical, most widely recognized test for equality of variances across groups (Levene, 1960; see references); Brown-Forsythe and Bartlett are reported alongside for comparison.",
+                        "La prueba de Levene se trata como referencia principal por ser la más clásica y ampliamente reconocida para igualdad de varianzas entre grupos (Levene, 1960; ver referencias); Brown-Forsythe y Bartlett se reportan junto a esta para comparar."
                     ),
                     tr(
                         "Why it matters: unequal variances mainly threaten the classical F-test when group sizes are also unequal; with equal group sizes, ANOVA is fairly robust to moderate variance differences.",
@@ -1782,8 +1782,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     tr("Maximum VIF: ", "VIF máximo: "), format(round(clean_num(max_vif), 2), nsmall = 2),
                     if (!is.na(max_vif_name)) paste0(tr(" (term: ", " (término: "), max_vif_name, ")") else "",
                     tr(
-                        ". By convention, values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970).",
-                        ". Por convención, valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970)."
+                        ". By convention, values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references).",
+                        ". Por convención, valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970; ver referencias)."
                     )
                 ) else tr("Not applicable: requires covariates.", "No aplica: requiere covariables."),
                 if (length(covs) > 0) tr(
