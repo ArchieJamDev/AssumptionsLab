@@ -299,6 +299,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="linearity",
                 title="Linearity in the logit (Box-Tidwell)",
+                refs=list(
+                    "box_1962"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -346,6 +348,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="goodnessOfFit",
                 title="Goodness of fit",
+                refs=list(
+                    "hosmer_1980"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -393,6 +397,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="discrimination",
                 title="Discrimination",
+                refs=list(
+                    "hanley_1982"),
                 columns=list(
                     list(
                         `name`="metric", 
@@ -433,6 +439,9 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="multicollinearity",
                 title="Multicollinearity",
                 visible=FALSE,
+                refs=list(
+                    "marquardt_1970",
+                    "belsley_1980"),
                 columns=list(
                     list(
                         `name`="diagnostic", 
@@ -477,6 +486,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Distance correlation matrix (dCor, APA 7 format)",
                 rows=0,
                 visible=FALSE,
+                refs=list(
+                    "sz_kely_2007"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -498,6 +509,9 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Pairs with a notable gap between Pearson and dCor",
                 rows=0,
                 visible=FALSE,
+                refs=list(
+                    "sz_kely_2007",
+                    "ma_2011"),
                 columns=list(
                     list(
                         `name`="var1", 
@@ -549,6 +563,9 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="influence",
                 title="Influential cases",
+                refs=list(
+                    "cook_1977",
+                    "pregibon_1981"),
                 columns=list(
                     list(
                         `name`="case", 

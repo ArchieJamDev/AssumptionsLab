@@ -77,6 +77,8 @@ items:
   - name: linearity
     title: Linearity in the logit (Box-Tidwell)
     type: Table
+    refs:
+      - box_1962
     columns:
       - name: predictor
         title: Predictor
@@ -120,6 +122,8 @@ items:
   - name: goodnessOfFit
     title: Goodness of fit
     type: Table
+    refs:
+      - hosmer_1980
     columns:
       - name: test
         title: Test
@@ -163,6 +167,8 @@ items:
   - name: discrimination
     title: Discrimination
     type: Table
+    refs:
+      - hanley_1982
     columns:
       - name: metric
         title: Metric
@@ -201,6 +207,9 @@ items:
     title: Multicollinearity
     type: Table
     visible: false
+    refs:
+      - marquardt_1970
+      - belsley_1980
     columns:
       - name: diagnostic
         title: Diagnostic
@@ -240,6 +249,8 @@ items:
     type: Table
     rows: 0
     visible: false
+    refs:
+      - sz_kely_2007
     columns:
       - name: var
         title: Variable
@@ -260,6 +271,9 @@ items:
     type: Table
     rows: 0
     visible: false
+    refs:
+      - sz_kely_2007
+      - ma_2011
     columns:
       - name: var1
         title: Variable 1
@@ -302,6 +316,9 @@ items:
   - name: influence
     title: Influential cases
     type: Table
+    refs:
+      - cook_1977
+      - pregibon_1981
     columns:
       - name: case
         title: Case
