@@ -65,7 +65,8 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
         proportionalOdds = function() private$.items[["proportionalOdds"]],
         independenceIrrelevantAlternatives = function() private$.items[["independenceIrrelevantAlternatives"]],
         robust = function() private$.items[["robust"]],
-        notes = function() private$.items[["notes"]]),
+        notes = function() private$.items[["notes"]],
+        totalBibliography = function() private$.items[["totalBibliography"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -80,47 +81,140 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normality",
-                title="Normality"))
+                title="Normality",
+                refs=list(
+                    "shapiro_1965",
+                    "lilliefors_1967",
+                    "anderson_1952",
+                    "shapiro_1972",
+                    "jarque_1987",
+                    "razali_2011")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homoscedasticity",
-                title="Homoscedasticity / Homogeneity of variances"))
+                title="Homoscedasticity / Homogeneity of variances",
+                refs=list(
+                    "levene_1960",
+                    "brown_1974",
+                    "bartlett_1937",
+                    "fligner_1976",
+                    "hartley_1950",
+                    "breusch_1979",
+                    "white_1980",
+                    "goldfeld_1965",
+                    "mackinnon_1985",
+                    "welch_1947")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="linearity",
-                title="Linearity"))
+                title="Linearity",
+                refs=list(
+                    "box_1962",
+                    "ramsey_1969",
+                    "sz_kely_2007",
+                    "ma_2011")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independence",
-                title="Independence"))
+                title="Independence",
+                refs=list(
+                    "durbin_1951",
+                    "breusch_1978",
+                    "godfrey_1978",
+                    "ljung_1978")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearity",
-                title="Multicollinearity"))
+                title="Multicollinearity",
+                refs=list(
+                    "marquardt_1970",
+                    "belsley_1980",
+                    "o_brien_2007")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influence",
-                title="Outliers and influence"))
+                title="Outliers and influence",
+                refs=list(
+                    "cook_1977",
+                    "mahalanobis_1936",
+                    "belsley_1980")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sphericity",
-                title="Sphericity"))
+                title="Sphericity",
+                refs=list(
+                    "mauchly_1940",
+                    "greenhouse_1959",
+                    "huynh_1976",
+                    "friedman_1937")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="proportionalOdds",
-                title="Proportional Odds"))
+                title="Proportional Odds",
+                refs=list(
+                    "brant_1990")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independenceIrrelevantAlternatives",
-                title="Independence of Irrelevant Alternatives"))
+                title="Independence of Irrelevant Alternatives",
+                refs=list(
+                    "hausman_1984",
+                    "cheng_2007")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="robust",
-                title="Transformations and robust alternatives"))
+                title="Transformations and robust alternatives",
+                refs=list(
+                    "friedman_1937",
+                    "mackinnon_1985",
+                    "welch_1947",
+                    "wilcoxon_1945")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="notes",
-                title="Using this library"))}))
+                title="Using this library"))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="totalBibliography",
+                title="Complete Bibliography (All Categories)",
+                refs=list(
+                    "shapiro_1965",
+                    "lilliefors_1967",
+                    "anderson_1952",
+                    "shapiro_1972",
+                    "jarque_1987",
+                    "razali_2011",
+                    "levene_1960",
+                    "brown_1974",
+                    "bartlett_1937",
+                    "fligner_1976",
+                    "hartley_1950",
+                    "breusch_1979",
+                    "white_1980",
+                    "goldfeld_1965",
+                    "mackinnon_1985",
+                    "welch_1947",
+                    "box_1962",
+                    "ramsey_1969",
+                    "sz_kely_2007",
+                    "ma_2011",
+                    "durbin_1951",
+                    "breusch_1978",
+                    "godfrey_1978",
+                    "ljung_1978",
+                    "marquardt_1970",
+                    "belsley_1980",
+                    "o_brien_2007",
+                    "cook_1977",
+                    "mahalanobis_1936",
+                    "mauchly_1940",
+                    "greenhouse_1959",
+                    "huynh_1976",
+                    "friedman_1937",
+                    "brant_1990",
+                    "hausman_1984",
+                    "cheng_2007",
+                    "wilcoxon_1945")))}))
 
 assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "assumptionLibraryBase",
@@ -163,6 +257,7 @@ assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cl
 #'   \code{results$independenceIrrelevantAlternatives} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$robust} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$notes} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$totalBibliography} \tab \tab \tab \tab \tab a html \cr
 #' }
 #'
 #' @export
