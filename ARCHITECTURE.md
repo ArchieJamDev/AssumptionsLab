@@ -688,6 +688,27 @@ architectural modification — source comments simply gain no new language
 (bilingual is fixed), report content gains a new `reportLang` choice plus
 `texts.R` entries, and the interface gains one more `.po` file.
 
+## Why report content keeps its own `reportLang`, on purpose
+
+`reportLang`/`tr()`/`texts.R` is not a stopgap waiting to be replaced by
+jamovi's native `.()` catalog. `.()` is only safe for text jamovi's
+compiler extracts from yaml — `jmvcore::Options$translate()` builds its
+translator once per R engine process and never invalidates it, so text
+assembled dynamically in R and routed through `.()` freezes at whatever
+language was active when that process started; nothing short of
+restarting jamovi picks up a change. Confirmed by reading `jmvcore`
+directly after the regression first shipped (and was reverted) in a
+sibling module, FiabilityLab.
+
+Instant, reliable switching also serves the module's teaching mission
+directly, not just its mechanics. AssumptionsLab is built to teach
+methodology to novice researchers and students. Seeing the same
+analytical paragraph in Spanish and then, with one click, in English is
+itself part of that lesson — it shows a student early why precise
+methodological vocabulary matters, since that precision is what
+eventually gets read and published. A mechanism that cannot guarantee an
+instant, reliable switch would undermine that, not just inconvenience it.
+
 -------------------------------------------------------------------------------
 
 # Internacionalización
@@ -732,6 +753,29 @@ requerir modificación arquitectónica — los comentarios de código
 simplemente no ganan un idioma nuevo (el bilingüismo es fijo), el
 contenido del informe gana una nueva opción de `reportLang` más entradas
 en `texts.R`, y la interfaz gana un archivo `.po` más.
+
+## Por qué el contenido del informe conserva su propio `reportLang`, a propósito
+
+`reportLang`/`tr()`/`texts.R` no es una solución provisional a la espera
+de ser reemplazada por el catálogo nativo `.()` de jamovi. `.()` solo es
+seguro para texto que el compilador de jamovi extrae del yaml —
+`jmvcore::Options$translate()` construye su traductor una sola vez por
+proceso del motor de R y nunca lo invalida, así que el texto ensamblado
+dinámicamente en R y enrutado por `.()` queda congelado en el idioma que
+estaba activo cuando ese proceso arrancó; nada salvo reiniciar jamovi
+recoge un cambio. Confirmado leyendo `jmvcore` directamente después de que
+la regresión se publicara (y se revirtiera) en un módulo hermano,
+FiabilityLab.
+
+El cambio de idioma instantáneo y confiable también sirve directamente a
+la misión pedagógica del módulo, no solo a su mecánica. AssumptionsLab
+está construido para enseñar metodología a investigadores noveles y
+estudiantes. Ver el mismo párrafo analítico en español y luego, con un
+clic, en inglés es en sí mismo parte de esa lección — le muestra al
+estudiante desde temprano por qué importa la precisión del vocabulario
+metodológico, ya que esa precisión es lo que eventualmente se lee y se
+publica. Un mecanismo que no puede garantizar un cambio instantáneo y
+confiable socavaría eso, no solo lo haría menos cómodo.
 
 -------------------------------------------------------------------------------
 
