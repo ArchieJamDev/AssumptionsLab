@@ -4,10 +4,13 @@
 analysis removed from the menu, `refs:` wired into all 9 analysis modules,
 and the attempt to do the same inside Assumption Library reverted once
 jamovi's client turned out to render `refs:` only for `Table`-type
-results, never `Html`; Library's own guide text then moved to jamovi's
-native i18n catalog via static `content:` fields instead, while its
-comparison tables stayed on `reportLang` to avoid the `.()`-from-R
-caching bug; 2026-09-17: §12 Internationalization rewritten
+results, never `Html`; Library's entire content — guide text and
+comparison tables alike — then moved to static `content:` fields
+translated through jamovi's native i18n catalog, since none of it
+depends on the user's data; its `reportLang` option was removed
+entirely, closing the gap this split briefly left (jamovi's own UI
+language controlling guide text while a separate option controlled the
+tables); 2026-09-17: §12 Internationalization rewritten
 around the three actual bilingual mechanisms now implemented; §11
 extended to Bibliography and the "why an analysis, not a passive
 reference" rationale; §4, §8, §10 cross-referenced to the native
@@ -646,28 +649,34 @@ why, and CODE_STYLE.md §21 for the citation-style consequence of this
 split (jamovi's own numbered format in-app, APA 7th in
 `docs/Bibliography.md`).
 
-**Library's guide text moved to jamovi's native i18n catalog; its
-comparison tables did not.** A separate part of the same review asked
-Library to use jamovi's translation catalog instead of its own
-`reportLang` option. This was only partly achievable, and for a precise
-reason, not a vague one: jamovi's `.()` function, called from R, is
-literally `self$options$translate()` — the same cached call behind the
-FiabilityLab regression (§12). Calling it from `.b.R` to populate a
-table's rows would reintroduce that exact bug. But every category's
-narrative guide text never changes at runtime — it is the same text on
-every run, regardless of the user's data — so it was moved out of R
-entirely: each category's guide paragraphs are now a static `content:`
-field defined directly in `jamovi/assumptionlibrary.r.yaml`, extracted
-and translated through `jamovi/i18n/es.po` exactly like `title`, with
-`.run()` never touching it (see CODE_STYLE.md §20). Each category's
-comparison table, by contrast, needs a different row of text on every
-line, and jamovi has no YAML-level way to express that (a column's own
-`content:` field holds one fixed value repeated down the whole column,
-never distinct per-row text) — so the tables are still built in `.b.R`
-via `tr()`/`reportLang`, unchanged. The result is a deliberate split
-within Library itself: its prose follows jamovi's own UI language
-automatically; its tables still follow the module's own report-language
-option, same as every analysis module.
+**Library's entire content moved to jamovi's native i18n catalog,
+`reportLang` and all.** A separate part of the same review asked Library
+to use jamovi's translation catalog instead of its own `reportLang`
+option. The precise reason this is achievable here, and is not in the 9
+analysis modules, is that none of Library's content depends on the
+user's data: it is reference/glossary text, identical on every run
+regardless of what dataset is loaded. Nothing computed at runtime means
+nothing needs `.()` called from R — which is literally
+`self$options$translate()`, the same cached call behind the FiabilityLab
+regression (§12) — so there is no version of this bug to reintroduce.
+Every category's guide paragraphs AND its comparison table (the HTML
+`<table>` that `.al_table()` used to build at runtime) are now static
+`content:` fields defined directly in `jamovi/assumptionlibrary.r.yaml`,
+extracted and translated through `jamovi/i18n/es.po` exactly like
+`title` (see CODE_STYLE.md §20), with `.run()` reduced to only
+show/hide items by category. `reportLang` itself, and its separate
+"Report Language" control, were removed from this analysis entirely —
+an initial version kept guide text on the native catalog while leaving
+the tables on `reportLang`, and that split surfaced exactly the
+confusing behavior it risked: changing jamovi's UI language moved the
+prose but not the tables, and changing the module's own language option
+moved the tables but not the prose. One category's combined guide+table
+text can run well past 10,000 characters, past which R's own parser
+refuses a single string literal needing Unicode escapes ("string
+constant is too long"), so each category is still several result items
+(a guide paragraph, its table, a closing guide paragraph) rather than
+one — a length constraint, not a mechanism difference: every item uses
+exactly the same static, natively-translated approach.
 
 -------------------------------------------------------------------------------
 
@@ -723,30 +732,37 @@ consecuencia de estilo de citación de esta división (el propio formato
 numerado de jamovi dentro de la app, APA 7.ª edición en
 `docs/Bibliography.md`).
 
-**El texto de guía de Library se mudó al catálogo i18n nativo de jamovi;
-sus tablas comparativas no.** Otra parte de la misma revisión pidió que
-Library usara el catálogo de traducción de jamovi en vez de su propia
-opción `reportLang`. Esto solo se logró parcialmente, y por una razón
-precisa, no vaga: la función `.()` de jamovi, llamada desde R, es
-literalmente `self$options$translate()` — la misma llamada cacheada
-detrás de la regresión de FiabilityLab (§12). Llamarla desde `.b.R` para
-poblar las filas de una tabla reintroduciría exactamente ese bug. Pero el
-texto narrativo de guía de cada categoría nunca cambia en tiempo de
-ejecución — es el mismo texto en cada corrida, sin importar los datos del
-usuario — así que se sacó de R por completo: los párrafos de guía de cada
-categoría son ahora un campo `content:` estático definido directamente en
-`jamovi/assumptionlibrary.r.yaml`, extraído y traducido vía
-`jamovi/i18n/es.po` exactamente igual que `title`, sin que `.run()` lo
-toque nunca (ver CODE_STYLE.md §20). La tabla comparativa de cada
-categoría, en cambio, necesita un texto distinto en cada fila, y jamovi
-no tiene forma a nivel YAML de expresar eso (el propio campo `content:`
-de una columna solo lleva un valor fijo repetido en toda la columna,
-nunca texto distinto por fila) — así que las tablas siguen construyéndose
-en `.b.R` vía `tr()`/`reportLang`, sin cambios. El resultado es una
-división deliberada dentro de la propia Library: su prosa sigue
-automáticamente el idioma de la interfaz de jamovi; sus tablas siguen
-dependiendo de la opción de idioma de informe del módulo, igual que
-cualquier módulo de análisis.
+**Todo el contenido de Library se mudó al catálogo i18n nativo de jamovi,
+incluida la opción `reportLang` misma.** Otra parte de la misma revisión
+pidió que Library usara el catálogo de traducción de jamovi en vez de su
+propia opción `reportLang`. La razón precisa por la que esto es viable
+aquí, y no en los 9 módulos de análisis, es que ningún contenido de
+Library depende de los datos del usuario: es texto de referencia/glosario,
+idéntico en cada corrida sin importar qué dataset esté cargado. Que nada
+se calcule en tiempo de ejecución significa que nada necesita `.()`
+llamado desde R — que es literalmente `self$options$translate()`, la
+misma llamada cacheada detrás de la regresión de FiabilityLab (§12) —
+así que no hay ninguna versión de ese bug que reintroducir. Los párrafos
+de guía de cada categoría Y su tabla comparativa (el `<table>` HTML que
+antes construía `.al_table()` en tiempo de ejecución) son ahora campos
+`content:` estáticos definidos directamente en
+`jamovi/assumptionlibrary.r.yaml`, extraídos y traducidos vía
+`jamovi/i18n/es.po` exactamente igual que `title` (ver CODE_STYLE.md
+§20), con `.run()` reducido a solo mostrar/ocultar ítems por categoría.
+`reportLang` misma, y su control aparte "Report Language", se quitaron
+por completo de este análisis — una versión inicial dejaba el texto de
+guía en el catálogo nativo mientras las tablas seguían en `reportLang`,
+y esa división mostró exactamente el comportamiento confuso que
+arriesgaba: cambiar el idioma de la interfaz de jamovi movía la prosa
+pero no las tablas, y cambiar la opción de idioma propia del módulo
+movía las tablas pero no la prosa. El texto combinado de guía+tabla de
+una categoría puede superar los 10,000 caracteres, límite más allá del
+cual el propio parser de R rechaza un literal de cadena que necesite
+escapes Unicode ("string constant is too long"), así que cada categoría
+sigue siendo varios ítems de resultado (un párrafo de guía, su tabla, un
+párrafo de guía de cierre) en vez de uno solo — una restricción de
+longitud, no una diferencia de mecanismo: cada ítem usa exactamente el
+mismo enfoque estático y traducido de forma nativa.
 
 -------------------------------------------------------------------------------
 

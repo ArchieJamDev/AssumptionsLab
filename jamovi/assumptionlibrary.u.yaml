@@ -30,9 +30,3 @@ compilerMode: tame
 children:
   - type: ComboBox
     name: category
-  - type: CollapseBox
-    label: Report Language
-    collapsed: false
-    children:
-      - type: ComboBox
-        name: reportLang

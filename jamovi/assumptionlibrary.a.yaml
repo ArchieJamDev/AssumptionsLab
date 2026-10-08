@@ -59,12 +59,3 @@ options:
       - title: Transformations and Robust Alternatives
         name: robust
     default: all
-  - name: reportLang
-    title: Report Language
-    type: List
-    options:
-      - title: English
-        name: en
-      - title: Español
-        name: es
-    default: en

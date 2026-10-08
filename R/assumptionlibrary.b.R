@@ -37,63 +37,78 @@
 # usuario; cada módulo de análisis interpreta sus propios resultados por
 # separado, con los datos reales del usuario.
 #
-# Responsibilities
-# 1. Render the comparison table for each assumption/test category covered
-#    by the suite (normality, homoscedasticity, independence, etc.), in
-#    every active report language.
-# 2. Filter which category's items are shown, based on the user's selection.
+# Every category's content - guide text AND its comparison table - is static:
+# it never depends on the user's data, so there is nothing for .run() to
+# build. Each category's full HTML (guide paragraphs + the HTML <table> that
+# used to be built by .al_table() at runtime) is now a static `content:`
+# field defined directly in jamovi/assumptionlibrary.r.yaml, generated once
+# from the EN/ES text already in texts.R (section "library") and extracted/
+# translated through jamovi's own native i18n catalog (jamovi/i18n/es.po) -
+# the same mechanism as `title`/`description`, confirmed in jamovi-compiler's
+# own i18n.js. This follows jamovi's UI language automatically and needed no
+# `reportLang` option at all, so that option (and its separate "Report
+# Language" control) was removed from this analysis entirely - keeping it
+# around after nothing used it would have been actively misleading, not
+# neutral. See CODE_STYLE.md §20/§21 and ARCHITECTURE.md §11 for why this
+# is safe here (static content) but not for the 9 analysis modules' guide/
+# interpretation text (computed from the user's data on every run, so it
+# still needs `tr()`/`reportLang`, never `.()` called from R - that call is
+# literally the cached `Options$translate()` behind the FiabilityLab
+# translator regression).
 #
-# ES: Responsabilidades
-# 1. Renderizar la tabla comparativa de cada categoría de supuesto/prueba
-#    cubierta por la suite (normalidad, homoscedasticidad, independencia,
-#    etc.), en cada idioma de informe activo.
-# 2. Filtrar qué ítems de categoría se muestran, según la selección del
-#    usuario.
+# Each category is still several result items (a guide paragraph, its
+# table, a closing guide paragraph - five items for homoscedasticity,
+# which has two tables) rather than one combined item, purely because R's
+# own parser refuses a single string literal needing Unicode escapes once
+# it crosses roughly 10,000 characters ("string constant is too long" at
+# compile time) - several of these categories' combined guide+table text
+# comfortably exceeds that. Splitting keeps every individual item's
+# content well under the limit while every piece stays equally static and
+# natively translated; it is not a language-handling split like the
+# earlier, reverted attempt (every item here uses exactly the same
+# mechanism, just addressed by a different result name).
 #
-# Narrative guide text per category (every "<category>" and
-# "<category>Guide2"/"Guide3" Html item) is static content defined directly
-# in jamovi/assumptionlibrary.r.yaml and translated through jamovi's own
-# native i18n catalog (jamovi/i18n/es.po), not through this module's
-# reportLang option: that text never changes at runtime, so there is nothing
-# for .run() to set. Only each category's comparison table
-# ("<category>Table"/"...GroupTable"/"...RegTable") is still built here,
-# because jamovi has no YAML-level way to express a table with several
-# statically-different rows (a column's own "content:" field can only hold
-# ONE fixed value repeated down that column, never distinct per-row text) -
-# see CODE_STYLE.md §21 and ARCHITECTURE.md §11 for why this split exists
-# and why going further would reintroduce the exact jmvcore translator-
-# caching bug this project hit in FiabilityLab (`.()` called from R is
-# literally `self$options$translate()`, the same cached call).
+# ES: El contenido de cada categoría - texto de guía Y su tabla comparativa -
+# es estático: nunca depende de los datos del usuario, así que no hay nada
+# que .run() deba construir. El HTML completo de cada categoría (párrafos de
+# guía + la tabla HTML que antes construía .al_table() en tiempo de
+# ejecución) es ahora un campo `content:` estático definido directamente en
+# jamovi/assumptionlibrary.r.yaml, generado una sola vez desde el texto EN/ES
+# que ya existía en texts.R (sección "library") y extraído/traducido vía el
+# propio catálogo i18n nativo de jamovi (jamovi/i18n/es.po) - el mismo
+# mecanismo que `title`/`description`, confirmado en el propio i18n.js de
+# jamovi-compiler. Esto sigue el idioma de la interfaz de jamovi
+# automáticamente y no necesitó ninguna opción `reportLang`, así que esa
+# opción (y su control "Report Language" aparte) se quitó por completo de
+# este análisis - dejarla ahí sin que nada la usara habría sido activamente
+# engañoso, no neutral. Ver CODE_STYLE.md §20/§21 y ARCHITECTURE.md §11 para
+# por qué esto es seguro aquí (contenido estático) pero no para el texto de
+# guía/interpretación de los 9 módulos de análisis (calculado a partir de
+# los datos del usuario en cada corrida, así que sigue necesitando
+# `tr()`/`reportLang`, nunca `.()` llamado desde R - esa llamada es
+# literalmente el `Options$translate()` cacheado detrás de la regresión del
+# traductor de FiabilityLab).
 #
-# ES: El texto narrativo de guía por categoría (cada ítem Html
-# "<categoría>" y "<categoría>Guide2"/"Guide3") es contenido estático
-# definido directamente en jamovi/assumptionlibrary.r.yaml y traducido por
-# el propio catálogo i18n nativo de jamovi (jamovi/i18n/es.po), no por la
-# opción reportLang de este módulo: ese texto nunca cambia en tiempo de
-# ejecución, así que .run() no tiene nada que fijarle. Solo la tabla
-# comparativa de cada categoría ("<categoría>Table"/"...GroupTable"/
-# "...RegTable") sigue construyéndose aquí, porque jamovi no tiene forma a
-# nivel YAML de expresar una tabla con varias filas estáticas distintas (el
-# campo "content:" de una columna solo puede llevar UN valor fijo repetido
-# en toda la columna, nunca texto distinto por fila) - ver CODE_STYLE.md
-# §21 y ARCHITECTURE.md §11 para por qué existe esta división y por qué ir
-# más allá reintroduciría exactamente el bug de caché del traductor de
-# jmvcore que este proyecto encontró en FiabilityLab (`.()` llamado desde R
-# es literalmente `self$options$translate()`, la misma llamada cacheada).
+# Cada categoría sigue siendo varios ítems de resultado (un párrafo de
+# guía, su tabla, un párrafo de guía de cierre - cinco ítems para
+# homoscedasticity, que tiene dos tablas) en vez de uno combinado, solo
+# porque el propio parser de R rechaza un literal de cadena que necesite
+# escapes Unicode una vez que cruza aproximadamente 10,000 caracteres
+# ("string constant is too long" en tiempo de compilación) - el texto
+# combinado de guía+tabla de varias de estas categorías supera
+# cómodamente ese límite. Dividirlo mantiene el contenido de cada ítem
+# individual bien por debajo del límite mientras cada pieza sigue siendo
+# igual de estática y traducida de forma nativa; no es una división de
+# manejo de idioma como el intento anterior, revertido (cada ítem aquí
+# usa exactamente el mismo mecanismo, solo que con un nombre de resultado
+# distinto).
 #
-# Workflow
-# 1. Read the selected category and report language.
-# 2. Resolve each category's table text via the shared .al_text()
-#    repository (texts.R, section "library") and render it as HTML.
-# 3. Hide any item not matching the selected category.
+# Responsibility
+# 1. Show only the items matching the user's selected category.
 #
-# ES: Flujo de trabajo
-# 1. Leer la categoría seleccionada y el idioma del informe.
-# 2. Resolver el texto de la tabla de cada categoría vía el repositorio
-#    compartido .al_text() (texts.R, sección "library") y renderizarlo
-#    como HTML.
-# 3. Ocultar cualquier ítem que no coincida con la categoría
-#    seleccionada.
+# ES: Responsabilidad
+# 1. Mostrar solo los ítems que coinciden con la categoría seleccionada por
+#    el usuario.
 # -----------------------------------------------------------------------------
 
 assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
@@ -104,21 +119,6 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
 
             category <- self$options$category
 
-            # -----------------------------------------------------------------------------
-            # Bilingual wiring (AssumptionsLab standard — see regCheck/logCheck).
-            # Only the comparison tables below use this; the static guide text
-            # is translated natively instead (see the file header).
-            # ES: Cableado bilingüe (estándar AssumptionsLab — ver regCheck/
-            # logCheck). Solo las tablas comparativas de abajo lo usan; el
-            # texto estático de guía se traduce de forma nativa en cambio
-            # (ver el encabezado del archivo).
-            # -----------------------------------------------------------------------------
-            lang <- .al_normalize_lang(self$options$reportLang)
-
-            txt <- function(key) {
-                .al_text(lang, "library", key)
-            }
-
             show_section <- function(name) {
                 category == "all" || category == name
             }
@@ -127,102 +127,6 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
                 if (!show_section(name))
                     result$setVisible(FALSE)
             }
-
-            # -----------------------------------------------------------------------------
-            # Escape HTML-unsafe characters.
-            # ES: Escapar caracteres inseguros para HTML.
-            #
-            # Required before inserting any raw text into an HTML result, since some
-            # table cells contain literal "<"/">" (e.g. "p < .05", "VIF < 5") that
-            # would otherwise be mistaken for HTML tags by the renderer.
-            #
-            # ES: Necesario antes de insertar cualquier texto crudo en un resultado HTML,
-            # ya que algunas celdas de tabla contienen "<"/">" literales (p. ej.
-            # "p < .05", "VIF < 5") que de otro modo el renderizador confundiría con
-            # etiquetas HTML.
-            # -----------------------------------------------------------------------------
-            .al_esc <- function(x) {
-                x <- gsub("&", "&amp;", x, fixed = TRUE)
-                x <- gsub("<", "&lt;", x, fixed = TRUE)
-                x <- gsub(">", "&gt;", x, fixed = TRUE)
-                x
-            }
-
-            # -----------------------------------------------------------------------------
-            # Render a comparison table as HTML.
-            # ES: Renderizar una tabla comparativa como HTML.
-            #
-            # Inputs: headers - character vector of column titles; rows - a list, each
-            # element a character vector of the same length as headers (one row's cells).
-            # Output: an HTML <table> string, wrapped in the same container used
-            # throughout the library's other items.
-            #
-            # ES: Entradas: headers - vector de caracteres con los títulos de columna;
-            # rows - una lista, cada elemento un vector de caracteres de la misma longitud
-            # que headers (las celdas de una fila).
-            # ES: Salida: un string de <table> HTML, envuelto en el mismo contenedor
-            # usado en el resto de los ítems de la biblioteca.
-            # -----------------------------------------------------------------------------
-            .al_table <- function(headers, rows) {
-                th <- paste0(
-                    '<th style="text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;">',
-                    .al_esc(headers), '</th>', collapse = ""
-                )
-                trs <- vapply(rows, function(r) {
-                    tds <- paste0(
-                        '<td style="text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;">',
-                        .al_esc(r), '</td>', collapse = ""
-                    )
-                    paste0("<tr>", tds, "</tr>")
-                }, character(1))
-                paste0(
-                    '<div style="max-width: 7.25in; width: 100%; box-sizing: border-box;">',
-                    '<table style="border-collapse: collapse; width: 100%; margin: 0.5em 0 0.8em 0; font-size: 0.95em;">',
-                    "<thead><tr>", th, "</tr></thead>",
-                    "<tbody>", paste(trs, collapse = ""), "</tbody>",
-                    "</table>",
-                    '</div>'
-                )
-            }
-
-            self$results$normalityTable$setContent(
-                .al_table(txt("normalityTableHeaders"), txt("normalityTableRows"))
-            )
-            self$results$homoscedasticityGroupTable$setContent(
-                .al_table(txt("homoscedasticityGroupTableHeaders"), txt("homoscedasticityGroupTableRows"))
-            )
-            self$results$homoscedasticityRegTable$setContent(
-                .al_table(txt("homoscedasticityRegTableHeaders"), txt("homoscedasticityRegTableRows"))
-            )
-            self$results$linearityTable$setContent(
-                .al_table(txt("linearityTableHeaders"), txt("linearityTableRows"))
-            )
-            self$results$independenceTable$setContent(
-                .al_table(txt("independenceTableHeaders"), txt("independenceTableRows"))
-            )
-            self$results$multicollinearityTable$setContent(
-                .al_table(txt("multicollinearityTableHeaders"), txt("multicollinearityTableRows"))
-            )
-            self$results$influenceTable$setContent(
-                .al_table(txt("influenceTableHeaders"), txt("influenceTableRows"))
-            )
-            self$results$sphericityTable$setContent(
-                .al_table(txt("sphericityTableHeaders"), txt("sphericityTableRows"))
-            )
-            self$results$proportionalOddsTable$setContent(
-                .al_table(txt("proportionalOddsTableHeaders"), txt("proportionalOddsTableRows"))
-            )
-            # "iia" is the short, unambiguous prefix already used for this
-            # assumption's txt() keys and multCheck's own result names.
-            # ES: "iia" es el prefijo corto e inequívoco ya usado para las
-            # claves txt() de este supuesto y los nombres de resultado
-            # propios de multCheck.
-            self$results$independenceIrrelevantAlternativesTable$setContent(
-                .al_table(txt("iiaTableHeaders"), txt("iiaTableRows"))
-            )
-            self$results$robustTable$setContent(
-                .al_table(txt("robustTableHeaders"), txt("robustTableRows"))
-            )
 
             hide_if_needed(self$results$normality, "normality")
             hide_if_needed(self$results$normalityTable, "normality")

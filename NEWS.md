@@ -85,17 +85,28 @@
   `refs:` reference list for `Table`-type results, never for `Html`,
   so Library's narrative category sections cannot carry their own
   native citation list the way an analysis module's tables do.
-- `Assumption Library`'s category guide text (the narrative explanation
-  of each assumption/test) moved from its own `reportLang` option to
-  jamovi's native i18n catalog: it is now a static `content:` field per
-  category, defined directly in `jamovi/assumptionlibrary.r.yaml` and
-  translated through `jamovi/i18n/es.po`, following jamovi's own UI
-  language automatically. Each category's comparison table stayed on
-  `tr()`/`reportLang`, unchanged, since jamovi has no YAML-level way to
-  express a table whose rows hold different static text per row, and
-  `.()` called from R is the exact cached call behind the FiabilityLab
-  translator regression — using it to populate table rows would
-  reintroduce that bug (see `CODE_STYLE.md` §20/§21).
+- `Assumption Library`'s entire content (the narrative explanation of
+  each assumption/test, and its comparison table) moved from its own
+  `reportLang` option to jamovi's native i18n catalog: every category's
+  guide paragraphs and the HTML `<table>` that used to be built at
+  runtime are now static `content:` fields defined directly in
+  `jamovi/assumptionlibrary.r.yaml` and translated through
+  `jamovi/i18n/es.po`, following jamovi's own UI language automatically.
+  This is possible because none of Library's content depends on the
+  user's data, unlike the 9 analysis modules - so nothing there ever
+  needs `.()` called from R, the exact cached call behind the
+  FiabilityLab translator regression. `reportLang` and its "Report
+  Language" control were removed from this analysis entirely: an
+  interim version left the comparison tables on `reportLang` while the
+  guide text followed jamovi's UI language, which meant the two could
+  show different languages at once depending on which control was
+  changed - exactly the confusing behavior removing `reportLang`
+  everywhere avoids. Each category is still several result items rather
+  than one, because a single result's combined guide+table text can
+  exceed the ~10,000-character limit R's own parser imposes on a string
+  literal needing Unicode escapes - a length constraint only, since
+  every item uses the same static, natively-translated mechanism (see
+  `CODE_STYLE.md` §20/§21).
 
 ## New features
 

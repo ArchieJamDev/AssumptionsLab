@@ -6,8 +6,10 @@ confirmed by reading the Electron client source directly, after Assumption
 Library's own category sections tried it and silently showed nothing;
 added to §20 that static `content:`/`notes` fields are extracted and
 translated the same way as `title`, and that this is only safe for text
-that never varies at runtime — Assumption Library's guide text moved to it,
-its comparison tables did not; 2026-09-17: added §19.1 Category A/B error handling, native jamovi plot
+that never varies at runtime — Assumption Library's entire content (guide
+text and its comparison tables) moved to it, since none of it depends on
+the user's data, and its `reportLang` option was removed entirely;
+2026-09-17: added §19.1 Category A/B error handling, native jamovi plot
 themes to §18, native jamovi i18n catalog to §20 — lessons from jamovi's
 official module review)
 Project: AssumptionsLab
