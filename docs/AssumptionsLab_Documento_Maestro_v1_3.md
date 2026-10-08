@@ -94,18 +94,35 @@ Características:
 Función principal:
 Permitir al estudiante profundizar directamente en las fuentes originales.
 
-### 3.4 Por qué Library y Bibliography son análisis, no documentación pasiva
-La revisión oficial de jamovi (16 de septiembre de 2026) sugirió migrar
-`Bibliography` al mecanismo pasivo nativo de `00refs.yaml`/`refs:` (citación
-fija de paquetes usados por un análisis). Se decidió mantener ambos módulos
-como análisis del menú, con el mismo argumento que sostiene esta sección:
-ambos son subsistemas educativos con opciones filtrables propias (tema,
-categoría, idioma) cuyo resultado se genera dinámicamente — exactamente lo
-que un *analysis* de jamovi está diseñado para ser. Migrarlos a un
-mecanismo pasivo perdería el filtrado interactivo y el cambio de idioma, y
-dejaría de poder incluirse su contenido en el informe exportado del
-estudiante junto al resto de sus resultados. Ver ARCHITECTURE.md §11 para
-el detalle técnico completo.
+### 3.4 Por qué Library sigue siendo análisis, y qué pasó con Bibliography
+La revisión oficial de jamovi (16 de septiembre de 2026, con seguimiento
+en octubre) pidió mover la atribución de método por análisis al
+mecanismo nativo `00refs.yaml`/`refs:` de jamovi, enganchado directamente
+a la tabla/gráfico que usó cada fuente — igual que cualquier otro módulo
+de jamovi, y la única forma de que esa cita llegue al informe exportado
+del estudiante junto al resultado que respalda. Se aceptó este cambio:
+`Bibliography` dejó de ser un análisis del menú.
+
+Eso no significa que se haya perdido el trabajo de investigación
+invertido en ella. Sus tres roles se repartieron:
+
+- **Atribución de método por análisis** → `00refs.yaml`/`refs:`, nativo
+  de jamovi, aparece junto a cada resultado.
+- **Lista de lectura curada y filtrable por tema** → se fusionó dentro
+  de `Assumption Library`, que sigue siendo un análisis del menú con sus
+  propias opciones filtrables (tema, categoría, idioma) — el mismo
+  argumento de esta sección sigue aplicando a Library, no así a
+  Bibliography.
+- **Perfil bibliométrico** (conteo de citas, indexación Scopus/Web of
+  Science/cuartil) y la **lista completa en APA 7.ª edición** → viven en
+  `docs/Bibliography.md`, fuera de la interfaz de jamovi.
+
+Una consecuencia importante: el renderizador nativo de referencias de
+jamovi usa su propio formato numerado por orden de aparición (`[1]`,
+`[2]`...), no APA — una restricción de la interfaz de jamovi, no una
+elección de AssumptionsLab. La cita en APA 7.ª edición, fija y completa,
+sigue viviendo en `docs/Bibliography.md`. Ver ARCHITECTURE.md §11 y
+CODE_STYLE.md §21 para el detalle técnico completo.
 
 ---
 

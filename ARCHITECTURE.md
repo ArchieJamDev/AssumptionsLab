@@ -592,9 +592,9 @@ DEVELOPER_GUIDE.md §10 para el contrato de las funciones de render.
 
 # 11. Methodological Library
 
-The Library and Bibliography are independent educational subsystems.
+The Library is an independent educational subsystem.
 
-Their objectives are
+Its objectives are
 
 • explain concepts;
 
@@ -604,49 +604,74 @@ Their objectives are
 
 • support learning;
 
-• complement reports;
+• complement reports.
 
-• trace a diagnostic back to its source literature (Bibliography).
+It should remain independent from statistical computations — it neither
+reads nor computes anything from the user's dataset. Independent from
+computations does not mean it belongs outside jamovi's *analysis*
+framework: it is implemented as a jamovi analysis on purpose, with its
+own filterable options (topic/category, language) and results that
+render dynamically from those options — the same shape as any other
+analysis, regardless of whether it touches `self$data`.
 
-Both should remain independent from statistical computations — neither
-reads nor computes anything from the user's dataset.
-
-Independent from computations does not mean they belong outside jamovi's
-*analysis* framework. Both are implemented as jamovi analyses on purpose:
-each has its own filterable options (topic/category, language) and
-produces results that render dynamically from those options — the same
-shape as any other analysis, regardless of whether it touches `self$data`.
-jamovi's own passive citation mechanism (`00refs.yaml` + `refs:`) solves a
-different problem — a fixed, non-interactive list of the packages/methods
-an analysis used — and would drop the topic filter and the language
-toggle entirely. Keeping Library and Bibliography as menu analyses is also
-what lets their content appear in the user's exported report alongside
-the rest of their results, which a native help/about panel does not.
+**Bibliography is no longer a menu analysis.** jamovi's own module review
+asked that per-analysis method attribution move to jamovi's native
+citation mechanism (`00refs.yaml` + `refs:`), attached directly to the
+Table/Image that used each source — exactly how every other jamovi
+module cites its own methods, and the only way a citation reaches the
+user's exported report alongside the result it supports. Bibliography's
+other two roles were split rather than dropped: its curated, topic-
+filterable reading list is folded into Library, and its full APA 7th
+reference list plus bibliometric profile (citation counts, journal
+indexing/quartile) now live in `docs/Bibliography.md` — preserving that
+research effort outside jamovi's interface rather than losing it. See
+`docs/Bibliography.md` itself for why, and CODE_STYLE.md §21 for the
+citation-style consequence of this split (jamovi's own numbered format
+in-app, APA 7th in `docs/Bibliography.md`).
 
 -------------------------------------------------------------------------------
 
 # Biblioteca metodológica
 
-La Library y la Bibliography constituyen subsistemas educativos
-independientes.
+La Library constituye un subsistema educativo independiente.
 
-No realizan cálculos.
+Sus objetivos son
 
-Explican resultados.
+• explicar conceptos;
 
-Independiente de los cálculos no significa que deban quedar fuera del
-marco de *analysis* de jamovi. Ambas se implementan como análisis de
-jamovi a propósito: cada una tiene sus propias opciones filtrables
-(tema/categoría, idioma) y produce resultados que se generan
+• definir indicadores estadísticos;
+
+• describir supuestos;
+
+• apoyar el aprendizaje;
+
+• complementar informes.
+
+Debe permanecer independiente de los cálculos estadísticos — no lee ni
+calcula nada del dataset del usuario. Independiente de los cálculos no
+significa que deba quedar fuera del marco de *analysis* de jamovi: se
+implementa como un análisis de jamovi a propósito, con sus propias
+opciones filtrables (tema/categoría, idioma) y resultados que se generan
 dinámicamente a partir de esas opciones — la misma forma que cualquier
-otro análisis, sin importar si toca `self$data`. El propio mecanismo
-pasivo de citación de jamovi (`00refs.yaml` + `refs:`) resuelve un
-problema distinto — una lista fija y no interactiva de los
-paquetes/métodos que usó un análisis — y perdería por completo el filtro
-por tema y el selector de idioma. Mantener Library y Bibliography como
-análisis del menú es también lo que permite que su contenido aparezca en
-el informe exportado del usuario junto al resto de sus resultados, algo
-que un panel nativo de ayuda/acerca de no ofrece.
+otro análisis, sin importar si toca `self$data`.
+
+**Bibliography ya no es un análisis del menú.** La propia revisión del
+módulo de jamovi pidió que la atribución de método por análisis se
+mudara al mecanismo nativo de citación de jamovi (`00refs.yaml` +
+`refs:`), enganchado directamente a la Table/Image que usó cada fuente —
+exactamente como cita sus propios métodos cualquier otro módulo de
+jamovi, y la única forma de que una cita llegue al informe exportado del
+usuario junto al resultado que respalda. Los otros dos roles de
+Bibliography se repartieron en vez de eliminarse: su lista de lectura
+curada y filtrable por tema se fusionó en Library, y su lista completa
+de referencias en APA 7.ª edición más su perfil bibliométrico (conteo de
+citas, indexación/cuartil de revista) ahora viven en
+`docs/Bibliography.md` — conservando ese esfuerzo de investigación fuera
+de la interfaz de jamovi en vez de perderlo. Ver el propio
+`docs/Bibliography.md` para el porqué, y CODE_STYLE.md §21 para la
+consecuencia de estilo de citación de esta división (el propio formato
+numerado de jamovi dentro de la app, APA 7.ª edición en
+`docs/Bibliography.md`).
 
 -------------------------------------------------------------------------------
 
