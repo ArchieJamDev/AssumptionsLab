@@ -33,7 +33,7 @@ AssumptionsLab bridges the gap between statistical computation and methodologica
 
 - Evidence-based methodological guidance alongside every diagnostic, not just the numbers.
 - Plain-language interpretation of what a result means and what to do about it.
-- A built-in methodological library and a unified, APA 7th-referenced bibliography, so a diagnostic can be traced back to its source literature without leaving jamovi.
+- A built-in methodological library, plus a complete APA 7th-referenced bibliography and bibliometric profile in the module's own documentation, so every diagnostic can be traced back to its source literature.
 - The same validation, diagnostic, and reporting workflow across every module, so learning one analysis transfers to the next.
 
 Rather than asking users to memorize statistical rules, AssumptionsLab helps them understand **why an assumption matters and how violating it changes what the analysis can tell them**.
@@ -78,13 +78,9 @@ Rather than asking users to memorize statistical rules, AssumptionsLab helps the
     </td>
   </tr>
   <tr>
-    <td align="center" width="50%">
-      <img src="docs/screenshots/libreria1.png" width="100%" alt="Assumption Library">
+    <td align="center" colspan="2" width="100%">
+      <img src="docs/screenshots/libreria1.png" width="50%" alt="Assumption Library">
       <p><em>The built-in Assumption Library</em></p>
-    </td>
-    <td align="center" width="50%">
-      <img src="docs/screenshots/biblio1.png" width="100%" alt="Bibliography module">
-      <p><em>Integrated, APA-referenced Bibliography</em></p>
     </td>
   </tr>
 </table>
@@ -105,9 +101,8 @@ Rather than asking users to memorize statistical rules, AssumptionsLab helps the
 | **Path Analysis & Structural Validation** | An interactive path-diagram builder, residual normality/outliers, linear vs. non-linear association strength (distance correlation, copula entropy). |
 | **Time Series** | Model-specific diagnostics for ARIMA, SARIMA, ETS, VAR, VECM, and GARCH — stationarity, residual autocorrelation, seasonality. |
 | **Assumption Library** | A bilingual (EN/ES) glossary explaining every assumption and test above, filterable by category — a reference, not a computation. |
-| **Bibliography** | A unified, APA 7th-only, topic-filtered bibliography of the verified methodological sources cited throughout the module. |
 
-Every module (except the Library and Bibliography, which don't compute anything) reports both English and Spanish interpretations and shares the same validation → diagnostics → interpretation → recommendation workflow.
+Every module (except the Library, which doesn't compute anything) reports both English and Spanish interpretations and shares the same validation → diagnostics → interpretation → recommendation workflow. Every method-backed result cites its own source in jamovi's native reference format; the complete APA 7th edition bibliography and bibliometric profile live in [`docs/Bibliography.md`](docs/Bibliography.md).
 
 ---
 

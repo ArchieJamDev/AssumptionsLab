@@ -13,8 +13,9 @@ description: >
   reporting isolated test statistics. It covers group comparisons (independent
   and related samples, ANOVA/ANCOVA), regression (linear, logistic, ordinal
   logistic, multinomial logistic), path analysis and structural validation, and
-  time series, alongside a built-in methodological library and a unified,
-  APA-7th-referenced bibliography.
+  time series, alongside a built-in methodological library. Every method-backed
+  result cites its own source in jamovi's native numbered format, and the
+  complete APA 7th edition bibliography lives in the module's documentation.
 usesNative: false
 minApp: 1.0.8
 icon: assets/assumptionslab-icon.png
@@ -35,23 +36,6 @@ analyses:
       and are available in English or Spanish. Use it alongside any of the
       assumption-checking analyses to look up the theory behind a diagnostic, or
       as a stand-alone teaching aid for planning an analysis before running one.
-    category: analyses
-  - title: Bibliography
-    name: bibliography
-    ns: AssumptionsLab
-    menuGroup: Assumption Lab
-    menuSubgroup: Methodological Guide
-    menuTitle: Bibliography
-    description: >
-      A curated, verified bibliography of the methodological sources cited
-      throughout AssumptionsLab, not a data analysis: it renders a
-      topic-filtered reading list in APA 7th edition and does not read or
-      compute anything from the user's dataset. References can be filtered by
-      topic (statistical assumptions, normality, homoscedasticity, linearity and
-      regression, path analysis, related groups, time series, robust methods)
-      and displayed in English or Spanish, with citation style always fixed to
-      APA 7th. Use it to trace a diagnostic back to its source literature or to
-      build a reference list for a methods section.
     category: analyses
   - title: Independent Groups
     name: groupCheck

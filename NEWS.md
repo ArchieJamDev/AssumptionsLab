@@ -70,6 +70,21 @@
   discoloring the outlier/influence-flag highlight in `logCheck`,
   `ordCheck`, `multCheck`, and `regCheck`'s plots since those modules
   were first written; all now build the chain in the correct order.
+- The standalone `Bibliography` analysis is removed from the menu.
+  Per-analysis method attribution moved to jamovi's own native
+  `00refs.yaml`/`refs:` mechanism, attached directly to the table/plot
+  each source backs, across all 9 analysis modules — this is also why
+  in-app citations now render in jamovi's own numbered,
+  order-of-appearance format rather than APA, a constraint of jamovi's
+  reference renderer rather than a module choice (see `CODE_STYLE.md`
+  §21). The complete APA 7th edition reference list and each source's
+  bibliometric profile (citation counts, journal indexing) moved to
+  `docs/Bibliography.md`. `Assumption Library` keeps its own
+  filterable category browser, with a plain-text pointer to that same
+  documentation file — jamovi's own results renderer only shows a
+  `refs:` reference list for `Table`-type results, never for `Html`,
+  so Library's narrative category sections cannot carry their own
+  native citation list the way an analysis module's tables do.
 
 ## New features
 

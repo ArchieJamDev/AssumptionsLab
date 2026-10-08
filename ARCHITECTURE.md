@@ -1,10 +1,15 @@
 # AssumptionsLab Architecture
 
-**Version:** 1.1 (2026-09-17: §12 Internationalization rewritten around
-the three actual bilingual mechanisms now implemented; §11 extended to
-Bibliography and the "why an analysis, not a passive reference" rationale;
-§4, §8, §10 cross-referenced to the native plot-theme, shared-helpers, and
-Category A/B mechanisms — lessons from jamovi's official module review)  
+**Version:** 1.2 (2026-10-08: §11 updated — the standalone `Bibliography`
+analysis removed from the menu, `refs:` wired into all 9 analysis modules,
+and the attempt to do the same inside Assumption Library reverted once
+jamovi's client turned out to render `refs:` only for `Table`-type
+results, never `Html`; 2026-09-17: §12 Internationalization rewritten
+around the three actual bilingual mechanisms now implemented; §11
+extended to Bibliography and the "why an analysis, not a passive
+reference" rationale; §4, §8, §10 cross-referenced to the native
+plot-theme, shared-helpers, and Category A/B mechanisms — lessons from
+jamovi's official module review)  
 **Project:** AssumptionsLab  
 **License:** GNU General Public License v3.0  
 **Author:** Arquímedes De León Chacón Chacón
@@ -620,14 +625,23 @@ citation mechanism (`00refs.yaml` + `refs:`), attached directly to the
 Table/Image that used each source — exactly how every other jamovi
 module cites its own methods, and the only way a citation reaches the
 user's exported report alongside the result it supports. Bibliography's
-other two roles were split rather than dropped: its curated, topic-
-filterable reading list is folded into Library, and its full APA 7th
+other two roles were split rather than dropped: its full APA 7th
 reference list plus bibliometric profile (citation counts, journal
 indexing/quartile) now live in `docs/Bibliography.md` — preserving that
-research effort outside jamovi's interface rather than losing it. See
-`docs/Bibliography.md` itself for why, and CODE_STYLE.md §21 for the
-citation-style consequence of this split (jamovi's own numbered format
-in-app, APA 7th in `docs/Bibliography.md`).
+research effort outside jamovi's interface rather than losing it. We
+also tried folding its curated, topic-filterable reading list into
+Library's own category sections via `refs:`, since Library already
+discusses each source by name — but jamovi's results renderer only
+shows a `refs:` reference list for `Table`-type results (confirmed by
+reading its Electron client source directly); an `Html`-type result's
+renderer never touches it, even though the `refs:` data itself reaches
+the client correctly. Since every one of Library's category sections is
+`Html` (narrative guide text, not tabular), the native mechanism has
+nowhere to render there, so Library keeps a plain-text pointer to
+`docs/Bibliography.md` instead. See `docs/Bibliography.md` itself for
+why, and CODE_STYLE.md §21 for the citation-style consequence of this
+split (jamovi's own numbered format in-app, APA 7th in
+`docs/Bibliography.md`).
 
 -------------------------------------------------------------------------------
 
@@ -662,12 +676,22 @@ mudara al mecanismo nativo de citación de jamovi (`00refs.yaml` +
 exactamente como cita sus propios métodos cualquier otro módulo de
 jamovi, y la única forma de que una cita llegue al informe exportado del
 usuario junto al resultado que respalda. Los otros dos roles de
-Bibliography se repartieron en vez de eliminarse: su lista de lectura
-curada y filtrable por tema se fusionó en Library, y su lista completa
-de referencias en APA 7.ª edición más su perfil bibliométrico (conteo de
+Bibliography se repartieron en vez de eliminarse: su lista completa de
+referencias en APA 7.ª edición más su perfil bibliométrico (conteo de
 citas, indexación/cuartil de revista) ahora viven en
 `docs/Bibliography.md` — conservando ese esfuerzo de investigación fuera
-de la interfaz de jamovi en vez de perderlo. Ver el propio
+de la interfaz de jamovi en vez de perderlo. También intentamos fusionar
+su lista de lectura curada y filtrable por tema dentro de las propias
+secciones de categoría de Library vía `refs:`, ya que Library ya
+menciona cada fuente por su nombre — pero el renderizador de resultados
+de jamovi solo muestra la lista de referencias de `refs:` para
+resultados tipo `Table` (confirmado leyendo directamente el código
+fuente de su cliente Electron); el renderizador de un resultado tipo
+`Html` nunca la usa, aunque los datos de `refs:` sí llegan
+correctamente al cliente. Como cada sección de categoría de Library es
+`Html` (texto narrativo de guía, no tabular), el mecanismo nativo no
+tiene dónde renderizarse ahí, así que Library conserva en cambio un
+simple puntero de texto a `docs/Bibliography.md`. Ver el propio
 `docs/Bibliography.md` para el porqué, y CODE_STYLE.md §21 para la
 consecuencia de estilo de citación de esta división (el propio formato
 numerado de jamovi dentro de la app, APA 7.ª edición en

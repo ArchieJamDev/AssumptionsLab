@@ -1,8 +1,12 @@
 # AssumptionsLab Code Style Guide
 
-Version: 1.1 (2026-09-17: added §19.1 Category A/B error handling, native
-jamovi plot themes to §18, native jamovi i18n catalog to §20 — lessons
-from jamovi's official module review)
+Version: 1.2 (2026-10-08: added to §21 that `refs:` only renders for
+`Table`-type results in jamovi's own client, never `Html`/`Image` —
+confirmed by reading the Electron client source directly, after Assumption
+Library's own category sections tried it and silently showed nothing;
+2026-09-17: added §19.1 Category A/B error handling, native jamovi plot
+themes to §18, native jamovi i18n catalog to §20 — lessons from jamovi's
+official module review)
 Project: AssumptionsLab
 License: GNU GPL v3
 Author: Arquímedes De León Chacón Chacón
@@ -539,6 +543,17 @@ jamovi assigns it at render time and it is not stable across runs. Where
 report prose mentions a source by name (e.g. "Levene, 1960"), append
 "see references" / "ver referencias", never a number.
 
+`refs:` only ever renders visibly for `Table`-type results — confirmed
+by reading jamovi's Electron client source directly: the reference-list
+rendering logic lives exclusively inside the Table renderer, and an
+`Html`-type result's renderer never touches it, even though the `refs:`
+data does reach the client correctly through `jmvcore`. Never add
+`refs:` to an `Html`/`Image` result expecting it to display — it will
+compile and install without error, but nothing will ever show. Assumption
+Library's category sections learned this the hard way: they are all
+`Html`, so they carry no `refs:` at all and instead point to
+`docs/Bibliography.md` as plain text.
+
 ---
 
 # Integridad científica
@@ -565,6 +580,18 @@ corchete específico (`[7]`) en ningún texto fuente — jamovi lo asigna en
 tiempo de render y no es estable entre corridas. Donde el texto del
 informe mencione una fuente por su nombre (p. ej. "Levene, 1960"),
 agregar "see references" / "ver referencias", nunca un número.
+
+`refs:` solo se renderiza visiblemente en resultados tipo `Table` —
+confirmado leyendo directamente el código fuente del cliente Electron
+de jamovi: la lógica de renderizado de la lista de referencias vive
+exclusivamente dentro del renderer de Table, y el renderer de un
+resultado tipo `Html`/`Image` nunca la usa, aunque los datos de `refs:`
+sí llegan correctamente al cliente a través de `jmvcore`. Nunca agregar
+`refs:` a un resultado `Html`/`Image` esperando que se muestre —
+compila e instala sin error, pero nunca aparece nada. Las secciones de
+categoría de Assumption Library lo aprendieron de la forma difícil: son
+todas `Html`, así que no llevan ningún `refs:` y en cambio apuntan a
+`docs/Bibliography.md` como texto simple.
 
 -------------------------------------------------------------------------------
 

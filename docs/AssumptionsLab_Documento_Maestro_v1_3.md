@@ -108,14 +108,16 @@ invertido en ella. Sus tres roles se repartieron:
 
 - **Atribución de método por análisis** → `00refs.yaml`/`refs:`, nativo
   de jamovi, aparece junto a cada resultado.
-- **Lista de lectura curada y filtrable por tema** → se fusionó dentro
-  de `Assumption Library`, que sigue siendo un análisis del menú con sus
-  propias opciones filtrables (tema, categoría, idioma) — el mismo
-  argumento de esta sección sigue aplicando a Library, no así a
-  Bibliography.
-- **Perfil bibliométrico** (conteo de citas, indexación Scopus/Web of
+- **Lista de lectura curada y filtrable por tema**, **perfil
+  bibliométrico** (conteo de citas, indexación Scopus/Web of
   Science/cuartil) y la **lista completa en APA 7.ª edición** → viven en
-  `docs/Bibliography.md`, fuera de la interfaz de jamovi.
+  `docs/Bibliography.md`, fuera de la interfaz de jamovi. Se intentó
+  enganchar la lista de lectura dentro de `Assumption Library` vía
+  `refs:`, pero el renderizador de jamovi solo muestra esa lista de
+  referencias para resultados tipo tabla, nunca para los resultados
+  `Html` de los que está hecha Library — así que Library solo tiene un
+  puntero de texto a `docs/Bibliography.md`, igual que cualquier otro
+  texto del módulo.
 
 Una consecuencia importante: el renderizador nativo de referencias de
 jamovi usa su propio formato numerado por orden de aparición (`[1]`,
@@ -182,10 +184,14 @@ El aprendizaje sigue este ciclo:
 - Versión de software correspondiente: AssumptionsLab 1.6.0
 - Estado: expansión de módulos completada (diez módulos de análisis) más
   la respuesta a la revisión oficial de jamovi (16 de septiembre de
-  2026): manejo de errores Categoría A/B en los 9 módulos de
-  diagnóstico, migración de gráficos al mecanismo nativo de tema/paleta
-  de jamovi, catálogo de traducción i18n nativo de jamovi (inglés +
-  español), y consolidación de ayudantes compartidos
+  2026, con seguimiento en octubre): manejo de errores Categoría A/B en
+  los 9 módulos de diagnóstico, migración de gráficos al mecanismo
+  nativo de tema/paleta de jamovi, catálogo de traducción i18n nativo de
+  jamovi (inglés + español), consolidación de ayudantes compartidos, y
+  retiro del análisis independiente `Bibliography` del menú (enganchado
+  `00refs.yaml`/`refs:` en los 9 módulos de análisis; la bibliografía
+  completa en APA 7.ª edición y el perfil bibliométrico ahora viven en
+  `docs/Bibliography.md`)
 - Alcance: estructura base + integración bibliográfica + Library
   funcional + suite completa de módulos de análisis + alineación con los
   mecanismos nativos de jamovi (tema de gráficos, i18n)
@@ -200,6 +206,6 @@ El aprendizaje sigue este ciclo:
 
 Este documento actúa como base estructural del sistema AssumptionsLab y debe actualizarse de forma incremental conforme se incorporen nuevos módulos, mejoras pedagógicas y expansión de la Library.
 
-Última revisión de contenido: 2026-09-17, con motivo de la respuesta a la
-revisión oficial de jamovi y el release de AssumptionsLab 1.6.0 descritos
-en la Sección 7.
+Última revisión de contenido: 2026-10-08, con motivo del retiro del
+análisis `Bibliography` del menú y la consolidación de la bibliografía
+en `docs/Bibliography.md`, descritos en la Sección 3.4 y la Sección 7.
