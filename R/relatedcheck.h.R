@@ -281,6 +281,12 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="normality",
                 title="Normality of differences/residuals",
+                refs=list(
+                    "shapiro_1965",
+                    "lilliefors_1967",
+                    "anderson_1952",
+                    "shapiro_1972",
+                    "jarque_1987"),
                 columns=list(
                     list(
                         `name`="scope", 
@@ -380,6 +386,10 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 name="sphericity",
                 title="Sphericity and corrections",
                 visible=FALSE,
+                refs=list(
+                    "mauchly_1940",
+                    "greenhouse_1959",
+                    "huynh_1976"),
                 columns=list(
                     list(
                         `name`="diagnostic", 
@@ -431,6 +441,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 name="dcorMatrixTable",
                 title="Distance correlation matrix (dCor, APA 7 format)",
                 visible=FALSE,
+                refs=list(
+                    "sz_kely_2007"),
                 rows=0,
                 columns=list(
                     list(
@@ -452,6 +464,9 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 name="correlationComparisonTable",
                 title="Pairs with a notable gap between Pearson and dCor",
                 visible=FALSE,
+                refs=list(
+                    "sz_kely_2007",
+                    "ma_2011"),
                 rows=0,
                 columns=list(
                     list(
