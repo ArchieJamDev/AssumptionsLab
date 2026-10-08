@@ -821,13 +821,13 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$goodnessOfFitGuide$setContent(html_guide(tr("Goodness of fit", "Bondad de ajuste"), tr(
                 c(
                     "Goodness of fit evaluates whether the model, as a whole, reasonably reproduces the observed category frequencies.",
-                    "The Hosmer-Lemeshow test does not generalize directly to an ordinal response; the Lipsitz (1996; see references) and Pulkstenis-Robinson (2004; see references) tests are the ordinal-specific analogues used here instead.",
+                    "The Hosmer-Lemeshow test does not generalize directly to an ordinal response; the Lipsitz (1996) and Pulkstenis-Robinson (2004; see references) tests are the ordinal-specific analogues used here instead.",
                     "The Pulkstenis-Robinson test needs at least one categorical predictor to partition cases into covariate patterns; it is not shown when only numeric predictors are selected. It also needs at least as many distinct covariate patterns as groups to be valid (Fagerland & Hosmer, 2013; see references) - with very few categorical predictors or very few levels, treat a result from this test with extra caution.",
                     "As with any chi-square-based fit test, these lose power with very small samples and can flag trivially small lack of fit with very large ones - read them together with the proportional-odds result and substantive knowledge of the data."
                 ),
                 c(
                     "La bondad de ajuste evalúa si el modelo, en conjunto, reproduce razonablemente las frecuencias de categoría observadas.",
-                    "La prueba de Hosmer-Lemeshow no generaliza directamente a un desenlace ordinal; las pruebas de Lipsitz (1996; ver referencias) y Pulkstenis-Robinson (2004; ver referencias) son los análogos específicos para lo ordinal usados aquí en cambio.",
+                    "La prueba de Hosmer-Lemeshow no generaliza directamente a un desenlace ordinal; las pruebas de Lipsitz (1996) y Pulkstenis-Robinson (2004; ver referencias) son los análogos específicos para lo ordinal usados aquí en cambio.",
                     "La prueba de Pulkstenis-Robinson necesita al menos un predictor categórico para particionar los casos en patrones de covariables; no se muestra cuando solo hay predictores numéricos seleccionados. También necesita al menos tantos patrones de covariables distintos como grupos para ser válida (Fagerland & Hosmer, 2013; ver referencias) - con muy pocos predictores categóricos o muy pocos niveles, trate un resultado de esta prueba con cautela adicional.",
                     "Como cualquier prueba de ajuste basada en ji-cuadrado, estas pierden poder con muestras muy pequeñas y pueden marcar una falta de ajuste trivial con muestras muy grandes - léalas junto con el resultado de momios proporcionales y el conocimiento sustantivo de los datos."
                 )

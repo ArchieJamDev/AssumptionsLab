@@ -165,6 +165,9 @@ items:
   - name: outlierTable
     title: Outlier Diagnostics
     type: Table
+    refs:
+      - mahalanobis_1936
+      - cook_1977
     clearWith:
       - vars
       - relations
@@ -311,6 +314,11 @@ items:
   - name: residualNormality
     title: Residual Normality by Equation
     type: Table
+    refs:
+      - shapiro_1965
+      - anderson_1952
+      - shapiro_1972
+      - jarque_1987
     clearWith:
       - vars
       - relations
@@ -351,6 +359,9 @@ items:
   - name: homoscedasticity
     title: Homoscedasticity by Equation
     type: Table
+    refs:
+      - breusch_1979
+      - white_1980
     clearWith:
       - vars
       - relations
@@ -397,6 +408,9 @@ items:
   - name: multicollinearity
     title: Multicollinearity by Equation
     type: Table
+    refs:
+      - marquardt_1970
+      - belsley_1980
     clearWith:
       - vars
       - relations
@@ -436,6 +450,8 @@ items:
   - name: mardiaTable
     title: "Mardia's Multivariate Normality Test"
     type: Table
+    refs:
+      - mardia_1970
     clearWith:
       - vars
       - relations
@@ -496,6 +512,8 @@ items:
   - name: dcorMatrixTable
     title: Distance Correlation Matrix (dCor, APA 7 Format)
     type: Table
+    refs:
+      - sz_kely_2007
     clearWith:
       - vars
       - relations
@@ -523,6 +541,9 @@ items:
   - name: correlationComparisonTable
     title: Pairs with a Notable Gap Between Pearson and dCor
     type: Table
+    refs:
+      - sz_kely_2007
+      - ma_2011
     clearWith:
       - vars
       - relations
@@ -575,6 +596,8 @@ items:
   - name: crossEntropyTable
     title: Copula Entropy Independence Test
     type: Table
+    refs:
+      - ma_2011
     clearWith:
       - vars
       - relations
@@ -618,6 +641,8 @@ items:
   - name: indirectEffectsTable
     title: Direct, Indirect, and Total Effects (Simple Mediation)
     type: Table
+    refs:
+      - sobel_1982
     clearWith:
       - vars
       - relations
@@ -670,6 +695,11 @@ items:
   - name: sampleSizeTable
     title: Sample Size Assessment by Model Complexity
     type: Table
+    refs:
+      - green_1991
+      - bentler_1987
+      - jackson_2003
+      - kline_2023
     clearWith:
       - vars
       - relations

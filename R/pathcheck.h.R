@@ -484,6 +484,9 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="outlierTable",
                 title="Outlier Diagnostics",
+                refs=list(
+                    "mahalanobis_1936",
+                    "cook_1977"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -650,6 +653,11 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="residualNormality",
                 title="Residual Normality by Equation",
+                refs=list(
+                    "shapiro_1965",
+                    "anderson_1952",
+                    "shapiro_1972",
+                    "jarque_1987"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -695,6 +703,9 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="homoscedasticity",
                 title="Homoscedasticity by Equation",
+                refs=list(
+                    "breusch_1979",
+                    "white_1980"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -748,6 +759,9 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="multicollinearity",
                 title="Multicollinearity by Equation",
+                refs=list(
+                    "marquardt_1970",
+                    "belsley_1980"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -792,6 +806,8 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="mardiaTable",
                 title="Mardia's Multivariate Normality Test",
+                refs=list(
+                    "mardia_1970"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -859,6 +875,8 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="dcorMatrixTable",
                 title="Distance Correlation Matrix (dCor, APA 7 Format)",
+                refs=list(
+                    "sz_kely_2007"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -887,6 +905,9 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationComparisonTable",
                 title="Pairs with a Notable Gap Between Pearson and dCor",
+                refs=list(
+                    "sz_kely_2007",
+                    "ma_2011"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -948,6 +969,8 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="crossEntropyTable",
                 title="Copula Entropy Independence Test",
+                refs=list(
+                    "ma_2011"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -997,6 +1020,8 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="indirectEffectsTable",
                 title="Direct, Indirect, and Total Effects (Simple Mediation)",
+                refs=list(
+                    "sobel_1982"),
                 clearWith=list(
                     "vars",
                     "relations",
@@ -1058,6 +1083,11 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="sampleSizeTable",
                 title="Sample Size Assessment by Model Complexity",
+                refs=list(
+                    "green_1991",
+                    "bentler_1987",
+                    "jackson_2003",
+                    "kline_2023"),
                 clearWith=list(
                     "vars",
                     "relations",
