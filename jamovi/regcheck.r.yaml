@@ -75,6 +75,8 @@ items:
   - name: linearityPredictor
     title: Linearity by numeric predictor
     type: Table
+    refs:
+      - box_1962
     clearWith:
       - dep
       - covs
@@ -107,6 +109,8 @@ items:
   - name: linearityModel
     title: Overall model linearity
     type: Table
+    refs:
+      - ramsey_1969
     clearWith:
       - dep
       - covs
@@ -163,6 +167,8 @@ items:
   - name: dcorMatrixTable
     title: Distance correlation matrix (dCor, APA 7 format)
     type: Table
+    refs:
+      - sz_kely_2007
     clearWith:
       - dep
       - covs
@@ -188,6 +194,9 @@ items:
   - name: correlationComparisonTable
     title: Pairs with a notable gap between Pearson and dCor
     type: Table
+    refs:
+      - sz_kely_2007
+      - ma_2011
     clearWith:
       - dep
       - covs
@@ -301,6 +310,11 @@ items:
   - name: residualNormality
     title: Residual normality
     type: Table
+    refs:
+      - shapiro_1965
+      - lilliefors_1967
+      - anderson_1952
+      - shapiro_1972
     clearWith:
       - dep
       - covs
@@ -369,6 +383,9 @@ items:
   - name: homoscedasticity
     title: Homoscedasticity and heteroscedasticity
     type: Table
+    refs:
+      - breusch_1979
+      - white_1980
     clearWith:
       - dep
       - covs
@@ -421,6 +438,10 @@ items:
   - name: independence
     title: Independence of errors
     type: Table
+    refs:
+      - breusch_1978
+      - godfrey_1978
+      - durbin_1951
     clearWith:
       - dep
       - covs
@@ -455,6 +476,9 @@ items:
   - name: multicollinearity
     title: Multicollinearity
     type: Table
+    refs:
+      - marquardt_1970
+      - belsley_1980
     clearWith:
       - dep
       - covs
@@ -487,6 +511,9 @@ items:
   - name: influence
     title: Outlying and influential cases
     type: Table
+    refs:
+      - cook_1977
+      - belsley_1980
     clearWith:
       - dep
       - covs
@@ -562,6 +589,10 @@ items:
   - name: transformationNormality
     title: Residual normality by transformation
     type: Table
+    refs:
+      - shapiro_1965
+      - anderson_1952
+      - jarque_1987
     clearWith:
       - dep
       - covs
@@ -588,6 +619,8 @@ items:
   - name: transformationFit
     title: Fit and residual variance by transformation
     type: Table
+    refs:
+      - breusch_1979
     clearWith:
       - dep
       - covs
