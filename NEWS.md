@@ -1,5 +1,16 @@
 # Validation scripts (unreleased, 2026-09-05)
 
+## Additions
+
+- `validation/case_study_public_data.R`: runs `groupCheck`, `regCheck` and
+  `pathCheck` on public datasets (`lavaan::HolzingerSwineford1939` and
+  `psychTools::epi.bfi`) and checks 20 of the module's outputs against
+  independent reference implementations (`stats`, `car`, `lmtest`, `energy`,
+  `tseries`); all match on AssumptionsLab 1.6.0. It replaces the private
+  survey data that the manuscript's applied cases and verification table
+  previously relied on, so every number in them can now be reproduced from
+  public data.
+
 ## Bug fixes
 
 - `validation/normality_groupcheck_mc.R` and `validation/normality_regcheck_mc.R`

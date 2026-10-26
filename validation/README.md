@@ -64,9 +64,8 @@ R=999 instead of R=99, restricted to the single cell most sensitive to that
 choice) is also included, confirming the pattern is not an artifact of the
 smaller R=99 budget used elsewhere.
 
-Reported in: Chacón, A. (2026). "AssumptionsLab: Pedagogical Accompaniment and
-Graduated Evidence for Statistical Assumption Checking in Jamovi", Austrian
-Journal of Statistics, Section "Monte Carlo Validation of the
+Accompanies the manuscript: Chacón, A. (2026). "AssumptionsLab: Pedagogical Accompaniment and
+Graduated Evidence for Statistical Assumption Checking in Jamovi", Section "Monte Carlo Validation of the
 Normality-Battery Rule".
 
 ## `linearity_dcor_mc.R`
@@ -76,7 +75,7 @@ heuristic that `groupCheck`/`regCheck`/`pathCheck`'s pairwise linearity
 diagnostic uses to flag a pair for inspection (gap = dCor - |r| > 0.10):
 one purely linear scenario (`y = x + e`) and one canonical non-linear
 scenario with quadratic dependence (`y = x^2 + e`), both `x, e ~ N(0,1)`,
-at the sample size of the article's own applied case (n=119). 5,000
+at a moderate sample size (n=119). 5,000
 replications per scenario, seed `20260908`. No permutation testing or
 bootstrap is involved, so this runs in well under a minute.
 
@@ -90,7 +89,46 @@ Run with `Rscript linearity_dcor_mc.R` (requires the `energy` package;
 ~20 seconds on a single core). Reproduces `linearity_dcor_mc_results.csv`,
 already included here.
 
-Reported in: Chacón, A. (2026). "AssumptionsLab: Pedagogical Accompaniment and
-Graduated Evidence for Statistical Assumption Checking in Jamovi", Austrian
-Journal of Statistics, Section "Extending Graduated Evidence to Linearity
+Accompanies the manuscript: Chacón, A. (2026). "AssumptionsLab: Pedagogical Accompaniment and
+Graduated Evidence for Statistical Assumption Checking in Jamovi", Section "Extending Graduated Evidence to Linearity
 and Dependence".
+
+## `case_study_public_data.R`
+
+The applied cases of the manuscript, run on **public data** with the module's
+own analyses, plus a numeric verification of the module's output against
+independent reference implementations:
+
+| Analysis | Dataset (object, package) | Specification |
+|---|---|---|
+| `groupCheck` | `HolzingerSwineford1939`, `lavaan` (Holzinger & Swineford, 1939) | `x1` (visual perception) by `school` (Pasteur n=156, Grant-White n=145) |
+| `regCheck` | `epi.bfi`, `psychTools` (Revelle; Northwestern University undergraduates, N=231) | `bdi ~ bfneur + bfext + bfopen + bfagree + bfcon` |
+| `pathCheck` | `epi.bfi`, `psychTools` | `bfneur, bfext -> traitanx`; `bfneur, bfext, traitanx -> bdi` |
+
+Both datasets ship inside CRAN packages, so nothing needs to be downloaded or
+placed in the repository. They are previously published data used without
+modification; no new human-subjects data were collected.
+
+The script runs the three analyses and compares 20 module outputs with
+independent implementations (`stats::shapiro.test`, `car::leveneTest`,
+`stats::lm`, `lmtest::bptest`, `car::vif`, `energy::dcor`,
+`stats::mahalanobis`, `tseries::jarque.bera.test`). It also recomputes the
+Jarque-Bera statistic with the Bessel-corrected standard deviation that
+`shared-helpers.R` used before 1.5.1, to illustrate the discrepancy that this
+kind of verification originally exposed.
+
+**Scope**: these are illustrative cases of the module's output and reasoning,
+not evidence that the graduated-evidence framework improves decisions. The
+datasets and variables were chosen for public availability and psychological
+relevance, not as representative or typical cases.
+
+Run with `Rscript case_study_public_data.R <path-to-this-repository>`
+(requires `pkgload`, `lavaan`, `psychTools`, `car`, `lmtest`, `energy`, and
+`tseries`, plus the module's own dependencies; several minutes, because
+`regCheck` and `pathCheck` use permutation tests). Set `DUMP=1` to also print
+every result table the module produced. With AssumptionsLab 1.6.0 (commit
+`0d3815e`), R 4.5.2, `lavaan` 0.7-2 and `psychTools` 2.5.7.22, all 20
+comparisons match.
+
+Reported in the manuscript's applied-cases section and its numeric
+verification table.
