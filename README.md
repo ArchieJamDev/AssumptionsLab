@@ -1,4 +1,9 @@
-# AssumptionsLab
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/logo/assumptionslab-logo-dark.svg">
+    <img src="docs/logo/assumptionslab-logo.svg" alt="AssumptionsLab" width="560">
+  </picture>
+</p>
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![GitHub release](https://img.shields.io/github/v/release/ArchieJamDev/AssumptionsLab)](https://github.com/ArchieJamDev/AssumptionsLab/releases)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 230" width="1080" height="230" role="img" aria-label="AssumptionsLab">
+  <title>AssumptionsLab</title>
+  <g transform="translate(0 -6) scale(0.95)">
+    <rect x="55" y="181.1" width="26" height="22.9" rx="6" fill="#0072B2" opacity="0.28"/>
+    <rect x="85" y="130.4" width="26" height="73.6" rx="6" fill="#E69F00" opacity="0.28"/>
+    <rect x="115" y="95.4" width="26" height="108.6" rx="6" fill="#009E73" opacity="0.28"/>
+    <rect x="145" y="130.4" width="26" height="73.6" rx="6" fill="#E69F00" opacity="0.28"/>
+    <rect x="175" y="181.1" width="26" height="22.9" rx="6" fill="#0072B2" opacity="0.28"/>
+    <polyline points="36,201.0 40,199.9 44,198.4 48,196.6 52,194.3 56,191.5 60,188.0 64,183.9 68,179.1 72,173.6 76,167.4 80,160.4 84,152.9 88,144.9 92,136.6 96,128.2 100,119.9 104,112.0 108,104.7 112,98.4 116,93.1 120,89.2 124,86.8 128,86.0 132,86.8 136,89.2 140,93.1 144,98.4 148,104.7 152,112.0 156,119.9 160,128.2 164,136.6 168,144.9 172,152.9 176,160.4 180,167.4 184,173.6 188,179.1 192,183.9 196,188.0 200,191.5 204,194.3 208,196.6 212,198.4 216,199.9 220,201.0" fill="none" stroke="#7FB2E5" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+    <line x1="36" y1="210" x2="220" y2="210" stroke="#8A94A6" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/>
+    <circle cx="78.0" cy="164.0" r="11.0" fill="#0072B2" stroke="#0D1117" stroke-width="3.5"/>
+    <circle cx="128.0" cy="86.0" r="14.0" fill="#E69F00" stroke="#0D1117" stroke-width="3.5"/>
+    <circle cx="170.0" cy="149.0" r="12.0" fill="#009E73" stroke="#0D1117" stroke-width="3.5"/>
+    <circle cx="198.0" cy="60.0" r="24.0" fill="#009E73" stroke="#0D1117" stroke-width="3.5"/>
+    <path d="M186 60 l8 9 l15 -17" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="250" y="128" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="94" font-weight="700" fill="#F2F5FA" letter-spacing="-1"><tspan fill="#F0A06A">Assumptions</tspan>Lab</text>
+  <text x="254" y="172" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="25" fill="#AEB9CC" letter-spacing="0.5">Statistical assumptions assessment for jamovi</text>
+</svg>
