@@ -59,8 +59,8 @@
 # multicollinearity block (a property of the predictors' own design matrix,
 # independent of the response family), the custom per-case Pearson-type
 # influence residual on the observed category's fitted probability, the
-# .run()/.plotTr()/.plotPalette()/.plotTheme() plot scaffolding, and inline
-# tr() bilingual text (not a new texts.R section).
+# .run()/.plotPalette()/.plotTheme() plot scaffolding, and inline
+# `.()` report text (not a new texts.R section).
 #
 # ES: Este archivo implementa multCheck: un módulo de diagnóstico de
 # supuestos para el modelo logit multinomial (una variable dependiente
@@ -100,8 +100,8 @@
 # matriz de diseño de los predictores, independiente de la familia del
 # desenlace), el residuo tipo Pearson por caso sobre la probabilidad
 # ajustada de la categoría observada, el andamiaje de gráficos
-# .run()/.plotTr()/.plotPalette()/.plotTheme(), y el texto bilingüe con
-# tr() en línea (no una nueva sección de texts.R).
+# .run()/.plotPalette()/.plotTheme(), y el texto del informe con
+# `.()` en línea (no una nueva sección de texts.R).
 #
 # Soft dependency (Sep 2026, same pattern as ordCheck's brant/
 # generalhoslem): 'generalhoslem' for goodness-of-fit (lipsitz.test,
@@ -385,9 +385,9 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Initial setup and shared helpers (AssumptionsLab standard).
             # ES: Configuración inicial y helpers compartidos (estándar AssumptionsLab).
             # -----------------------------------------------------------------------------
-            lang <- .al_normalize_lang(self$options$reportLang)
+            lang <- .al_lang(self$options)
 
-            tr <- function(en, es) .al_tr(lang, en, es)
+            . <- lang$tr
 
             html_escape <- .al_html_escape
 
@@ -402,7 +402,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             fmt_num <- function(x, digits = 3) {
                 x <- clean_num(x)
                 if (is.na(x))
-                    return(tr("Not computed", "No calculado"))
+                    return(.("Not computed"))
                 format(round(x, digits), nsmall = digits)
             }
 
@@ -438,172 +438,9 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             apaCell <- function(r, p, digits = 3) .al_apa_cell(r, p, digits)
 
-            set_result_titles <- function() {
 
-                set_title_safe <- function(name, en, es) {
-                    element <- tryCatch(self$results[[name]], error = function(e) NULL)
-                    if (is.null(element)) return(invisible(FALSE))
-                    tryCatch(element$setTitle(tr(en, es)), error = function(e) invisible(FALSE))
-                    invisible(TRUE)
-                }
 
-                titles <- list(
-                    c("intro", "Introduction", "Introducción"),
-                    c("designGuide", "Model design", "Diseño del modelo"),
-                    c("design", "Design summary", "Resumen del diseño"),
-                    c("categoryDistribution", "Category distribution", "Distribución por categoría"),
 
-                    c("separationGuide", "Complete separation", "Separación completa"),
-                    c("separation", "Complete separation", "Separación completa"),
-                    c("separationInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("linearityGuide", "Linearity in the multinomial logit", "Linealidad en el logit multinomial"),
-                    c("linearity",
-                      "Linearity in the multinomial logit (LR test)",
-                      "Linealidad en el logit multinomial (prueba LR)"),
-                    c("linearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("linearityPlot", "Empirical logit vs predictor", "Logit empírico vs predictor"),
-
-                    c("iiaGuide",
-                      "Independence of Irrelevant Alternatives (IIA)",
-                      "Independencia de alternativas irrelevantes (IIA)"),
-                    c("iia", "Hausman-McFadden test (IIA)", "Prueba de Hausman-McFadden (IIA)"),
-                    c("iiaInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("goodnessOfFitGuide", "Goodness of fit", "Bondad de ajuste"),
-                    c("goodnessOfFit", "Goodness of fit", "Bondad de ajuste"),
-                    c("goodnessOfFitInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("discriminationGuide", "Pseudo-R²", "Pseudo-R²"),
-                    c("discrimination", "Pseudo-R²", "Pseudo-R²"),
-                    c("discriminationInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("classificationGuide", "Classification table", "Tabla de clasificación"),
-                    c("classification", "Observed vs. predicted", "Observado vs. predicho"),
-                    c("classificationInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("multicollinearityGuide", "Multicollinearity", "Multicolinealidad"),
-                    c("multicollinearity", "Multicollinearity", "Multicolinealidad"),
-                    c("multicollinearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("correlationMatrixGuide",
-                      "Correlation Matrix (numeric predictors)",
-                      "Matriz de Correlaciones (predictores numéricos)"),
-                    c("pearsonMatrixTable",
-                      "Pearson correlation matrix (APA 7 format)",
-                      "Matriz de correlaciones de Pearson (formato APA 7)"),
-                    c("dcorMatrixTable",
-                      "Distance correlation matrix (dCor, APA 7 format)",
-                      "Matriz de correlación de distancia (dCor, formato APA 7)"),
-                    c("correlationComparisonGuide",
-                      "Pearson / dCor / Copula Entropy Discordance Analysis",
-                      "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                    c("correlationComparisonTable",
-                      "Pairs with a notable difference between Pearson and dCor",
-                      "Pares con diferencia notable entre Pearson y dCor"),
-                    c("correlationComparisonInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("influenceGuide", "Influential cases", "Casos influyentes"),
-                    c("influence", "Influential cases", "Casos influyentes"),
-                    c("influenceInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("influencePlot", "Pearson residual by case", "Residuo de Pearson por caso"),
-
-                    c("coefficientsGuide",
-                      "Coefficients and odds ratios (by category)",
-                      "Coeficientes y odds ratios (por categoría)"),
-                    c("coefficients", "Coefficients and odds ratios", "Coeficientes y odds ratios"),
-                    c("coefficientsInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("notes", "Notes and recommendation", "Notas y recomendación")
-                )
-
-                for (item in titles) set_title_safe(item[[1]], item[[2]], item[[3]])
-            }
-
-            set_result_titles()
-
-            set_table_column_titles <- function() {
-
-                set_col_title_safe <- function(table_name, col_name, en, es) {
-                    table <- tryCatch(self$results[[table_name]], error = function(e) NULL)
-                    if (is.null(table)) return(invisible(FALSE))
-                    column <- tryCatch(table$getColumn(col_name), error = function(e) NULL)
-                    if (is.null(column)) return(invisible(FALSE))
-                    tryCatch(column$setTitle(tr(en, es)), error = function(e) invisible(FALSE))
-                    invisible(TRUE)
-                }
-
-                cols <- list(
-                    c("design", "element", "Element", "Elemento"),
-                    c("design", "value", "Value", "Valor"),
-
-                    c("categoryDistribution", "category", "Category", "Categoría"),
-                    c("categoryDistribution", "n", "n", "n"),
-                    c("categoryDistribution", "proportion", "Proportion", "Proporción"),
-
-                    c("separation", "predictor", "Predictor", "Predictor"),
-                    c("separation", "category", "Category", "Categoría"),
-                    c("separation", "type", "Type", "Tipo"),
-                    c("separation", "coefficient", "Coefficient", "Coeficiente"),
-
-                    c("linearity", "predictor", "Predictor", "Predictor"),
-                    c("linearity", "chiSq", "X²", "X²"),
-                    c("linearity", "df", "df", "gl"),
-                    c("linearity", "pSig", "Sig.", "Sig."),
-
-                    c("iia", "category", "Omitted category", "Categoría omitida"),
-                    c("iia", "chiSq", "X²", "X²"),
-                    c("iia", "df", "df", "gl"),
-                    c("iia", "pSig", "Sig.", "Sig."),
-                    c("iia", "note", "Note", "Nota"),
-
-                    c("goodnessOfFit", "test", "Test", "Prueba"),
-                    c("goodnessOfFit", "statistic", "Statistic", "Estadístico"),
-                    c("goodnessOfFit", "df", "df", "gl"),
-                    c("goodnessOfFit", "pSig", "Sig.", "Sig."),
-
-                    c("discrimination", "metric", "Metric", "Métrica"),
-                    c("discrimination", "value", "Value", "Valor"),
-
-                    c("classification", "observed", "Observed", "Observado"),
-                    c("classification", "total", "n", "n"),
-                    c("classification", "recall", "Recall", "Recall"),
-
-                    c("multicollinearity", "diagnostic", "Diagnostic", "Diagnóstico"),
-                    c("multicollinearity", "item", "Item", "Elemento"),
-                    c("multicollinearity", "statistic", "Statistic", "Estadístico"),
-                    c("multicollinearity", "value", "Value", "Valor"),
-
-                    c("pearsonMatrixTable", "var", "Variable", "Variable"),
-                    c("dcorMatrixTable", "var", "Variable", "Variable"),
-
-                    c("correlationComparisonTable", "var1", "Variable 1", "Variable 1"),
-                    c("correlationComparisonTable", "var2", "Variable 2", "Variable 2"),
-                    c("correlationComparisonTable", "pearson", "Pearson r", "Pearson r"),
-                    c("correlationComparisonTable", "dcor", "dCor", "dCor"),
-                    c("correlationComparisonTable", "gap", "Gap (dCor - |r|)", "Brecha (dCor − |r|)"),
-                    c("correlationComparisonTable", "ce", "Copula entropy", "Entropía copular"),
-                    c("correlationComparisonTable", "ceP", "p (CE)", "p (CE)"),
-                    c("correlationComparisonTable", "ceSig", "Sig. (CE)", "Sig. (CE)"),
-                    c("correlationComparisonTable", "flag", "Notable difference", "Diferencia notable"),
-
-                    c("influence", "case", "Case", "Caso"),
-                    c("influence", "observed", "Observed category", "Categoría observada"),
-                    c("influence", "pearsonStat", "Pearson statistic", "Estadístico de Pearson"),
-                    c("influence", "p", "p", "p"),
-
-                    c("coefficients", "predictor", "Predictor", "Predictor"),
-                    c("coefficients", "category", "Category", "Categoría"),
-                    c("coefficients", "or", "OR", "OR"),
-                    c("coefficients", "ciLower", "95% CI lower", "IC 95% inferior"),
-                    c("coefficients", "ciUpper", "95% CI upper", "IC 95% superior"),
-                    c("coefficients", "pSig", "Sig.", "Sig.")
-                )
-
-                for (item in cols) set_col_title_safe(item[[1]], item[[2]], item[[3]], item[[4]])
-            }
-
-            set_table_column_titles()
 
             # -----------------------------------------------------------------------------
             # Data / dependent-variable checks.
@@ -615,34 +452,28 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             data <- self$data
             if (is.null(data) || nrow(data) == 0) {
-                jmvcore::reject(tr("No data are available.", "No hay datos disponibles."))
+                jmvcore::reject(.("No data are available."))
             }
 
             if (is.null(dep_var) || !nzchar(dep_var) || !(dep_var %in% names(data))) {
-                jmvcore::reject(tr("Dependent variable not selected.", "Variable dependiente no seleccionada."))
+                jmvcore::reject(.("Dependent variable not selected."))
             }
 
             dep_raw <- data[[dep_var]]
             if (!is.factor(dep_raw)) {
-                jmvcore::reject(tr(
-                    "The dependent variable must be a nominal (factor) variable.",
-                    "La variable dependiente debe ser una variable nominal (factor)."
-                ))
+                jmvcore::reject(.("The dependent variable must be a nominal (factor) variable."))
             }
 
             dep_levels <- levels(droplevels(dep_raw))
             n_levels <- length(dep_levels)
 
             if (n_levels < 3) {
-                jmvcore::reject(tr(
-                    "The dependent variable has fewer than 3 categories. Use logCheck for a binary (2-category) dependent variable instead - it gives richer binary-specific diagnostics (ROC/AUC, Hosmer-Lemeshow, a single odds-ratio table).",
-                    "La variable dependiente tiene menos de 3 categorías. Use logCheck en cambio para una variable dependiente binaria (2 categorías) - da diagnósticos binarios más ricos (ROC/AUC, Hosmer-Lemeshow, una tabla de un solo odds ratio)."
-                ))
+                jmvcore::reject(.("The dependent variable has fewer than 3 categories. Use logCheck for a binary (2-category) dependent variable instead - it gives richer binary-specific diagnostics (ROC/AUC, Hosmer-Lemeshow, a single odds-ratio table)."))
             }
 
             predictors <- c(covs, factors)
             if (length(predictors) == 0) {
-                jmvcore::reject(tr("Select at least one predictor.", "Seleccione al menos un predictor."))
+                jmvcore::reject(.("Select at least one predictor."))
             }
 
             # The reference category is always the factor's FIRST level (no
@@ -682,13 +513,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             })
 
             if (is.null(model)) {
-                jmvcore::reject(paste0(
-                    tr(
-                        "Error fitting the model (check for near-perfect separation or a predictor with an unused level in a subset of the data): ",
-                        "Error al ajustar el modelo (revise si hay cuasi-separación o un predictor con un nivel no usado en un subconjunto de los datos): "
-                    ),
-                    model_error
-                ))
+                jmvcore::reject(sprintf(.("Error fitting the model (check for near-perfect separation or a predictor with an unused level in a subset of the data): %s"), model_error))
             }
 
             null_model <- tryCatch({
@@ -725,38 +550,21 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "AssumptionsLab",
                 "</p>",
                 "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
-                tr("Assumption check for multinomial logistic regression", "Revisión de supuestos para regresión logística multinomial"),
+                .("Assumption check for multinomial logistic regression"),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">",
-                tr(
-                    "Use this analysis when you want to review whether a multinomial-logit model, for an unordered outcome with 3 or more categories, has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
-                    "Use este análisis cuando quiera revisar si un modelo logit multinomial, para un desenlace no ordenado con 3 o más categorías, tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
-                ),
+                .("Use this analysis when you want to review whether a multinomial-logit model, for an unordered outcome with 3 or more categories, has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data."),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 html_block(NULL, c(
                     paste0(
-                        tr("<b>Categories:</b> ", "<b>Categorías:</b> "),
+                        .("<b>Categories:</b> "),
                         html_escape(paste(dep_levels, collapse = ", "))
                     ),
-                    paste0(
-                        tr("<b>Reference category:</b> ", "<b>Categoría de referencia:</b> "),
-                        html_escape(reference_label),
-                        tr(" (the factor's first level - reorder levels in jamovi's variable editor to change it).",
-                           " (el primer nivel del factor - reordene los niveles en el editor de variables de jamovi para cambiarlo).")
-                    ),
-                    paste0(
-                        tr("<b>Complete cases:</b> ", "<b>Casos completos:</b> "), n_complete,
-                        tr(" | <b>Smallest category:</b> ", " | <b>Categoría más pequeña:</b> "),
-                        html_escape(min_cat_name), " (n = ", min_cat_n, ")"
-                    ),
-                    paste0(
-                        tr("<b>Estimated parameters:</b> ", "<b>Parámetros estimados:</b> "),
-                        n_model_params,
-                        tr(" (across ", " (entre "), n_levels - 1,
-                        tr(" non-reference category equation(s))", " ecuación(es) de categoría no-referencia)")
-                    )
+                    sprintf(.("<b>Reference category:</b> %s (the factor's first level - reorder levels in jamovi's variable editor to change it)."), html_escape(reference_label)),
+                    sprintf(.("<b>Complete cases:</b> %s | <b>Smallest category:</b> %s (n = %s)"), n_complete, html_escape(min_cat_name), min_cat_n),
+                    sprintf(.("<b>Estimated parameters:</b> %s (across %s non-reference category equation(s))"), n_model_params, n_levels - 1)
                 ), paragraphs = TRUE, escape = FALSE),
                 "</div>"
             ))
@@ -765,22 +573,11 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Model design.
             # ES: Diseño del modelo.
             # -----------------------------------------------------------------------------
-            self$results$designGuide$setContent(html_guide(tr("Model design", "Diseño del modelo"), tr(
-                c(
-                    "The multinomial-logit model treats the dependent variable's categories as unordered, and fits one log-odds equation per non-reference category versus the reference category, all estimated jointly.",
-                    "Before interpreting the model, review that every category has a reasonable number of cases and that the number of estimated parameters is small relative to the smallest category.",
-                    "A model can be computed even when some categories are sparse, but coefficient estimates and standard errors become unstable as the smallest category shrinks relative to the number of parameters."
-                ),
-                c(
-                    "El modelo logit multinomial trata las categorías de la variable dependiente como no ordenadas, y ajusta una ecuación de log-momios por categoría no-referencia frente a la categoría de referencia, todas estimadas conjuntamente.",
-                    "Antes de interpretar el modelo, revise que cada categoría tenga un número razonable de casos y que el número de parámetros estimados sea pequeño frente a la categoría más pequeña.",
-                    "Un modelo puede calcularse incluso cuando alguna categoría es escasa, pero las estimaciones de coeficientes y sus errores estándar se vuelven inestables a medida que la categoría más pequeña se achica frente al número de parámetros."
-                )
-            )))
+            self$results$designGuide$setContent(html_guide(.("Model design"), c(.("The multinomial-logit model treats the dependent variable's categories as unordered, and fits one log-odds equation per non-reference category versus the reference category, all estimated jointly."), .("Before interpreting the model, review that every category has a reasonable number of cases and that the number of estimated parameters is small relative to the smallest category."), .("A model can be computed even when some categories are sparse, but coefficient estimates and standard errors become unstable as the smallest category shrinks relative to the number of parameters."))))
 
-            add_row(self$results$design, "design_1", list(element = tr("Total cases", "Casos totales"), value = as.character(n_total)))
-            add_row(self$results$design, "design_2", list(element = tr("Complete cases", "Casos completos"), value = as.character(n_complete)))
-            add_row(self$results$design, "design_3", list(element = tr("Number of categories", "Número de categorías"), value = as.character(n_levels)))
+            add_row(self$results$design, "design_1", list(element = .("Total cases"), value = as.character(n_total)))
+            add_row(self$results$design, "design_2", list(element = .("Complete cases"), value = as.character(n_complete)))
+            add_row(self$results$design, "design_3", list(element = .("Number of categories"), value = as.character(n_levels)))
             # design is a native jamovi Table (plain-text cells), unlike the
             # intro block above - html_escape() would leak literal "&amp;"-
             # style text into the cell instead of rendering as HTML, so the
@@ -790,9 +587,9 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # html_escape() dejaría texto literal "&amp;" en la celda en vez
             # de interpretarse como HTML, así que aquí va la etiqueta de
             # categoría cruda, sin escapar.
-            add_row(self$results$design, "design_4", list(element = tr("Reference category", "Categoría de referencia"), value = reference_label))
-            add_row(self$results$design, "design_5", list(element = tr("Smallest category", "Categoría más pequeña"), value = paste0(min_cat_name, " (n = ", min_cat_n, ")")))
-            add_row(self$results$design, "design_6", list(element = tr("Estimated parameters", "Parámetros estimados"), value = as.character(n_model_params)))
+            add_row(self$results$design, "design_4", list(element = .("Reference category"), value = reference_label))
+            add_row(self$results$design, "design_5", list(element = .("Smallest category"), value = paste0(min_cat_name, " (n = ", min_cat_n, ")")))
+            add_row(self$results$design, "design_6", list(element = .("Estimated parameters"), value = as.character(n_model_params)))
 
             for (i in seq_along(cat_counts)) {
                 add_row(self$results$categoryDistribution, paste0("cat_", i), list(
@@ -820,18 +617,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # grande es común por sí solo y no es en sí una señal de
             # separación de la forma en que sí lo es una PENDIENTE extrema.
             # -----------------------------------------------------------------------------
-            self$results$separationGuide$setContent(html_guide(tr("Complete separation", "Separación completa"), tr(
-                c(
-                    "Complete or quasi-complete separation occurs when a predictor (or combination of predictors) perfectly or nearly perfectly predicts which category a case falls into.",
-                    "Very large coefficients together with very large standard errors are the typical signal of this problem.",
-                    "This check only screens for the extreme coefficient/standard-error signature in the predictor (slope) terms of each non-reference-category equation; it does not guarantee adequate cell counts across every category combination."
-                ),
-                c(
-                    "La separación completa o cuasi-completa ocurre cuando un predictor (o combinación de predictores) predice perfecta o casi perfectamente en qué categoría cae un caso.",
-                    "Coeficientes muy grandes junto con errores estándar muy grandes son la señal típica de este problema.",
-                    "Esta revisión solo detecta la firma extrema de coeficiente/error estándar en los términos de predictores (pendientes) de cada ecuación de categoría no-referencia; no garantiza conteos de celda adecuados en cada combinación de categorías."
-                )
-            )))
+            self$results$separationGuide$setContent(html_guide(.("Complete separation"), c(.("Complete or quasi-complete separation occurs when a predictor (or combination of predictors) perfectly or nearly perfectly predicts which category a case falls into."), .("Very large coefficients together with very large standard errors are the typical signal of this problem."), .("This check only screens for the extreme coefficient/standard-error signature in the predictor (slope) terms of each non-reference-category equation; it does not guarantee adequate cell counts across every category combination."))))
 
             n_separations <- 0
             slope_terms <- setdiff(colnames(coef_matrix), "(Intercept)")
@@ -845,7 +631,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             add_row(self$results$separation, paste0("sep_", n_separations), list(
                                 predictor = term,
                                 category = category,
-                                type = tr("Complete separation", "Separación completa"),
+                                type = .("Complete separation"),
                                 coefficient = coef_val
                             ))
                         }
@@ -854,22 +640,16 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             if (n_separations == 0) {
                 add_row(self$results$separation, "sep_none", list(
-                    predictor = tr("Not detected", "No detectada"), category = "-", type = "-", coefficient = NA
+                    predictor = .("Not detected"), category = "-", type = "-", coefficient = NA
                 ))
             }
 
             self$results$separationInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (n_separations > 0) {
-                    tr(
-                        paste0(n_separations, " predictor-category combination(s) show coefficients and standard errors consistent with complete or quasi-complete separation. Estimates for these terms are not reliable and should not be interpreted at face value."),
-                        paste0(n_separations, " combinación(es) predictor-categoría muestran coeficientes y errores estándar consistentes con separación completa o cuasi-completa. Las estimaciones de esos términos no son confiables y no deben interpretarse literalmente.")
-                    )
+                    sprintf(.("%s predictor-category combination(s) show coefficients and standard errors consistent with complete or quasi-complete separation. Estimates for these terms are not reliable and should not be interpreted at face value."), n_separations)
                 } else {
-                    tr(
-                        "No coefficient/standard-error pattern consistent with complete separation was detected in the predictor (slope) terms of any category equation.",
-                        "No se detectó ningún patrón de coeficiente/error estándar consistente con separación completa en los términos de predictores (pendientes) de ninguna ecuación de categoría."
-                    )
+                    .("No coefficient/standard-error pattern consistent with complete separation was detected in the predictor (slope) terms of any category equation.")
                 },
                 paragraphs = TRUE
             ))
@@ -895,20 +675,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # tabla de Wald por categoría, reflejando cómo ordCheck ya
             # enmarca esto como una prueba por predictor.
             # -----------------------------------------------------------------------------
-            self$results$linearityGuide$setContent(html_guide(tr("Linearity in the multinomial logit", "Linealidad en el logit multinomial"), tr(
-                c(
-                    "The multinomial-logit model does not assume the outcome relates linearly to the predictors, but that each category's log-odds (versus the reference) does.",
-                    "This assumption is checked with a Box-Tidwell-style procedure, adding an interaction term between each numeric predictor and its own logarithm to every non-reference-category equation at once, then comparing the two models with a likelihood-ratio test.",
-                    "A significant test suggests the real relationship is not linear in the logit for at least one category and the predictor may need a transformation or a nonlinear term.",
-                    "This check only applies to numeric predictors; categorical predictors do not have this assumption."
-                ),
-                c(
-                    "El modelo logit multinomial no asume que el desenlace se relacione linealmente con los predictores, sino que el log-momio de cada categoría (frente a la referencia) lo haga.",
-                    "Este supuesto se revisa con un procedimiento estilo Box-Tidwell, agregando un término de interacción entre cada predictor numérico y su propio logaritmo a todas las ecuaciones de categoría no-referencia a la vez, y comparando ambos modelos con una prueba de razón de verosimilitud.",
-                    "Una prueba significativa sugiere que la relación real no es lineal en el logit para al menos una categoría y el predictor podría necesitar una transformación o un término no lineal.",
-                    "Esta revisión solo aplica a predictores numéricos; los predictores categóricos no tienen este supuesto."
-                )
-            )))
+            self$results$linearityGuide$setContent(html_guide(.("Linearity in the multinomial logit"), c(.("The multinomial-logit model does not assume the outcome relates linearly to the predictors, but that each category's log-odds (versus the reference) does."), .("This assumption is checked with a Box-Tidwell-style procedure, adding an interaction term between each numeric predictor and its own logarithm to every non-reference-category equation at once, then comparing the two models with a likelihood-ratio test."), .("A significant test suggests the real relationship is not linear in the logit for at least one category and the predictor may need a transformation or a nonlinear term."), .("This check only applies to numeric predictors; categorical predictors do not have this assumption."))))
 
             bt_tested <- 0
             bt_significant <- 0
@@ -947,20 +714,13 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             self$results$linearityInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (bt_tested == 0) {
-                    tr("No numeric predictors were available to test for linearity in the multinomial logit.",
-                       "No había predictores numéricos disponibles para revisar la linealidad en el logit multinomial.")
+                    .("No numeric predictors were available to test for linearity in the multinomial logit.")
                 } else {
                     c(
-                        tr(
-                            paste0(bt_significant, " of ", bt_tested, " numeric predictor(s) showed a significant likelihood-ratio test, suggesting the relationship with the logit may not be linear for those predictors in at least one category."),
-                            paste0(bt_significant, " de ", bt_tested, " predictor(es) numérico(s) mostraron una prueba de razón de verosimilitud significativa, lo que sugiere que la relación con el logit podría no ser lineal para esos predictores en al menos una categoría.")
-                        ),
-                        tr(
-                            "If non-linearity is confirmed, consider adding a quadratic or spline term for that predictor, or categorizing it into meaningful groups.",
-                            "Si se confirma la no linealidad, considere agregar un término cuadrático o spline para ese predictor, o categorizarlo en grupos con sentido."
-                        )
+                        sprintf(.("%s of %s numeric predictor(s) showed a significant likelihood-ratio test, suggesting the relationship with the logit may not be linear for those predictors in at least one category."), bt_significant, bt_tested),
+                        .("If non-linearity is confirmed, consider adding a quadratic or spline term for that predictor, or categorizing it into meaningful groups.")
                     )
                 },
                 paragraphs = TRUE
@@ -976,21 +736,8 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # degeneración numérica).
             # -----------------------------------------------------------------------------
             self$results$iiaGuide$setContent(html_guide(
-                tr("Independence of Irrelevant Alternatives (IIA)", "Independencia de alternativas irrelevantes (IIA)"),
-                tr(
-                    c(
-                        "The multinomial-logit model assumes the relative odds between any two categories do not depend on which OTHER categories are also available - Independence of Irrelevant Alternatives (IIA), the one assumption unique to this model family.",
-                        "The Hausman-McFadden (1984; see references) test checks this by refitting the model after removing every case belonging to one category at a time; if IIA holds, the coefficients shared with the full model should not change beyond sampling error.",
-                        "One row is shown per omitted category. A significant test for an omitted category is evidence against IIA; a non-significant test is compatible with it.",
-                        "In finite samples, the test statistic's denominator (a covariance-matrix difference) is not always invertible - a well-documented degeneracy of this specific test, not a coding error - and is reported here as 'not computable' rather than a misleading number."
-                    ),
-                    c(
-                        "El modelo logit multinomial asume que los momios relativos entre dos categorías cualesquiera no dependen de qué OTRAS categorías también estén disponibles - Independencia de Alternativas Irrelevantes (IIA), el único supuesto propio de esta familia de modelos.",
-                        "La prueba de Hausman-McFadden (1984; ver referencias) revisa esto reajustando el modelo tras eliminar, de a una, todos los casos que pertenecen a una categoría; si la IIA se sostiene, los coeficientes compartidos con el modelo completo no deberían cambiar más allá del error de muestreo.",
-                        "Se muestra una fila por categoría omitida. Una prueba significativa para una categoría omitida es evidencia en contra de la IIA; una prueba no significativa es compatible con ella.",
-                        "En muestras finitas, el denominador del estadístico de prueba (una diferencia de matrices de covarianza) no siempre es invertible - una degeneración bien documentada de esta prueba específica, no un error de programación - y se reporta aquí como 'no calculable' en vez de un número engañoso."
-                    )
-                )
+                .("Independence of Irrelevant Alternatives (IIA)"),
+                c(.("The multinomial-logit model assumes the relative odds between any two categories do not depend on which OTHER categories are also available - Independence of Irrelevant Alternatives (IIA), the one assumption unique to this model family."), .("The Hausman-McFadden (1984; see references) test checks this by refitting the model after removing every case belonging to one category at a time; if IIA holds, the coefficients shared with the full model should not change beyond sampling error."), .("One row is shown per omitted category. A significant test for an omitted category is evidence against IIA; a non-significant test is compatible with it."), .("In finite samples, the test statistic's denominator (a covariance-matrix difference) is not always invertible - a well-documented degeneracy of this specific test, not a coding error - and is reported here as 'not computable' rather than a misleading number."))
             ))
 
             iia_predictors_rhs <- paste(qname(predictors), collapse = " + ")
@@ -1015,7 +762,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (is.null(restricted_model) || is.null(vcov_full)) {
                     add_row(self$results$iia, paste0("iia_", omitted_category), list(
                         category = omitted_category, chiSq = NA, df = NA, p = NA, pSig = "",
-                        note = tr("Restricted model could not be fit", "No se pudo ajustar el modelo restringido")
+                        note = .("Restricted model could not be fit")
                     ))
                     next()
                 }
@@ -1050,7 +797,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (is.null(vcov_restricted)) {
                     add_row(self$results$iia, paste0("iia_", omitted_category), list(
                         category = omitted_category, chiSq = NA, df = NA, p = NA, pSig = "",
-                        note = tr("Covariance matrix not available for the restricted model", "Matriz de covarianza no disponible para el modelo restringido")
+                        note = .("Covariance matrix not available for the restricted model")
                     ))
                     next()
                 }
@@ -1061,7 +808,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (length(common_categories) == 0 || length(common_terms) == 0) {
                     add_row(self$results$iia, paste0("iia_", omitted_category), list(
                         category = omitted_category, chiSq = NA, df = NA, p = NA, pSig = "",
-                        note = tr("No coefficients are common to both models", "Ningún coeficiente es común a ambos modelos")
+                        note = .("No coefficients are common to both models")
                     ))
                     next()
                 }
@@ -1088,10 +835,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (is.na(hausman_stat)) {
                     add_row(self$results$iia, paste0("iia_", omitted_category), list(
                         category = omitted_category, chiSq = NA, df = df_iia, p = NA, pSig = "",
-                        note = tr(
-                            "Not computable (the covariance-matrix difference is not invertible - often itself evidence against a genuine IIA violation)",
-                            "No calculable (la diferencia de matrices de covarianza no es invertible - a menudo, en sí misma, evidencia en contra de una violación genuina de la IIA)"
-                        )
+                        note = .("Not computable (the covariance-matrix difference is not invertible - often itself evidence against a genuine IIA violation)")
                     ))
                     next()
                 }
@@ -1107,22 +851,13 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             self$results$iiaInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (!iia_any_computable) {
-                    tr(
-                        "The Hausman-McFadden statistic could not be computed for any omitted category in this model - most often because the covariance-matrix difference was not positive definite, itself a known and fairly common outcome of this test, not necessarily evidence of a problem with the model.",
-                        "El estadístico de Hausman-McFadden no pudo calcularse para ninguna categoría omitida en este modelo - con mayor frecuencia porque la diferencia de matrices de covarianza no fue definida positiva, en sí misma un resultado conocido y bastante común de esta prueba, no necesariamente evidencia de un problema con el modelo."
-                    )
+                    .("The Hausman-McFadden statistic could not be computed for any omitted category in this model - most often because the covariance-matrix difference was not positive definite, itself a known and fairly common outcome of this test, not necessarily evidence of a problem with the model.")
                 } else if (iia_any_significant) {
-                    tr(
-                        "At least one omitted category produced a significant Hausman-McFadden statistic, suggesting the Independence of Irrelevant Alternatives assumption may not hold for this model - the relative odds between the remaining categories shift when that category is removed. Consider a nested-logit or multinomial-probit model, which do not require IIA, before relying heavily on this model's odds ratios.",
-                        "Al menos una categoría omitida produjo un estadístico de Hausman-McFadden significativo, lo que sugiere que el supuesto de Independencia de Alternativas Irrelevantes podría no sostenerse para este modelo - los momios relativos entre las categorías restantes cambian al eliminar esa categoría. Considere un modelo logit anidado o probit multinomial, que no requieren IIA, antes de confiar demasiado en los odds ratios de este modelo."
-                    )
+                    .("At least one omitted category produced a significant Hausman-McFadden statistic, suggesting the Independence of Irrelevant Alternatives assumption may not hold for this model - the relative odds between the remaining categories shift when that category is removed. Consider a nested-logit or multinomial-probit model, which do not require IIA, before relying heavily on this model's odds ratios.")
                 } else {
-                    tr(
-                        "No omitted category produced a significant Hausman-McFadden statistic, compatible with the Independence of Irrelevant Alternatives assumption holding for this model.",
-                        "Ninguna categoría omitida produjo un estadístico de Hausman-McFadden significativo, compatible con que el supuesto de Independencia de Alternativas Irrelevantes se sostenga para este modelo."
-                    )
+                    .("No omitted category produced a significant Hausman-McFadden statistic, compatible with the Independence of Irrelevant Alternatives assumption holding for this model.")
                 },
                 paragraphs = TRUE
             ))
@@ -1133,26 +868,13 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Bondad de ajuste - dependencia opcional del paquete
             # 'generalhoslem', mismo patrón de guarda que ordCheck.
             # -----------------------------------------------------------------------------
-            self$results$goodnessOfFitGuide$setContent(html_guide(tr("Goodness of fit", "Bondad de ajuste"), tr(
-                c(
-                    "Goodness of fit evaluates whether the model, as a whole, reasonably reproduces the observed category frequencies.",
-                    "The Lipsitz (1996) and Pulkstenis-Robinson (2004; see references) tests were developed for the proportional-odds model but generalhoslem documents support for 'multinom' fitted objects as well; they are used here for consistency with ordCheck's battery, since no goodness-of-fit test specific to the unordered multinomial case is as widely implemented.",
-                    "The Pulkstenis-Robinson test needs at least one categorical predictor to partition cases into covariate patterns; it is not shown when only numeric predictors are selected. It also needs at least as many distinct covariate patterns as groups to be valid (Fagerland & Hosmer, 2013; see references) - with very few categorical predictors or very few levels, treat a result from this test with extra caution.",
-                    "As with any chi-square-based fit test, these lose power with very small samples and can flag trivially small lack of fit with very large ones - read them together with the IIA result and substantive knowledge of the data."
-                ),
-                c(
-                    "La bondad de ajuste evalúa si el modelo, en conjunto, reproduce razonablemente las frecuencias de categoría observadas.",
-                    "Las pruebas de Lipsitz (1996) y Pulkstenis-Robinson (2004; ver referencias) se desarrollaron para el modelo de momios proporcionales, pero generalhoslem documenta soporte también para objetos ajustados 'multinom'; se usan aquí por consistencia con la batería de ordCheck, ya que no hay una prueba de bondad de ajuste específica para el caso multinomial no ordenado tan ampliamente implementada.",
-                    "La prueba de Pulkstenis-Robinson necesita al menos un predictor categórico para particionar los casos en patrones de covariables; no se muestra cuando solo hay predictores numéricos seleccionados. También necesita al menos tantos patrones de covariables distintos como grupos para ser válida (Fagerland & Hosmer, 2013; ver referencias) - con muy pocos predictores categóricos o muy pocos niveles, trate un resultado de esta prueba con cautela adicional.",
-                    "Como cualquier prueba de ajuste basada en ji-cuadrado, estas pierden poder con muestras muy pequeñas y pueden marcar una falta de ajuste trivial con muestras muy grandes - léalas junto con el resultado de IIA y el conocimiento sustantivo de los datos."
-                )
-            )))
+            self$results$goodnessOfFitGuide$setContent(html_guide(.("Goodness of fit"), c(.("Goodness of fit evaluates whether the model, as a whole, reasonably reproduces the observed category frequencies."), .("The Lipsitz (1996) and Pulkstenis-Robinson (2004; see references) tests were developed for the proportional-odds model but generalhoslem documents support for 'multinom' fitted objects as well; they are used here for consistency with ordCheck's battery, since no goodness-of-fit test specific to the unordered multinomial case is as widely implemented."), .("The Pulkstenis-Robinson test needs at least one categorical predictor to partition cases into covariate patterns; it is not shown when only numeric predictors are selected. It also needs at least as many distinct covariate patterns as groups to be valid (Fagerland & Hosmer, 2013; see references) - with very few categorical predictors or very few levels, treat a result from this test with extra caution."), .("As with any chi-square-based fit test, these lose power with very small samples and can flag trivially small lack of fit with very large ones - read them together with the IIA result and substantive knowledge of the data."))))
 
             gof_available <- requireNamespace("generalhoslem", quietly = TRUE)
 
             if (!gof_available) {
                 add_row(self$results$goodnessOfFit, "gof_missing", list(
-                    test = tr("Package 'generalhoslem' not installed", "Paquete 'generalhoslem' no instalado"),
+                    test = .("Package 'generalhoslem' not installed"),
                     statistic = NA, df = NA, p = NA, pSig = ""
                 ))
             } else {
@@ -1167,7 +889,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ))
                 } else {
                     add_row(self$results$goodnessOfFit, "gof_lipsitz_err", list(
-                        test = tr("Lipsitz (not computable for this model)", "Lipsitz (no calculable para este modelo)"),
+                        test = .("Lipsitz (not computable for this model)"),
                         statistic = NA, df = NA, p = NA, pSig = ""
                     ))
                 }
@@ -1176,7 +898,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     pr_chisq <- tryCatch(generalhoslem::pulkrob.chisq(model, catvars = factors), error = function(e) NULL)
                     if (!is.null(pr_chisq) && is.finite(pr_chisq$p.value)) {
                         add_row(self$results$goodnessOfFit, "gof_pr_chisq", list(
-                            test = tr("Pulkstenis-Robinson (chi-squared)", "Pulkstenis-Robinson (ji-cuadrado)"),
+                            test = .("Pulkstenis-Robinson (chi-squared)"),
                             statistic = unname(pr_chisq$statistic),
                             df = unname(pr_chisq$parameter),
                             p = pr_chisq$p.value,
@@ -1184,14 +906,14 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         ))
                     } else {
                         add_row(self$results$goodnessOfFit, "gof_pr_chisq_err", list(
-                            test = tr("Pulkstenis-Robinson chi-squared (not computable for this model)", "Pulkstenis-Robinson ji-cuadrado (no calculable para este modelo)"),
+                            test = .("Pulkstenis-Robinson chi-squared (not computable for this model)"),
                             statistic = NA, df = NA, p = NA, pSig = ""
                         ))
                     }
                     pr_dev <- tryCatch(generalhoslem::pulkrob.deviance(model, catvars = factors), error = function(e) NULL)
                     if (!is.null(pr_dev) && is.finite(pr_dev$p.value)) {
                         add_row(self$results$goodnessOfFit, "gof_pr_dev", list(
-                            test = tr("Pulkstenis-Robinson (deviance)", "Pulkstenis-Robinson (devianza)"),
+                            test = .("Pulkstenis-Robinson (deviance)"),
                             statistic = unname(pr_dev$statistic),
                             df = unname(pr_dev$parameter),
                             p = pr_dev$p.value,
@@ -1199,7 +921,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         ))
                     } else {
                         add_row(self$results$goodnessOfFit, "gof_pr_dev_err", list(
-                            test = tr("Pulkstenis-Robinson deviance (not computable for this model)", "Pulkstenis-Robinson devianza (no calculable para este modelo)"),
+                            test = .("Pulkstenis-Robinson deviance (not computable for this model)"),
                             statistic = NA, df = NA, p = NA, pSig = ""
                         ))
                     }
@@ -1207,7 +929,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 if (self$results$goodnessOfFit$rowCount == 0) {
                     add_row(self$results$goodnessOfFit, "gof_none", list(
-                        test = tr("No test could be computed", "No se pudo calcular ninguna prueba"),
+                        test = .("No test could be computed"),
                         statistic = NA, df = NA, p = NA, pSig = ""
                     ))
                 }
@@ -1221,22 +943,13 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             self$results$goodnessOfFitInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (!gof_available) {
-                    tr(
-                        "The 'generalhoslem' package is not installed, so goodness of fit could not be tested. Install it (install.packages(\"generalhoslem\")) to enable this check.",
-                        "El paquete 'generalhoslem' no está instalado, así que no se pudo probar la bondad de ajuste. Instálelo (install.packages(\"generalhoslem\")) para habilitar esta revisión."
-                    )
+                    .("The 'generalhoslem' package is not installed, so goodness of fit could not be tested. Install it (install.packages(\"generalhoslem\")) to enable this check.")
                 } else if (gof_any_sig) {
-                    tr(
-                        "At least one goodness-of-fit test is significant, suggesting the model does not reproduce the observed category frequencies well in some region of the predictor space. Consider additional predictors, interactions, or reviewing category coding before trusting model-based predictions.",
-                        "Al menos una prueba de bondad de ajuste es significativa, lo que sugiere que el modelo no reproduce bien las frecuencias de categoría observadas en alguna región del espacio de predictores. Considere predictores adicionales, interacciones, o revisar la codificación de categorías antes de confiar en predicciones basadas en el modelo."
-                    )
+                    .("At least one goodness-of-fit test is significant, suggesting the model does not reproduce the observed category frequencies well in some region of the predictor space. Consider additional predictors, interactions, or reviewing category coding before trusting model-based predictions.")
                 } else {
-                    tr(
-                        "The available goodness-of-fit tests are compatible with adequate fit.",
-                        "Las pruebas de bondad de ajuste disponibles son compatibles con un ajuste adecuado."
-                    )
+                    .("The available goodness-of-fit tests are compatible with adequate fit.")
                 },
                 paragraphs = TRUE
             ))
@@ -1249,18 +962,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # razonamiento que ordCheck: no hay un único ROC/AUC una vez
             # que el desenlace tiene 3+ categorías no ordenadas).
             # -----------------------------------------------------------------------------
-            self$results$discriminationGuide$setContent(html_guide(tr("Pseudo-R²", "Pseudo-R²"), tr(
-                c(
-                    "There is no single ROC curve or AUC once the outcome has more than two unordered categories, so overall model quality is summarized here with pseudo-R² measures instead, complemented by the classification table below.",
-                    "McFadden's pseudo-R² compares the fitted model's log-likelihood to an intercept-only model; values of .20-.40 are often described as a good fit, but this rule of thumb is much less established than R² conventions for linear regression.",
-                    "Nagelkerke's pseudo-R² rescales a related measure so it can reach 1.0, making it more directly comparable across models, but it is not on the same numeric scale as a linear-regression R² and should not be interpreted as \"percent of variance explained\" in that sense."
-                ),
-                c(
-                    "No hay una única curva ROC ni AUC una vez que el desenlace tiene más de dos categorías no ordenadas, así que aquí la calidad general del modelo se resume con medidas de pseudo-R² en cambio, complementadas con la tabla de clasificación de abajo.",
-                    "El pseudo-R² de McFadden compara la log-verosimilitud del modelo ajustado contra un modelo solo con intercepto; valores de .20-.40 suelen describirse como un buen ajuste, pero esta regla es mucho menos establecida que las convenciones de R² en regresión lineal.",
-                    "El pseudo-R² de Nagelkerke reescala una medida relacionada para que pueda llegar a 1.0, haciéndolo más directamente comparable entre modelos, pero no está en la misma escala numérica que un R² de regresión lineal y no debería interpretarse como \"porcentaje de varianza explicada\" en ese sentido."
-                )
-            )))
+            self$results$discriminationGuide$setContent(html_guide(.("Pseudo-R²"), c(.("There is no single ROC curve or AUC once the outcome has more than two unordered categories, so overall model quality is summarized here with pseudo-R² measures instead, complemented by the classification table below."), .("McFadden's pseudo-R² compares the fitted model's log-likelihood to an intercept-only model; values of .20-.40 are often described as a good fit, but this rule of thumb is much less established than R² conventions for linear regression."), .("Nagelkerke's pseudo-R² rescales a related measure so it can reach 1.0, making it more directly comparable across models, but it is not on the same numeric scale as a linear-regression R² and should not be interpreted as \"percent of variance explained\" in that sense."))))
 
             ll_model <- ll_full_model
             ll_null <- if (!is.null(null_model)) as.numeric(stats::logLik(null_model)) else NA_real_
@@ -1276,15 +978,11 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             add_row(self$results$discrimination, "disc_2", list(metric = "Nagelkerke R²", value = nagelkerke_r2))
 
             self$results$discriminationInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (is.na(mcfadden_r2)) {
-                    tr("Pseudo-R² could not be computed (the null model failed to converge).",
-                       "El pseudo-R² no pudo calcularse (el modelo nulo no convergió).")
+                    .("Pseudo-R² could not be computed (the null model failed to converge).")
                 } else {
-                    tr(
-                        paste0("McFadden R² = ", fmt_num(mcfadden_r2, 3), "; Nagelkerke R² = ", fmt_num(nagelkerke_r2, 3), "."),
-                        paste0("McFadden R² = ", fmt_num(mcfadden_r2, 3), "; Nagelkerke R² = ", fmt_num(nagelkerke_r2, 3), ".")
-                    )
+                    sprintf(.("McFadden R² = %s; Nagelkerke R² = %s."), fmt_num(mcfadden_r2, 3), fmt_num(nagelkerke_r2, 3))
                 },
                 paragraphs = TRUE
             ))
@@ -1300,18 +998,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # encabezado del archivo para por qué este es un diagnóstico
             # genuinamente nuevo para el caso no ordenado/nominal.
             # -----------------------------------------------------------------------------
-            self$results$classificationGuide$setContent(html_guide(tr("Classification table", "Tabla de clasificación"), tr(
-                c(
-                    "Each case is assigned to the category with the highest fitted probability under the model, then compared against its actually observed category.",
-                    "Recall (the proportion of each observed category correctly predicted) is shown by row; overall accuracy is reported below the table, alongside the chance baseline for this many categories (1 / number of categories, if the categories were equally likely).",
-                    "A model can have a statistically significant pseudo-R² while still classifying poorly in practical terms - this table is the more concrete, applied complement to the pseudo-R² figures above."
-                ),
-                c(
-                    "Cada caso se asigna a la categoría con la probabilidad ajustada más alta bajo el modelo, y luego se compara contra su categoría realmente observada.",
-                    "El recall (la proporción de cada categoría observada predicha correctamente) se muestra por fila; la exactitud global se reporta debajo de la tabla, junto con la línea base de azar para este número de categorías (1 / número de categorías, si las categorías fueran igual de probables).",
-                    "Un modelo puede tener un pseudo-R² estadísticamente significativo y aun así clasificar mal en términos prácticos - esta tabla es el complemento más concreto y aplicado de las cifras de pseudo-R² de arriba."
-                )
-            )))
+            self$results$classificationGuide$setContent(html_guide(.("Classification table"), c(.("Each case is assigned to the category with the highest fitted probability under the model, then compared against its actually observed category."), .("Recall (the proportion of each observed category correctly predicted) is shown by row; overall accuracy is reported below the table, alongside the chance baseline for this many categories (1 / number of categories, if the categories were equally likely)."), .("A model can have a statistically significant pseudo-R² while still classifying poorly in practical terms - this table is the more concrete, applied complement to the pseudo-R² figures above."))))
 
             private$.ensureClassificationColumns(dep_levels)
 
@@ -1341,22 +1028,18 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 overall_accuracy <- n_correct / n_complete
             } else {
                 add_row(self$results$classification, "class_none", list(
-                    observed = tr("Predictions could not be computed", "No se pudieron calcular las predicciones")
+                    observed = .("Predictions could not be computed")
                 ))
             }
 
             chance_baseline <- 1 / n_levels
 
             self$results$classificationInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (is.na(overall_accuracy)) {
-                    tr("The classification table could not be built for this model.",
-                       "No se pudo construir la tabla de clasificación para este modelo.")
+                    .("The classification table could not be built for this model.")
                 } else {
-                    tr(
-                        paste0("Overall accuracy = ", fmt_num(100 * overall_accuracy, 1), "%, against a ", fmt_num(100 * chance_baseline, 1), "% chance baseline for ", n_levels, " equally likely categories. Compare accuracy to this baseline, not to 100%: even a modest gain over chance can reflect a genuinely useful model when the categories are hard to tell apart."),
-                        paste0("Exactitud global = ", fmt_num(100 * overall_accuracy, 1), "%, contra una línea base de azar de ", fmt_num(100 * chance_baseline, 1), "% para ", n_levels, " categorías igual de probables. Compare la exactitud contra esta línea base, no contra el 100%: incluso una ganancia modesta sobre el azar puede reflejar un modelo genuinamente útil cuando las categorías son difíciles de distinguir.")
-                    )
+                    sprintf(.("Overall accuracy = %s%%, against a %s%% chance baseline for %s equally likely categories. Compare accuracy to this baseline, not to 100%%: even a modest gain over chance can reflect a genuinely useful model when the categories are hard to tell apart."), fmt_num(100 * overall_accuracy, 1), fmt_num(100 * chance_baseline, 1), n_levels)
                 },
                 paragraphs = TRUE
             ))
@@ -1372,18 +1055,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # los predictores, totalmente independiente de la familia del
             # desenlace).
             # -----------------------------------------------------------------------------
-            self$results$multicollinearityGuide$setContent(html_guide(tr("Multicollinearity", "Multicolinealidad"), tr(
-                c(
-                    "Multicollinearity evaluates whether predictors carry very redundant information.",
-                    "VIF values close to 1 suggest low collinearity; high values indicate a predictor is too well explained by other predictors.",
-                    "If meaningful collinearity is present, consider combining variables, removing redundant predictors, centering variables, or changing the analytic question."
-                ),
-                c(
-                    "La multicolinealidad evalúa si los predictores contienen información muy redundante.",
-                    "VIF cercanos a 1 sugieren baja colinealidad; valores altos indican que un predictor se explica demasiado bien por otros predictores.",
-                    "Si hay colinealidad importante, considere combinar variables, eliminar predictores redundantes, centrar variables, o cambiar la pregunta analítica."
-                )
-            )))
+            self$results$multicollinearityGuide$setContent(html_guide(.("Multicollinearity"), c(.("Multicollinearity evaluates whether predictors carry very redundant information."), .("VIF values close to 1 suggest low collinearity; high values indicate a predictor is too well explained by other predictors."), .("If meaningful collinearity is present, consider combining variables, removing redundant predictors, centering variables, or changing the analytic question."))))
 
             mc_visible <- length(predictors) >= 2
             self$results$multicollinearityGuide$setVisible(mc_visible)
@@ -1423,12 +1095,9 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         }, error = function(e) NA_real_)
                         tol <- if (is.na(vif)) NA_real_ else 1 / vif
 
-                        vif_reason <- if (is.na(vif)) tr(
-                            "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
-                            "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
-                        ) else NULL
+                        vif_reason <- if (is.na(vif)) .("Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).") else NULL
                         add_multi("VIF", pClean, "VIF", vif, reason = vif_reason)
-                        add_multi(tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol, reason = vif_reason)
+                        add_multi(.("Tolerance"), pClean, "1/VIF", tol, reason = vif_reason)
 
                         if (!is.na(vif) && (is.na(max_vif) || vif > max_vif)) {
                             max_vif <- vif
@@ -1442,23 +1111,19 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     cond_index <- if (!is.na(min_eig) && min_eig > 0) sqrt(max_eig / min_eig) else NA_real_
                     det_r <- tryCatch(det(stats::cor(design_mat)), error = function(e) NA_real_)
 
-                    add_multi(tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), "λ min", min_eig)
-                    add_multi(tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", cond_index)
-                    add_multi(tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", det_r)
+                    add_multi(.("Minimum eigenvalue"), .("Design matrix"), "λ min", min_eig)
+                    add_multi(.("Condition index"), .("Design matrix"), "CI", cond_index)
+                    add_multi(.("Determinant"), .("Correlation matrix"), "det(R)", det_r)
                 } else {
-                    add_multi(tr("VIF / tolerance", "VIF / tolerancia"), tr("Not applicable", "No aplicable"), "", NA_real_)
+                    add_multi(.("VIF / tolerance"), .("Not applicable"), "", NA_real_)
                 }
 
                 self$results$multicollinearityInterpretation$setContent(html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     if (!is.na(max_vif)) {
-                        tr(
-                            paste0("Maximum VIF: ", fmt_num(max_vif, 2), " (predictor: ", max_vif_name, "). Values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references)."),
-                            paste0("VIF máximo: ", fmt_num(max_vif, 2), " (predictor: ", max_vif_name, "). Valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970; ver referencias).")
-                        )
+                        sprintf(.("Maximum VIF: %s (predictor: %s). Values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references)."), fmt_num(max_vif, 2), max_vif_name)
                     } else {
-                        tr("Multicollinearity could not be assessed for this predictor set.",
-                           "No se pudo evaluar la multicolinealidad para este conjunto de predictores.")
+                        .("Multicollinearity could not be assessed for this predictor set.")
                     },
                     paragraphs = TRUE
                 ))
@@ -1481,18 +1146,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             corrData <- model_data_complete
 
-            self$results$correlationMatrixGuide$setContent(html_guide(tr("Correlation Matrix (numeric predictors)", "Matriz de Correlaciones (predictores numéricos)"), tr(
-                c(
-                    "These two tables complement the multicollinearity checks with an overview of the association among the numeric predictors, each in APA 7 format (lower triangle, numbered variables).",
-                    "The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (Székely et al., 2007), which detects linear and non-linear association alike.",
-                    "The dependent variable is deliberately excluded from this matrix: unlike ordCheck's ordinal outcome, this variable's categories are unordered, so there is no defensible way to integer-code it for a correlation coefficient - its relationship to the predictors is instead reported through the coefficients/odds-ratios table."
-                ),
-                c(
-                    "Estas dos tablas complementan las pruebas de multicolinealidad con una vista general de la asociación entre los predictores numéricos, cada una en formato APA 7 (triángulo inferior, variables numeradas).",
-                    "La primera reporta la correlación de Pearson convencional (solo detecta asociación lineal); la segunda reporta la correlación de distancia (Székely et al., 2007), que detecta asociación lineal y no lineal por igual.",
-                    "La variable dependiente se excluye deliberadamente de esta matriz: a diferencia del desenlace ordinal de ordCheck, las categorías de esta variable no están ordenadas, así que no hay una forma defendible de codificarla como entero para un coeficiente de correlación - su relación con los predictores se reporta en cambio mediante la tabla de coeficientes/odds ratios."
-                )
-            )))
+            self$results$correlationMatrixGuide$setContent(html_guide(.("Correlation Matrix (numeric predictors)"), c(.("These two tables complement the multicollinearity checks with an overview of the association among the numeric predictors, each in APA 7 format (lower triangle, numbered variables)."), .("The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (Székely et al., 2007), which detects linear and non-linear association alike."), .("The dependent variable is deliberately excluded from this matrix: unlike ordCheck's ordinal outcome, this variable's categories are unordered, so there is no defensible way to integer-code it for a correlation coefficient - its relationship to the predictors is instead reported through the coefficients/odds-ratios table."))))
 
             self$results$correlationMatrixGuide$setVisible(k >= 2)
             self$results$pearsonMatrixTable$setVisible(k >= 2)
@@ -1547,11 +1201,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     add_row(self$results$dcorMatrixTable, paste0("dm_", i), dcorVals)
                 }
 
-                self$results$correlationMatrixNote$setContent(html_block(NULL, paste0(
-                    tr("N = ", "N = "), n_complete, ". ",
-                    tr("* p < .05, ** p < .01, *** p < .001. ", "* p < .05, ** p < .01, *** p < .001. "),
-                    .al_dcor_na_note(lang)
-                ), paragraphs = FALSE))
+                self$results$correlationMatrixNote$setContent(html_block(NULL, sprintf(.("N = %s. * p < .05, ** p < .01, *** p < .001. %s"), n_complete, .al_dcor_na_note(lang)), paragraphs = FALSE))
 
                 notable_pairs <- 0
                 for (key in names(pairResults)) {
@@ -1564,33 +1214,23 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             var1 = pr$v1, var2 = pr$v2,
                             pearson = fmt_num(pr$pearsonR, 3), dcor = fmt_num(pr$dcor, 3),
                             gap = gap, ce = pr$ce, ceP = pr$ceP, ceSig = p_sig(pr$ceP),
-                            flag = tr("Yes", "Sí")
+                            flag = .("Yes")
                         ))
                     }
                 }
 
                 self$results$correlationComparisonGuide$setContent(html_block(
-                    tr("Pearson / dCor / Copula Entropy Discordance Analysis", "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                    .al_html_list(tr(c(
-                        "Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship.",
-                        "Pairs are flagged in the table below when the gap (dCor minus |Pearson r|) is greater than .10. The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence.",
-                        .al_permutation_note(lang, 199, 20260704)
-                    ), c(
-                        "Dado que la r de Pearson solo capta asociación lineal mientras que dCor capta asociación lineal y no lineal por igual, un par cuyo dCor sea notablemente mayor que su |r| de Pearson es una señal (no una prueba) de una relación no lineal.",
-                        "Se señalan en la tabla de abajo los pares con una brecha (dCor menos |r| de Pearson) mayor a .10. El resultado de la prueba de entropía copular (CE, copent()) para el mismo par se muestra al lado como una segunda línea de evidencia libre de supuestos distribucionales.",
-                        .al_permutation_note(lang, 199, 20260704)
-                    ))),
+                    .("Pearson / dCor / Copula Entropy Discordance Analysis"),
+                    .al_html_list(c(.("Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship."), .("Pairs are flagged in the table below when the gap (dCor minus |Pearson r|) is greater than .10. The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence."), .al_permutation_note(lang, 199, 20260704))),
                     raw = TRUE
                 ))
 
                 self$results$correlationComparisonInterpretation$setContent(html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     if (notable_pairs == 0) {
-                        tr("No pair shows a Pearson/dCor gap greater than 0.10; there is no indication of unmodeled non-linear association among the model's numeric predictors.",
-                           "Ningún par muestra una brecha Pearson/dCor mayor a 0.10; no hay indicios de asociación no lineal no modelada entre los predictores numéricos del modelo.")
+                        .("No pair shows a Pearson/dCor gap greater than 0.10; there is no indication of unmodeled non-linear association among the model's numeric predictors.")
                     } else {
-                        tr(paste0(notable_pairs, " pair(s) show a notable Pearson/dCor gap; inspect a scatterplot before concluding the relationship is non-linear."),
-                           paste0(notable_pairs, " par(es) muestran una brecha Pearson/dCor notable; revise un diagrama de dispersión antes de concluir que la relación es no lineal."))
+                        sprintf(.("%s pair(s) show a notable Pearson/dCor gap; inspect a scatterplot before concluding the relationship is non-linear."), notable_pairs)
                     },
                     paragraphs = TRUE
                 ))
@@ -1610,20 +1250,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # devuelve una matriz n x K también para objetos "multinom",
             # así que la fórmula es idéntica).
             # -----------------------------------------------------------------------------
-            self$results$influenceGuide$setContent(html_guide(tr("Influential cases", "Casos influyentes"), tr(
-                c(
-                    "nnet::multinom() does not expose Cook's D or leverage the way a linear or binary logistic model does, so influence here is screened with a simpler, case-level Pearson-type residual instead: how far the model's fitted probability for the case's OWN observed category falls from a perfect fit.",
-                    "Cases are flagged at |residual| > 2.5, the same convention used elsewhere in this suite for standardized-residual screening.",
-                    "This is a reasonable approximation, not a single canonical published statistic for this model family - for a fuller graphical treatment of an analogous ordinal case, see Liu et al. (2009; see references).",
-                    "A flagged case should not be removed automatically; check whether it is a recording error, a valid but extreme case, or a sign the model does not represent all subgroups well."
-                ),
-                c(
-                    "nnet::multinom() no expone Cook's D ni leverage como sí lo hace un modelo lineal o logístico binario, así que aquí la influencia se criba con un residuo tipo Pearson por caso más simple en cambio: qué tan lejos está la probabilidad ajustada del modelo para la categoría REALMENTE OBSERVADA del caso de un ajuste perfecto.",
-                    "Los casos se marcan en |residuo| > 2.5, la misma convención usada en otra parte de esta suite para el cribado de residuos estandarizados.",
-                    "Esta es una aproximación razonable, no un único estadístico canónico publicado para esta familia de modelos - para un tratamiento gráfico más completo de un caso ordinal análogo, ver Liu et al. (2009; ver referencias).",
-                    "Un caso marcado no debe eliminarse automáticamente; revise si es un error de registro, un caso válido pero extremo, o una señal de que el modelo no representa bien a todos los subgrupos."
-                )
-            )))
+            self$results$influenceGuide$setContent(html_guide(.("Influential cases"), c(.("nnet::multinom() does not expose Cook's D or leverage the way a linear or binary logistic model does, so influence here is screened with a simpler, case-level Pearson-type residual instead: how far the model's fitted probability for the case's OWN observed category falls from a perfect fit."), .("Cases are flagged at |residual| > 2.5, the same convention used elsewhere in this suite for standardized-residual screening."), .("This is a reasonable approximation, not a single canonical published statistic for this model family - for a fuller graphical treatment of an analogous ordinal case, see Liu et al. (2009; see references)."), .("A flagged case should not be removed automatically; check whether it is a recording error, a valid but extreme case, or a sign the model does not represent all subgroups well."))))
 
             fitted_probs <- tryCatch(stats::predict(model, type = "probs"), error = function(e) NULL)
 
@@ -1655,18 +1282,13 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             pct_influential <- if (n_complete > 0) 100 * n_influential / n_complete else NA_real_
 
             self$results$influenceInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (is.null(fitted_probs)) {
-                    tr("Fitted probabilities could not be computed for this model.",
-                       "No se pudieron calcular las probabilidades ajustadas para este modelo.")
+                    .("Fitted probabilities could not be computed for this model.")
                 } else if (n_influential == 0) {
-                    tr("No cases exceed the |residual| > 2.5 screening threshold.",
-                       "Ningún caso supera el umbral de cribado |residuo| > 2.5.")
+                    .("No cases exceed the |residual| > 2.5 screening threshold.")
                 } else {
-                    tr(
-                        paste0(n_influential, " of ", n_complete, " cases (", fmt_num(pct_influential, 1), "%) exceed the |residual| > 2.5 screening threshold."),
-                        paste0(n_influential, " de ", n_complete, " casos (", fmt_num(pct_influential, 1), "%) superan el umbral de cribado |residuo| > 2.5.")
-                    )
+                    sprintf(.("%s of %s cases (%s%%) exceed the |residual| > 2.5 screening threshold."), n_influential, n_complete, fmt_num(pct_influential, 1))
                 },
                 paragraphs = TRUE
             ))
@@ -1682,21 +1304,8 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # una tabla separada de intercepts/cutpoints).
             # -----------------------------------------------------------------------------
             self$results$coefficientsGuide$setContent(html_guide(
-                tr("Coefficients and odds ratios (by category)", "Coeficientes y odds ratios (por categoría)"),
-                tr(
-                    c(
-                        "Each non-reference category has its own set of coefficients: exp(coefficient) is the odds ratio of belonging to THAT category rather than the reference category, for a one-unit increase in the predictor (or for belonging to a predictor's category versus its own reference level).",
-                        "The \"(Intercept)\" row's odds ratio is the baseline odds of that category versus the reference when every predictor equals zero (or is at its reference level) - it is not itself a predictor effect and is shown for completeness, not for substantive interpretation.",
-                        "Read the confidence interval, not only the point estimate: if it includes 1, the effect is not statistically distinguishable from no association.",
-                        "These odds ratios are only meaningfully interpretable to the extent Independence of Irrelevant Alternatives holds - if the Hausman-McFadden test above flags a category, treat that category's odds ratios with additional caution."
-                    ),
-                    c(
-                        "Cada categoría no-referencia tiene su propio conjunto de coeficientes: exp(coeficiente) es el odds ratio de pertenecer a ESA categoría en vez de a la categoría de referencia, por un aumento de una unidad en el predictor (o por pertenecer a una categoría de un predictor frente a su propio nivel de referencia).",
-                        "El odds ratio de la fila \"(Intercept)\" es el momio base de esa categoría frente a la referencia cuando todos los predictores valen cero (o están en su nivel de referencia) - no es en sí un efecto de predictor y se muestra por completitud, no para interpretación sustantiva.",
-                        "Lea el intervalo de confianza, no solo el estimador puntual: si incluye 1, el efecto no es estadísticamente distinguible de la ausencia de asociación.",
-                        "Estos odds ratios solo son interpretables con sentido en la medida en que se sostenga la Independencia de Alternativas Irrelevantes - si la prueba de Hausman-McFadden de arriba marca una categoría, trate los odds ratios de esa categoría con cautela adicional."
-                    )
-                )
+                .("Coefficients and odds ratios (by category)"),
+                c(.("Each non-reference category has its own set of coefficients: exp(coefficient) is the odds ratio of belonging to THAT category rather than the reference category, for a one-unit increase in the predictor (or for belonging to a predictor's category versus its own reference level)."), .("The \"(Intercept)\" row's odds ratio is the baseline odds of that category versus the reference when every predictor equals zero (or is at its reference level) - it is not itself a predictor effect and is shown for completeness, not for substantive interpretation."), .("Read the confidence interval, not only the point estimate: if it includes 1, the effect is not statistically distinguishable from no association."), .("These odds ratios are only meaningfully interpretable to the extent Independence of Irrelevant Alternatives holds - if the Hausman-McFadden test above flags a category, treat that category's odds ratios with additional caution."))
             ))
 
             ci_array <- tryCatch(stats::confint(model), error = function(e) NULL)
@@ -1743,14 +1352,11 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             self$results$coefficientsInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (is.na(strongest_label)) {
-                    tr("No predictor coefficients were estimated.", "No se estimaron coeficientes de predictores.")
+                    .("No predictor coefficients were estimated.")
                 } else {
-                    tr(
-                        paste0("Strongest association: ", strongest_label, ", |log(OR)| = ", fmt_num(strongest_abs_log_or, 2), "."),
-                        paste0("Asociación más fuerte: ", strongest_label, ", |log(OR)| = ", fmt_num(strongest_abs_log_or, 2), ".")
-                    )
+                    sprintf(.("Strongest association: %s, |log(OR)| = %s."), strongest_label, fmt_num(strongest_abs_log_or, 2))
                 },
                 paragraphs = TRUE
             ))
@@ -1761,30 +1367,21 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
             recommendations <- c()
             if (iia_any_significant) {
-                recommendations <- c(recommendations, tr(
-                    "The Independence of Irrelevant Alternatives assumption is not well supported for at least one omitted category; consider a nested-logit or multinomial-probit model.",
-                    "El supuesto de Independencia de Alternativas Irrelevantes no está bien respaldado para al menos una categoría omitida; considere un modelo logit anidado o probit multinomial."
-                ))
+                recommendations <- c(recommendations, .("The Independence of Irrelevant Alternatives assumption is not well supported for at least one omitted category; consider a nested-logit or multinomial-probit model."))
             }
             if (bt_significant > 0) {
-                recommendations <- c(recommendations, tr(
-                    "At least one numeric predictor shows a non-linear relationship with the multinomial logit; consider a transformation or categorization.",
-                    "Al menos un predictor numérico muestra una relación no lineal con el logit multinomial; considere una transformación o categorización."
-                ))
+                recommendations <- c(recommendations, .("At least one numeric predictor shows a non-linear relationship with the multinomial logit; consider a transformation or categorization."))
             }
             if (n_influential > 0) {
-                recommendations <- c(recommendations, tr(
-                    "There are cases with a large Pearson-type residual; inspect them before relying on the model's predictions.",
-                    "Hay casos con un residuo tipo Pearson grande; inspecciónelos antes de confiar en las predicciones del modelo."
-                ))
+                recommendations <- c(recommendations, .("There are cases with a large Pearson-type residual; inspect them before relying on the model's predictions."))
             }
 
             self$results$notes$setContent(html_block(NULL, c(
                 paste0(
-                    tr("Suggested decision: ", "Decisión sugerida: "),
-                    if (length(recommendations) > 0) paste(recommendations, collapse = " ") else tr("No major assumption concerns were flagged; the model's coefficients appear reasonably defensible.", "No se marcaron preocupaciones importantes de supuestos; los coeficientes del modelo parecen razonablemente defendibles.")
+                    .("Suggested decision: "),
+                    if (length(recommendations) > 0) paste(recommendations, collapse = " ") else .("No major assumption concerns were flagged; the model's coefficients appear reasonably defensible.")
                 ),
-                paste0(tr("Model fitted with ", "Modelo ajustado con "), n_complete, tr(" cases.", " casos."))
+                sprintf(.("Model fitted with %s cases."), n_complete)
             ), paragraphs = TRUE))
 
             # -----------------------------------------------------------------------------
@@ -1805,7 +1402,6 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # solo dibuja residuos de Pearson contra el número de caso.
             # -----------------------------------------------------------------------------
             self$results$linearityPlot$setState(list(
-                reportLang = lang,
                 model_data = model_data_complete,
                 obs_category = as.character(model_data_complete$dep_nom),
                 reference_label = reference_label,
@@ -1813,7 +1409,6 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 covs = covs
             ))
             self$results$influencePlot$setState(list(
-                reportLang = lang,
                 n = n_complete,
                 pearson_resid = if (!is.null(fitted_probs)) pearson_resid else rep(NA_real_, n_complete)
             ))
@@ -1828,7 +1423,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         # -----------------------------------------------------------------------------
         # Plot helpers (identical pattern to ordCheck/logCheck:
-        # .emptyLogPlot, .plotTr, .plotStyle, .plotPalette, .plotTheme).
+        # .emptyLogPlot, .plotStyle, .plotPalette, .plotTheme).
         # ES: Helpers de gráficos (patrón idéntico a ordCheck/logCheck).
         # -----------------------------------------------------------------------------
         .emptyLogPlot = function(message) {
@@ -1839,19 +1434,6 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             TRUE
         },
 
-        .plotTr = function(en, es, image = NULL) {
-            plot_lang <- tryCatch({
-                st <- if (!is.null(image)) image$state else NULL
-                if (!is.null(st) && is.list(st) && !is.null(st$reportLang) && nzchar(st$reportLang)) {
-                    st$reportLang
-                } else {
-                    self$options$reportLang
-                }
-            }, error = function(e) "es")
-
-            plot_lang <- tryCatch(.al_normalize_lang(plot_lang), error = function(e) "es")
-            if (identical(plot_lang, "es")) es else en
-        },
 
         # Plot theme/palette migrated to jamovi's native ggtheme/theme
         # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
@@ -1895,16 +1477,14 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # corte de ordCheck agregando un panel también por categoría.
         # -----------------------------------------------------------------------------
         .plotLinearity = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             st <- image$state
             if (is.null(st)) return(FALSE)
 
-            tr_p <- function(en, es) private$.plotTr(en, es, image)
             covs <- st$covs
 
             if (length(covs) == 0) {
-                return(private$.emptyLogPlot(tr_p(
-                    "No numeric predictors to plot.", "No hay predictores numéricos para graficar."
-                )))
+                return(private$.emptyLogPlot(.("No numeric predictors to plot.")))
             }
 
             bins <- tryCatch(as.integer(self$options$linBins), error = function(e) 8L)
@@ -1951,10 +1531,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             if (length(plot_rows) == 0) {
-                return(private$.emptyLogPlot(tr_p(
-                    "Not enough variation to plot linearity in the multinomial logit.",
-                    "No hay suficiente variación para graficar la linealidad en el logit multinomial."
-                )))
+                return(private$.emptyLogPlot(.("Not enough variation to plot linearity in the multinomial logit.")))
             }
 
             plot_df <- do.call(rbind, plot_rows)
@@ -1985,9 +1562,9 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(ggplot2::aes(size = n, color = predictor), show.legend = c(size = TRUE, color = FALSE)) +
                 ggplot2::facet_grid(category ~ predictor, scales = "free_x") +
                 ggplot2::labs(
-                    x = tr_p("Predictor (binned mean)", "Predictor (media por grupo)"),
-                    y = tr_p("Empirical logit (category vs. reference)", "Logit empírico (categoría vs. referencia)"),
-                    size = tr_p("Group n", "n del grupo")
+                    x = .("Predictor (binned mean)"),
+                    y = .("Empirical logit (category vs. reference)"),
+                    size = .("Group n")
                 ) +
                 ggtheme +
                 ggplot2::theme(legend.position = "bottom", plot.margin = ggplot2::margin(4, 6, 4, 6))
@@ -2005,10 +1582,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ordCheck.
         # -----------------------------------------------------------------------------
         .plotInfluence = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             st <- image$state
             if (is.null(st)) return(FALSE)
 
-            tr_p <- function(en, es) private$.plotTr(en, es, image)
             pal <- private$.plotColors(theme)
 
             resid_vals <- st$pearson_resid
@@ -2016,10 +1593,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             threshold <- 2.5
 
             if (all(is.na(resid_vals))) {
-                return(private$.emptyLogPlot(tr_p(
-                    "Residuals could not be computed for this model.",
-                    "No se pudieron calcular los residuos para este modelo."
-                )))
+                return(private$.emptyLogPlot(.("Residuals could not be computed for this model.")))
             }
 
             show_threshold <- tryCatch(isTRUE(self$options$influenceShowThreshold), error = function(e) TRUE)
@@ -2054,7 +1628,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             p <- p +
-                ggplot2::labs(x = tr_p("Case", "Caso"), y = tr_p("Pearson-type residual", "Residuo tipo Pearson")) +
+                ggplot2::labs(x = .("Case"), y = .("Pearson-type residual")) +
                 ggtheme +
                 ggplot2::theme(plot.margin = ggplot2::margin(4, 6, 4, 6))
 

@@ -53,7 +53,7 @@
 #    Cook's D), parametrized per area and per the user's plot-set
 #    selection.
 # 4. Assemble the odds-ratio table and the applied-interpretation text for
-#    every diagnostic area, in the user's selected report language.
+#    every diagnostic area, in jamovi's language.
 #
 # ES: Responsabilidades
 # 1. Ajustar el modelo de regresión logística binaria a partir de la
@@ -128,9 +128,9 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Initial setup and shared helpers (AssumptionsLab standard).
             # ES: Configuración inicial y helpers compartidos (estándar AssumptionsLab).
             # -----------------------------------------------------------------------------
-            lang <- .al_normalize_lang(self$options$reportLang)
+            lang <- .al_lang(self$options)
 
-            tr <- function(en, es) .al_tr(lang, en, es)
+            . <- lang$tr
 
             txt <- function(key) {
                 .al_text(lang, "logistic", key)
@@ -156,7 +156,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             fmt_num <- function(x, digits = 3) {
                 x <- clean_num(x)
                 if (is.na(x))
-                    return(tr("Not computed", "No calculado"))
+                    return(.("Not computed"))
                 format(round(x, digits), nsmall = digits)
             }
 
@@ -182,172 +182,9 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             qname <- .al_qname
             strip_qname <- .al_strip_qname
 
-            set_result_titles <- function() {
 
-                set_title_safe <- function(name, en, es) {
-                    element <- tryCatch(
-                        self$results[[name]],
-                        error = function(e) NULL
-                    )
 
-                    if (is.null(element))
-                        return(invisible(FALSE))
 
-                    tryCatch(
-                        element$setTitle(tr(en, es)),
-                        error = function(e) invisible(FALSE)
-                    )
-
-                    invisible(TRUE)
-                }
-
-                titles <- list(
-                    c("intro", "Introduction", "Introducción"),
-                    c("designGuide", "Model design", "Diseño del modelo"),
-                    c("design", "Design summary", "Resumen del diseño"),
-
-                    c("separationGuide", "Complete separation", "Separación completa"),
-                    c("separation", "Complete separation", "Separación completa"),
-                    c("separationInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("linearityGuide", "Linearity in the logit", "Linealidad en el logit"),
-                    c("linearity",
-                      "Linearity in the logit (Box-Tidwell)",
-                      "Linealidad en el logit (Box-Tidwell)"),
-                    c("linearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("linearityPlot",
-                      "Empirical logit vs predictor",
-                      "Logit empírico vs predictor"),
-
-                    c("goodnessOfFitGuide", "Goodness of fit", "Bondad de ajuste"),
-                    c("goodnessOfFit", "Goodness of fit", "Bondad de ajuste"),
-                    c("goodnessOfFitInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("calibrationPlot",
-                      "Calibration by probability deciles",
-                      "Calibración por deciles de probabilidad"),
-
-                    c("discriminationGuide", "Discrimination", "Discriminación"),
-                    c("discrimination", "Discrimination", "Discriminación"),
-                    c("discriminationInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("discriminationPlot", "ROC curve", "Curva ROC"),
-
-                    c("multicollinearityGuide", "Multicollinearity", "Multicolinealidad"),
-                    c("multicollinearity", "Multicollinearity", "Multicolinealidad"),
-                    c("multicollinearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("correlationMatrixGuide", "Correlation Matrix", "Matriz de Correlaciones"),
-                    c("pearsonMatrixTable",
-                      "Pearson correlation matrix (APA 7 format)",
-                      "Matriz de correlaciones de Pearson (formato APA 7)"),
-                    c("dcorMatrixTable",
-                      "Distance correlation matrix (dCor, APA 7 format)",
-                      "Matriz de correlación de distancia (dCor, formato APA 7)"),
-                    c("correlationComparisonGuide",
-                      "Pearson / dCor / Copula Entropy Discordance Analysis",
-                      "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                    c("correlationComparisonTable",
-                      "Pairs with a notable difference between Pearson and dCor",
-                      "Pares con diferencia notable entre Pearson y dCor"),
-                    c("correlationComparisonInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("influenceGuide", "Influential cases", "Casos influyentes"),
-                    c("influence", "Influential cases", "Casos influyentes"),
-                    c("influenceInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("influencePlot", "Cook's D by case", "Cook's D por caso"),
-
-                    c("oddsRatiosGuide", "Odds Ratios", "Odds Ratios"),
-                    c("oddsRatios", "Odds Ratios", "Odds Ratios"),
-                    c("oddsRatiosInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("notes", "Notes and recommendation", "Notas y recomendación")
-                )
-
-                for (item in titles)
-                    set_title_safe(item[[1]], item[[2]], item[[3]])
-            }
-
-            set_result_titles()
-
-            set_table_column_titles <- function() {
-
-                set_col_title_safe <- function(table_name, col_name, en, es) {
-                    table <- tryCatch(
-                        self$results[[table_name]],
-                        error = function(e) NULL
-                    )
-
-                    if (is.null(table))
-                        return(invisible(FALSE))
-
-                    column <- tryCatch(
-                        table$getColumn(col_name),
-                        error = function(e) NULL
-                    )
-
-                    if (is.null(column))
-                        return(invisible(FALSE))
-
-                    tryCatch(
-                        column$setTitle(tr(en, es)),
-                        error = function(e) invisible(FALSE)
-                    )
-
-                    invisible(TRUE)
-                }
-
-                cols <- list(
-                    c("design", "element", "Element", "Elemento"),
-                    c("design", "value", "Value", "Valor"),
-
-                    c("separation", "predictor", "Predictor", "Predictor"),
-                    c("separation", "type", "Type", "Tipo"),
-                    c("separation", "coefficient", "Coefficient", "Coeficiente"),
-
-                    c("linearity", "predictor", "Predictor", "Predictor"),
-                    c("linearity", "statistic", "Statistic", "Estadístico"),
-                    c("linearity", "pSig", "Sig.", "Sig."),
-
-                    c("goodnessOfFit", "test", "Test", "Prueba"),
-                    c("goodnessOfFit", "statistic", "Statistic", "Estadístico"),
-                    c("goodnessOfFit", "pSig", "Sig.", "Sig."),
-
-                    c("discrimination", "metric", "Metric", "Métrica"),
-                    c("discrimination", "value", "Value", "Valor"),
-
-                    c("multicollinearity", "diagnostic", "Diagnostic", "Diagnóstico"),
-                    c("multicollinearity", "item", "Item", "Elemento"),
-                    c("multicollinearity", "statistic", "Statistic", "Estadístico"),
-                    c("multicollinearity", "value", "Value", "Valor"),
-
-                    c("pearsonMatrixTable", "var", "Variable", "Variable"),
-                    c("dcorMatrixTable", "var", "Variable", "Variable"),
-
-                    c("correlationComparisonTable", "var1", "Variable 1", "Variable 1"),
-                    c("correlationComparisonTable", "var2", "Variable 2", "Variable 2"),
-                    c("correlationComparisonTable", "pearson", "Pearson r", "Pearson r"),
-                    c("correlationComparisonTable", "dcor", "dCor", "dCor"),
-                    c("correlationComparisonTable", "gap", "Gap (dCor - |r|)", "Brecha (dCor − |r|)"),
-                    c("correlationComparisonTable", "ce", "Copula entropy", "Entropía copular"),
-                    c("correlationComparisonTable", "ceP", "p (CE)", "p (CE)"),
-                    c("correlationComparisonTable", "ceSig", "Sig. (CE)", "Sig. (CE)"),
-                    c("correlationComparisonTable", "flag", "Notable difference", "Diferencia notable"),
-
-                    c("influence", "case", "Case", "Caso"),
-                    c("influence", "cooksD", "Cook's D", "Cook's D"),
-                    c("influence", "leverage", "Leverage", "Leverage"),
-
-                    c("oddsRatios", "predictor", "Predictor", "Predictor"),
-                    c("oddsRatios", "or", "OR", "OR"),
-                    c("oddsRatios", "ciLower", "95% CI lower", "IC 95% inferior"),
-                    c("oddsRatios", "ciUpper", "95% CI upper", "IC 95% superior"),
-                    c("oddsRatios", "pSig", "Sig.", "Sig.")
-                )
-
-                for (item in cols)
-                    set_col_title_safe(item[[1]], item[[2]], item[[3]], item[[4]])
-            }
-
-            set_table_column_titles()
 
             dep_var <- self$options$dep
             covs <- self$options$covs
@@ -356,11 +193,11 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             data <- self$data
             if (is.null(data) || nrow(data) == 0) {
-                jmvcore::reject(tr("No data are available.", "No hay datos disponibles."))
+                jmvcore::reject(.("No data are available."))
             }
 
             if (is.null(dep_var) || !(dep_var %in% names(data))) {
-                jmvcore::reject(tr("Dependent variable not selected.", "Variable dependiente no seleccionada."))
+                jmvcore::reject(.("Dependent variable not selected."))
             }
 
             dep_data <- data[[dep_var]]
@@ -375,10 +212,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (is.factor(dep_data)) {
                 levels_dep <- levels(dep_data)
                 if (length(levels_dep) != 2) {
-                    jmvcore::reject(tr(
-                        "The variable must have exactly 2 levels.",
-                        "La variable debe tener 2 niveles."
-                    ))
+                    jmvcore::reject(.("The variable must have exactly 2 levels."))
                 }
                 reference_label <- levels_dep[1]
                 event_label <- levels_dep[2]
@@ -386,24 +220,18 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             } else if (is.numeric(dep_data)) {
                 unique_vals <- sort(unique(na.omit(dep_data)))
                 if (length(unique_vals) != 2) {
-                    jmvcore::reject(tr(
-                        "The variable must have exactly 2 unique values.",
-                        "La variable debe tener 2 valores únicos."
-                    ))
+                    jmvcore::reject(.("The variable must have exactly 2 unique values."))
                 }
                 reference_label <- as.character(unique_vals[1])
                 event_label <- as.character(unique_vals[2])
                 dep_binary <- as.integer(dep_data == unique_vals[2])
             } else {
-                jmvcore::reject(tr(
-                    "The variable must be binary or a 2-level factor.",
-                    "Variable debe ser binaria o factor de 2 niveles."
-                ))
+                jmvcore::reject(.("The variable must be binary or a 2-level factor."))
             }
 
             predictors <- c(covs, factors)
             if (length(predictors) == 0) {
-                jmvcore::reject(tr("Select at least one predictor.", "Seleccione al menos un predictor."))
+                jmvcore::reject(.("Select at least one predictor."))
             }
 
             model_data <- data
@@ -430,10 +258,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             })
 
             if (is.null(model)) {
-                jmvcore::reject(paste0(
-                    tr("Error fitting the model: ", "Error al ajustar el modelo: "),
-                    model_error
-                ))
+                jmvcore::reject(sprintf(.("Error fitting the model: %s"), model_error))
             }
 
             model_summary <- summary(model)
@@ -443,55 +268,28 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Report introduction.
             # ES: Introducción del informe.
             # -----------------------------------------------------------------------------
-            self$results$intro$setContent(paste0(
-                "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\">",
-                "<p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">",
-                "AssumptionsLab",
-                "</p>",
-                "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
-                tr("Assumption check for logistic regression", "Revisión de supuestos para regresión logística"),
-                "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
-                "<p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">",
-                tr(
-                    "Use this analysis when you want to review whether a logistic regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
-                    "Use este análisis cuando quiera revisar si un modelo de regresión logística tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
-                ),
-                "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
-                html_block(NULL, c(
-                paste0(
-                    tr("<b>Reference level (0):</b> ", "<b>Nivel de referencia (0):</b> "),
-                    html_escape(reference_label),
-                    tr(" | <b>Event (1):</b> ", " | <b>Evento (1):</b> "),
-                    html_escape(event_label)
-                ),
-                paste0(
-                    tr("<b>Complete cases:</b> ", "<b>Casos completos:</b> "), n_complete,
-                    tr(" | <b>Events:</b> ", " | <b>Eventos:</b> "), n_events,
-                    tr(" | <b>Non-events:</b> ", " | <b>No eventos:</b> "), n_non_events
-                ),
-                paste0(tr("<b>EPV (least-frequent category):</b> ", "<b>EPV (categoría menos frecuente):</b> "), fmt_num(epv, 1))
-            ), paragraphs = TRUE, escape = FALSE),
-                "</div>"
-            ))
+            self$results$intro$setContent(sprintf(.("<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">Assumption check for logistic regression</p><p style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">Use this analysis when you want to review whether a logistic regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.</p><p style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>"), html_block(NULL, c(
+                sprintf(.("<b>Reference level (0):</b> %s | <b>Event (1):</b> %s"), html_escape(reference_label), html_escape(event_label)),
+                sprintf(.("<b>Complete cases:</b> %s | <b>Events:</b> %s | <b>Non-events:</b> %s"), n_complete, n_events, n_non_events),
+                sprintf(.("<b>EPV (least-frequent category):</b> %s"), fmt_num(epv, 1))
+            ), paragraphs = TRUE, escape = FALSE)))
 
             # -----------------------------------------------------------------------------
             # Model design.
             # ES: Diseño del modelo.
             # -----------------------------------------------------------------------------
-            self$results$designGuide$setContent(html_guide(tr("Model design", "Diseño del modelo"), "designGuide"))
+            self$results$designGuide$setContent(html_guide(.("Model design"), "designGuide"))
 
-            add_row(self$results$design, "design_1", list(element = tr("Total cases", "Casos totales"), value = as.character(n_total)))
-            add_row(self$results$design, "design_2", list(element = tr("Complete cases", "Casos completos"), value = as.character(n_complete)))
-            add_row(self$results$design, "design_3", list(element = tr("Events", "Eventos"), value = as.character(n_events)))
-            add_row(self$results$design, "design_4", list(element = tr("EPV (least-frequent category)", "EPV (categoría menos frecuente)"), value = fmt_num(epv, 2)))
+            add_row(self$results$design, "design_1", list(element = .("Total cases"), value = as.character(n_total)))
+            add_row(self$results$design, "design_2", list(element = .("Complete cases"), value = as.character(n_complete)))
+            add_row(self$results$design, "design_3", list(element = .("Events"), value = as.character(n_events)))
+            add_row(self$results$design, "design_4", list(element = .("EPV (least-frequent category)"), value = fmt_num(epv, 2)))
 
             # -----------------------------------------------------------------------------
             # Complete separation.
             # ES: Separación completa.
             # -----------------------------------------------------------------------------
-            self$results$separationGuide$setContent(html_guide(tr("Complete separation", "Separación completa"), "separationGuide"))
+            self$results$separationGuide$setContent(html_guide(.("Complete separation"), "separationGuide"))
 
             n_separations <- 0
             if (nrow(coef_table) > 1) {
@@ -504,7 +302,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         n_separations <- n_separations + 1
                         add_row(self$results$separation, paste0("sep_", n_separations), list(
                             predictor = predictor_name,
-                            type = tr("Complete separation", "Separación completa"),
+                            type = .("Complete separation"),
                             coefficient = coef_val
                         ))
                     }
@@ -512,43 +310,25 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             if (n_separations == 0) {
                 add_row(self$results$separation, "sep_none", list(
-                    predictor = tr("Not detected", "No detectada"),
+                    predictor = .("Not detected"),
                     type = "-",
                     coefficient = NA
                 ))
             }
 
             self$results$separationInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (n_separations > 0) {
                     c(
-                        tr(
-                            paste0(n_separations, " of ", n_predictors, " predictor(s) show coefficients and standard errors consistent with complete or quasi-complete separation. Estimates for these predictors are not reliable and should not be interpreted at face value."),
-                            paste0(n_separations, " de ", n_predictors, " predictor(es) muestran coeficientes y errores estándar consistentes con separación completa o cuasi-completa. Las estimaciones de esos predictores no son confiables y no deben interpretarse literalmente.")
-                        ),
-                        tr(
-                            "Common error: reporting the odds ratio for a separated predictor as if it were a normal, stable estimate; a coefficient of, say, 8 with a standard error of 4 does not mean a huge, precise effect - it means the algorithm could not find a finite solution.",
-                            "Error común: reportar el odds ratio de un predictor separado como si fuera una estimación estable normal; un coeficiente de, por ejemplo, 8 con un error estándar de 4 no significa un efecto enorme y preciso - significa que el algoritmo no pudo encontrar una solución finita."
-                        ),
-                        tr(
-                            paste0("Sample-size context: with ", n_events, " events and ", n_non_events, " non-events, small or unevenly split subgroups within a predictor are the most common cause of this pattern."),
-                            paste0("Contexto de tamaño de muestra: con ", n_events, " eventos y ", n_non_events, " no eventos, los subgrupos pequeños o muy desiguales dentro de un predictor son la causa más frecuente de este patrón.")
-                        ),
-                        tr(
-                            "Consider Firth's (1993; see references) penalized logistic regression, which corrects the maximum-likelihood bias and yields finite estimates under separation, or combine rare categories before trusting these coefficients.",
-                            "Considere la regresión logística penalizada de Firth (1993; ver referencias), que corrige el sesgo de máxima verosimilitud y produce estimaciones finitas bajo separación, o combine categorías poco frecuentes antes de confiar en estos coeficientes."
-                        )
+                        sprintf(.("%s of %s predictor(s) show coefficients and standard errors consistent with complete or quasi-complete separation. Estimates for these predictors are not reliable and should not be interpreted at face value."), n_separations, n_predictors),
+                        .("Common error: reporting the odds ratio for a separated predictor as if it were a normal, stable estimate; a coefficient of, say, 8 with a standard error of 4 does not mean a huge, precise effect - it means the algorithm could not find a finite solution."),
+                        sprintf(.("Sample-size context: with %s events and %s non-events, small or unevenly split subgroups within a predictor are the most common cause of this pattern."), n_events, n_non_events),
+                        .("Consider Firth's (1993; see references) penalized logistic regression, which corrects the maximum-likelihood bias and yields finite estimates under separation, or combine rare categories before trusting these coefficients.")
                     )
                 } else {
                     c(
-                        tr(
-                            "No coefficient/standard-error pattern consistent with complete separation was detected.",
-                            "No se detectó ningún patrón de coeficiente/error estándar consistente con separación completa."
-                        ),
-                        tr(
-                            "This check only screens for the extreme coefficient/standard-error signature; it does not guarantee that every category combination has adequate cell counts, which is worth a quick manual check with sparse categorical predictors.",
-                            "Esta revisión solo detecta la firma extrema de coeficiente/error estándar; no garantiza que cada combinación de categorías tenga conteos de celda adecuados, algo que vale la pena revisar manualmente con predictores categóricos poco frecuentes."
-                        )
+                        .("No coefficient/standard-error pattern consistent with complete separation was detected."),
+                        .("This check only screens for the extreme coefficient/standard-error signature; it does not guarantee that every category combination has adequate cell counts, which is worth a quick manual check with sparse categorical predictors.")
                     )
                 },
                 paragraphs = TRUE
@@ -558,7 +338,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Linearity in the logit (Box-Tidwell).
             # ES: Linealidad en el logit (Box-Tidwell).
             # -----------------------------------------------------------------------------
-            self$results$linearityGuide$setContent(html_guide(tr("Linearity in the logit", "Linealidad en el logit"), "linearityGuide"))
+            self$results$linearityGuide$setContent(html_guide(.("Linearity in the logit"), "linearityGuide"))
 
             bt_tested <- 0
             bt_significant <- 0
@@ -566,7 +346,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (length(covs) == 0) {
                 self$results$linearity$addRow(rowKey = "lin_none", values = list(
-                    predictor = tr("Not applicable", "No aplicable"),
+                    predictor = .("Not applicable"),
                     statistic = NA_real_,
                     p = NA_real_,
                     pSig = ""
@@ -650,50 +430,29 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             linearity_interp <- character(0)
             if (length(covs) == 0) {
-                linearity_interp <- tr(
-                    "No numeric predictors were included, so the Box-Tidwell linearity-in-the-logit check does not apply.",
-                    "No se incluyeron predictores numéricos, por lo que la prueba de linealidad en el logit (Box-Tidwell) no aplica."
-                )
+                linearity_interp <- .("No numeric predictors were included, so the Box-Tidwell linearity-in-the-logit check does not apply.")
             } else if (bt_tested == 0) {
-                linearity_interp <- tr(
-                    "The Box-Tidwell test could not be computed for the numeric predictors (it requires strictly positive values).",
-                    "No fue posible calcular la prueba de Box-Tidwell para los predictores numéricos (requiere valores estrictamente positivos)."
-                )
+                linearity_interp <- .("The Box-Tidwell test could not be computed for the numeric predictors (it requires strictly positive values).")
             } else {
                 linearity_interp <- c(
                     paste0(
-                        tr(
-                            paste0(bt_significant, " of ", bt_tested, " numeric predictor(s) showed a significant Box-Tidwell interaction (Box & Tidwell, 1962; see references), suggesting the relationship with the logit may not be linear for those predictors."),
-                            paste0(bt_significant, " de ", bt_tested, " predictor(es) numérico(s) mostraron una interacción de Box-Tidwell significativa (Box & Tidwell, 1962; ver referencias), lo que sugiere que la relación con el logit podría no ser lineal para esos predictores.")
-                        )
+                        sprintf(.("%s of %s numeric predictor(s) showed a significant Box-Tidwell interaction (Box & Tidwell, 1962; see references), suggesting the relationship with the logit may not be linear for those predictors."), bt_significant, bt_tested)
                     ),
-                    tr(
-                        "Common error: applying this check to categorical predictors, or concluding non-linearity from the raw scatterplot of the outcome against the predictor. Linearity in the logit is only meaningful for numeric predictors and is properly assessed with the interaction test or the \"Empirical Logit vs Predictor\" chart, not with the raw 0/1 scatter.",
-                        "Error común: aplicar esta revisión a predictores categóricos, o concluir no linealidad a partir del diagrama de dispersión crudo de la variable dependiente contra el predictor. La linealidad en el logit solo tiene sentido para predictores numéricos y se evalúa correctamente con la prueba de interacción o el gráfico \"Logit empírico vs predictor\", no con la dispersión cruda 0/1."
-                    ),
-                    tr(
-                        paste0("Sample-size caveat: with ", n_complete, " complete cases, the Box-Tidwell interaction term has less power to detect real curvature than the main effects do; a non-significant result here is weaker evidence of linearity than a non-significant result would be with a much larger sample."),
-                        paste0("Matiz de tamaño de muestra: con ", n_complete, " casos completos, el término de interacción de Box-Tidwell tiene menos poder para detectar curvatura real que los efectos principales; un resultado no significativo aquí es evidencia más débil de linealidad de lo que sería con una muestra mucho más grande.")
-                    ),
-                    tr(
-                        "If non-linearity is confirmed, consider adding a quadratic or spline term for that predictor, or categorizing it into clinically or theoretically meaningful groups.",
-                        "Si se confirma la no linealidad, considere agregar un término cuadrático o spline para ese predictor, o categorizarlo en grupos con sentido clínico o teórico."
-                    )
+                    .("Common error: applying this check to categorical predictors, or concluding non-linearity from the raw scatterplot of the outcome against the predictor. Linearity in the logit is only meaningful for numeric predictors and is properly assessed with the interaction test or the \"Empirical Logit vs Predictor\" chart, not with the raw 0/1 scatter."),
+                    sprintf(.("Sample-size caveat: with %s complete cases, the Box-Tidwell interaction term has less power to detect real curvature than the main effects do; a non-significant result here is weaker evidence of linearity than a non-significant result would be with a much larger sample."), n_complete),
+                    .("If non-linearity is confirmed, consider adding a quadratic or spline term for that predictor, or categorizing it into clinically or theoretically meaningful groups.")
                 )
             }
 
             if (length(bt_skipped) > 0) {
                 linearity_interp <- c(linearity_interp, paste0(
-                    tr(
-                        "Not tested (non-positive or non-numeric values): ",
-                        "No evaluado (valores no positivos o no numéricos): "
-                    ),
+                    .("Not tested (non-positive or non-numeric values): "),
                     paste(bt_skipped, collapse = ", ")
                 ))
             }
 
             self$results$linearityInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 linearity_interp,
                 paragraphs = TRUE
             ))
@@ -702,7 +461,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Goodness of fit.
             # ES: Bondad de ajuste.
             # -----------------------------------------------------------------------------
-            self$results$goodnessOfFitGuide$setContent(html_guide(tr("Goodness of fit", "Bondad de ajuste"), "goodnessOfFitGuide"))
+            self$results$goodnessOfFitGuide$setContent(html_guide(.("Goodness of fit"), "goodnessOfFitGuide"))
 
             deviance_val <- model$deviance
             deviance_df <- model$df.residual
@@ -718,10 +477,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             hl_test <- NULL
             hl_reason <- NULL
             if (!requireNamespace("ResourceSelection", quietly = TRUE)) {
-                hl_reason <- tr(
-                    "The 'ResourceSelection' package is not installed.",
-                    "El paquete 'ResourceSelection' no está instalado."
-                )
+                hl_reason <- .("The 'ResourceSelection' package is not installed.")
             } else {
                 hl_test <- tryCatch({
                     ResourceSelection::hoslem.test(model_data_complete$dep_binary, fitted(model), g = 10)
@@ -747,10 +503,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     hl_test <- NULL
 
                 if (is.null(hl_test))
-                    hl_reason <- tr(
-                        "Could not be computed - the predicted probabilities are not spread out enough to form 10 distinct groups (too few observations or too little variation in fitted probabilities).",
-                        "No se pudo calcular - las probabilidades predichas no están suficientemente dispersas para formar 10 grupos distintos (muy pocas observaciones o muy poca variación en las probabilidades ajustadas)."
-                    )
+                    hl_reason <- .("Could not be computed - the predicted probabilities are not spread out enough to form 10 distinct groups (too few observations or too little variation in fitted probabilities).")
             }
 
             self$results$goodnessOfFit$addRow(rowKey = "gof_hl", values = list(
@@ -766,44 +519,17 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
 
             self$results$goodnessOfFitInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
-                    paste0(
-                        tr("Deviance / df ratio: ", "Razón devianza / gl: "), fmt_num(deviance_val / deviance_df, 2),
-                        tr(
-                            ". Values well above 1 suggest overdispersion or poor fit, though this ratio is only a rough signal.",
-                            ". Valores muy por encima de 1 sugieren sobredispersión o ajuste pobre, aunque esta razón es solo una señal aproximada."
-                        )
-                    ),
-                    tr(
-                        "Caveat: the residual-deviance chi-square approximation is only strictly valid when data are grouped (repeated covariate patterns); with individual-level data, as here, it is an approximate reference, not a precise test.",
-                        "Matiz: la aproximación de ji-cuadrado sobre la devianza residual es estrictamente válida solo con datos agrupados (patrones de covariables repetidos); con datos a nivel individual, como aquí, es una referencia aproximada, no una prueba precisa."
-                    ),
+                    sprintf(.("Deviance / df ratio: %s. Values well above 1 suggest overdispersion or poor fit, though this ratio is only a rough signal."), fmt_num(deviance_val / deviance_df, 2)),
+                    .("Caveat: the residual-deviance chi-square approximation is only strictly valid when data are grouped (repeated covariate patterns); with individual-level data, as here, it is an approximate reference, not a precise test."),
                     if (!is.null(hl_test)) {
                         hl_p_str <- if (hl_test$p.value < .001) "< .001" else paste0("= ", fmt_num(hl_test$p.value, 3))
-                        paste0(
-                            "Hosmer-Lemeshow (1980; ", tr("see references", "ver referencias"), "): p ", hl_p_str, ". ",
-                            tr(
-                                if (hl_test$p.value >= .05)
-                                    "Compatible with adequate fit across probability groups."
-                                else
-                                    "Suggests the model does not fit well in some probability range; review the \"Calibration by Probability Decile\" chart.",
-                                if (hl_test$p.value >= .05)
-                                    "Compatible con un ajuste adecuado entre grupos de probabilidad."
-                                else
-                                    "Sugiere que el modelo no ajusta bien en algún rango de probabilidades; revise el gráfico \"Calibración por deciles de probabilidad\"."
-                            )
-                        )
+                        sprintf(.("Hosmer-Lemeshow (1980; see references): p %s. %s"), hl_p_str, if (hl_test$p.value >= .05) .("Compatible with adequate fit across probability groups.") else .("Suggests the model does not fit well in some probability range; review the \"Calibration by Probability Decile\" chart."))
                     } else {
-                        paste0(
-                            tr("Hosmer-Lemeshow: ", "Hosmer-Lemeshow: "),
-                            hl_reason
-                        )
+                        sprintf(.("Hosmer-Lemeshow: %s"), hl_reason)
                     },
-                    tr(
-                        "Common error: treating a non-significant Hosmer-Lemeshow test as proof the model fits well. The test loses power with very large samples and its result depends on the number of groups chosen (commonly 10); always read it together with the calibration plot rather than in isolation.",
-                        "Error común: tratar una prueba de Hosmer-Lemeshow no significativa como prueba de que el modelo ajusta bien. La prueba pierde poder con muestras muy grandes y su resultado depende del número de grupos elegido (habitualmente 10); léala siempre junto con el gráfico de calibración, no de forma aislada."
-                    )
+                    .("Common error: treating a non-significant Hosmer-Lemeshow test as proof the model fits well. The test loses power with very large samples and its result depends on the number of groups chosen (commonly 10); always read it together with the calibration plot rather than in isolation.")
                 ),
                 paragraphs = TRUE
             ))
@@ -812,16 +538,13 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Discrimination.
             # ES: Discriminación.
             # -----------------------------------------------------------------------------
-            self$results$discriminationGuide$setContent(html_guide(tr("Discrimination", "Discriminación"), "discriminationGuide"))
+            self$results$discriminationGuide$setContent(html_guide(.("Discrimination"), "discriminationGuide"))
 
             auc_val <- NA_real_
             roc_obj <- NULL
             auc_reason <- NULL
             if (!requireNamespace("pROC", quietly = TRUE)) {
-                auc_reason <- tr(
-                    "The 'pROC' package is not installed.",
-                    "El paquete 'pROC' no está instalado."
-                )
+                auc_reason <- .("The 'pROC' package is not installed.")
             } else {
                 roc_obj <- tryCatch({
                     pROC::roc(model_data_complete$dep_binary, fitted(model), quiet = TRUE)
@@ -837,10 +560,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 # realmente finito.
                 if (!is.finite(auc_val)) {
                     auc_val <- NA_real_
-                    auc_reason <- tr(
-                        "Could not be computed for this model's predicted probabilities.",
-                        "No se pudo calcular para las probabilidades predichas de este modelo."
-                    )
+                    auc_reason <- .("Could not be computed for this model's predicted probabilities.")
                 }
             }
             self$results$discrimination$addRow(rowKey = "disc_auc", values = list(metric = "AUC", value = auc_val))
@@ -851,7 +571,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
 
             self$results$discriminationInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (!is.na(auc_val)) {
                     auc_q1 <- auc_val / (2 - auc_val)
                     auc_q2 <- (2 * auc_val^2) / (1 + auc_val)
@@ -865,37 +585,15 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     auc_ci_hi <- min(1, auc_val + 1.96 * auc_se)
 
                     c(
-                        paste0(
-                            tr("AUC = ", "AUC = "), fmt_num(auc_val, 3),
-                            tr(" (approx. 95% CI ", " (IC 95% aprox. "), fmt_num(auc_ci_lo, 3), "-", fmt_num(auc_ci_hi, 3), tr("; Hanley & McNeil, 1982; see references). ", "; Hanley & McNeil, 1982; ver referencias). "),
-                            tr(
-                                if (auc_val >= .8) "Good discrimination between events and non-events."
-                                else if (auc_val >= .7) "Acceptable discrimination."
-                                else if (auc_val >= .6) "Weak discrimination; interpret with caution."
-                                else "Discrimination close to chance level.",
-                                if (auc_val >= .8) "Buena discriminación entre eventos y no eventos."
-                                else if (auc_val >= .7) "Discriminación aceptable."
-                                else if (auc_val >= .6) "Discriminación débil; interprete con cautela."
-                                else "Discriminación cercana al nivel de azar."
-                            )
-                        ),
+                        sprintf(.("AUC = %s (approx. 95%% CI %s-%s; Hanley & McNeil, 1982; see references). %s"), fmt_num(auc_val, 3), fmt_num(auc_ci_lo, 3), fmt_num(auc_ci_hi, 3), if (auc_val >= .8) .("Good discrimination between events and non-events.") else if (auc_val >= .7) .("Acceptable discrimination.") else if (auc_val >= .6) .("Weak discrimination; interpret with caution.") else .("Discrimination close to chance level.")),
                         if (auc_val < .5) {
-                            tr(
-                                paste0("An AUC below .50 means the predicted probability ranking runs opposite to the event category as coded; reversing the classification rule would give an equivalent discrimination of approximately ", fmt_num(1 - auc_val, 3), ", still close to chance."),
-                                paste0("Un AUC por debajo de .50 significa que el orden de las probabilidades predichas va en sentido opuesto a la categoría de evento tal como está codificada; invertir la regla de clasificación daría una discriminación equivalente de aproximadamente ", fmt_num(1 - auc_val, 3), ", todavía cercana al azar.")
-                            )
+                            sprintf(.("An AUC below .50 means the predicted probability ranking runs opposite to the event category as coded; reversing the classification rule would give an equivalent discrimination of approximately %s, still close to chance."), fmt_num(1 - auc_val, 3))
                         },
-                        tr(
-                            "Common error: treating AUC as evidence of good calibration, or as a measure of overall model accuracy. A model can discriminate well and still produce poorly calibrated probabilities; use the \"Calibration by Probability Decile\" chart to check that separately.",
-                            "Error común: tratar el AUC como evidencia de buena calibración, o como una medida de exactitud global del modelo. Un modelo puede discriminar bien y aun así producir probabilidades mal calibradas; use el gráfico \"Calibración por deciles de probabilidad\" para revisar eso por separado."
-                        ),
-                        tr(
-                            paste0("Sample-size caveat: with only ", n_events, " events and ", n_non_events, " non-events, the AUC confidence interval reported in the Discrimination table reflects real sampling uncertainty in this estimate, not just a point value."),
-                            paste0("Matiz de tamaño de muestra: con solo ", n_events, " eventos y ", n_non_events, " no eventos, el intervalo de confianza del AUC reportado en la tabla de Discriminación refleja incertidumbre real de muestreo en esta estimación, no solo un valor puntual.")
-                        )
+                        .("Common error: treating AUC as evidence of good calibration, or as a measure of overall model accuracy. A model can discriminate well and still produce poorly calibrated probabilities; use the \"Calibration by Probability Decile\" chart to check that separately."),
+                        sprintf(.("Sample-size caveat: with only %s events and %s non-events, the AUC confidence interval reported in the Discrimination table reflects real sampling uncertainty in this estimate, not just a point value."), n_events, n_non_events)
                     )
                 } else {
-                    paste0(tr("AUC: ", "AUC: "), auc_reason)
+                    sprintf(.("AUC: %s"), auc_reason)
                 },
                 paragraphs = TRUE
             ))
@@ -904,7 +602,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Multicollinearity.
             # ES: Multicolinealidad.
             # -----------------------------------------------------------------------------
-            self$results$multicollinearityGuide$setContent(html_guide(tr("Multicollinearity", "Multicolinealidad"), "multicollinearityGuide"))
+            self$results$multicollinearityGuide$setContent(html_guide(.("Multicollinearity"), "multicollinearityGuide"))
 
             max_vif <- NA_real_
             max_vif_name <- NA_character_
@@ -946,12 +644,9 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     tol <- if (is.na(vif)) NA_real_ else 1 / vif
                     pClean <- gsub("^`|`$", "", colnames(X_no_intercept)[j])
 
-                    vif_reason <- if (is.na(vif)) tr(
-                        "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
-                        "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
-                    ) else NULL
+                    vif_reason <- if (is.na(vif)) .("Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).") else NULL
                     add_multi("VIF", pClean, "VIF", vif, reason = vif_reason)
-                    add_multi(tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol, reason = vif_reason)
+                    add_multi(.("Tolerance"), pClean, "1/VIF", tol, reason = vif_reason)
 
                     if (!is.na(vif) && (is.na(max_vif) || vif > max_vif)) {
                         max_vif <- vif
@@ -975,58 +670,30 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         error = function(e) NA_real_
                     )
 
-                    add_multi(tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), min_eig)
-                    add_multi(tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", ci)
-                    add_multi(tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", det_r)
+                    add_multi(.("Minimum eigenvalue"), .("Design matrix"), .("minimum λ"), min_eig)
+                    add_multi(.("Condition index"), .("Design matrix"), "CI", ci)
+                    add_multi(.("Determinant"), .("Correlation matrix"), "det(R)", det_r)
                 }
             } else {
-                add_multi(tr("VIF / tolerance", "VIF / tolerancia"), tr("Not applicable", "No aplicable"), "", NA_real_)
+                add_multi(.("VIF / tolerance"), .("Not applicable"), "", NA_real_)
             }
 
             self$results$multicollinearityInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (!is.na(max_vif)) {
                     c(
-                        paste0(
-                            tr("Maximum VIF: ", "VIF máximo: "), fmt_num(max_vif, 2),
-                            tr(" (predictor: ", " (predictor: "), max_vif_name, ")",
-                            tr(
-                                ". Values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references).",
-                                ". Valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970; ver referencias)."
-                            )
-                        ),
-                        paste0(
-                            tr("In practical terms, a VIF of ", "En términos prácticos, un VIF de "), fmt_num(max_vif, 2),
-                            tr(
-                                paste0(" means that predictor's standard error is about ", fmt_num(sqrt(max_vif), 2), " times larger than it would be without collinearity - which widens its confidence interval and odds-ratio range accordingly."),
-                                paste0(" significa que el error estándar de ese predictor es aproximadamente ", fmt_num(sqrt(max_vif), 2), " veces más grande de lo que sería sin colinealidad - lo que amplía su intervalo de confianza y su rango de odds ratio en la misma proporción.")
-                            )
-                        ),
+                        sprintf(.("Maximum VIF: %s (predictor: %s). Values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references)."), fmt_num(max_vif, 2), max_vif_name),
+                        sprintf(.("In practical terms, a VIF of %s%s"), fmt_num(max_vif, 2), sprintf(.(" means that predictor's standard error is about %s times larger than it would be without collinearity - which widens its confidence interval and odds-ratio range accordingly."), fmt_num(sqrt(max_vif), 2))),
                         if (!is.na(max_ci))
-                            tr(
-                                paste0("Condition index (whole design matrix): ", fmt_num(max_ci, 2), ". Values above 15 raise a moderate concern and above 30 a severe one, complementing VIF by diagnosing collinearity across the whole matrix at once."),
-                                paste0("Índice de condición (toda la matriz de diseño): ", fmt_num(max_ci, 2), ". Valores por encima de 15 encienden una alerta moderada y por encima de 30 una severa, complementando al VIF al diagnosticar la colinealidad de toda la matriz a la vez.")
-                            )
+                            sprintf(.("Condition index (whole design matrix): %s. Values above 15 raise a moderate concern and above 30 a severe one, complementing VIF by diagnosing collinearity across the whole matrix at once."), fmt_num(max_ci, 2))
                         else "",
-                        tr(
-                            "Common error: assuming a high VIF means the predictor should be removed. The model may still predict and discriminate well overall; the issue is isolating that predictor's individual effect from the others, not the model's usefulness as a whole.",
-                            "Error común: pensar que un VIF alto significa que hay que eliminar el predictor. El modelo puede seguir prediciendo y discriminando bien en conjunto; el problema es aislar el efecto individual de ese predictor frente a los demás, no la utilidad del modelo en su conjunto."
-                        ),
-                        tr(
-                            paste0("Sample-size caveat: this threshold is a convention, not a statistical law. With ", n_complete, " complete cases here, even moderate collinearity can make coefficients noticeably unstable; with much larger samples a similar VIF is usually more tolerable."),
-                            paste0("Matiz de tamaño de muestra: este umbral es una convención, no una ley estadística. Con ", n_complete, " casos completos aquí, incluso una colinealidad moderada puede volver los coeficientes notablemente inestables; con muestras mucho más grandes, un VIF similar suele ser más tolerable.")
-                        )
+                        .("Common error: assuming a high VIF means the predictor should be removed. The model may still predict and discriminate well overall; the issue is isolating that predictor's individual effect from the others, not the model's usefulness as a whole."),
+                        sprintf(.("Sample-size caveat: this threshold is a convention, not a statistical law. With %s complete cases here, even moderate collinearity can make coefficients noticeably unstable; with much larger samples a similar VIF is usually more tolerable."), n_complete)
                     )
                 } else if (n_predictors <= 1) {
-                    tr(
-                        "Multicollinearity requires at least two predictors; it does not apply here.",
-                        "La multicolinealidad requiere al menos dos predictores; no aplica en este caso."
-                    )
+                    .("Multicollinearity requires at least two predictors; it does not apply here.")
                 } else {
-                    tr(
-                        "VIF could not be computed for this model matrix.",
-                        "No fue posible calcular el VIF para esta matriz de diseño."
-                    )
+                    .("VIF could not be computed for this model matrix.")
                 },
                 paragraphs = TRUE
             ))
@@ -1035,7 +702,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Correlation matrices (Pearson and dCor, APA 7 format) + copent.
             # ES: Matrices de correlación (Pearson y dCor, formato APA 7) + copent.
             # -----------------------------------------------------------------------------
-            self$results$correlationMatrixGuide$setContent(html_guide(tr("Correlation Matrix", "Matriz de Correlaciones"), "correlationMatrixGuide"))
+            self$results$correlationMatrixGuide$setContent(html_guide(.("Correlation Matrix"), "correlationMatrixGuide"))
 
             # dcor_stat()/dcor_pvalue(): equivalent to every other module's
             # version (regCheck/anovaCheck/relatedCheck), consolidated in
@@ -1136,33 +803,21 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 self$results$correlationMatrixNote$setContent(html_block(NULL,
                     c(
-                        paste0(sprintf("N = %d.", n_complete), " ", tr("* p < .05, ** p < .01, *** p < .001 (dependent variable coded 0/1: point-biserial correlation).", "* p < .05, ** p < .01, *** p < .001 (variable dependiente codificada 0/1: correlación biserial-puntual).")),
+                        sprintf(.("%s * p < .05, ** p < .01, *** p < .001 (dependent variable coded 0/1: point-biserial correlation)."), sprintf("N = %d.", n_complete)),
                         .al_dcor_na_note(lang)
                     ),
                     paragraphs = FALSE
                 ))
             } else {
                 self$results$correlationMatrixNote$setContent(html_block(NULL,
-                    tr("Not applicable: fewer than two numeric model variables.", "No aplica: menos de dos variables numéricas del modelo."),
+                    .("Not applicable: fewer than two numeric model variables."),
                     paragraphs = FALSE
                 ))
             }
 
             self$results$correlationComparisonGuide$setContent(html_block(
-                tr("Pearson / dCor / Copula Entropy Discordance Analysis", "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                .al_html_list(tr(c(
-                    "Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship.",
-                    "Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10.",
-                    "The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence.",
-                    "This threshold is a heuristic, not a formal test; always inspect a scatterplot of any flagged pair before concluding the relationship is non-linear.",
-                    .al_permutation_note(lang, 199, 20260704)
-                ), c(
-                    "Dado que la r de Pearson solo capta asociación lineal mientras que dCor capta asociación lineal y no lineal por igual, un par cuyo dCor sea notablemente mayor que su |r| de Pearson es una señal (no una prueba) de una relación no lineal.",
-                    "Se señalan en la tabla \"Pares con diferencia notable entre Pearson y dCor\" los pares con una brecha (dCor menos |r| de Pearson) mayor a .10.",
-                    "El resultado de la prueba de entropía copular (CE, copent()) para el mismo par se muestra al lado como una segunda línea de evidencia libre de supuestos distribucionales.",
-                    "Este umbral es una heurística, no una prueba formal; siempre revise un diagrama de dispersión de cualquier par señalado antes de concluir que la relación es no lineal.",
-                    .al_permutation_note(lang, 199, 20260704)
-                ))),
+                .("Pearson / dCor / Copula Entropy Discordance Analysis"),
+                .al_html_list(c(.("Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship."), .("Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10."), .("The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence."), .("This threshold is a heuristic, not a formal test; always inspect a scatterplot of any flagged pair before concluding the relationship is non-linear."), .al_permutation_note(lang, 199, 20260704))),
                 raw = TRUE
             ))
 
@@ -1183,27 +838,23 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     dcor = apaCell(pr$dcor, pr$dcorP),
                     gap = gap, ce = pr$ce, ceP = pr$ceP,
                     ceSig = p_sig(pr$ceP),
-                    flag = tr("Yes", "Sí")
+                    flag = .("Yes")
                 ))
             }
 
             if (length(flaggedPairs) == 0) {
                 self$results$correlationComparisonInterpretation$setContent(html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     if (k < 2)
-                        tr("Not applicable: fewer than two numeric model variables.", "No aplica: menos de dos variables numéricas del modelo.")
+                        .("Not applicable: fewer than two numeric model variables.")
                     else
-                        tr(sprintf("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the model's numeric variables.", gapThreshold),
-                           sprintf("Ningún par muestra una brecha Pearson/dCor mayor a %.2f; no hay indicios de asociación no lineal no modelada entre las variables numéricas del modelo.", gapThreshold)),
+                        sprintf(.("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the model's numeric variables."), gapThreshold),
                     paragraphs = FALSE
                 ))
             } else {
                 self$results$correlationComparisonInterpretation$setContent(html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
-                    tr(sprintf("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Inspect a scatterplot of each flagged pair (recall the dependent variable is binary, so its correlations are point-biserial).",
-                               length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", ")),
-                       sprintf("%d par(es) muestran una brecha Pearson/dCor mayor a %.2f: %s. Revise un diagrama de dispersión de cada par señalado (recuerde que la variable dependiente es binaria, así que sus correlaciones son biserial-puntuales).",
-                               length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", "))),
+                    .("Applied Interpretation"),
+                    sprintf(.("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Inspect a scatterplot of each flagged pair (recall the dependent variable is binary, so its correlations are point-biserial)."), length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", ")),
                     paragraphs = FALSE
                 ))
             }
@@ -1212,7 +863,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Influence.
             # ES: Influencia.
             # -----------------------------------------------------------------------------
-            self$results$influenceGuide$setContent(html_guide(tr("Influential cases", "Casos influyentes"), "influenceGuide"))
+            self$results$influenceGuide$setContent(html_guide(.("Influential cases"), "influenceGuide"))
 
             cooks_d <- cooks.distance(model)
             leverage_vals <- hatvalues(model)
@@ -1260,27 +911,14 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             pct_influential <- 100 * n_influential / n_complete
 
             self$results$influenceInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
                     paste0(
-                        tr(
-                            paste0(n_influential, " of ", n_complete, " cases (", fmt_num(pct_influential, 1), "%) exceed the Cook's D or leverage cutoffs used here (Pregibon, 1981; see references)."),
-                            paste0(n_influential, " de ", n_complete, " casos (", fmt_num(pct_influential, 1), "%) superan los umbrales de Cook's D o leverage usados aquí (Pregibon, 1981; ver referencias).")
-                        )
+                        sprintf(.("%s of %s cases (%s%%) exceed the Cook's D or leverage cutoffs used here (Pregibon, 1981; see references)."), n_influential, n_complete, fmt_num(pct_influential, 1))
                     ),
-                    paste0(
-                        tr("The single most influential observation is case ", "El caso más influyente es el caso "), max_cooks_idx,
-                        tr(paste0(", with Cook's D = ", fmt_num(max_cooks_val, 3), "."), paste0(", con Cook's D = ", fmt_num(max_cooks_val, 3), ".")
-                        )
-                    ),
-                    tr(
-                        "Common error: removing every flagged case automatically to 'clean' the model. With cutoffs this permissive, some flags are expected even in well-behaved data; treat this as a shortlist to inspect, not a deletion list.",
-                        "Error común: eliminar automáticamente todos los casos marcados para 'limpiar' el modelo. Con umbrales tan permisivos, es esperable marcar algunos casos incluso en datos bien comportados; trate esto como una lista corta para inspeccionar, no una lista para eliminar."
-                    ),
-                    tr(
-                        "An influential case should not be removed automatically; review whether it is a recording error, a valid but extreme case, or a sign the model does not represent all subgroups well. If you do remove or refit without a case, report both versions of the model.",
-                        "Un caso influyente no debe eliminarse automáticamente; revise si es un error de registro, un caso válido pero extremo, o una señal de que el modelo no representa bien a todos los subgrupos. Si elimina un caso o reajusta sin él, reporte ambas versiones del modelo."
-                    )
+                    sprintf(.("The single most influential observation is case %s%s"), max_cooks_idx, sprintf(.(", with Cook's D = %s."), fmt_num(max_cooks_val, 3))),
+                    .("Common error: removing every flagged case automatically to 'clean' the model. With cutoffs this permissive, some flags are expected even in well-behaved data; treat this as a shortlist to inspect, not a deletion list."),
+                    .("An influential case should not be removed automatically; review whether it is a recording error, a valid but extreme case, or a sign the model does not represent all subgroups well. If you do remove or refit without a case, report both versions of the model.")
                 ),
                 paragraphs = TRUE
             ))
@@ -1340,7 +978,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             self$results$oddsRatiosInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
                     if (!is.na(strongest_idx)) {
                         # p_values_by_name (not coef_table) is the correct lookup here:
@@ -1360,28 +998,17 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         # fuerte que exceda el propio número de filas de coef_table.
                         strongest_p <- p_values_by_name[strongest_idx]
                         paste0(
-                            tr("Strongest association: ", "Asociación más fuerte: "), strip_qname(names(ors)[strongest_idx]),
-                            tr(paste0(", OR = ", fmt_num(ors[strongest_idx], 2), " (p ", if (!is.na(strongest_p) && strongest_p < .001) "< .001" else paste0("= ", fmt_num(strongest_p, 3)), ")."),
-                               paste0(", OR = ", fmt_num(ors[strongest_idx], 2), " (p ", if (!is.na(strongest_p) && strongest_p < .001) "< .001" else paste0("= ", fmt_num(strongest_p, 3)), ").")
-                            )
+                            .("Strongest association: "), strip_qname(names(ors)[strongest_idx]),
+                            sprintf(.(", OR = %s (p %s)."), fmt_num(ors[strongest_idx], 2), if (!is.na(strongest_p) && strongest_p < .001) "< .001" else paste0("= ", fmt_num(strongest_p, 3)))
                         )
                     } else {
-                        tr("No predictor reached conventional significance in this model.", "Ningún predictor alcanzó significancia convencional en este modelo.")
+                        .("No predictor reached conventional significance in this model.")
                     },
-                    tr(
-                        "Read the confidence interval, not only the point estimate: if it includes 1, the effect is not statistically distinguishable from no association.",
-                        "Lea el intervalo de confianza, no solo el estimador puntual: si incluye 1, el efecto no es estadísticamente distinguible de la ausencia de asociación."
-                    ),
+                    .("Read the confidence interval, not only the point estimate: if it includes 1, the effect is not statistically distinguishable from no association."),
                     paste0(
-                        tr(
-                            paste0("Common error: interpreting the OR as a relative risk. They coincide only when the event is rare; here the event prevalence is ", fmt_num(event_prevalence, 1), "%, so with common events like this the OR systematically overstates the real relative effect (Zhang & Yu, 1998; see references)."),
-                            paste0("Error común: interpretar el OR como un riesgo relativo. Coinciden solo cuando el evento es poco frecuente; aquí la prevalencia del evento es ", fmt_num(event_prevalence, 1), "%, así que con eventos frecuentes como este el OR exagera sistemáticamente el efecto relativo real (Zhang & Yu, 1998; ver referencias).")
-                        )
+                        sprintf(.("Common error: interpreting the OR as a relative risk. They coincide only when the event is rare; here the event prevalence is %s%%, so with common events like this the OR systematically overstates the real relative effect (Zhang & Yu, 1998; see references)."), fmt_num(event_prevalence, 1))
                     ),
-                    tr(
-                        "For audiences unfamiliar with odds ratios, consider also reporting predicted probabilities at representative predictor values, which are easier to communicate than the OR itself.",
-                        "Para audiencias no familiarizadas con odds ratios, considere reportar también probabilidades predichas en valores representativos de los predictores, que son más fáciles de comunicar que el OR en sí."
-                    )
+                    .("For audiences unfamiliar with odds ratios, consider also reporting predicted probabilities at representative predictor values, which are easier to communicate than the OR itself.")
                 ),
                 paragraphs = TRUE
             ))
@@ -1391,65 +1018,37 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Notas y recomendación.
             # -----------------------------------------------------------------------------
             epv_note <- if (epv >= 10) {
-                tr("Adequate.", "Adecuado.")
+                .("Adequate.")
             } else if (epv >= 5) {
-                tr("Acceptable with caution.", "Aceptable con cautela.")
+                .("Acceptable with caution.")
             } else {
-                tr("Insufficient (Peduzzi et al., 1996, recommend EPV >= 10).", "Insuficiente (Peduzzi et al., 1996, recomiendan EPV >= 10).")
+                .("Insufficient (Peduzzi et al., 1996, recommend EPV >= 10).")
             }
 
-            recommendation <- paste(
-                tr("The logistic regression model can be interpreted cautiously,",
-                   "El modelo de regresión logística puede interpretarse con cautela,"),
-                tr("while reviewing the reported diagnostics.",
-                   "revisando los diagnósticos reportados.")
-            )
+            recommendation <- .("The logistic regression model can be interpreted cautiously, while reviewing the reported diagnostics.")
 
             if (epv < 10) {
-                recommendation <- paste(
-                    tr("EPV is below the recommended threshold; coefficients and standard errors may be unstable,",
-                       "El EPV está por debajo del umbral recomendado; los coeficientes y errores estándar pueden ser inestables,"),
-                    tr("consider Firth's penalized logistic regression or combining sparse categories.",
-                       "considere regresión logística penalizada de Firth o combinar categorías poco frecuentes.")
-                )
+                recommendation <- .("EPV is below the recommended threshold; coefficients and standard errors may be unstable, consider Firth's penalized logistic regression or combining sparse categories.")
             }
 
             if (!is.na(max_vif) && max_vif >= 5) {
-                recommendation <- paste(
-                    tr("There is relevant multicollinearity among predictors; review redundant predictors",
-                       "Hay multicolinealidad relevante entre predictores; revisar predictores redundantes"),
-                    tr("before interpreting individual odds ratios.",
-                       "antes de interpretar los odds ratios individuales.")
-                )
+                recommendation <- .("There is relevant multicollinearity among predictors; review redundant predictors before interpreting individual odds ratios.")
             }
 
             if (exists("bt_significant") && bt_significant > 0) {
-                recommendation <- paste(
-                    tr("At least one numeric predictor shows a non-linear relationship with the logit; consider a",
-                       "Al menos un predictor numérico muestra una relación no lineal con el logit; considere un"),
-                    tr("polynomial term, spline, or categorization for that predictor.",
-                       "término polinomial, spline o categorización para ese predictor.")
-                )
+                recommendation <- .("At least one numeric predictor shows a non-linear relationship with the logit; consider a polynomial term, spline, or categorization for that predictor.")
             }
 
             if (n_influential > 0 && pct_influential >= 10) {
-                recommendation <- paste(
-                    tr("There are outlying or influential cases; inspect them before",
-                       "Existen casos atípicos o influyentes; inspeccionarlos antes de"),
-                    tr("making decisions about the model.",
-                       "tomar decisiones sobre el modelo.")
-                )
+                recommendation <- .("There are outlying or influential cases; inspect them before making decisions about the model.")
             }
 
             self$results$notes$setContent(html_block(
-                tr("Notes and recommendation", "Notas y recomendación"),
+                .("Notes and recommendation"),
                 c(
-                    paste0(tr("Suggested decision: ", "Decisión sugerida: "), recommendation),
-                    paste0(
-                        tr("Model fitted with ", "Modelo ajustado con "), n_complete,
-                        tr(" cases.", " casos.")
-                    ),
-                    paste0(tr("EPV (least-frequent category): ", "EPV (categoría menos frecuente): "), fmt_num(epv, 1), " - ", epv_note)
+                    sprintf(.("Suggested decision: %s"), recommendation),
+                    sprintf(.("Model fitted with %s cases."), n_complete),
+                    sprintf(.("EPV (least-frequent category): %s - %s"), fmt_num(epv, 1), epv_note)
                 ),
                 paragraphs = TRUE
             ))
@@ -1474,24 +1073,20 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # pROC, que guarda sus propias copias de los datos de predictor y respuesta.
             # -----------------------------------------------------------------------------
             self$results$linearityPlot$setState(list(
-                reportLang = lang,
                 covs = covs,
                 model_data = model_data_complete,
                 dep_binary = model_data_complete$dep_binary
             ))
             self$results$calibrationPlot$setState(list(
-                reportLang = lang,
                 fitted = fitted(model),
                 dep_binary = model_data_complete$dep_binary
             ))
             self$results$discriminationPlot$setState(list(
-                reportLang = lang,
                 roc_specificities = if (!is.null(roc_obj)) roc_obj$specificities else NULL,
                 roc_sensitivities = if (!is.null(roc_obj)) roc_obj$sensitivities else NULL,
                 auc_val = auc_val
             ))
             self$results$influencePlot$setState(list(
-                reportLang = lang,
                 cooks_d = cooks_d,
                 leverage = leverage_vals,
                 n = n_complete,
@@ -1528,20 +1123,6 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             TRUE
         },
 
-        .plotTr = function(en, es, image = NULL) {
-            plot_lang <- tryCatch({
-                st <- if (!is.null(image)) image$state else NULL
-                if (!is.null(st) && is.list(st) && !is.null(st$reportLang) && nzchar(st$reportLang)) {
-                    st$reportLang
-                } else {
-                    self$options$reportLang
-                }
-            }, error = function(e) "es")
-
-            plot_lang <- tryCatch(.al_normalize_lang(plot_lang), error = function(e) "es")
-
-            if (identical(plot_lang, "es")) es else en
-        },
 
         # -----------------------------------------------------------------------------
         # Plot theme/palette - migrated to jamovi's native mechanism (jamovi
@@ -1628,18 +1209,15 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Logit empírico vs predictor (linealidad en el logit).
         # -----------------------------------------------------------------------------
         .plotLinearity = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             st <- image$state
             if (is.null(st))
                 return(FALSE)
 
-            tr_p <- function(en, es) private$.plotTr(en, es, image)
             covs <- st$covs
 
             if (length(covs) == 0) {
-                return(private$.emptyLogPlot(tr_p(
-                    "No numeric predictors to plot.",
-                    "No hay predictores numéricos para graficar."
-                )))
+                return(private$.emptyLogPlot(.("No numeric predictors to plot.")))
             }
 
             bins <- tryCatch(as.integer(self$options$linBins), error = function(e) 8L)
@@ -1681,10 +1259,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             if (length(plot_rows) == 0) {
-                return(private$.emptyLogPlot(tr_p(
-                    "Not enough variation to plot linearity in the logit.",
-                    "No hay suficiente variación para graficar la linealidad en el logit."
-                )))
+                return(private$.emptyLogPlot(.("Not enough variation to plot linearity in the logit.")))
             }
 
             plot_df <- do.call(rbind, plot_rows)
@@ -1717,9 +1292,9 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(ggplot2::aes(size = n, color = predictor), show.legend = c(size = TRUE, color = FALSE)) +
                 ggplot2::facet_wrap(~predictor, scales = "free_x") +
                 ggplot2::labs(
-                    x = tr_p("Predictor (binned mean)", "Predictor (media por grupo)"),
-                    y = tr_p("Empirical logit", "Logit empírico"),
-                    size = tr_p("Group n", "n del grupo")
+                    x = .("Predictor (binned mean)"),
+                    y = .("Empirical logit"),
+                    size = .("Group n")
                 ) +
                 ggtheme +
                 ggplot2::theme(legend.position = "bottom", plot.margin = ggplot2::margin(4, 6, 4, 6))
@@ -1736,11 +1311,11 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Calibración: probabilidad predicha vs proporción observada por decil.
         # -----------------------------------------------------------------------------
         .plotCalibration = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             st <- image$state
             if (is.null(st))
                 return(FALSE)
 
-            tr_p <- function(en, es) private$.plotTr(en, es, image)
             pal <- private$.plotColors(theme)
 
             fitted_vals <- st$fitted
@@ -1754,10 +1329,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             qs <- unique(stats::quantile(fitted_vals, probs = probs, na.rm = TRUE))
 
             if (length(qs) < 3) {
-                return(private$.emptyLogPlot(tr_p(
-                    "Not enough variation in predicted probabilities to plot calibration.",
-                    "No hay suficiente variación en las probabilidades predichas para graficar la calibración."
-                )))
+                return(private$.emptyLogPlot(.("Not enough variation in predicted probabilities to plot calibration.")))
             }
 
             grp <- cut(fitted_vals, breaks = qs, include.lowest = TRUE)
@@ -1781,8 +1353,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(color = pal$point, size = 2.4) +
                 ggplot2::coord_cartesian(xlim = c(0, 1), ylim = c(0, 1)) +
                 ggplot2::labs(
-                    x = tr_p("Mean predicted probability (decile)", "Probabilidad predicha media (decil)"),
-                    y = tr_p("Observed proportion", "Proporción observada")
+                    x = .("Mean predicted probability (decile)"),
+                    y = .("Observed proportion")
                 ) +
                 ggtheme +
                 ggplot2::theme(plot.margin = ggplot2::margin(4, 6, 4, 6))
@@ -1796,20 +1368,17 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Curva ROC (discriminación).
         # -----------------------------------------------------------------------------
         .plotROC = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             st <- image$state
             if (is.null(st))
                 return(FALSE)
 
-            tr_p <- function(en, es) private$.plotTr(en, es, image)
             pal <- private$.plotColors(theme)
 
             specificities <- st$roc_specificities
             sensitivities <- st$roc_sensitivities
             if (is.null(specificities) || is.null(sensitivities)) {
-                return(private$.emptyLogPlot(tr_p(
-                    "ROC curve unavailable ('pROC' package required).",
-                    "Curva ROC no disponible (se requiere el paquete 'pROC')."
-                )))
+                return(private$.emptyLogPlot(.("ROC curve unavailable ('pROC' package required).")))
             }
 
             show_ref <- tryCatch(isTRUE(self$options$rocRefLine), error = function(e) TRUE)
@@ -1843,8 +1412,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             p <- p +
                 ggplot2::coord_equal(xlim = c(0, 1), ylim = c(0, 1)) +
                 ggplot2::labs(
-                    x = tr_p("1 - Specificity", "1 - Especificidad"),
-                    y = tr_p("Sensitivity", "Sensibilidad")
+                    x = .("1 - Specificity"),
+                    y = .("Sensitivity")
                 ) +
                 ggtheme +
                 ggplot2::theme(plot.margin = ggplot2::margin(4, 6, 4, 6))
@@ -1858,11 +1427,11 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Cook's D por caso (influencia).
         # -----------------------------------------------------------------------------
         .plotInfluence = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             st <- image$state
             if (is.null(st))
                 return(FALSE)
 
-            tr_p <- function(en, es) private$.plotTr(en, es, image)
             pal <- private$.plotColors(theme)
 
             cooks_d <- st$cooks_d
@@ -1919,7 +1488,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             p <- p +
                 ggplot2::labs(
-                    x = tr_p("Case", "Caso"),
+                    x = .("Case"),
                     y = "Cook's D"
                 ) +
                 ggtheme +

@@ -43,7 +43,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: item
         title: Item
@@ -59,7 +58,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: item
         title: Item
@@ -81,7 +79,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: predictor
         title: Predictor
@@ -115,7 +112,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: scope
         title: Scope
@@ -156,7 +152,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     rows: 0
     visible: false
     columns:
@@ -173,7 +168,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     rows: 0
     visible: false
     columns:
@@ -201,7 +195,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     rows: 0
     visible: false
     columns:
@@ -319,7 +312,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: test
         title: Test
@@ -390,7 +382,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: family
         title: Family
@@ -446,7 +437,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: test
         title: Test
@@ -483,7 +473,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     visible: false
     columns:
       - name: diagnostic
@@ -518,7 +507,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: case
         title: Case
@@ -597,7 +585,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: criterion
         title: Criterion / test
@@ -625,7 +612,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: criterion
         title: Criterion / test

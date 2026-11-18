@@ -41,7 +41,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 1
     columns:
       - name: nVars
@@ -72,7 +71,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     columns:
       - name: dependent
@@ -96,7 +94,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (showExogenous)
     columns:
@@ -116,7 +113,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (showEndogenous)
     columns:
@@ -136,7 +132,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     columns:
       - name: check
@@ -174,7 +169,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -212,7 +206,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized && showCoeffs)
     columns:
@@ -253,7 +246,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized && showR2)
     columns:
@@ -281,7 +273,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized && showCovs)
     columns:
@@ -325,7 +316,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized && showResiduals)
     columns:
@@ -368,7 +358,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -417,7 +406,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -458,7 +446,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -501,7 +488,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized && showCorrs)
     columns:
@@ -520,7 +506,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized && showCorrs)
     columns:
@@ -550,7 +535,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized && showCorrs)
     columns:
@@ -604,7 +588,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized && showCorrs)
     columns:
@@ -649,7 +632,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -706,7 +688,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:
@@ -745,7 +726,6 @@ items:
       - isFinalized
       - permutations
       - permutationSeed
-      - reportLang
     rows: 0
     visible: (isFinalized)
     columns:

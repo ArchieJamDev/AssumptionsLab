@@ -38,15 +38,6 @@ options:
   - name: group
     title: Group Variable
     type: Variable
-  - name: reportLang
-    title: Report Language
-    type: List
-    options:
-      - title: English
-        name: en
-      - title: Español
-        name: es
-    default: en
   - name: showDistributionPlot
     title: Distribution by group
     type: Bool

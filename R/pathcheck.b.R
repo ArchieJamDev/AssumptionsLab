@@ -80,7 +80,7 @@
 #    multicollinearity, Mardia, correlation structure, and sample-size
 #    adequacy from the fitted equations.
 # 5. Interpret: build the applied-interpretation text for every diagnostic
-#    area, in the user's selected report language.
+#    area, in jamovi's language.
 # 6. Summarize: assemble the final model-diagnostic verdict table.
 #
 # ES: Flujo de trabajo
@@ -93,15 +93,14 @@
 #    multicolinealidad, Mardia, estructura de correlación y adecuación del
 #    tamaño de muestra a partir de las ecuaciones ajustadas.
 # 5. Interpretar: construir el texto de interpretación aplicada para cada
-#    área diagnóstica, en el idioma de informe seleccionado por el
-#    usuario.
+#    área diagnóstica, en el idioma de jamovi.
 # 6. Resumir: ensamblar la tabla de veredicto final de diagnóstico del
 #    modelo.
 #
-# Bilingual support (reportLang) uses the same convention as the rest of
-# the suite (.al_normalize_lang() / tr(), defined in texts.R).
-# ES: El soporte bilingüe (reportLang) usa la misma convención que el resto
-# de la suite (.al_normalize_lang() / tr(), definidas en texts.R).
+# Report text follows jamovi's language through `.()` and `.al_lang()`,
+# the same convention as the rest of the suite (shared-helpers.R, texts.R).
+# ES: El texto del informe sigue el idioma de jamovi mediante `.()` y
+# `.al_lang()`, la misma convención que el resto de la suite.
 # -----------------------------------------------------------------------------
 
 pathCheckClass <- R6::R6Class(
@@ -119,10 +118,6 @@ pathCheckClass <- R6::R6Class(
         # ES: Utilidades internas.
         # -----------------------------------------------------------------------------
 
-        .plotTr = function(en, es) {
-            lang <- .al_normalize_lang(self$options$reportLang)
-            if (identical(lang, "es")) es else en
-        },
 
         # Plot theme/palette migrated to jamovi's native ggtheme/theme
         # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
@@ -328,8 +323,8 @@ pathCheckClass <- R6::R6Class(
         },
 
         .run = function() {
-            lang <- .al_normalize_lang(self$options$reportLang)
-            tr <- function(en, es) .al_tr(lang, en, es)
+            lang <- .al_lang(self$options)
+            . <- lang$tr
 
             html_escape <- .al_html_escape
 
@@ -350,217 +345,9 @@ pathCheckClass <- R6::R6Class(
             # Report introduction.
             # ES: Introducción del informe.
             # -----------------------------------------------------------------------------
-            set_html_safe("intro", paste0(
-                "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\">",
-                "<p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">",
-                "AssumptionsLab",
-                "</p>",
-                "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
-                tr("Assumption check for path analysis", "Revisión de supuestos para análisis de rutas"),
-                "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
-                "<p style=\"margin: 0; line-height: 1.35;\">",
-                tr(
-                    "Use this analysis when you want to review whether a path model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
-                    "Use este análisis cuando quiera revisar si un modelo de rutas tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
-                ),
-                "</p>",
-                "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
-                "</div>"
-            ))
+            set_html_safe("intro", .("<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\"><p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">Assumption check for path analysis</p><p style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0; line-height: 1.35;\">Use this analysis when you want to review whether a path model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.</p><p style=\"margin: 0 0 0.25em 0;\"> </p></div>"))
 
-            set_result_titles <- function() {
-                set_title_safe <- function(name, en, es) {
-                    element <- tryCatch(self$results[[name]], error = function(e) NULL)
-                    if (is.null(element)) return(invisible(FALSE))
-                    tryCatch(element$setTitle(tr(en, es)), error = function(e) invisible(FALSE))
-                    invisible(TRUE)
-                }
-                titles <- list(
-                    c("modelSummary", "Current model", "Modelo actual"),
-                    c("specifiedModel", "Specified model", "Modelo especificado"),
-                    c("modelStructureGuide", "Model Structure", "Estructura del Modelo"),
-                    c("exogenousTable", "Exogenous Variables of the Model", "Variables Exógenas del Modelo"),
-                    c("endogenousTable", "Endogenous Variables of the Model", "Variables Endógenas del Modelo"),
-                    c("validationSummary", "Methodological Model Validation", "Validación Metodológica del Modelo"),
-                    c("pathDiagram", "Path Diagram (SVG)", "Diagrama de Ruta (Path Diagram SVG)"),
-                    c("outlierGuide", "Multivariate Outliers", "Valores Atípicos Multivariados"),
-                    c("outlierTable", "Outlier Case Diagnostics", "Diagnóstico de Casos Atípicos"),
-                    c("equationsGuide", "Model Design", "Diseño del Modelo"),
-                    c("pathCoefficients", "Path Coefficients", "Coeficientes de Ruta (Path Coefficients)"),
-                    c("coefficientsInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("rSquaredTable", "Explained Variance (R²)", "Varianza Explicada (R²)"),
-                    c("residualCovarianceGuide", "Residual Covariances", "Covarianzas Residuales"),
-                    c("residualCovarianceTable", "Residual Covariances Between Endogenous Variables",
-                      "Covarianzas Residuales entre Variables Endógenas"),
-                    c("residualPlots", "Residual Diagnostics by Equation", "Diagnóstico de Residuos por Ecuación"),
-                    c("normalityGuide", "Residual Normality", "Normalidad de Residuos"),
-                    c("residualNormality", "Residual Normality by Equation", "Normalidad de Residuos por Ecuación"),
-                    c("normalityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("homoscedasticityGuide", "Homoscedasticity", "Homoscedasticidad"),
-                    c("homoscedasticity", "Homoscedasticity by Equation", "Homoscedasticidad por Ecuación"),
-                    c("homoscedasticityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("multicollinearityGuide", "Multicollinearity", "Multicolinealidad"),
-                    c("multicollinearity", "Multicollinearity by Equation", "Multicolinealidad por Ecuación"),
-                    c("multicollinearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("mardiaGuide", "Multivariate Normality (Mardia)", "Normalidad Multivariada (Mardia)"),
-                    c("mardiaTable", "Mardia's Multivariate Normality Test", "Prueba de Normalidad Multivariada de Mardia"),
-                    c("mardiaInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("correlationMatrixGuide", "Correlation Matrix", "Matriz de Correlaciones"),
-                    c("pearsonMatrixTable", "Pearson Correlation Matrix (APA 7 format)",
-                      "Matriz de Correlaciones de Pearson (formato APA 7)"),
-                    c("dcorMatrixTable", "Distance Correlation Matrix (dCor, APA 7 format)",
-                      "Matriz de Correlación de Distancia (dCor, formato APA 7)"),
-                    c("correlationComparisonGuide", "Pearson / dCor / Copula Entropy Discordance Analysis",
-                      "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                    c("correlationComparisonTable", "Pairs with a Notable Pearson / dCor Gap",
-                      "Pares con Diferencia Notable entre Pearson y dCor"),
-                    c("correlationComparisonInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("crossEntropyGuide", "Copula Entropy Independence Test", "Independencia por Entropía Copular"),
-                    c("crossEntropyTable", "Copula Entropy Independence Test", "Prueba de Independencia por Entropía Copular"),
-                    c("crossEntropyInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("indirectEffectsGuide", "Direct, Indirect and Total Effects", "Efectos Directos, Indirectos y Totales"),
-                    c("indirectEffectsTable", "Direct, Indirect and Total Effects (Simple Mediation)",
-                      "Efectos Directos, Indirectos y Totales (Mediación Simple)"),
-                    c("indirectEffectsInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("sampleSizeGuide", "Sample Size Adequacy", "Adecuación del Tamaño de Muestra"),
-                    c("sampleSizeTable", "Sample Size Assessment Given Model Complexity",
-                      "Valoración del Tamaño de Muestra según la Complejidad del Modelo"),
-                    c("sampleSizeInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("modelDiagnosticConclusionGuide", "Diagnostic Conclusion", "Conclusión Diagnóstica del Modelo"),
-                    c("modelDiagnosticConclusionTable", "Model Diagnostics Summary", "Resumen de Diagnósticos del Modelo"),
-                    c("modelDiagnosticConclusionInterpretation", "Overall Verdict", "Veredicto General")
-                )
-                for (t in titles) set_title_safe(t[1], t[2], t[3])
-            }
-            set_result_titles()
 
-            set_table_column_titles <- function() {
-                set_col_title_safe <- function(table_name, col_name, en, es) {
-                    table <- tryCatch(self$results[[table_name]], error = function(e) NULL)
-                    if (is.null(table))
-                        return(invisible(FALSE))
-                    column <- tryCatch(table$getColumn(col_name), error = function(e) NULL)
-                    if (is.null(column))
-                        return(invisible(FALSE))
-                    tryCatch(column$setTitle(tr(en, es)), error = function(e) invisible(FALSE))
-                    invisible(TRUE)
-                }
-
-                cols <- list(
-                    c("modelSummary", "nVars", "Variables", "Variables"),
-                    c("modelSummary", "nRelations", "Relations", "Relaciones"),
-                    c("modelSummary", "nEndog", "Endogenous variables", "Variables endógenas"),
-                    c("modelSummary", "nExog", "Exogenous variables", "Variables exógenas"),
-                    c("modelSummary", "nCases", "Complete cases", "Casos completos"),
-                    c("modelSummary", "casesPerRelation", "Cases per relation", "Casos por relación"),
-
-                    c("specifiedModel", "dependent", "Dependent variable", "Variable dependiente"),
-                    c("specifiedModel", "predictors", "Predictors", "Predictores"),
-
-                    c("exogenousTable", "variable", "Variable", "Variable"),
-                    c("exogenousTable", "outgoingPaths", "Outgoing paths", "Rutas salientes"),
-                    c("endogenousTable", "variable", "Variable", "Variable"),
-                    c("endogenousTable", "incomingPaths", "Direct predictors", "Predictores directos"),
-
-                    c("residualCovarianceTable", "var1", "Variable 1", "Variable 1"),
-                    c("residualCovarianceTable", "var2", "Variable 2", "Variable 2"),
-                    c("residualCovarianceTable", "covariance", "Covariance", "Covarianza"),
-                    c("residualCovarianceTable", "correlation", "Correlation", "Correlación"),
-
-                    c("validationSummary", "check", "Validation", "Validación"),
-                    c("validationSummary", "status", "Status", "Estado"),
-                    c("validationSummary", "details", "Details", "Detalles"),
-
-                    c("outlierTable", "case", "Case", "Caso"),
-                    c("outlierTable", "d2", "Mahalanobis D²", "D² Mahalanobis"),
-                    c("outlierTable", "pD2", "p", "p"),
-                    c("outlierTable", "leverage", "Leverage", "Leverage"),
-                    c("outlierTable", "cooksD", "Cook's Distance", "Distancia de Cook"),
-                    c("outlierTable", "criteria", "Active criteria", "Criterios activados"),
-
-                    c("pathCoefficients", "dep", "Endogenous variable", "Variable Endógena"),
-                    c("pathCoefficients", "pred", "Predictor", "Predictor"),
-                    c("pathCoefficients", "est", "Est.", "Est."),
-                    c("pathCoefficients", "se", "SE", "E.E."),
-                    c("pathCoefficients", "t", "t", "t"),
-                    c("pathCoefficients", "p", "p", "p"),
-                    c("pathCoefficients", "beta", "Std. Beta", "Beta Est."),
-
-                    c("rSquaredTable", "var", "Endogenous variable", "Variable Endógena"),
-                    c("rSquaredTable", "r2", "R²", "R²"),
-                    c("rSquaredTable", "adjR2", "Adjusted R²", "R² Ajustado"),
-
-                    c("residualNormality", "dep", "Dependent variable", "Variable Dependiente"),
-                    c("residualNormality", "test", "Test", "Prueba"),
-                    c("residualNormality", "statistic", "Statistic", "Estadístico"),
-                    c("residualNormality", "p", "p", "p"),
-                    c("residualNormality", "pSig", "Sig.", "Sig."),
-
-                    c("homoscedasticity", "dep", "Dependent variable", "Variable Dependiente"),
-                    c("homoscedasticity", "test", "Test", "Prueba"),
-                    c("homoscedasticity", "statistic", "Statistic", "Estadístico"),
-                    c("homoscedasticity", "value", "Value", "Valor"),
-                    c("homoscedasticity", "df", "df", "gl"),
-                    c("homoscedasticity", "p", "p", "p"),
-                    c("homoscedasticity", "pSig", "Sig.", "Sig."),
-
-                    c("multicollinearity", "dep", "Dependent variable", "Variable Dependiente"),
-                    c("multicollinearity", "diagnostic", "Diagnostic", "Diagnóstico"),
-                    c("multicollinearity", "item", "Item", "Elemento"),
-                    c("multicollinearity", "statistic", "Statistic", "Estadístico"),
-                    c("multicollinearity", "value", "Value", "Valor"),
-
-                    c("pearsonMatrixTable", "var", "Variable", "Variable"),
-                    c("dcorMatrixTable", "var", "Variable", "Variable"),
-
-                    c("mardiaTable", "measure", "Measure", "Medida"),
-                    c("mardiaTable", "value", "Coefficient", "Coeficiente"),
-                    c("mardiaTable", "statistic", "Statistic", "Estadístico"),
-                    c("mardiaTable", "df", "df", "gl"),
-                    c("mardiaTable", "p", "p", "p"),
-                    c("mardiaTable", "pSig", "Sig.", "Sig."),
-
-                    c("crossEntropyTable", "var1", "Variable 1", "Variable 1"),
-                    c("crossEntropyTable", "var2", "Variable 2", "Variable 2"),
-                    c("crossEntropyTable", "connected", "Connected in the model", "Conectadas en el modelo"),
-                    c("crossEntropyTable", "ce", "Copula Entropy", "Entropía Copular"),
-                    c("crossEntropyTable", "p", "p", "p"),
-                    c("crossEntropyTable", "pSig", "Sig.", "Sig."),
-
-                    c("correlationComparisonTable", "var1", "Variable 1", "Variable 1"),
-                    c("correlationComparisonTable", "var2", "Variable 2", "Variable 2"),
-                    c("correlationComparisonTable", "pearson", "Pearson r", "Pearson r"),
-                    c("correlationComparisonTable", "dcor", "dCor", "dCor"),
-                    c("correlationComparisonTable", "gap", "Gap (dCor \u2212 |r|)", "Brecha (dCor \u2212 |r|)"),
-                    c("correlationComparisonTable", "ce", "Copula Entropy", "Entropía Copular"),
-                    c("correlationComparisonTable", "ceP", "p (CE)", "p (CE)"),
-                    c("correlationComparisonTable", "ceSig", "Sig. (CE)", "Sig. (CE)"),
-                    c("correlationComparisonTable", "flag", "Notable gap", "Diferencia notable"),
-
-                    c("indirectEffectsTable", "x", "Predictor (X)", "Predictor (X)"),
-                    c("indirectEffectsTable", "m", "Mediator (M)", "Mediador (M)"),
-                    c("indirectEffectsTable", "y", "Dependent Variable (Y)", "Variable Dependiente (Y)"),
-                    c("indirectEffectsTable", "directBeta", "Direct Effect (\u03b2)", "Efecto Directo (\u03b2)"),
-                    c("indirectEffectsTable", "indirectBeta", "Indirect Effect (\u03b2)", "Efecto Indirecto (\u03b2)"),
-                    c("indirectEffectsTable", "totalBeta", "Total Effect (\u03b2)", "Efecto Total (\u03b2)"),
-                    c("indirectEffectsTable", "sobelZ", "Sobel z", "z de Sobel"),
-                    c("indirectEffectsTable", "sobelP", "p", "p"),
-                    c("indirectEffectsTable", "sobelPSig", "Sig.", "Sig."),
-
-                    c("sampleSizeTable", "criterion", "Criterion (author)", "Criterio (autor)"),
-                    c("sampleSizeTable", "rule", "Rule", "Regla"),
-                    c("sampleSizeTable", "required", "Required N", "N requerido"),
-                    c("sampleSizeTable", "actual", "Actual N", "N actual"),
-                    c("sampleSizeTable", "status", "Status", "Estado"),
-
-                    c("modelDiagnosticConclusionTable", "area", "Diagnostic Area", "Área Diagnóstica"),
-                    c("modelDiagnosticConclusionTable", "status", "Status", "Estado"),
-                    c("modelDiagnosticConclusionTable", "detail", "Detail", "Detalle")
-                )
-                for (col in cols) set_col_title_safe(col[1], col[2], col[3], col[4])
-            }
-            set_table_column_titles()
 
             vars      <- self$options$vars
             relations <- self$options$relations
@@ -626,11 +413,8 @@ pathCheckClass <- R6::R6Class(
             # ES: Estructura del modelo: exógenas / endógenas (showExogenous/showEndogenous).
             # -----------------------------------------------------------------------------
             set_html_safe("modelStructureGuide", html_block(
-                tr("Model Structure", "Estructura del Modelo"),
-                tr(
-                    "Exogenous variables have no incoming paths in the specified model (no other variable predicts them); endogenous variables are predicted by at least one other variable. Use this list as a sanity check that the model reflects the structure you intended, before reading the rest of the report.",
-                    "Las variables exógenas no tienen rutas entrantes en el modelo especificado (ninguna otra variable las predice); las variables endógenas son predichas por al menos otra variable. Use este listado como chequeo de cordura de que el modelo refleja la estructura que usted pretendía, antes de leer el resto del informe."
-                ),
+                .("Model Structure"),
+                .("Exogenous variables have no incoming paths in the specified model (no other variable predicts them); endogenous variables are predicted by at least one other variable. Use this list as a sanity check that the model reflects the structure you intended, before reading the rest of the report."),
                 paragraphs = FALSE
             ))
 
@@ -656,8 +440,7 @@ pathCheckClass <- R6::R6Class(
             if (length(edges) == 0) {
                 self$results$specifiedModel$addRow(rowKey = "empty", values = list(
                     dependent  = "—",
-                    predictors = tr("No relations have been defined yet.",
-                                    "No existen relaciones definidas.")
+                    predictors = .("No relations have been defined yet.")
                 ))
             } else {
                 for (d in deps) {
@@ -685,60 +468,48 @@ pathCheckClass <- R6::R6Class(
             }
 
             if (length(vars) < 2 || length(edges) == 0) {
-                addCheck("spec", tr("Specification", "Especificación"), FALSE,
-                    "", tr("Add at least two variables and one relation between them.",
-                           "Agregue al menos dos variables y una relación entre ellas."))
+                addCheck("spec", .("Specification"), FALSE,
+                    "", .("Add at least two variables and one relation between them."))
             } else {
                 edgeKeys <- vapply(edges, function(e) paste(e$pred, e$dep, sep = " -> "), character(1))
                 hasDup   <- any(duplicated(edgeKeys))
-                addCheck("dup", tr("No duplicate relations", "Sin relaciones duplicadas"), !hasDup,
-                    tr("No duplicate relations.", "Sin relaciones duplicadas."),
-                    tr("There are repeated relations; remove the duplicates.",
-                       "Existen relaciones repetidas; elimine los duplicados."))
+                addCheck("dup", .("No duplicate relations"), !hasDup,
+                    .("No duplicate relations."),
+                    .("There are repeated relations; remove the duplicates."))
 
                 selfLoop <- any(vapply(edges, function(e) identical(e$pred, e$dep), logical(1)))
-                addCheck("self", tr("No self-loops", "Sin autolazos"), !selfLoop,
-                    tr("No variable predicts itself.", "Ninguna variable depende de sí misma."),
-                    tr("A variable cannot predict itself; fix that relation.",
-                       "Una variable no puede predecirse a sí misma; corrija la relación."))
+                addCheck("self", .("No self-loops"), !selfLoop,
+                    .("No variable predicts itself."),
+                    .("A variable cannot predict itself; fix that relation."))
 
                 hasCycle <- private$.hasCycle(edges)
-                addCheck("cycle", tr("No cycles", "Sin ciclos"), !hasCycle,
-                    tr("The model is recursive (no feedback loops).",
-                       "El modelo es recursivo (sin retroalimentación)."),
-                    tr("A cycle was detected; a recursive (OLS) model does not allow feedback loops.",
-                       "Se detectó un ciclo; un modelo recursivo (OLS) no admite retroalimentación."))
+                addCheck("cycle", .("No cycles"), !hasCycle,
+                    .("The model is recursive (no feedback loops)."),
+                    .("A cycle was detected; a recursive (OLS) model does not allow feedback loops."))
 
-                addCheck("hasPred", tr("All dependent variables have predictors",
-                                       "Todas las dependientes poseen predictores"), TRUE,
-                    tr("Every dependent variable has at least one predictor.",
-                       "Cada variable dependiente tiene al menos un predictor."), "")
+                addCheck("hasPred", .("All dependent variables have predictors"), TRUE,
+                    .("Every dependent variable has at least one predictor."), "")
 
                 nComp <- private$.connectedComponents(vars, edges)
-                addCheck("connected", tr("Connected model", "Modelo conectado"), nComp == 1,
-                    tr("All variables form a single connected model.",
-                       "Todas las variables forman un único modelo conectado."),
-                    tr("The model has subgroups of variables with no relation between them.",
-                       "El modelo tiene subgrupos de variables sin relación entre sí."))
+                addCheck("connected", .("Connected model"), nComp == 1,
+                    .("All variables form a single connected model."),
+                    .("The model has subgroups of variables with no relation between them."))
 
                 if (length(isolated) > 0) {
                     addCheck("isolated",
                         paste0(paste(isolated, collapse = ", "),
                                if (length(isolated) == 1)
-                                   tr(" does not take part in any relation", " no participa en ninguna relación")
+                                   .(" does not take part in any relation")
                                else
-                                   tr(" do not take part in any relation", " no participan en ninguna relación")),
+                                   .(" do not take part in any relation")),
                         FALSE, "",
-                        tr("Add a relation for this variable or remove it from the model.",
-                           "Agregue una relación para esta variable o retírela del modelo."))
+                        .("Add a relation for this variable or remove it from the model."))
                 }
 
                 ready <- !hasDup && !selfLoop && !hasCycle && nComp == 1 && length(isolated) == 0
-                addCheck("ready", tr("Model ready for analysis", "Modelo listo para análisis"), ready,
-                    tr("The model satisfies all validations and can be finalized.",
-                       "El modelo cumple todas las validaciones y puede finalizarse."),
-                    tr("Resolve the alerts above before finalizing the model.",
-                       "Resuelva las alertas anteriores antes de finalizar el modelo."))
+                addCheck("ready", .("Model ready for analysis"), ready,
+                    .("The model satisfies all validations and can be finalized."),
+                    .("Resolve the alerts above before finalizing the model."))
             }
 
             # El diagrama se renderiza siempre que haya variables, sin esperar a
@@ -760,7 +531,7 @@ pathCheckClass <- R6::R6Class(
             data <- self$data[, vars, drop = FALSE]
             data <- jmvcore::naOmit(data)
 
-            set_html_safe("equationsGuide", html_guide(tr("Model Design", "Diseño del Modelo"), "path", "designGuide"))
+            set_html_safe("equationsGuide", html_guide(.("Model Design"), "path", "designGuide"))
 
             coefTable <- self$results$pathCoefficients
             r2Table   <- self$results$rSquaredTable
@@ -894,11 +665,8 @@ pathCheckClass <- R6::R6Class(
             depsWithFit <- names(fits)
             if (length(depsWithFit) >= 2) {
                 set_html_safe("residualCovarianceGuide", html_block(
-                    tr("Residual Covariances", "Covarianzas Residuales"),
-                    tr(
-                        "When two endogenous variables share unmodeled causes, the residuals of their equations correlate even though no direct path connects them. Reporting these residual (error) covariances is standard practice in path analysis whenever correlated errors are plausible by design.",
-                        "Cuando dos variables endógenas comparten causas no modeladas, los residuos de sus ecuaciones se correlacionan aunque ninguna ruta directa las conecte. Reportar estas covarianzas residuales (de error) es una práctica estándar en análisis de rutas cuando es plausible que existan errores correlacionados por diseño."
-                    ),
+                    .("Residual Covariances"),
+                    .("When two endogenous variables share unmodeled causes, the residuals of their equations correlate even though no direct path connects them. Reporting these residual (error) covariances is standard practice in path analysis whenever correlated errors are plausible by design."),
                     paragraphs = FALSE
                 ))
 
@@ -981,45 +749,32 @@ pathCheckClass <- R6::R6Class(
                 strongestIdx <- which.max(absBetas)
                 predSentences <- vapply(seq_along(rowsInfo), function(i) {
                     r <- rowsInfo[[i]]
-                    dirWord <- tr(if (r$beta >= 0) "positively" else "negatively",
-                                  if (r$beta >= 0) "positivamente" else "negativamente")
+                    dirWord <- if (r$beta >= 0) .("positively") else .("negatively")
                     sigWord <- if (!is.na(r$p) && r$p < .05)
-                        tr("significantly", "de forma significativa")
+                        .("significantly")
                     else
-                        tr("without statistical significance", "sin significancia estadística")
+                        .("without statistical significance")
                     strongTag <- if (i == strongestIdx && length(rowsInfo) > 1)
-                        tr(" (strongest direct predictor in this equation)", " (predictor directo más fuerte de esta ecuación)")
+                        .(" (strongest direct predictor in this equation)")
                     else ""
-                    tr(sprintf("%s predicts %s %s and %s (\u03b2 = %.3f, p %s)%s",
-                               r$pred, d, dirWord, sigWord, r$beta, format_p(r$p), strongTag),
-                       sprintf("%s predice a %s %s y %s (\u03b2 = %.3f, p %s)%s",
-                               r$pred, d, dirWord, sigWord, r$beta, format_p(r$p), strongTag))
+                    sprintf(.("%s predicts %s %s and %s (β = %.3f, p %s)%s"), r$pred, d, dirWord, sigWord, r$beta, format_p(r$p), strongTag)
                 }, character(1))
-                eqLine <- tr(
-                    sprintf("Equation for %s (R\u00b2 = %.3f, adjusted R\u00b2 = %.3f): %s.",
-                            d, s$r.squared, s$adj.r.squared, paste(predSentences, collapse = "; ")),
-                    sprintf("Ecuación de %s (R\u00b2 = %.3f, R\u00b2 ajustado = %.3f): %s.",
-                            d, s$r.squared, s$adj.r.squared, paste(predSentences, collapse = "; "))
-                )
+                eqLine <- sprintf(.("Equation for %s (R² = %.3f, adjusted R² = %.3f): %s."), d, s$r.squared, s$adj.r.squared, paste(predSentences, collapse = "; "))
                 depLines <- c(depLines, eqLine)
             }
 
             set_html_safe("coefficientsInterpretation", html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
-                c(tr(sprintf("%d of %d path coefficient(s) are statistically significant (p < .05).",
-                             nSig, nCoef),
-                     sprintf("%d de %d coeficiente(s) de ruta son estadísticamente significativos (p < .05).",
-                             nSig, nCoef)),
+                .("Applied Interpretation"),
+                c(sprintf(.("%d of %d path coefficient(s) are statistically significant (p < .05)."), nSig, nCoef),
                   depLines,
-                  tr("Common error: interpreting a path coefficient as if it were the total effect; it only reflects the direct effect within its own equation. If a predictor also reaches the outcome through a mediator, see the \"Direct, Indirect and Total Effects\" section for the full decomposition.",
-                     "Error común: interpretar un coeficiente de ruta como si fuera el efecto total; solo refleja el efecto directo dentro de su propia ecuación. Si un predictor también llega a la variable dependiente a través de un mediador, consulte la sección \"Efectos Directos, Indirectos y Totales\" para la descomposición completa."))
+                  .("Common error: interpreting a path coefficient as if it were the total effect; it only reflects the direct effect within its own equation. If a predictor also reaches the outcome through a mediator, see the \"Direct, Indirect and Total Effects\" section for the full decomposition."))
             ))
 
             # -----------------------------------------------------------------------------
             # Multivariate outliers.
             # ES: Valores atípicos multivariados.
             # -----------------------------------------------------------------------------
-            set_html_safe("outlierGuide", html_guide(tr("Multivariate Outliers", "Valores Atípicos Multivariados"),
+            set_html_safe("outlierGuide", html_guide(.("Multivariate Outliers"),
                                                        "path", "outlierAnalysisGuide"))
 
             outlierTable <- self$results$outlierTable
@@ -1097,12 +852,8 @@ pathCheckClass <- R6::R6Class(
 
                 nFlaggedD2 <- sum(mahaResult$d2 > mahaResult$threshold, na.rm = TRUE)
                 set_html_safe("outlierGuide", paste0(
-                    html_guide(tr("Multivariate Outliers", "Valores Atípicos Multivariados"), "path", "outlierAnalysisGuide"),
-                    html_block(NULL, tr(
-                        sprintf("%d of %d cases (%.1f%%) exceed the Mahalanobis D² threshold (p < .025).",
-                                nFlaggedD2, n, 100 * nFlaggedD2 / n),
-                        sprintf("%d de %d casos (%.1f%%) superan el umbral de D² de Mahalanobis (p < .025).",
-                                nFlaggedD2, n, 100 * nFlaggedD2 / n)), paragraphs = FALSE)
+                    html_guide(.("Multivariate Outliers"), "path", "outlierAnalysisGuide"),
+                    html_block(NULL, sprintf(.("%d of %d cases (%.1f%%) exceed the Mahalanobis D² threshold (p < .025)."), nFlaggedD2, n, 100 * nFlaggedD2 / n), paragraphs = FALSE)
                 ))
             }
 
@@ -1110,7 +861,7 @@ pathCheckClass <- R6::R6Class(
             # Residual normality per equation.
             # ES: Normalidad de residuos por ecuación.
             # -----------------------------------------------------------------------------
-            set_html_safe("normalityGuide", html_guide(tr("Residual Normality", "Normalidad de Residuos"), "path", "normalityGuide"))
+            set_html_safe("normalityGuide", html_guide(.("Residual Normality"), "path", "normalityGuide"))
             normTable <- self$results$residualNormality
             normTable$deleteRows()
 
@@ -1156,7 +907,7 @@ pathCheckClass <- R6::R6Class(
                 if (!is.null(sw))
                     add_norm("Shapiro-Wilk", unname(sw$statistic), sw$p.value)
                 else
-                    add_norm("Shapiro-Wilk", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, tr))
+                    add_norm("Shapiro-Wilk", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, .))
 
                 # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
                 # Pearson chi-square: identical tryCatch calls in every module,
@@ -1168,76 +919,61 @@ pathCheckClass <- R6::R6Class(
                 if (!is.null(ad))
                     add_norm("Anderson-Darling", unname(ad$statistic), ad$p.value)
                 else
-                    add_norm("Anderson-Darling", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, tr))
+                    add_norm("Anderson-Darling", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, .))
 
                 if (!is.null(li))
-                    add_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), unname(li$statistic), li$p.value)
+                    add_norm(.("Lilliefors (corrected K-S)"), unname(li$statistic), li$p.value)
                 else
-                    add_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, tr))
+                    add_norm(.("Lilliefors (corrected K-S)"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, .))
 
                 if (!is.null(cvm))
                     add_norm("Cramer-von Mises", unname(cvm$statistic), cvm$p.value)
                 else
-                    add_norm("Cramer-von Mises", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, tr))
+                    add_norm("Cramer-von Mises", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
 
                 if (!is.null(sf))
                     add_norm("Shapiro-Francia", unname(sf$statistic), sf$p.value)
                 else
-                    add_norm("Shapiro-Francia", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$sf, tr))
+                    add_norm("Shapiro-Francia", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$sf, .))
 
                 if (!is.null(pt))
-                    add_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), unname(pt$statistic), pt$p.value)
+                    add_norm(.("Pearson chi-square"), unname(pt$statistic), pt$p.value)
                 else
-                    add_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$pt, tr))
+                    add_norm(.("Pearson chi-square"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$pt, .))
 
                 jb <- .nc_res$jb
                 if (!is.null(jb))
                     add_norm("Jarque-Bera", jb$value, jb$p)
                 else
-                    add_norm("Jarque-Bera", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$jb, tr))
+                    add_norm("Jarque-Bera", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$jb, .))
 
                 skew_test <- .nc_res$skew
                 if (!is.null(skew_test))
-                    add_norm(tr("Skewness test", "Prueba de asimetría"), skew_test$value, skew_test$p)
+                    add_norm(.("Skewness test"), skew_test$value, skew_test$p)
                 else
-                    add_norm(tr("Skewness test", "Prueba de asimetría"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$skew, tr))
+                    add_norm(.("Skewness test"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$skew, .))
 
                 kurt_test <- .nc_res$kurt
                 if (!is.null(kurt_test))
-                    add_norm(tr("Kurtosis test", "Prueba de curtosis"), kurt_test$value, kurt_test$p)
+                    add_norm(.("Kurtosis test"), kurt_test$value, kurt_test$p)
                 else
-                    add_norm(tr("Kurtosis test", "Prueba de curtosis"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$kurt, tr))
+                    add_norm(.("Kurtosis test"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$kurt, .))
             }
 
             nCases <- nrow(data)
             depNormLines <- vapply(names(fits), function(d) {
                 fail <- normFailByDep[[d]]; total <- normTotalByDep[[d]]
                 if (fail == 0) {
-                    tr(sprintf("%s: residuals are compatible with normality (0 of %d tests significant).", d, total),
-                       sprintf("%s: los residuos son compatibles con normalidad (0 de %d pruebas significativas).", d, total))
+                    sprintf(.("%s: residuals are compatible with normality (0 of %d tests significant)."), d, total)
                 } else {
                     testsTxt <- paste(normFailedTestsByDep[[d]], collapse = ", ")
-                    tr(sprintf("%s: residuals depart from normality in %d of %d tests (%s). Because this equation has %d complete cases, %s",
-                               d, fail, total, testsTxt, nCases,
-                               if (nCases >= 100)
-                                   "the sample is large enough that the significance tests on this equation's path coefficients should still be reasonably robust to this departure, but it is worth inspecting the \"Residual Diagnostics by Equation\" chart for the specific shape of the deviation (skew, heavy tails, a few extreme cases)."
-                               else
-                                   "with a moderate-to-small sample this departure is more likely to distort the significance tests on this equation's path coefficients; consider bootstrap standard errors or inspecting the \"Residual Diagnostics by Equation\" chart for a specific cause (e.g. remaining outliers, a skewed dependent variable)."),
-                       sprintf("%s: los residuos se desvían de la normalidad en %d de %d pruebas (%s). Dado que esta ecuación tiene %d casos completos, %s",
-                               d, fail, total, testsTxt, nCases,
-                               if (nCases >= 100)
-                                   "la muestra es lo bastante grande como para que las pruebas de significancia de los coeficientes de ruta de esta ecuación sigan siendo razonablemente robustas a esta desviación, aunque conviene revisar el gráfico \"Diagnóstico de Residuos por Ecuación\" para ver la forma específica de la desviación (asimetría, colas pesadas, algunos casos extremos)."
-                               else
-                                   "con una muestra moderada a pequeña esta desviación es más probable que distorsione las pruebas de significancia de los coeficientes de ruta de esta ecuación; considere errores estándar bootstrap o revise el gráfico \"Diagnóstico de Residuos por Ecuación\" en busca de una causa puntual (p. ej. atípicos remanentes, una variable dependiente asimétrica)."))
+                    sprintf(.("%s: residuals depart from normality in %d of %d tests (%s). Because this equation has %d complete cases, %s"), d, fail, total, testsTxt, nCases, if (nCases >= 100) .("the sample is large enough that the significance tests on this equation's path coefficients should still be reasonably robust to this departure, but it is worth inspecting the \"Residual Diagnostics by Equation\" chart for the specific shape of the deviation (skew, heavy tails, a few extreme cases).") else .("with a moderate-to-small sample this departure is more likely to distort the significance tests on this equation's path coefficients; consider bootstrap standard errors or inspecting the \"Residual Diagnostics by Equation\" chart for a specific cause (e.g. remaining outliers, a skewed dependent variable)."))
                 }
             }, character(1))
 
             set_html_safe("normalityInterpretation", html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
-                c(tr(sprintf("%d of %d test-equation combination(s) show non-normal residuals (p < .05).",
-                             nNormalityFail, nNormalityTotal),
-                     sprintf("%d de %d combinación(es) prueba-ecuación muestran residuos no normales (p < .05).",
-                             nNormalityFail, nNormalityTotal)),
+                .("Applied Interpretation"),
+                c(sprintf(.("%d of %d test-equation combination(s) show non-normal residuals (p < .05)."), nNormalityFail, nNormalityTotal),
                   depNormLines)
             ))
 
@@ -1245,7 +981,7 @@ pathCheckClass <- R6::R6Class(
             # Homoscedasticity per equation.
             # ES: Homoscedasticidad por ecuación.
             # -----------------------------------------------------------------------------
-            set_html_safe("homoscedasticityGuide", html_guide(tr("Homoscedasticity", "Homoscedasticidad"), "path", "homoscedasticityGuide"))
+            set_html_safe("homoscedasticityGuide", html_guide(.("Homoscedasticity"), "path", "homoscedasticityGuide"))
             homoTable <- self$results$homoscedasticity
             homoTable$deleteRows()
 
@@ -1285,20 +1021,14 @@ pathCheckClass <- R6::R6Class(
                 if (!is.null(bp))
                     add_homo("Breusch-Pagan (lmtest)", "LM", unname(bp$statistic), as.character(unname(bp$parameter)), bp$p.value)
                 else
-                    add_homo("Breusch-Pagan (lmtest)", "LM", NA_real_, NA_character_, NA_real_, reason = tr(
-                        "Could not be computed - the auxiliary regression of squared residuals on the predictors is likely singular (too few residual degrees of freedom, or near-perfect collinearity among predictors).",
-                        "No se pudo calcular - la regresi\u00F3n auxiliar de residuos al cuadrado sobre los predictores es probablemente singular (muy pocos grados de libertad residuales, o colinealidad casi perfecta entre predictores)."
-                    ))
+                    add_homo("Breusch-Pagan (lmtest)", "LM", NA_real_, NA_character_, NA_real_, reason = .("Could not be computed - the auxiliary regression of squared residuals on the predictors is likely singular (too few residual degrees of freedom, or near-perfect collinearity among predictors)."))
 
                 gq <- tryCatch(lmtest::gqtest(fit), error = function(e) NULL)
                 if (!is.null(gq))
                     add_homo("Goldfeld-Quandt (lmtest)", "F", unname(gq$statistic),
                              paste(unname(gq$parameter), collapse = ", "), gq$p.value)
                 else
-                    add_homo("Goldfeld-Quandt (lmtest)", "F", NA_real_, NA_character_, NA_real_, reason = tr(
-                        "Could not be computed - Goldfeld-Quandt splits this equation's cases in two (ordered by fitted values) and fits a separate regression to each half; there are likely too few cases, relative to the number of predictors, for both halves to be estimable.",
-                        "No se pudo calcular - Goldfeld-Quandt divide los casos de esta ecuaci\u00F3n en dos (ordenados por valores ajustados) y ajusta una regresi\u00F3n separada a cada mitad; probablemente hay muy pocos casos, respecto al n\u00FAmero de predictores, para que ambas mitades sean estimables."
-                    ))
+                    add_homo("Goldfeld-Quandt (lmtest)", "F", NA_real_, NA_character_, NA_real_, reason = .("Could not be computed - Goldfeld-Quandt splits this equation's cases in two (ordered by fitted values) and fits a separate regression to each half; there are likely too few cases, relative to the number of predictors, for both halves to be estimable."))
 
                 white <- tryCatch({
                     e2 <- res^2
@@ -1323,45 +1053,32 @@ pathCheckClass <- R6::R6Class(
                     } else NULL
                 }, error = function(e) NULL)
                 if (!is.null(white))
-                    add_homo(tr("White (general)", "White (general)"), "LM", white$value, as.character(white$df), white$p)
+                    add_homo(.("White (general)"), "LM", white$value, as.character(white$df), white$p)
                 else
-                    add_homo(tr("White (general)", "White (general)"), "LM", NA_real_, NA_character_, NA_real_, reason = tr(
-                        "Could not be computed - White's auxiliary regression adds every predictor's square and cross-product, so it needs more residual degrees of freedom than Breusch-Pagan; there are likely too many predictors relative to the number of cases in this equation.",
-                        "No se pudo calcular - la regresi\u00F3n auxiliar de White agrega el cuadrado y los productos cruzados de cada predictor, as\u00ED que necesita m\u00E1s grados de libertad residuales que Breusch-Pagan; probablemente hay demasiados predictores respecto al n\u00FAmero de casos en esta ecuaci\u00F3n."
-                    ))
+                    add_homo(.("White (general)"), "LM", NA_real_, NA_character_, NA_real_, reason = .("Could not be computed - White's auxiliary regression adds every predictor's square and cross-product, so it needs more residual degrees of freedom than Breusch-Pagan; there are likely too many predictors relative to the number of cases in this equation."))
 
                 sp <- tryCatch(stats::cor.test(abs(res), fitted_vals, method = "spearman"), error = function(e) NULL)
                 if (!is.null(sp))
-                    add_homo(tr("Spearman |residuals| vs fitted", "Spearman |residuos| vs ajustados"),
+                    add_homo(.("Spearman |residuals| vs fitted"),
                              "\u03C1", unname(sp$estimate), NA_character_, sp$p.value)
                 else
-                    add_homo(tr("Spearman |residuals| vs fitted", "Spearman |residuos| vs ajustados"),
-                             "\u03C1", NA_real_, NA_character_, NA_real_, reason = tr(
-                                 "Could not be computed - fewer than 2 complete cases, or the residuals/fitted values do not vary, in this equation.",
-                                 "No se pudo calcular - menos de 2 casos completos, o los residuos/valores ajustados no var\u00EDan, en esta ecuaci\u00F3n."
-                             ))
+                    add_homo(.("Spearman |residuals| vs fitted"),
+                             "\u03C1", NA_real_, NA_character_, NA_real_, reason = .("Could not be computed - fewer than 2 complete cases, or the residuals/fitted values do not vary, in this equation."))
             }
 
             depHomoLines <- vapply(names(fits), function(d) {
                 fail <- homoFailByDep[[d]]
                 if (fail == 0) {
-                    tr(sprintf("%s: no test detects heteroscedasticity in this equation's residuals.", d),
-                       sprintf("%s: ninguna prueba detecta heterocedasticidad en los residuos de esta ecuación.", d))
+                    sprintf(.("%s: no test detects heteroscedasticity in this equation's residuals."), d)
                 } else {
                     testsTxt <- paste(homoFailedTestsByDep[[d]], collapse = ", ")
-                    tr(sprintf("%s: %s detect(s) heteroscedasticity. This does not bias the path coefficients themselves, but it can bias their standard errors and therefore the p-values in the \"Path Coefficients\" table; consider re-checking the affected coefficients with heteroscedasticity-consistent (HC/robust) standard errors before drawing firm conclusions about their significance.",
-                               d, testsTxt),
-                       sprintf("%s: %s detecta(n) heterocedasticidad. Esto no sesga los coeficientes de ruta en sí, pero sí puede sesgar sus errores estándar y por tanto los valores p de la tabla \"Coeficientes de Ruta\"; conviene revisar los coeficientes afectados con errores estándar robustos/consistentes a heterocedasticidad (HC) antes de sacar conclusiones firmes sobre su significancia.",
-                               d, testsTxt))
+                    sprintf(.("%s: %s detect(s) heteroscedasticity. This does not bias the path coefficients themselves, but it can bias their standard errors and therefore the p-values in the \"Path Coefficients\" table; consider re-checking the affected coefficients with heteroscedasticity-consistent (HC/robust) standard errors before drawing firm conclusions about their significance."), d, testsTxt)
                 }
             }, character(1))
 
             set_html_safe("homoscedasticityInterpretation", html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
-                c(tr(sprintf("%d of %d test-equation combination(s) show evidence of heteroscedasticity (p < .05).",
-                             nHomoFail, nHomoTotal),
-                     sprintf("%d de %d combinación(es) prueba-ecuación muestran evidencia de heterocedasticidad (p < .05).",
-                             nHomoFail, nHomoTotal)),
+                .("Applied Interpretation"),
+                c(sprintf(.("%d of %d test-equation combination(s) show evidence of heteroscedasticity (p < .05)."), nHomoFail, nHomoTotal),
                   depHomoLines)
             ))
 
@@ -1369,7 +1086,7 @@ pathCheckClass <- R6::R6Class(
             # Multicollinearity (VIF, tolerance, eigenvalue, condition index, det(R)).
             # ES: Multicolinealidad (VIF, tolerancia, eigenvalue, índice de condición, det(R)).
             # -----------------------------------------------------------------------------
-            set_html_safe("multicollinearityGuide", html_guide(tr("Multicollinearity", "Multicolinealidad"), "path", "multicollinearityGuide"))
+            set_html_safe("multicollinearityGuide", html_guide(.("Multicollinearity"), "path", "multicollinearityGuide"))
             vifTable <- self$results$multicollinearity
             vifTable$deleteRows()
 
@@ -1417,12 +1134,9 @@ pathCheckClass <- R6::R6Class(
                     tol <- if (is.na(vif)) NA_real_ else 1 / vif
                     pClean <- gsub("^`|`$", "", colnames(X_no_intercept)[j])
 
-                    vif_reason <- if (is.na(vif)) tr(
-                        "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
-                        "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
-                    ) else NULL
+                    vif_reason <- if (is.na(vif)) .("Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).") else NULL
                     add_multi_row(d, "VIF", pClean, "VIF", vif, reason = vif_reason)
-                    add_multi_row(d, tr("Tolerance", "Tolerancia"), pClean, "1/VIF", tol, reason = vif_reason)
+                    add_multi_row(d, .("Tolerance"), pClean, "1/VIF", tol, reason = vif_reason)
 
                     if (!is.na(vif)) {
                         depVifs[pClean] <- vif
@@ -1441,13 +1155,10 @@ pathCheckClass <- R6::R6Class(
                 }, error = function(e) NULL)
 
                 if (is.null(eig)) {
-                    eig_reason <- tr(
-                        "Could not be computed - the predictors' correlation matrix could not be decomposed (likely too few complete cases relative to the number of predictors) in this equation.",
-                        "No se pudo calcular - no fue posible descomponer la matriz de correlación de los predictores (probablemente muy pocos casos completos respecto al número de predictores) en esta ecuación."
-                    )
-                    add_multi_row(d, tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), NA_real_, reason = eig_reason)
-                    add_multi_row(d, tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", NA_real_, reason = eig_reason)
-                    add_multi_row(d, tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", NA_real_, reason = eig_reason)
+                    eig_reason <- .("Could not be computed - the predictors' correlation matrix could not be decomposed (likely too few complete cases relative to the number of predictors) in this equation.")
+                    add_multi_row(d, .("Minimum eigenvalue"), .("Design matrix"), .("minimum λ"), NA_real_, reason = eig_reason)
+                    add_multi_row(d, .("Condition index"), .("Design matrix"), "CI", NA_real_, reason = eig_reason)
+                    add_multi_row(d, .("Determinant"), .("Correlation matrix"), "det(R)", NA_real_, reason = eig_reason)
                 }
 
                 if (!is.null(eig)) {
@@ -1460,9 +1171,9 @@ pathCheckClass <- R6::R6Class(
                         error = function(e) NA_real_
                     )
 
-                    add_multi_row(d, tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), min_eig)
-                    add_multi_row(d, tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", ci)
-                    add_multi_row(d, tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", det_r)
+                    add_multi_row(d, .("Minimum eigenvalue"), .("Design matrix"), .("minimum λ"), min_eig)
+                    add_multi_row(d, .("Condition index"), .("Design matrix"), "CI", ci)
+                    add_multi_row(d, .("Determinant"), .("Correlation matrix"), "det(R)", det_r)
 
                     if (is.na(maxCi) || ci > maxCi) {
                         maxCi <- ci
@@ -1477,33 +1188,23 @@ pathCheckClass <- R6::R6Class(
                 worst <- names(depVifs)[which.max(depVifs)]
                 worstVal <- max(depVifs)
                 sevWord <- if (worstVal > 10)
-                    tr("a severe multicollinearity problem", "un problema severo de multicolinealidad")
+                    .("a severe multicollinearity problem")
                 else if (worstVal > 5)
-                    tr("a moderate multicollinearity concern", "una alerta moderada de multicolinealidad")
+                    .("a moderate multicollinearity concern")
                 else
-                    tr("no meaningful multicollinearity", "ninguna multicolinealidad relevante")
-                tr(sprintf("%s: highest VIF is %.2f (%s), indicating %s among its predictors.",
-                           d, worstVal, worst, sevWord),
-                   sprintf("%s: el VIF más alto es %.2f (%s), lo que indica %s entre sus predictores.",
-                           d, worstVal, worst, sevWord))
+                    .("no meaningful multicollinearity")
+                sprintf(.("%s: highest VIF is %.2f (%s), indicating %s among its predictors."), d, worstVal, worst, sevWord)
             }, character(1))
             depVifLines <- depVifLines[nzchar(depVifLines)]
 
             set_html_safe("multicollinearityInterpretation", html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 if (is.na(maxVif))
-                    tr("No equation has two or more predictors, so multicollinearity is not applicable.",
-                       "Ninguna ecuación tiene dos o más predictores, por lo que la multicolinealidad no aplica.")
+                    .("No equation has two or more predictors, so multicollinearity is not applicable.")
                 else
-                    c(tr(sprintf("Maximum VIF across the whole model: %.2f (%s). Values between 5 and 10 raise a moderate concern, and above 10 are considered a severe problem (Marquardt, 1970; see references).",
-                                 maxVif, maxVifLabel),
-                         sprintf("VIF máximo de todo el modelo: %.2f (%s). Valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970; ver referencias).",
-                                 maxVif, maxVifLabel)),
+                    c(sprintf(.("Maximum VIF across the whole model: %.2f (%s). Values between 5 and 10 raise a moderate concern, and above 10 are considered a severe problem (Marquardt, 1970; see references)."), maxVif, maxVifLabel),
                       if (!is.na(maxCi))
-                          tr(sprintf("Maximum condition index across equations: %.2f (%s). Values above 15 raise a moderate concern and above 30 a severe one, complementing VIF by diagnosing collinearity across the whole design matrix at once.",
-                                     maxCi, maxCiLabel),
-                             sprintf("Índice de condición máximo entre ecuaciones: %.2f (%s). Valores por encima de 15 encienden una alerta moderada y por encima de 30 una severa, complementando al VIF al diagnosticar la colinealidad de toda la matriz de diseño a la vez.",
-                                     maxCi, maxCiLabel))
+                          sprintf(.("Maximum condition index across equations: %.2f (%s). Values above 15 raise a moderate concern and above 30 a severe one, complementing VIF by diagnosing collinearity across the whole design matrix at once."), maxCi, maxCiLabel)
                       else "",
                       depVifLines)
             ))
@@ -1512,7 +1213,7 @@ pathCheckClass <- R6::R6Class(
             # Mardia multivariate normality.
             # ES: Normalidad multivariada de Mardia.
             # -----------------------------------------------------------------------------
-            set_html_safe("mardiaGuide", html_guide(tr("Multivariate Normality (Mardia)", "Normalidad Multivariada (Mardia)"),
+            set_html_safe("mardiaGuide", html_guide(.("Multivariate Normality (Mardia)"),
                                                        "path", "multivariateNormalityGuide"))
             mardiaTable <- self$results$mardiaTable
             mardiaTable$deleteRows()
@@ -1543,7 +1244,7 @@ pathCheckClass <- R6::R6Class(
 
             if (!is.null(mardiaRes)) {
                 mardiaTable$addRow(rowKey = "skew", values = list(
-                    measure   = tr("Mardia's skewness", "Asimetría de Mardia"),
+                    measure   = .("Mardia's skewness"),
                     value     = mardiaRes$b1p,
                     statistic = mardiaRes$skewStat,
                     df        = sprintf("%.1f", mardiaRes$skewDf),
@@ -1551,7 +1252,7 @@ pathCheckClass <- R6::R6Class(
                     pSig      = p_sig_stars(mardiaRes$skewP)
                 ))
                 mardiaTable$addRow(rowKey = "kurt", values = list(
-                    measure   = tr("Mardia's kurtosis", "Curtosis de Mardia"),
+                    measure   = .("Mardia's kurtosis"),
                     value     = mardiaRes$b2p,
                     statistic = mardiaRes$kurtZ,
                     df        = "—",
@@ -1562,34 +1263,16 @@ pathCheckClass <- R6::R6Class(
                 kurtSig <- !is.na(mardiaRes$kurtP) && mardiaRes$kurtP < .05
                 mardiaFail <- skewSig || kurtSig
                 set_html_safe("mardiaInterpretation", html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     c(
-                      tr(sprintf("Multivariate skewness: %s (b1p = %.3f, \u03c7\u00b2(%.1f) = %.2f, p %s).",
-                                 if (skewSig) "statistically significant departure from multivariate normality" else "compatible with multivariate normality",
-                                 mardiaRes$b1p, mardiaRes$skewDf, mardiaRes$skewStat, format_p(mardiaRes$skewP)),
-                         sprintf("Asimetría multivariada: %s (b1p = %.3f, \u03c7\u00b2(%.1f) = %.2f, p %s).",
-                                 if (skewSig) "desviación estadísticamente significativa de la normalidad multivariada" else "compatible con normalidad multivariada",
-                                 mardiaRes$b1p, mardiaRes$skewDf, mardiaRes$skewStat, format_p(mardiaRes$skewP))),
-                      tr(sprintf("Multivariate kurtosis: %s (b2p = %.3f, z = %.2f, p %s).",
-                                 if (kurtSig) "statistically significant departure from multivariate normality" else "compatible with multivariate normality",
-                                 mardiaRes$b2p, mardiaRes$kurtZ, format_p(mardiaRes$kurtP)),
-                         sprintf("Curtosis multivariada: %s (b2p = %.3f, z = %.2f, p %s).",
-                                 if (kurtSig) "desviación estadísticamente significativa de la normalidad multivariada" else "compatible con normalidad multivariada",
-                                 mardiaRes$b2p, mardiaRes$kurtZ, format_p(mardiaRes$kurtP))),
-                      tr(if (mardiaFail)
-                             "Because this OLS-based path analysis estimates each equation separately, multivariate normality is not required for the coefficients or their significance tests to be valid; this diagnostic mainly matters if the same model is later re-specified as an SEM estimated by maximum likelihood, where it can affect standard errors and fit indices."
-                         else
-                             "The set of model variables is compatible with multivariate normality; this is a favorable (though not required) condition if the same model is later re-specified as an SEM estimated by maximum likelihood.",
-                         if (mardiaFail)
-                             "Dado que este análisis de ruta por OLS estima cada ecuación por separado, la normalidad multivariada no es un requisito para que los coeficientes o sus pruebas de significancia sean válidos; este diagnóstico importa sobre todo si el mismo modelo se replantea más adelante como un SEM estimado por máxima verosimilitud, donde sí puede afectar los errores estándar y los índices de ajuste."
-                         else
-                             "El conjunto de variables del modelo es compatible con normalidad multivariada; esta es una condición favorable (aunque no obligatoria) si el mismo modelo se replantea más adelante como un SEM estimado por máxima verosimilitud.")
+                      sprintf(.("Multivariate skewness: %s (b1p = %.3f, χ²(%.1f) = %.2f, p %s)."), if (skewSig) .("statistically significant departure from multivariate normality") else .("compatible with multivariate normality"), mardiaRes$b1p, mardiaRes$skewDf, mardiaRes$skewStat, format_p(mardiaRes$skewP)),
+                      sprintf(.("Multivariate kurtosis: %s (b2p = %.3f, z = %.2f, p %s)."), if (kurtSig) .("statistically significant departure from multivariate normality") else .("compatible with multivariate normality"), mardiaRes$b2p, mardiaRes$kurtZ, format_p(mardiaRes$kurtP)),
+                      if (mardiaFail) .("Because this OLS-based path analysis estimates each equation separately, multivariate normality is not required for the coefficients or their significance tests to be valid; this diagnostic mainly matters if the same model is later re-specified as an SEM estimated by maximum likelihood, where it can affect standard errors and fit indices.") else .("The set of model variables is compatible with multivariate normality; this is a favorable (though not required) condition if the same model is later re-specified as an SEM estimated by maximum likelihood.")
                     )
                 ))
             } else {
                 set_html_safe("mardiaInterpretation", html_block(NULL,
-                    tr("Mardia's test could not be computed (singular covariance matrix or insufficient cases).",
-                       "La prueba de Mardia no pudo calcularse (matriz de covarianzas singular o casos insuficientes)."),
+                    .("Mardia's test could not be computed (singular covariance matrix or insufficient cases)."),
                     paragraphs = FALSE))
             }
 
@@ -1597,7 +1280,7 @@ pathCheckClass <- R6::R6Class(
             # Correlation matrices (Pearson and dCor, separate, APA 7 format).
             # ES: Matrices de correlaciones (Pearson y dCor, separadas, formato APA 7).
             # -----------------------------------------------------------------------------
-            set_html_safe("correlationMatrixGuide", html_guide(tr("Correlation Matrix", "Matriz de Correlaciones"),
+            set_html_safe("correlationMatrixGuide", html_guide(.("Correlation Matrix"),
                                                                   "path", "correlationMatrixGuide"))
             pearsonTable <- self$results$pearsonMatrixTable
             pearsonTable$deleteRows()
@@ -1689,22 +1372,8 @@ pathCheckClass <- R6::R6Class(
             # ES: Análisis de discordancia Pearson / dCor / Entropía Copular.
             # -----------------------------------------------------------------------------
             set_html_safe("correlationComparisonGuide", html_block(
-                tr("Pearson / dCor / Copula Entropy Discordance Analysis", "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                .al_html_list(tr(c(
-                    "Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship that a linear path model may be missing.",
-                    "Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10.",
-                    "The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence: when CE is also significant for a flagged pair, this reinforces the suspicion of an unmodeled non-linear dependency; when CE is not significant, the gap should be treated with more caution, since it may simply reflect sampling noise in the dCor permutation test.",
-                    "This threshold is a heuristic, not a formal test; always inspect a scatterplot of any flagged pair before concluding the relationship is non-linear.",
-                    sprintf("Method: dCor and CE p-values are obtained by permutation (B = %d permutations, seed = %d). The minimum achievable p at this resolution is %s; a p equal to this value should be read as p \u2264 %s (Monte Carlo), not as an exact value. Increase the number of permutations for higher resolution in a final report.",
-                            B_perm, seed_perm, floor_p_str, floor_p_str)
-                ), c(
-                    "Dado que la r de Pearson solo capta asociación lineal mientras que dCor capta asociación lineal y no lineal por igual, un par cuyo dCor sea notablemente mayor que su |r| de Pearson es una señal (no una prueba) de una relación no lineal que un modelo de ruta lineal podría estar pasando por alto.",
-                    "Se señalan en la tabla \"Pares con Diferencia Notable entre Pearson y dCor\" los pares con una brecha (dCor menos |r| de Pearson) mayor a .10.",
-                    "El resultado de la prueba de entropía copular (CE, copent()) para el mismo par se muestra al lado como una segunda línea de evidencia libre de supuestos distribucionales: cuando CE también es significativa para un par señalado, esto refuerza la sospecha de una dependencia no lineal no modelada; cuando CE no es significativa, la brecha debe tratarse con más cautela, ya que podría reflejar simplemente ruido muestral de la prueba de permutación de dCor.",
-                    "Este umbral es una heurística, no una prueba formal; siempre revise un diagrama de dispersión de cualquier par señalado antes de concluir que la relación es no lineal.",
-                    sprintf("Método: los valores p de dCor y CE se obtienen por permutación (B = %d permutaciones, semilla = %d). El p mínimo alcanzable con esta resolución es %s; un p igual a este valor debe leerse como p \u2264 %s (Monte Carlo), no como un valor exacto. Aumente el número de permutaciones para mayor resolución en un informe final.",
-                            B_perm, seed_perm, floor_p_str, floor_p_str)
-                ))),
+                .("Pearson / dCor / Copula Entropy Discordance Analysis"),
+                .al_html_list(c(.("Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship that a linear path model may be missing."), .("Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10."), .("The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence: when CE is also significant for a flagged pair, this reinforces the suspicion of an unmodeled non-linear dependency; when CE is not significant, the gap should be treated with more caution, since it may simply reflect sampling noise in the dCor permutation test."), .("This threshold is a heuristic, not a formal test; always inspect a scatterplot of any flagged pair before concluding the relationship is non-linear."), sprintf(.("Method: dCor and CE p-values are obtained by permutation (B = %d permutations, seed = %d). The minimum achievable p at this resolution is %s; a p equal to this value should be read as p ≤ %s (Monte Carlo), not as an exact value. Increase the number of permutations for higher resolution in a final report."), B_perm, seed_perm, floor_p_str, floor_p_str))),
                 raw = TRUE
             ))
 
@@ -1730,24 +1399,20 @@ pathCheckClass <- R6::R6Class(
                     ce    = pr$ce,
                     ceP   = pr$ceP,
                     ceSig = p_sig_stars(pr$ceP),
-                    flag  = tr("Yes", "Sí")
+                    flag  = .("Yes")
                 ))
             }
 
             if (length(flaggedPairs) == 0) {
                 set_html_safe("correlationComparisonInterpretation", html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
-                    tr(sprintf("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the model's variables.", gapThreshold),
-                       sprintf("Ningún par muestra una brecha Pearson/dCor mayor a %.2f; no hay indicios de asociación no lineal no modelada entre las variables del modelo.", gapThreshold)),
+                    .("Applied Interpretation"),
+                    sprintf(.("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the model's variables."), gapThreshold),
                     paragraphs = FALSE
                 ))
             } else {
                 set_html_safe("correlationComparisonInterpretation", html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
-                    tr(sprintf("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Of these, %d also show significant dependence by copula entropy (p < .05), which reinforces the suspicion of a non-linear relationship for that pair; for the rest, the gap should be treated with more caution and checked against a scatterplot.",
-                               length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", "), flaggedCeSig),
-                       sprintf("%d par(es) muestran una brecha Pearson/dCor mayor a %.2f: %s. De estos, %d también muestran dependencia significativa por entropía copular (p < .05), lo que refuerza la sospecha de una relación no lineal para ese par; para el resto, la brecha debe tratarse con más cautela y contrastarse con un diagrama de dispersión.",
-                               length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", "), flaggedCeSig)),
+                    .("Applied Interpretation"),
+                    sprintf(.("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Of these, %d also show significant dependence by copula entropy (p < .05), which reinforces the suspicion of a non-linear relationship for that pair; for the rest, the gap should be treated with more caution and checked against a scatterplot."), length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", "), flaggedCeSig),
                     paragraphs = FALSE
                 ))
             }
@@ -1756,15 +1421,14 @@ pathCheckClass <- R6::R6Class(
             # Independence by copula entropy.
             # ES: Independencia por entropía copular.
             # -----------------------------------------------------------------------------
-            set_html_safe("crossEntropyGuide", html_guide(tr("Copula Entropy Independence Test", "Independencia por Entropía Copular"),
+            set_html_safe("crossEntropyGuide", html_guide(.("Copula Entropy Independence Test"),
                                                              "path", "crossEntropyGuide"))
             ceTable <- self$results$crossEntropyTable
             ceTable$deleteRows()
 
             if (!hasCopent) {
                 set_html_safe("crossEntropyInterpretation", html_block(NULL,
-                    tr("The 'copent' package is not installed; this section could not be computed. Install it with install.packages('copent').",
-                       "El paquete 'copent' no está instalado; esta sección no pudo calcularse. Instálelo con install.packages('copent')."),
+                    .("The 'copent' package is not installed; this section could not be computed. Install it with install.packages('copent')."),
                     paragraphs = FALSE))
             } else {
                 nCeSig <- 0
@@ -1776,7 +1440,7 @@ pathCheckClass <- R6::R6Class(
                     ceTable$addRow(rowKey = key, values = list(
                         var1      = pr$v1,
                         var2      = pr$v2,
-                        connected = if (pr$connected) tr("Yes", "Sí") else tr("No", "No"),
+                        connected = if (pr$connected) .("Yes") else .("No"),
                         ce        = pr$ce,
                         p         = pr$ceP,
                         pSig      = p_sig_stars(pr$ceP)
@@ -1788,23 +1452,12 @@ pathCheckClass <- R6::R6Class(
                     }
                 }
                 unconnNote <- if (length(connectedSigPairs) > 0)
-                    tr(sprintf(" Notably, %s show significant dependence despite not being directly connected in the model, which may indicate an omitted path or a common cause not currently included.",
-                               paste(connectedSigPairs, collapse = ", ")),
-                       sprintf(" En particular, %s muestran dependencia significativa a pesar de no estar conectadas directamente en el modelo, lo que podría indicar una ruta omitida o una causa común no incluida actualmente.",
-                               paste(connectedSigPairs, collapse = ", ")))
+                    sprintf(.(" Notably, %s show significant dependence despite not being directly connected in the model, which may indicate an omitted path or a common cause not currently included."), paste(connectedSigPairs, collapse = ", "))
                 else ""
-                methodNote <- tr(
-                    sprintf(" Method: p-values by permutation (B = %d, seed = %d); minimum achievable p = %s (read as p \u2264 %s, Monte Carlo).",
-                            B_perm, seed_perm, floor_p_str, floor_p_str),
-                    sprintf(" Método: valores p por permutación (B = %d, semilla = %d); p mínimo alcanzable = %s (léase como p \u2264 %s, Monte Carlo).",
-                            B_perm, seed_perm, floor_p_str, floor_p_str)
-                )
+                methodNote <- sprintf(.(" Method: p-values by permutation (B = %d, seed = %d); minimum achievable p = %s (read as p ≤ %s, Monte Carlo)."), B_perm, seed_perm, floor_p_str, floor_p_str)
                 set_html_safe("crossEntropyInterpretation", html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
-                    paste0(tr(sprintf("%d of %d variable pair(s) show statistically significant dependence by copula entropy (p < .05).",
-                               nCeSig, nCeTotal),
-                       sprintf("%d de %d par(es) de variables muestran dependencia estadísticamente significativa por entropía copular (p < .05).",
-                               nCeSig, nCeTotal)), unconnNote, methodNote),
+                    .("Applied Interpretation"),
+                    paste0(sprintf(.("%d of %d variable pair(s) show statistically significant dependence by copula entropy (p < .05)."), nCeSig, nCeTotal), unconnNote, methodNote),
                     paragraphs = FALSE
                 ))
             }
@@ -1813,7 +1466,7 @@ pathCheckClass <- R6::R6Class(
             # Direct, indirect, and total effects (simple mediation).
             # ES: Efectos directos, indirectos y totales (mediación simple).
             # -----------------------------------------------------------------------------
-            set_html_safe("indirectEffectsGuide", html_guide(tr("Direct, Indirect and Total Effects", "Efectos Directos, Indirectos y Totales"),
+            set_html_safe("indirectEffectsGuide", html_guide(.("Direct, Indirect and Total Effects"),
                                                                 "path", "indirectEffectsGuide"))
             medTable <- self$results$indirectEffectsTable
             medTable$deleteRows()
@@ -1859,39 +1512,31 @@ pathCheckClass <- R6::R6Class(
 
             if (length(mediationRows) == 0) {
                 set_html_safe("indirectEffectsInterpretation", html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
-                    tr("No variable in this model both receives a path from a predictor and sends a path to that same predictor's other outcome, so there is no simple single-mediator chain to decompose.",
-                       "Ninguna variable de este modelo recibe una ruta de un predictor y a la vez envía una ruta hacia otra variable dependiente de ese mismo predictor, por lo que no hay una cadena de mediación simple de un solo mediador que descomponer."),
+                    .("Applied Interpretation"),
+                    .("No variable in this model both receives a path from a predictor and sends a path to that same predictor's other outcome, so there is no simple single-mediator chain to decompose."),
                     paragraphs = FALSE
                 ))
             } else {
                 medLines <- vapply(mediationRows, function(mr) {
                     sigWord <- if (!is.na(mr$sobelP) && mr$sobelP < .05)
-                        tr("statistically significant", "estadísticamente significativo")
+                        .("statistically significant")
                     else
-                        tr("not statistically significant", "sin significancia estadística")
+                        .("not statistically significant")
                     pattern <- if (is.na(mr$directBeta))
-                        tr("there is no direct path from %s to %s, so the entire effect is indirect through %s",
-                           "no hay ruta directa de %s a %s, por lo que todo el efecto es indirecto a través de %s")
+                        .("there is no direct path from %s to %s, so the entire effect is indirect through %s")
                     else if (sign(mr$directBeta) == sign(mr$indirectBeta))
-                        tr("the direct and indirect effects point in the same direction, so %3$s partially explains the effect of %1$s on %2$s alongside the direct path",
-                           "los efectos directo e indirecto apuntan en la misma dirección, por lo que %3$s explica parcialmente el efecto de %1$s sobre %2$s junto con la ruta directa")
+                        .("the direct and indirect effects point in the same direction, so %3$s partially explains the effect of %1$s on %2$s alongside the direct path")
                     else
-                        tr("the direct and indirect effects point in opposite directions (a suppression / inconsistent-mediation pattern), so the total effect of %1$s on %2$s is smaller than either path alone would suggest",
-                           "los efectos directo e indirecto apuntan en direcciones opuestas (un patrón de supresión / mediación inconsistente), por lo que el efecto total de %1$s sobre %2$s es menor de lo que cualquiera de las dos rutas por separado sugeriría")
+                        .("the direct and indirect effects point in opposite directions (a suppression / inconsistent-mediation pattern), so the total effect of %1$s on %2$s is smaller than either path alone would suggest")
                     patternTxt <- tryCatch(sprintf(pattern, mr$x, mr$y, mr$m), error = function(e)
                         sprintf(pattern, mr$x, mr$y, mr$m))
-                    tr(sprintf("%s -> %s -> %s: indirect effect \u03b2 = %.3f (Sobel z = %.2f, p %s, %s); total effect \u03b2 = %.3f. In this chain, %s.",
-                               mr$x, mr$m, mr$y, mr$indirectBeta, mr$sobelZ, format_p(mr$sobelP), sigWord, mr$totalBeta, patternTxt),
-                       sprintf("%s -> %s -> %s: efecto indirecto \u03b2 = %.3f (z de Sobel = %.2f, p %s, %s); efecto total \u03b2 = %.3f. En esta cadena, %s.",
-                               mr$x, mr$m, mr$y, mr$indirectBeta, mr$sobelZ, format_p(mr$sobelP), sigWord, mr$totalBeta, patternTxt))
+                    sprintf(.("%s -> %s -> %s: indirect effect β = %.3f (Sobel z = %.2f, p %s, %s); total effect β = %.3f. In this chain, %s."), mr$x, mr$m, mr$y, mr$indirectBeta, mr$sobelZ, format_p(mr$sobelP), sigWord, mr$totalBeta, patternTxt)
                 }, character(1))
 
                 set_html_safe("indirectEffectsInterpretation", html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     c(medLines,
-                      tr("This decomposition only covers single-mediator chains (X -> M -> Y); longer mediating chains are not yet computed. The Sobel test assumes the indirect effect's sampling distribution is approximately normal, which can be inaccurate in small samples; a bootstrap confidence interval for the indirect effect is preferable when in doubt.",
-                         "Esta descomposición solo cubre cadenas de un mediador (X -> M -> Y); las cadenas de mediación más largas todavía no se calculan. La prueba de Sobel asume que la distribución muestral del efecto indirecto es aproximadamente normal, lo cual puede ser impreciso en muestras pequeñas; ante la duda, es preferible un intervalo de confianza bootstrap para el efecto indirecto."))
+                      .("This decomposition only covers single-mediator chains (X -> M -> Y); longer mediating chains are not yet computed. The Sobel test assumes the indirect effect's sampling distribution is approximately normal, which can be inaccurate in small samples; a bootstrap confidence interval for the indirect effect is preferable when in doubt."))
                 ))
             }
 
@@ -1900,16 +1545,8 @@ pathCheckClass <- R6::R6Class(
             # ES: Valoración del tamaño de muestra según la complejidad del modelo.
             # -----------------------------------------------------------------------------
             set_html_safe("sampleSizeGuide", html_block(
-                tr("Sample Size Adequacy", "Adecuación del Tamaño de Muestra"),
-                tr(c(
-                    "There is no single agreed-upon rule for how large a sample a path model needs; the literature offers several complementary heuristics that weigh model complexity differently.",
-                    "Because this module estimates each equation separately by OLS rather than jointly by maximum likelihood, the regression-based rules (Green, 1991; see references) are the most directly applicable, one per equation; the ratio-based rules developed for the broader structural-equation-model family (Bentler & Chou, 1987; Jackson, 2003; Kline, 2023; see references) are shown as additional, more conservative benchmarks, because this path model has the same structural complexity (the same number of estimated paths) as an equivalent SEM.",
-                    "Wolf et al. (2013) show via simulation that the sample size actually needed depends heavily on effect size, indicator reliability, and the specific model, and can range from under 30 to several hundred cases for models of similar size; treat every rule in the \"Sample-Size Assessment by Model Complexity\" table as a heuristic floor, not a guarantee of adequate statistical power."
-                ), c(
-                    "No existe una única regla consensuada sobre qué tan grande debe ser la muestra de un modelo de ruta; la literatura ofrece varias heurísticas complementarias que ponderan la complejidad del modelo de forma distinta.",
-                    "Dado que este módulo estima cada ecuación por separado mediante OLS en vez de conjuntamente por máxima verosimilitud, las reglas basadas en regresión (Green, 1991; ver referencias) son las más directamente aplicables, una por ecuación; las reglas de razón desarrolladas para la familia más amplia de modelos de ecuaciones estructurales (Bentler & Chou, 1987; Jackson, 2003; Kline, 2023; ver referencias) se muestran como referencias adicionales más conservadoras, porque este modelo de ruta tiene la misma complejidad estructural (el mismo número de rutas estimadas) que un SEM equivalente.",
-                    "Wolf et al. (2013) muestran mediante simulación que el tamaño de muestra realmente necesario depende fuertemente del tamaño del efecto, la confiabilidad de los indicadores y el modelo específico, y puede ir de menos de 30 a varios cientos de casos para modelos de tamaño similar; trate cada regla de la tabla \"Valoración del Tamaño de Muestra según la Complejidad del Modelo\" como un piso heurístico, no como garantía de potencia estadística adecuada."
-                ))
+                .("Sample Size Adequacy"),
+                c(.("There is no single agreed-upon rule for how large a sample a path model needs; the literature offers several complementary heuristics that weigh model complexity differently."), .("Because this module estimates each equation separately by OLS rather than jointly by maximum likelihood, the regression-based rules (Green, 1991; see references) are the most directly applicable, one per equation; the ratio-based rules developed for the broader structural-equation-model family (Bentler & Chou, 1987; Jackson, 2003; Kline, 2023; see references) are shown as additional, more conservative benchmarks, because this path model has the same structural complexity (the same number of estimated paths) as an equivalent SEM."), .("Wolf et al. (2013) show via simulation that the sample size actually needed depends heavily on effect size, indicator reliability, and the specific model, and can range from under 30 to several hundred cases for models of similar size; treat every rule in the \"Sample-Size Assessment by Model Complexity\" table as a heuristic floor, not a guarantee of adequate statistical power."))
             ))
 
             N <- nrow(covData)
@@ -1920,26 +1557,26 @@ pathCheckClass <- R6::R6Class(
 
             sizeStatus <- function(required) {
                 if (is.na(required)) return("\u2014")
-                if (N >= required) tr("Meets", "Cumple")
-                else if (N >= 0.9 * required) tr("Marginal", "Marginal")
-                else tr("Does not meet", "No cumple")
+                if (N >= required) .("Meets")
+                else if (N >= 0.9 * required) .("Marginal")
+                else .("Does not meet")
             }
 
             sizeCriteria <- list(
-                list(criterion = tr("Green (1991) \u2014 overall R\u00b2 test", "Green (1991) \u2014 prueba de R\u00b2 global"),
-                     rule = tr("N \u2265 50 + 8m (m = predictors in the largest equation)", "N \u2265 50 + 8m (m = predictores de la ecuación más grande)"),
+                list(criterion = .("Green (1991) — overall R² test"),
+                     rule = .("N ≥ 50 + 8m (m = predictors in the largest equation)"),
                      required = 50 + 8 * maxPreds),
-                list(criterion = tr("Green (1991) \u2014 individual coefficients test", "Green (1991) \u2014 prueba de coeficientes individuales"),
-                     rule = tr("N \u2265 104 + m", "N \u2265 104 + m"),
+                list(criterion = .("Green (1991) — individual coefficients test"),
+                     rule = .("N ≥ 104 + m"),
                      required = 104 + maxPreds),
-                list(criterion = tr("Bentler & Chou (1987) \u2014 minimum cases:parameters ratio", "Bentler & Chou (1987) \u2014 razón mínima casos:parámetros"),
-                     rule = tr("N \u2265 5 \u00d7 (number of estimated paths)", "N \u2265 5 \u00d7 (número de rutas estimadas)"),
+                list(criterion = .("Bentler & Chou (1987) — minimum cases:parameters ratio"),
+                     rule = .("N ≥ 5 × (number of estimated paths)"),
                      required = 5 * nRel),
-                list(criterion = tr("Jackson (2003) \u2014 recommended N:q ratio", "Jackson (2003) \u2014 razón N:q recomendada"),
-                     rule = tr("N \u2265 10 \u00d7 (number of estimated paths); ideally closer to 20\u00d7", "N \u2265 10 \u00d7 (número de rutas estimadas); idealmente cercano a 20\u00d7"),
+                list(criterion = .("Jackson (2003) — recommended N:q ratio"),
+                     rule = .("N ≥ 10 × (number of estimated paths); ideally closer to 20×"),
                      required = 10 * nRel),
-                list(criterion = tr("Kline (2023) \u2014 general absolute minimum", "Kline (2023) \u2014 mínimo absoluto general"),
-                     rule = tr("N \u2265 200 as a general floor for models of this structural complexity", "N \u2265 200 como piso general para modelos de esta complejidad estructural"),
+                list(criterion = .("Kline (2023) — general absolute minimum"),
+                     rule = .("N ≥ 200 as a general floor for models of this structural complexity"),
                      required = 200)
             )
 
@@ -1949,7 +1586,7 @@ pathCheckClass <- R6::R6Class(
             for (i in seq_along(sizeCriteria)) {
                 sc <- sizeCriteria[[i]]
                 st <- sizeStatus(sc$required)
-                if (identical(st, tr("Meets", "Cumple"))) nMet <- nMet + 1
+                if (identical(st, .("Meets"))) nMet <- nMet + 1
                 szTable$addRow(rowKey = i, values = list(
                     criterion = sc$criterion, rule = sc$rule,
                     required = sc$required, actual = N, status = st
@@ -1957,11 +1594,8 @@ pathCheckClass <- R6::R6Class(
             }
 
             set_html_safe("sampleSizeInterpretation", html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
-                tr(sprintf("With N = %d complete cases, %d estimated path(s) across %d equation(s) (largest equation has %d predictor(s)), the model meets %d of %d sample-size criteria in the \"Sample-Size Assessment by Model Complexity\" table.",
-                           N, nRel, length(fits), maxPreds, nMet, length(sizeCriteria)),
-                   sprintf("Con N = %d casos completos, %d ruta(s) estimada(s) en %d ecuación(es) (la ecuación más grande tiene %d predictor(es)), el modelo cumple %d de %d criterios de la tabla \"Valoración del Tamaño de Muestra según la Complejidad del Modelo\".",
-                           N, nRel, length(fits), maxPreds, nMet, length(sizeCriteria))),
+                .("Applied Interpretation"),
+                sprintf(.("With N = %d complete cases, %d estimated path(s) across %d equation(s) (largest equation has %d predictor(s)), the model meets %d of %d sample-size criteria in the \"Sample-Size Assessment by Model Complexity\" table."), N, nRel, length(fits), maxPreds, nMet, length(sizeCriteria)),
                 paragraphs = FALSE
             ))
 
@@ -1970,9 +1604,8 @@ pathCheckClass <- R6::R6Class(
             # ES: Conclusión diagnóstica del modelo.
             # -----------------------------------------------------------------------------
             set_html_safe("modelDiagnosticConclusionGuide", html_block(
-                tr("Diagnostic Conclusion", "Conclusión Diagnóstica del Modelo"),
-                tr("This final section brings together every check run above into a single scorecard, so the overall methodological soundness of the estimated model can be judged at a glance instead of having to hold every individual result in mind.",
-                   "Esta sección final reúne todas las verificaciones anteriores en un solo marcador, de modo que la solidez metodológica general del modelo estimado pueda juzgarse de un vistazo en vez de tener que retener cada resultado individual en la mente."),
+                .("Diagnostic Conclusion"),
+                .("This final section brings together every check run above into a single scorecard, so the overall methodological soundness of the estimated model can be judged at a glance instead of having to hold every individual result in mind."),
                 paragraphs = FALSE
             ))
 
@@ -2000,76 +1633,67 @@ pathCheckClass <- R6::R6Class(
                 concTable$addRow(rowKey = area, values = list(area = area, status = status, detail = detail))
             }
 
-            addConc(tr("Sample size", "Tamaño de muestra"),
-                    if (nMet == length(sizeCriteria)) tr("No issues", "Sin problemas")
-                    else if (nMet >= length(sizeCriteria) / 2) tr("Attention", "Atención")
-                    else tr("Problem", "Problema"),
-                    tr(sprintf("Meets %d of %d criteria (see section above).", nMet, length(sizeCriteria)),
-                       sprintf("Cumple %d de %d criterios (ver sección anterior).", nMet, length(sizeCriteria))))
+            addConc(.("Sample size"),
+                    if (nMet == length(sizeCriteria)) .("No issues")
+                    else if (nMet >= length(sizeCriteria) / 2) .("Attention")
+                    else .("Problem"),
+                    sprintf(.("Meets %d of %d criteria (see section above)."), nMet, length(sizeCriteria)))
 
-            addConc(tr("Multivariate outliers", "Atípicos multivariados"),
-                    if (is.na(outlierFlag)) tr("Could not be computed", "No pudo calcularse")
-                    else if (outlierFlag == 0) tr("No issues", "Sin problemas")
-                    else tr("Attention", "Atención"),
-                    if (is.na(outlierFlag) || is.na(outlierN)) tr("Could not be computed.", "No pudo calcularse.")
-                    else tr(sprintf("%d of %d cases exceed the Mahalanobis D\u00b2 threshold.", outlierFlag, outlierN),
-                            sprintf("%d de %d casos superan el umbral de D\u00b2 de Mahalanobis.", outlierFlag, outlierN)))
+            addConc(.("Multivariate outliers"),
+                    if (is.na(outlierFlag)) .("Could not be computed")
+                    else if (outlierFlag == 0) .("No issues")
+                    else .("Attention"),
+                    if (is.na(outlierFlag) || is.na(outlierN)) .("Could not be computed.")
+                    else sprintf(.("%d of %d cases exceed the Mahalanobis D² threshold."), outlierFlag, outlierN))
 
-            addConc(tr("Residual normality", "Normalidad de residuos"),
-                    if (nNormalityFail == 0) tr("No issues", "Sin problemas") else tr("Attention", "Atención"),
-                    tr(sprintf("%d of %d test-equation combinations show non-normal residuals.", nNormalityFail, nNormalityTotal),
-                       sprintf("%d de %d combinaciones prueba-ecuación muestran residuos no normales.", nNormalityFail, nNormalityTotal)))
+            addConc(.("Residual normality"),
+                    if (nNormalityFail == 0) .("No issues") else .("Attention"),
+                    sprintf(.("%d of %d test-equation combinations show non-normal residuals."), nNormalityFail, nNormalityTotal))
 
-            addConc(tr("Homoscedasticity", "Homoscedasticidad"),
-                    if (nHomoFail == 0) tr("No issues", "Sin problemas") else tr("Attention", "Atención"),
-                    tr(sprintf("%d of %d test-equation combinations show evidence of heteroscedasticity.", nHomoFail, nHomoTotal),
-                       sprintf("%d de %d combinaciones prueba-ecuación muestran evidencia de heterocedasticidad.", nHomoFail, nHomoTotal)))
+            addConc(.("Homoscedasticity"),
+                    if (nHomoFail == 0) .("No issues") else .("Attention"),
+                    sprintf(.("%d of %d test-equation combinations show evidence of heteroscedasticity."), nHomoFail, nHomoTotal))
 
-            addConc(tr("Multicollinearity", "Multicolinealidad"),
-                    if (is.na(maxVif)) tr("Not applicable", "No aplica")
-                    else if (maxVif > 10) tr("Problem", "Problema")
-                    else if (maxVif > 5) tr("Attention", "Atención")
-                    else tr("No issues", "Sin problemas"),
-                    if (is.na(maxVif)) tr("No equation has two or more predictors.", "Ninguna ecuación tiene dos o más predictores.")
-                    else tr(sprintf("Maximum VIF = %.2f (%s).", maxVif, maxVifLabel),
-                            sprintf("VIF máximo = %.2f (%s).", maxVif, maxVifLabel)))
+            addConc(.("Multicollinearity"),
+                    if (is.na(maxVif)) .("Not applicable")
+                    else if (maxVif > 10) .("Problem")
+                    else if (maxVif > 5) .("Attention")
+                    else .("No issues"),
+                    if (is.na(maxVif)) .("No equation has two or more predictors.")
+                    else sprintf(.("Maximum VIF = %.2f (%s)."), maxVif, maxVifLabel))
 
-            addConc(tr("Multivariate normality (Mardia)", "Normalidad multivariada (Mardia)"),
-                    if (mardiaOk) tr("No issues", "Sin problemas") else tr("Attention", "Atención"),
-                    tr("Only relevant if this model is later re-estimated as an ML-based SEM.",
-                       "Solo relevante si este modelo se reestima más adelante como un SEM basado en máxima verosimilitud."))
+            addConc(.("Multivariate normality (Mardia)"),
+                    if (mardiaOk) .("No issues") else .("Attention"),
+                    .("Only relevant if this model is later re-estimated as an ML-based SEM."))
 
-            addConc(tr("Pearson/dCor discordance", "Discordancia Pearson/dCor"),
-                    if (gapFlaggedN == 0) tr("No issues", "Sin problemas") else tr("Attention", "Atención"),
-                    if (gapFlaggedN == 0) tr("No pair shows a notable linear/non-linear gap.", "Ningún par muestra una brecha lineal/no lineal notable.")
-                    else tr(sprintf("%d pair(s) flagged, %d reinforced by a significant copula entropy test.", gapFlaggedN, gapCeReinf),
-                            sprintf("%d par(es) señalado(s), %d reforzado(s) por una prueba de entropía copular significativa.", gapFlaggedN, gapCeReinf)))
+            addConc(.("Pearson/dCor discordance"),
+                    if (gapFlaggedN == 0) .("No issues") else .("Attention"),
+                    if (gapFlaggedN == 0) .("No pair shows a notable linear/non-linear gap.")
+                    else sprintf(.("%d pair(s) flagged, %d reinforced by a significant copula entropy test."), gapFlaggedN, gapCeReinf))
 
-            addConc(tr("Copula entropy independence", "Independencia por entropía copular"),
-                    if (is.na(ceSigN)) tr("Not computed (copent unavailable)", "No calculado (copent no disponible)")
-                    else if (length(unconnCe) > 0) tr("Attention", "Atención")
-                    else tr("No issues", "Sin problemas"),
-                    if (is.na(ceSigN)) tr("Install the 'copent' package to enable this check.", "Instale el paquete 'copent' para habilitar esta verificación.")
-                    else tr(sprintf("%d of %d pairs significant; %d involve variables not directly connected in the model.", ceSigN, ceTotalN, length(unconnCe)),
-                            sprintf("%d de %d pares significativos; %d involucran variables no conectadas directamente en el modelo.", ceSigN, ceTotalN, length(unconnCe))))
+            addConc(.("Copula entropy independence"),
+                    if (is.na(ceSigN)) .("Not computed (copent unavailable)")
+                    else if (length(unconnCe) > 0) .("Attention")
+                    else .("No issues"),
+                    if (is.na(ceSigN)) .("Install the 'copent' package to enable this check.")
+                    else sprintf(.("%d of %d pairs significant; %d involve variables not directly connected in the model."), ceSigN, ceTotalN, length(unconnCe)))
 
-            addConc(tr("Mediation (indirect effects)", "Mediación (efectos indirectos)"),
-                    if (length(mediationRows) == 0) tr("Not applicable", "No aplica")
-                    else if (medSigChains > 0) tr("Notable", "Destacable")
-                    else tr("No issues", "Sin problemas"),
-                    if (length(mediationRows) == 0) tr("No single-mediator chain exists in this model.", "No existe ninguna cadena de un solo mediador en este modelo.")
-                    else tr(sprintf("%d of %d mediation chain(s) show a statistically significant indirect effect (Sobel).", medSigChains, length(mediationRows)),
-                            sprintf("%d de %d cadena(s) de mediación muestran un efecto indirecto estadísticamente significativo (Sobel).", medSigChains, length(mediationRows))))
+            addConc(.("Mediation (indirect effects)"),
+                    if (length(mediationRows) == 0) .("Not applicable")
+                    else if (medSigChains > 0) .("Notable")
+                    else .("No issues"),
+                    if (length(mediationRows) == 0) .("No single-mediator chain exists in this model.")
+                    else sprintf(.("%d of %d mediation chain(s) show a statistically significant indirect effect (Sobel)."), medSigChains, length(mediationRows)))
 
             areaLabels <- c(
-                sampleSize        = tr("sample size", "tamaño de muestra"),
-                outliers          = tr("multivariate outliers", "atípicos multivariados"),
-                normality         = tr("residual normality", "normalidad de residuos"),
-                homoscedasticity  = tr("homoscedasticity", "homoscedasticidad"),
-                multicollinearity = tr("multicollinearity", "multicolinealidad"),
-                mardia            = tr("multivariate normality (Mardia)", "normalidad multivariada (Mardia)"),
-                pearsonDcorGap    = tr("Pearson/dCor discordance", "discordancia Pearson/dCor"),
-                crossEntropy      = tr("copula entropy independence", "independencia por entropía copular")
+                sampleSize        = .("sample size"),
+                outliers          = .("multivariate outliers"),
+                normality         = .("residual normality"),
+                homoscedasticity  = .("homoscedasticity"),
+                multicollinearity = .("multicollinearity"),
+                mardia            = .("multivariate normality (Mardia)"),
+                pearsonDcorGap    = .("Pearson/dCor discordance"),
+                crossEntropy      = .("copula entropy independence")
                 # "mediation" queda fuera adrede: un efecto indirecto significativo es un
                 # hallazgo sustantivo, no un problema metodológico, y no debe contarse
                 # como "área que requiere atención" junto a multicolinealidad/heterocedasticidad.
@@ -2089,16 +1713,12 @@ pathCheckClass <- R6::R6Class(
             flaggedAreaLabels <- unname(areaLabels[areaFlags])
 
             overallVerdict <- if (nFlaggedAreas == 0)
-                tr("Every diagnostic check above is clean: the model shows no notable outliers, its residuals are compatible with normality and homoscedasticity, there is no relevant multicollinearity, the sample size meets the benchmarks reviewed, and no unexplained non-linear or omitted-path signal was detected. This is a well-behaved OLS-based path model given the checks implemented so far.",
-                   "Todas las verificaciones anteriores están limpias: el modelo no muestra atípicos notables, sus residuos son compatibles con normalidad y homoscedasticidad, no hay multicolinealidad relevante, el tamaño de muestra cumple los referentes revisados, y no se detectó ninguna señal no explicada de no linealidad o de ruta omitida. Este es un modelo de ruta basado en OLS bien comportado, dadas las verificaciones implementadas hasta ahora.")
+                .("Every diagnostic check above is clean: the model shows no notable outliers, its residuals are compatible with normality and homoscedasticity, there is no relevant multicollinearity, the sample size meets the benchmarks reviewed, and no unexplained non-linear or omitted-path signal was detected. This is a well-behaved OLS-based path model given the checks implemented so far.")
             else
-                tr(sprintf("%d of %d diagnostic areas need attention: %s. None of these individually invalidates the model, but taken together they indicate where interpretation should be most cautious; address these flagged areas (particularly any severe multicollinearity or heteroscedasticity, since those directly affect the reliability of the path coefficients' significance tests) before treating the model's conclusions as final.",
-                           nFlaggedAreas, totalAreas, paste(flaggedAreaLabels, collapse = ", ")),
-                   sprintf("%d de %d áreas diagnósticas requieren atención: %s. Ninguna invalida el modelo por sí sola, pero en conjunto indican dónde la interpretación debe ser más cautelosa; atienda estas áreas señaladas (en particular cualquier multicolinealidad o heterocedasticidad severa, ya que afectan directamente la confiabilidad de las pruebas de significancia de los coeficientes de ruta) antes de tratar las conclusiones del modelo como definitivas.",
-                           nFlaggedAreas, totalAreas, paste(flaggedAreaLabels, collapse = ", ")))
+                sprintf(.("%d of %d diagnostic areas need attention: %s. None of these individually invalidates the model, but taken together they indicate where interpretation should be most cautious; address these flagged areas (particularly any severe multicollinearity or heteroscedasticity, since those directly affect the reliability of the path coefficients' significance tests) before treating the model's conclusions as final."), nFlaggedAreas, totalAreas, paste(flaggedAreaLabels, collapse = ", "))
 
             set_html_safe("modelDiagnosticConclusionInterpretation", html_block(
-                tr("Overall Verdict", "Veredicto General"),
+                .("Overall Verdict"),
                 overallVerdict,
                 paragraphs = FALSE
             ))
@@ -2225,11 +1845,9 @@ pathCheckClass <- R6::R6Class(
         # -----------------------------------------------------------------------------
 
         .plotPathDiagram = function(image, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(private$.plotTr(
-                    "The ggplot2 package is required to draw the path diagram.",
-                    "El paquete ggplot2 es necesario para dibujar el diagrama de ruta."
-                ))
+                image$setError(.("The ggplot2 package is required to draw the path diagram."))
                 return(FALSE)
             }
 
@@ -2421,11 +2039,9 @@ pathCheckClass <- R6::R6Class(
         },
 
         .plotResidualHistograms = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(private$.plotTr(
-                    "The ggplot2 package is required to draw diagnostic plots.",
-                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
-                ))
+                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
                 return(FALSE)
             }
 
@@ -2469,8 +2085,8 @@ pathCheckClass <- R6::R6Class(
                 ggplot2::geom_density(linewidth = 0.8, fill = NA) +
                 ggplot2::facet_wrap(~dep, nrow = 1) +
                 ggplot2::labs(
-                    x = private$.plotTr("Standardized residuals", "Residuos estandarizados"),
-                    y = private$.plotTr("Density", "Densidad")
+                    x = .("Standardized residuals"),
+                    y = .("Density")
                 ) +
                 ggtheme + private$.plotThemeExtra() +
                 # The facet strip already names each dependent variable, so

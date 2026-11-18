@@ -97,8 +97,7 @@
 # 1. Validar: comprobar que se seleccionaron una variable dependiente y
 #    una variable de agrupación, y que la dependiente es numérica.
 # 2. Preparar: construir la muestra de análisis (filas con grupo válido,
-#    casos completos para el modelo a nivel de caso) y traducir los
-#    títulos de los resultados.
+#    casos completos para el modelo a nivel de caso).
 # 3. Describir: calcular estadísticos descriptivos y renderizar el
 #    gráfico de distribución por grupo.
 # 4. Cribar: marcar atípicos por IQR y puntos influyentes a nivel de caso
@@ -129,7 +128,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # and case-level influence screening, the normality and homogeneity-of-
         # variance batteries, and the dynamic test recommendation for the selected
         # independent-groups comparison; then renders every guide, interpretation,
-        # and table title in the user's selected report language.
+        # and table title in jamovi's language.
         #
         # ES: Valida las variables dependiente/de agrupación, calcula descriptivos,
         # cribado de atípicos e influencia a nivel de caso, las baterías de
@@ -142,21 +141,20 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             data <- self$data
             dep <- self$options$dep
             group <- self$options$group
-            reportLang <- self$options$reportLang
 
-            reportLang <- .al_normalize_lang(reportLang)
-
-            # Report-language helpers: tr() picks between the English/Spanish
-            # argument pair, txt() looks up a pre-translated string by
-            # section/key from the shared text catalog (shared-helpers.R).
-            # ES: ayudantes de idioma de informe: tr() elige entre el par de
-            # argumentos inglés/español, txt() busca una cadena pretraducida
-            # por sección/clave en el catálogo de textos compartido
-            # (shared-helpers.R).
-            tr <- function(en, es = NULL, ...) .al_tr(reportLang, en, es)
+            # Report-language helpers: `.` translates through jamovi's own
+            # catalog (jamovi/i18n/es.po) in the language jamovi sends with
+            # this run; txt() looks up an entry of the shared text table by
+            # section/key (texts.R).
+            # ES: ayudantes de idioma del informe: `.` traduce con el
+            # catálogo propio de jamovi (jamovi/i18n/es.po) en el idioma que
+            # jamovi envía con esta ejecución; txt() busca una entrada de la
+            # tabla de textos compartida por sección/clave (texts.R).
+            lang <- .al_lang(self$options)
+            . <- lang$tr
 
             txt <- function(section, key) {
-                .al_text(reportLang, section, key)
+                .al_text(lang, section, key)
             }
 
             # Coerces a value to NA_real_ whenever it is missing, empty, NaN, or
@@ -202,28 +200,28 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
             p_decision <- function(p) {
                 if (is.na(p) || is.nan(p))
-                    return(tr("Not calc.", "No calc."))
+                    return(.("Not calc."))
 
                 if (p < .001)
-                    return(tr("Sig. dev. 0.1%", "Desv. sig. 0.1%"))
+                    return(.("Sig. dev. 0.1%"))
 
                 if (p < .01)
-                    return(tr("Sig. dev. 1%", "Desv. sig. 1%"))
+                    return(.("Sig. dev. 1%"))
 
                 if (p < .05)
-                    return(tr("Sig. dev. 5%", "Desv. sig. 5%"))
+                    return(.("Sig. dev. 5%"))
 
-                tr("Approx. normal", "Norm. aprox.")
+                .("Approx. normal")
             }
 
             variance_decision <- function(p) {
                 if (is.na(p) || is.nan(p))
-                    return(tr("Not calc.", "No calc."))
+                    return(.("Not calc."))
 
                 if (p < .05)
-                    return(tr("Significant variance difference", "Diferencias significativas entre varianzas"))
+                    return(.("Significant variance difference"))
 
-                tr("Homogeneous", "Homogéneas")
+                .("Homogeneous")
             }
 
             # -----------------------------------------------------------------------------
@@ -300,29 +298,15 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
             render_groupcheck_intro <- function(show_vars = TRUE) {
 
-                title_block <- paste0(
-                    "<p style=\"font-weight:700; margin:0 0 0.10em 0;\">AssumptionsLab</p>",
-                    "<p style=\"margin:0 0 0.35em 0;\">",
-                    tr("Assumption check for independent groups", "Revisión de supuestos para grupos independientes"),
-                    "</p>"
-                )
+                title_block <- .("<p style=\"font-weight:700; margin:0 0 0.10em 0;\">AssumptionsLab</p><p style=\"margin:0 0 0.35em 0;\">Assumption check for independent groups</p>")
 
-                use_paragraph <- tr(
-                    "Use this analysis when you want to review whether a comparison between independent groups has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
-                    "Use este análisis cuando quiera revisar si una comparación entre grupos independientes tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
-                )
+                use_paragraph <- .("Use this analysis when you want to review whether a comparison between independent groups has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.")
 
                 var_lines <- character(0)
                 if (isTRUE(show_vars)) {
                     var_lines <- c(
-                        paste0(
-                            tr("<b>Dependent variable:</b> ", "<b>Variable dependiente:</b> "),
-                            html_escape(dep)
-                        ),
-                        paste0(
-                            tr("<b>Grouping variable:</b> ", "<b>Variable de grupo:</b> "),
-                            html_escape(group)
-                        )
+                        sprintf(.("<b>Dependent variable:</b> %s"), html_escape(dep)),
+                        sprintf(.("<b>Grouping variable:</b> %s"), html_escape(group))
                     )
                 }
 
@@ -366,7 +350,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 x <- clean_num(x)
 
                 if (is.na(x))
-                    return(tr("Not calc.", "No calc."))
+                    return(.("Not calc."))
 
                 out <- formatC(x, format = "f", digits = digits)
                 out <- sub("0+$", "", out)
@@ -378,133 +362,13 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 p <- clean_num(p)
 
                 if (is.na(p))
-                    return(tr("Not calc.", "No calc."))
+                    return(.("Not calc."))
 
                 if (p < .001)
                     return("< .001")
 
                 out <- sprintf("%.3f", p)
                 sub("^0", "", out)
-            }
-
-            # -----------------------------------------------------------------------------
-            # Result title and column-title translation.
-            # ES: Traducción de títulos de resultados y de columnas.
-            #
-            # set_col_title() safely renames one table column, swallowing errors from
-            # columns that do not exist under the current option combination (e.g. a
-            # column only added when a particular test path runs). translate_titles_
-            # and_columns() applies every panel/table/column title in the user's
-            # selected report language; it is called once before the analysis runs and
-            # once more at the end so that titles set during validation short-circuits
-            # are still correct.
-            #
-            # ES: set_col_title() renombra una columna de tabla de forma segura,
-            # absorbiendo los errores de columnas que no existen bajo la combinación
-            # de opciones actual (p. ej. una columna que solo se agrega cuando corre
-            # cierta ruta de prueba). translate_titles_and_columns() aplica el título
-            # de cada panel/tabla/columna en el idioma de informe seleccionado por el
-            # usuario; se invoca una vez antes de correr el análisis y otra vez al
-            # final, para que los títulos fijados durante las salidas anticipadas de
-            # validación también queden correctos.
-            # -----------------------------------------------------------------------------
-            set_col_title <- function(table, column, title) {
-
-                column_obj <- tryCatch(
-                    table$getColumn(column),
-                    error = function(e) NULL
-                )
-
-                if (is.null(column_obj))
-                    return(invisible(FALSE))
-
-                tryCatch(
-                    column_obj$setTitle(title),
-                    error = function(e) invisible(FALSE)
-                )
-
-                invisible(TRUE)
-            }
-
-            translate_titles_and_columns <- function() {
-
-                self$results$intro$setTitle(title = tr("Independent Groups", "Grupos independientes"))
-
-                self$results$design$setTitle(title = tr("Design summary", "Resumen del diseño"))
-
-                self$results$descriptives$setTitle(title = tr("Descriptive statistics by group", "Estadísticos descriptivos por grupo"))
-                self$results$distributionPlot$setTitle(title = tr("Distribution of the analyzed variable by group", "Distribución de la variable analizada por grupo"))
-                self$results$distributionPlotGuide$setTitle(title = tr("Distribution plot guide", "Guía del gráfico de distribución"))
-
-                self$results$outliers$setTitle(title = tr("Outlier screening by group", "Evaluación de valores atípicos por grupo"))
-
-                self$results$caseDiagnostics$setTitle(title = tr("Case diagnostics", "Diagnóstico de casos"))
-                self$results$caseDiagnosticsGuide$setTitle(title = tr("Case diagnostics guide", "Guía de diagnóstico de casos"))
-                self$results$caseDiagnosticsInterpretation$setTitle(title = tr("Applied interpretation of case diagnostics", "Interpretación aplicada del diagnóstico de casos"))
-
-                self$results$normality$setTitle(title = tr("Normality tests by group", "Pruebas de normalidad por grupo"))
-                self$results$normalityGuide$setTitle(title = tr("Normality interpretation guide", "Guía de interpretación de normalidad"))
-
-                self$results$normalitySummary$setTitle(title = tr("Normality decision summary", "Resumen de decisión sobre normalidad"))
-                self$results$normalitySummaryInterpretation$setTitle(title = tr("Applied interpretation of normality", "Interpretación aplicada de normalidad"))
-
-                self$results$qqNormalityPlot$setTitle(title = tr(
-                    "Normality Q-Q plots: global and by group",
-                    "Q-Q plots de normalidad: global y por grupo"
-                ))
-                self$results$qqNormalityGuide$setTitle(title = tr(
-                    "Visual normality guide",
-                    "Guía visual de normalidad"
-                ))
-                self$results$normalCurvePlot$setTitle(title = tr(
-                    "Observed distribution vs theoretical normal: global and by group",
-                    "Distribución observada vs normal teórica: global y por grupo"
-                ))
-                self$results$normalCurveGuide$setTitle(title = tr(
-                    "Visual distribution guide",
-                    "Guía visual de distribución"
-                ))
-
-                self$results$homogeneity$setTitle(title = tr("Homogeneity of variances", "Homogeneidad de varianzas"))
-                self$results$homogeneityGuide$setTitle(title = tr("Variance interpretation guide", "Guía de interpretación de varianzas"))
-                self$results$homogeneityInterpretation$setTitle(title = tr("Applied interpretation", "Interpretación aplicada"))
-
-                self$results$executiveSummary$setTitle(title = tr("Methodological Conclusion", "Conclusión Metodológica"))
-
-                self$results$notes$setTitle(title = tr("Notes and recommendation", "Notas y recomendación"))
-
-                set_col_title(self$results$design, "item", tr("Item", "Elemento"))
-                set_col_title(self$results$design, "value", tr("Value", "Valor"))
-
-                set_col_title(self$results$descriptives, "group", tr("Group", "Grupo"))
-                set_col_title(self$results$descriptives, "missing", tr("Missing", "Faltantes"))
-
-                set_col_title(self$results$outliers, "group", tr("Group", "Grupo"))
-                set_col_title(self$results$outliers, "lower", tr("Lower", "Límite inferior"))
-                set_col_title(self$results$outliers, "upper", tr("Upper", "Límite superior"))
-                set_col_title(self$results$outliers, "outliers", tr("Outliers", "Atípicos"))
-                set_col_title(self$results$outliers, "extreme", tr("Extreme", "Extremos"))
-
-                set_col_title(self$results$caseDiagnostics, "case", tr("Case", "Caso"))
-                set_col_title(self$results$caseDiagnostics, "group", tr("Group", "Grupo"))
-                set_col_title(self$results$caseDiagnostics, "value", tr("Value", "Valor"))
-                set_col_title(self$results$caseDiagnostics, "cookFlag", tr("Cook flag", "Alerta Cook"))
-                set_col_title(self$results$caseDiagnostics, "mahalFlag", tr("Distance flag", "Alerta distancia"))
-
-                set_col_title(self$results$normality, "group", tr("Group", "Grupo"))
-                set_col_title(self$results$normality, "test", tr("Test", "Prueba"))
-                set_col_title(self$results$normality, "statistic", tr("Statistic", "Estadístico"))
-                set_col_title(self$results$normality, "value", tr("Value", "Valor"))
-                set_col_title(self$results$normality, "decision", tr("Interpretation", "Interpretación"))
-
-                set_col_title(self$results$normalitySummary, "group", tr("Group", "Grupo"))
-                set_col_title(self$results$normalitySummary, "significant", tr("Significant tests", "Pruebas significativas"))
-                set_col_title(self$results$normalitySummary, "conclusion", tr("Conclusion", "Conclusión"))
-
-                set_col_title(self$results$homogeneity, "test", tr("Test", "Prueba"))
-                set_col_title(self$results$homogeneity, "statistic", tr("Statistic", "Estadístico"))
-                set_col_title(self$results$homogeneity, "value", tr("Value", "Valor"))
-                set_col_title(self$results$homogeneity, "decision", tr("Decision", "Decisión"))
             }
 
             # -----------------------------------------------------------------------------
@@ -522,24 +386,20 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # selección de variables esté incompleta o no sea adecuada.
             # -----------------------------------------------------------------------------
             if (is.null(dep) || is.null(group)) {
-                jmvcore::reject(tr(
-                    "Select a dependent variable and a grouping variable to begin.",
-                    "Seleccione una variable dependiente y una variable de grupo para comenzar."
-                ))
+                jmvcore::reject(.("Select a dependent variable and a grouping variable to begin."))
             }
 
             if (! dep %in% names(data) || ! group %in% names(data)) {
-                jmvcore::reject(tr("Selected variables were not found in the data.", "Las variables seleccionadas no se encontraron en los datos."))
+                jmvcore::reject(.("Selected variables were not found in the data."))
             }
 
             y <- data[[dep]]
             g <- data[[group]]
 
             if (! is.numeric(y)) {
-                jmvcore::reject(tr("The dependent variable must be numeric.", "La variable dependiente debe ser numérica."))
+                jmvcore::reject(.("The dependent variable must be numeric."))
             }
 
-            translate_titles_and_columns()
 
             # -----------------------------------------------------------------------------
             # Data preparation: valid rows and group factor.
@@ -587,40 +447,40 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # antes de revisar cualquier resultado diagnóstico.
             # -----------------------------------------------------------------------------
             design_text <- if (n_groups == 2) {
-                tr("Comparison of two independent groups", "Comparación de dos grupos independientes")
+                .("Comparison of two independent groups")
             } else if (n_groups > 2) {
-                tr("Comparison of three or more independent groups", "Comparación de tres o más grupos independientes")
+                .("Comparison of three or more independent groups")
             } else {
-                tr("Only one group detected", "Solo se detectó un grupo")
+                .("Only one group detected")
             }
 
             self$results$design$addRow(rowKey = "design", values = list(
-                item = tr("Detected design", "Diseño detectado"),
+                item = .("Detected design"),
                 value = design_text
             ))
 
             self$results$design$addRow(rowKey = "total", values = list(
-                item = tr("Total rows", "Filas totales"),
+                item = .("Total rows"),
                 value = as.character(n_total)
             ))
 
             self$results$design$addRow(rowKey = "validGroup", values = list(
-                item = tr("Rows with valid group value", "Filas con valor válido de grupo"),
+                item = .("Rows with valid group value"),
                 value = as.character(n_used)
             ))
 
             self$results$design$addRow(rowKey = "missingGroup", values = list(
-                item = tr("Rows without group value", "Filas sin valor de grupo"),
+                item = .("Rows without group value"),
                 value = as.character(n_no_group)
             ))
 
             self$results$design$addRow(rowKey = "groups", values = list(
-                item = tr("Detected groups", "Grupos detectados"),
+                item = .("Detected groups"),
                 value = as.character(n_groups)
             ))
 
             self$results$design$addRow(rowKey = "missingDep", values = list(
-                item = tr("Missing dependent values", "Valores faltantes en la variable dependiente"),
+                item = .("Missing dependent values"),
                 value = paste0(n_missing_dep, " (", missing_dep_pct, "%)")
             ))
 
@@ -841,7 +701,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 cookD = cook_values,
                 cookFlag = ifelse(
                     ! is.na(cook_values) & ! is.na(cook_cutoff) & cook_values > cook_cutoff,
-                    tr("Potential influence", "Influencia potencial"),
+                    .("Potential influence"),
                     ""
                 ),
                 mahalD2 = mahal_d2,
@@ -854,7 +714,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     # significativos en la tabla (p = .005, .019, .035) no se
                     # contaban en el resumen ("0 caso(s)"). Alineado a p < .05.
                     ! is.na(mahal_p) & mahal_p < .05,
-                    tr("High distance", "Distancia alta"),
+                    .("High distance"),
                     ""
                 ),
                 stringsAsFactors = FALSE
@@ -907,44 +767,12 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             n_any_flagged <- sum(nzchar(case_diag$cookFlag) | nzchar(case_diag$mahalFlag), na.rm = TRUE)
 
             self$results$caseDiagnosticsInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 block96(paste(
-                    tr(
-                        paste0(
-                            "Across ", n_total, " cases in ", n_groups, " group(s), the IQR rule flagged ",
-                            n_iqr_outliers, " outlier value(s) (", n_iqr_extreme, " of them extreme) spread across ",
-                            n_groups_with_outliers, " group(s). Separately, the case-level model (n = ", n_model,
-                            ") flagged ", n_cook_flagged, " case(s) by Cook's D (cutoff = ", round(cook_cutoff, 4),
-                            ") and ", n_mahal_flagged, " case(s) by Mahalanobis distance, for ", n_any_flagged,
-                            " unique case(s) flagged by at least one of these two criteria."
-                        ),
-                        paste0(
-                            "De los ", n_total, " casos en ", n_groups, " grupo(s), la regla IQR marcó ",
-                            n_iqr_outliers, " valor(es) atípico(s) (", n_iqr_extreme, " de ellos extremos) distribuidos en ",
-                            n_groups_with_outliers, " grupo(s). Por separado, el modelo a nivel de caso (n = ", n_model,
-                            ") marcó ", n_cook_flagged, " caso(s) por Cook's D (punto de corte = ", round(cook_cutoff, 4),
-                            ") y ", n_mahal_flagged, " caso(s) por distancia de Mahalanobis, con ", n_any_flagged,
-                            " caso(s) único(s) marcado(s) por al menos uno de estos dos criterios."
-                        )
-                    ),
-                    tr(
-                        "These two diagnostics answer related but distinct questions: the IQR rule flags values that are unusual relative to their own group's spread, while Cook's D and Mahalanobis distance flag cases that are unusual relative to the fitted group-comparison model as a whole. A case can be flagged by one and not the other.",
-                        "Estos dos diagnósticos responden preguntas relacionadas pero distintas: la regla IQR marca valores inusuales respecto a la dispersión de su propio grupo, mientras que Cook's D y la distancia de Mahalanobis marcan casos inusuales respecto al modelo de comparación de grupos ajustado en su conjunto. Un caso puede quedar marcado por uno y no por el otro."
-                    ),
-                    tr(
-                        "Why it matters: in group comparisons, a flagged case can shift a group's mean, its variance, or the overall homogeneity-of-variance conclusion enough to change which comparisons look defensible, especially in small or unbalanced groups.",
-                        "Por qué importa: en comparaciones de grupos, un caso marcado puede desplazar la media de un grupo, su varianza o la conclusión de homogeneidad de varianzas lo suficiente como para cambiar qué comparaciones resultan defendibles, especialmente en grupos pequeños o desbalanceados."
-                    ),
-                    tr(
-                        paste0(
-                            "A flagged case should not be removed mechanically to \"clean up\" the data \u2014 first check whether it reflects a data entry mistake, a valid but extreme case, or substantive information about that group, comparing results with and without it before deciding. Worth keeping in mind while doing so: the 4/n threshold used for Cook's D (here 4/", n_model, " = ", round(cook_cutoff, 4),
-                            ") is numerically larger \u2014 more lenient \u2014 as the model sample shrinks, and smaller \u2014 stricter \u2014 as it grows, yet small or unbalanced groups often still flag several cases because individual Cook's D values tend to be inflated when n is small. Treat 4/n as a screening threshold, not confirmed influence."
-                        ),
-                        paste0(
-                            "Un caso marcado no debe eliminarse mecánicamente para \"limpiar\" los datos \u2014 conviene primero verificar si refleja un error de registro, un caso válido pero extremo, o información sustantiva sobre ese grupo, comparando los resultados con y sin él antes de decidir. Al hacerlo, vale la pena recordar que el umbral 4/n usado para Cook's D (aquí 4/", n_model, " = ", round(cook_cutoff, 4),
-                            ") es numéricamente mayor \u2014más laxo\u2014 cuanto más pequeña es la muestra del modelo, y menor \u2014más estricto\u2014 cuanto más crece; aun así, los grupos pequeños o desbalanceados suelen seguir marcando varios casos porque los valores individuales de Cook's D tienden a inflarse cuando n es pequeño. Trátelo como un umbral de cribado, no como influencia confirmada."
-                        )
-                    ),
+                    sprintf(.("Across %s cases in %s group(s), the IQR rule flagged %s outlier value(s) (%s of them extreme) spread across %s group(s). Separately, the case-level model (n = %s) flagged %s case(s) by Cook's D (cutoff = %s) and %s case(s) by Mahalanobis distance, for %s unique case(s) flagged by at least one of these two criteria."), n_total, n_groups, n_iqr_outliers, n_iqr_extreme, n_groups_with_outliers, n_model, n_cook_flagged, round(cook_cutoff, 4), n_mahal_flagged, n_any_flagged),
+                    .("These two diagnostics answer related but distinct questions: the IQR rule flags values that are unusual relative to their own group's spread, while Cook's D and Mahalanobis distance flag cases that are unusual relative to the fitted group-comparison model as a whole. A case can be flagged by one and not the other."),
+                    .("Why it matters: in group comparisons, a flagged case can shift a group's mean, its variance, or the overall homogeneity-of-variance conclusion enough to change which comparisons look defensible, especially in small or unbalanced groups."),
+                    sprintf(.("A flagged case should not be removed mechanically to \"clean up\" the data — first check whether it reflects a data entry mistake, a valid but extreme case, or substantive information about that group, comparing results with and without it before deciding. Worth keeping in mind while doing so: the 4/n threshold used for Cook's D (here 4/%s = %s) is numerically larger — more lenient — as the model sample shrinks, and smaller — stricter — as it grows, yet small or unbalanced groups often still flag several cases because individual Cook's D values tend to be inflated when n is small. Treat 4/n as a screening threshold, not confirmed influence."), n_model, round(cook_cutoff, 4)),
                     sep = "\n\n"
                 ))
             ))
@@ -970,31 +798,31 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             normality_use <- function(test) {
                 if (test == "Shapiro-Wilk")
-                    return(tr("Preferred for small to moderate samples; widely used for normality screening.", "Preferida en muestras pequeñas a moderadas; muy usada para evaluar normalidad."))
+                    return(.("Preferred for small to moderate samples; widely used for normality screening."))
 
-                if (test == tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"))
-                    return(tr("General empirical distribution check, corrected for parameters estimated from the sample.", "Revisión general de la distribución empírica, corregida por parámetros estimados desde la muestra."))
+                if (test == .("Lilliefors (corrected K-S)"))
+                    return(.("General empirical distribution check, corrected for parameters estimated from the sample."))
 
                 if (test == "Anderson-Darling")
-                    return(tr("Useful when deviations in the distribution tails are important.", "Útil cuando importan las desviaciones en las colas de la distribución."))
+                    return(.("Useful when deviations in the distribution tails are important."))
 
                 if (test == "Cramer-von Mises")
-                    return(tr("Alternative empirical-distribution test, sensitive across the whole range of the distribution.", "Prueba alternativa de distribución empírica, sensible en todo el rango de la distribución."))
+                    return(.("Alternative empirical-distribution test, sensitive across the whole range of the distribution."))
 
                 if (test == "Shapiro-Francia")
-                    return(tr("Simplified variant of Shapiro-Wilk, competitive in large samples.", "Variante simplificada de Shapiro-Wilk, competitiva en muestras grandes."))
+                    return(.("Simplified variant of Shapiro-Wilk, competitive in large samples."))
 
-                if (test == tr("Pearson chi-square", "Pearson chi-cuadrado"))
-                    return(tr("Compares observed vs expected frequencies by class; less powerful with small samples.", "Compara frecuencias observadas vs. esperadas por clase; menos potente con muestras pequeñas."))
+                if (test == .("Pearson chi-square"))
+                    return(.("Compares observed vs expected frequencies by class; less powerful with small samples."))
 
                 if (test == "Jarque-Bera")
-                    return(tr("Evaluates skewness and kurtosis jointly; more informative in moderate to large samples.", "Evalúa asimetría y curtosis conjuntamente; más informativa en muestras moderadas a grandes."))
+                    return(.("Evaluates skewness and kurtosis jointly; more informative in moderate to large samples."))
 
-                if (test == tr("Skewness test", "Prueba de asimetría"))
-                    return(tr("Identifies asymmetric departures from normality.", "Identifica desviaciones asimétricas respecto a la normalidad."))
+                if (test == .("Skewness test"))
+                    return(.("Identifies asymmetric departures from normality."))
 
-                if (test == tr("Kurtosis test", "Prueba de curtosis"))
-                    return(tr("Identifies departures related to peakedness or tail weight.", "Identifica desviaciones relacionadas con apuntamiento o peso de las colas."))
+                if (test == .("Kurtosis test"))
+                    return(.("Identifies departures related to peakedness or tail weight."))
 
                 ""
             }
@@ -1042,7 +870,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     add_normality(level, "Shapiro-Wilk", n_valid, "W", unname(sw$statistic), sw$p.value)
                     shapiro_p_by_group <- c(shapiro_p_by_group, sw$p.value)
                 } else {
-                    add_normality(level, "Shapiro-Wilk", n_valid, "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$sw, tr))
+                    add_normality(level, "Shapiro-Wilk", n_valid, "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$sw, .))
                 }
 
                 # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
@@ -1053,52 +881,52 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 li <- .nt_x$li; ad <- .nt_x$ad; cvm <- .nt_x$cvm; sf <- .nt_x$sf
 
                 if (!is.null(li)) {
-                    add_normality(level, tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), n_valid, "D", unname(li$statistic), li$p.value)
+                    add_normality(level, .("Lilliefors (corrected K-S)"), n_valid, "D", unname(li$statistic), li$p.value)
                 } else {
-                    add_normality(level, tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), n_valid, "D", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$li, tr))
+                    add_normality(level, .("Lilliefors (corrected K-S)"), n_valid, "D", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$li, .))
                 }
 
                 if (!is.null(ad)) {
                     add_normality(level, "Anderson-Darling", n_valid, "A²", unname(ad$statistic), ad$p.value)
                 } else {
-                    add_normality(level, "Anderson-Darling", n_valid, "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$ad, tr))
+                    add_normality(level, "Anderson-Darling", n_valid, "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$ad, .))
                 }
 
                 if (!is.null(cvm)) {
                     add_normality(level, "Cramer-von Mises", n_valid, "W²", unname(cvm$statistic), cvm$p.value)
                 } else {
-                    add_normality(level, "Cramer-von Mises", n_valid, "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$cvm, tr))
+                    add_normality(level, "Cramer-von Mises", n_valid, "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$cvm, .))
                 }
 
                 if (!is.null(sf)) {
                     add_normality(level, "Shapiro-Francia", n_valid, "W'", unname(sf$statistic), sf$p.value)
                 } else {
-                    add_normality(level, "Shapiro-Francia", n_valid, "W'", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$sf, tr))
+                    add_normality(level, "Shapiro-Francia", n_valid, "W'", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$sf, .))
                 }
 
                 pt <- .nt_x$pt
                 if (!is.null(pt)) {
-                    add_normality(level, tr("Pearson chi-square", "Pearson chi-cuadrado"), n_valid, "P", unname(pt$statistic), pt$p.value)
+                    add_normality(level, .("Pearson chi-square"), n_valid, "P", unname(pt$statistic), pt$p.value)
                 } else {
-                    add_normality(level, tr("Pearson chi-square", "Pearson chi-cuadrado"), n_valid, "P", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$pt, tr))
+                    add_normality(level, .("Pearson chi-square"), n_valid, "P", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$pt, .))
                 }
 
                 if (!is.null(.nc_x$jb)) {
                     add_normality(level, "Jarque-Bera", n_valid, "JB", .nc_x$jb$value, .nc_x$jb$p)
                 } else {
-                    add_normality(level, "Jarque-Bera", n_valid, "JB", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$jb, tr))
+                    add_normality(level, "Jarque-Bera", n_valid, "JB", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$jb, .))
                 }
 
                 if (!is.null(.nc_x$skew)) {
-                    add_normality(level, tr("Skewness test", "Prueba de asimetría"), n_valid, "z", .nc_x$skew$value, .nc_x$skew$p)
+                    add_normality(level, .("Skewness test"), n_valid, "z", .nc_x$skew$value, .nc_x$skew$p)
                 } else {
-                    add_normality(level, tr("Skewness test", "Prueba de asimetría"), n_valid, "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$skew, tr))
+                    add_normality(level, .("Skewness test"), n_valid, "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$skew, .))
                 }
 
                 if (!is.null(.nc_x$kurt)) {
-                    add_normality(level, tr("Kurtosis test", "Prueba de curtosis"), n_valid, "z", .nc_x$kurt$value, .nc_x$kurt$p)
+                    add_normality(level, .("Kurtosis test"), n_valid, "z", .nc_x$kurt$value, .nc_x$kurt$p)
                 } else {
-                    add_normality(level, tr("Kurtosis test", "Prueba de curtosis"), n_valid, "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$kurt, tr))
+                    add_normality(level, .("Kurtosis test"), n_valid, "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$kurt, .))
                 }
             }
 
@@ -1145,15 +973,15 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 level <- group_levels[i]
                 sub <- normality_table[normality_table$group == level, , drop = FALSE]
                 significant <- sum(nzchar(as.character(sub$pSig)), na.rm = TRUE)
-                valid_tests <- sum(as.character(sub$decision) != tr("Not calc.", "No calc."), na.rm = TRUE)
+                valid_tests <- sum(as.character(sub$decision) != .("Not calc."), na.rm = TRUE)
 
                 group_sig_counts[as.character(level)] <- significant
                 group_valid_counts[as.character(level)] <- valid_tests
 
                 conclusion <- if (significant == 0) {
-                    tr("Approx. normal", "Norm. aprox.")
+                    .("Approx. normal")
                 } else {
-                    tr("At least one sig. test", "Al menos una prueba sig.")
+                    .("At least one sig. test")
                 }
 
                 self$results$normalitySummary$addRow(
@@ -1246,16 +1074,16 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                 if (! is.null(lev_median)) {
                     add_homogeneity(
-                        tr("Levene (median-centered)", "Levene (centrado en mediana)"),
+                        .("Levene (median-centered)"),
                         "F",
                         as.numeric(lev_median[1, "F value"]),
                         as.integer(lev_median[1, "Df"]),
                         as.integer(lev_median[2, "Df"]),
                         as.numeric(lev_median[1, "Pr(>F)"]),
-                        tr("General robust option; recommended for routine variance screening.", "Opción robusta general; recomendada para revisar varianzas de forma rutinaria.")
+                        .("General robust option; recommended for routine variance screening.")
                     )
                 } else {
-                    add_homogeneity(tr("Levene (median-centered)", "Levene (centrado en mediana)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
+                    add_homogeneity(.("Levene (median-centered)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Could not be computed - each group needs at least 2 observations for this test."))
                 }
 
                 bf <- tryCatch(
@@ -1271,10 +1099,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         as.integer(bf[1, "Df"]),
                         as.integer(bf[2, "Df"]),
                         as.numeric(bf[1, "Pr(>F)"]),
-                        tr("Median-centered Levene variant; useful when normality is doubtful.", "Variante de Levene centrada en la mediana; útil cuando la normalidad es dudosa.")
+                        .("Median-centered Levene variant; useful when normality is doubtful.")
                     )
                 } else {
-                    add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
+                    add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Could not be computed - each group needs at least 2 observations for this test."))
                 }
 
                 lev_mean <- tryCatch(
@@ -1290,16 +1118,16 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         as.integer(lev_mean[1, "Df"]),
                         as.integer(lev_mean[2, "Df"]),
                         as.numeric(lev_mean[1, "Pr(>F)"]),
-                        tr("Classical Levene form; more sensitive to non-normality than median-centered versions.", "Forma clásica de Levene; más sensible a la no normalidad que las versiones centradas en la mediana.")
+                        .("Classical Levene form; more sensitive to non-normality than median-centered versions.")
                     )
                 } else {
-                    add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
+                    add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Could not be computed - each group needs at least 2 observations for this test."))
                 }
 
             } else {
-                add_homogeneity(tr("Levene (median-centered)", "Levene (centrado en mediana)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Requires car package and at least two groups", "Requiere paquete car y al menos dos grupos"))
-                add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Requires car package and at least two groups", "Requiere paquete car y al menos dos grupos"))
-                add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Requires car package and at least two groups", "Requiere paquete car y al menos dos grupos"))
+                add_homogeneity(.("Levene (median-centered)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
+                add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
+                add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
             }
 
             if (length(unique(g_complete)) >= 2) {
@@ -1314,10 +1142,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         as.integer(unname(bart$parameter)),
                         NA_integer_,
                         bart$p.value,
-                        tr("Powerful when normality is plausible; sensitive to non-normality.", "Potente cuando la normalidad es plausible; sensible a la no normalidad.")
+                        .("Powerful when normality is plausible; sensitive to non-normality.")
                     )
                 } else {
-                    add_homogeneity("Bartlett", "K²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
+                    add_homogeneity("Bartlett", "K²", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Could not be computed - each group needs at least 2 observations for this test."))
                 }
 
                 flig <- tryCatch(stats::fligner.test(y_complete, g_complete), error = function(e) NULL)
@@ -1330,10 +1158,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         as.integer(unname(flig$parameter)),
                         NA_integer_,
                         flig$p.value,
-                        tr("Non-parametric and robust; useful when normality is doubtful.", "No paramétrica y robusta; útil cuando la normalidad es dudosa.")
+                        .("Non-parametric and robust; useful when normality is doubtful.")
                     )
                 } else {
-                    add_homogeneity("Fligner-Killeen", "χ²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations for this test.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para esta prueba."))
+                    add_homogeneity("Fligner-Killeen", "χ²", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Could not be computed - each group needs at least 2 observations for this test."))
                 }
 
                 # -----------------------------------------------------------------------------
@@ -1358,10 +1186,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 flagged_levels <- names(group_sig_counts)[group_sig_counts > 0]
 
                 evidence_integration_text <- if (length(flagged_levels) == 0) {
-                    tr(
-                        "Across the full battery of tests, no group accumulates more than an isolated significant result, which further supports treating the groups as approximately normal.",
-                        "En el conjunto completo de pruebas, ningún grupo acumula más de un resultado significativo aislado, lo que refuerza tratar los grupos como aproximadamente normales."
-                    )
+                    .("Across the full battery of tests, no group accumulates more than an isolated significant result, which further supports treating the groups as approximately normal.")
                 } else {
                     strong_levels <- flagged_levels[group_sig_counts[flagged_levels] >= 3]
                     weak_levels <- flagged_levels[group_sig_counts[flagged_levels] == 1]
@@ -1369,60 +1194,40 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                     if (length(strong_levels) > 0) {
                         strong_desc <- paste0(strong_levels, " (", group_sig_counts[strong_levels], "/", group_valid_counts[strong_levels], ")", collapse = ", ")
-                        strong_verb_en <- if (length(strong_levels) == 1) "accumulates" else "accumulate"
-                        strong_verb_es <- if (length(strong_levels) == 1) "acumula" else "acumulan"
-                        parts <- c(parts, tr(
-                            paste0("Looking beyond Shapiro-Wilk alone at the full battery, ", strong_desc, " ", strong_verb_en, " agreement across several tests, a more consistent signal of non-normality."),
-                            paste0("Más allá de Shapiro-Wilk por sí solo, en el conjunto completo de pruebas, ", strong_desc, " ", strong_verb_es, " coincidencia entre varias pruebas, una señal más consistente de no normalidad.")
+                        parts <- c(parts, sprintf(
+                            if (length(strong_levels) == 1)
+                                .("Looking beyond Shapiro-Wilk alone at the full battery, %s accumulates agreement across several tests, a more consistent signal of non-normality.")
+                            else
+                                .("Looking beyond Shapiro-Wilk alone at the full battery, %s accumulate agreement across several tests, a more consistent signal of non-normality."),
+                            strong_desc
                         ))
                     }
 
                     if (length(weak_levels) > 0) {
                         weak_desc <- paste(weak_levels, collapse = ", ")
-                        parts <- c(parts, tr(
-                            paste0("For ", weak_desc, ", only a single test out of the battery was significant, which is more consistent with an isolated, possibly spurious result than with a real departure from normality."),
-                            paste0("Para ", weak_desc, ", solo una prueba de la batería resultó significativa, lo cual es más compatible con un resultado aislado, posiblemente espurio, que con una desviación real de normalidad.")
-                        ))
+                        parts <- c(parts, sprintf(.("For %s, only a single test out of the battery was significant, which is more consistent with an isolated, possibly spurious result than with a real departure from normality."), weak_desc))
                     }
 
                     if (length(parts) == 0) {
-                        tr(
-                            "The flagged groups show a moderate number of significant tests, not a single isolated result nor a near-unanimous pattern; treat this as evidence worth noting but not decisive on its own.",
-                            "Los grupos marcados muestran un número moderado de pruebas significativas, ni un resultado aislado ni un patrón casi unánime; trátese como evidencia a considerar, pero no decisiva por sí sola."
-                        )
+                        .("The flagged groups show a moderate number of significant tests, not a single isolated result nor a near-unanimous pattern; treat this as evidence worth noting but not decisive on its own.")
                     } else {
                         paste(parts, collapse = " ")
                     }
                 }
 
                 self$results$normalitySummaryInterpretation$setContent(html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     block96(paste(
-                        tr(
-                            paste0(n_sig_shapiro, " of ", n_valid_shapiro, " groups showed a significant Shapiro-Wilk deviation from normality (n = ", n_total, " total, ", n_groups, " groups)."),
-                            paste0(n_sig_shapiro, " de ", n_valid_shapiro, " grupos mostraron una desviación significativa de normalidad en Shapiro-Wilk (n = ", n_total, " total, ", n_groups, " grupos).")
-                        ),
+                        sprintf(.("%s of %s groups showed a significant Shapiro-Wilk deviation from normality (n = %s total, %s groups)."), n_sig_shapiro, n_valid_shapiro, n_total, n_groups),
                         if (n_sig_shapiro > 0 && n_total >= 200) {
-                            tr(
-                                "Key message: the tests detect deviations, but with this sample size that does not automatically mean parametric tests are inadequate \u2014 large samples make Shapiro-Wilk detect even small, practically irrelevant departures from normality.",
-                                "Mensaje central: las pruebas detectan desviaciones, pero con este tamaño muestral eso no implica automáticamente que las pruebas paramétricas sean inadecuadas \u2014 las muestras grandes hacen que Shapiro-Wilk detecte incluso desviaciones pequeñas y poco relevantes en la práctica."
-                            )
+                            .("Key message: the tests detect deviations, but with this sample size that does not automatically mean parametric tests are inadequate — large samples make Shapiro-Wilk detect even small, practically irrelevant departures from normality.")
                         } else {
                             ""
                         },
-                        tr(
-                            "Shapiro-Wilk is used because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason.",
-                            "Se usa Shapiro-Wilk porque mantiene el mayor poder estadístico entre las pruebas de normalidad más comunes para prácticamente todo rango de tamaño muestral (Razali & Wah, 2011; ver referencias). La recomendación extendida de preferir Kolmogorov-Smirnov cuando n crece es un remanente de limitaciones de software antiguo, no una razón estadística."
-                        ),
+                        .("Shapiro-Wilk is used because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason."),
                         evidence_integration_text,
-                        tr(
-                            "Why it matters: normality by group mainly affects the precision of classical inference (confidence intervals, p-values) in small groups. With unequal or non-normal groups, Welch's t-test/ANOVA or a non-parametric alternative (Mann-Whitney, Kruskal-Wallis) is usually a safer default than the classical test.",
-                            "Por qué importa: la normalidad por grupo afecta principalmente la precisión de la inferencia clásica (intervalos de confianza, valores p) en grupos pequeños. Con grupos desiguales o no normales, la t de Welch/ANOVA de Welch o una alternativa no paramétrica (Mann-Whitney, Kruskal-Wallis) suele ser una opción más segura por defecto que la prueba clásica."
-                        ),
-                        tr(
-                            "Nor should every single group be required to pass normality before trusting any comparison: with reasonably balanced group sizes and a moderate total n, group comparisons are often robust to mild non-normality, and the bigger concern is a large, asymmetric departure in a small group. This connects directly to sample size: Shapiro-Wilk becomes very sensitive with large groups (roughly n > 300 per group) and may lack power in small groups (n < 15) to detect real departures, so significance alone says little without also looking at group size.",
-                            "Tampoco conviene exigir que cada grupo individual pase normalidad antes de confiar en cualquier comparación: con tamaños de grupo razonablemente balanceados y un n total moderado, las comparaciones entre grupos suelen ser robustas a una no normalidad leve, y la preocupación mayor es más bien una desviación grande y asimétrica en un grupo pequeño. Esto se conecta directamente con el tamaño de muestra: Shapiro-Wilk se vuelve muy sensible con grupos grandes (aproximadamente n > 300 por grupo) y puede carecer de poder en grupos pequeños (n < 15) para detectar desviaciones reales, así que la significancia por sí sola dice poco sin mirar también el tamaño del grupo."
-                        ),
+                        .("Why it matters: normality by group mainly affects the precision of classical inference (confidence intervals, p-values) in small groups. With unequal or non-normal groups, Welch's t-test/ANOVA or a non-parametric alternative (Mann-Whitney, Kruskal-Wallis) is usually a safer default than the classical test."),
+                        .("Nor should every single group be required to pass normality before trusting any comparison: with reasonably balanced group sizes and a moderate total n, group comparisons are often robust to mild non-normality, and the bigger concern is a large, asymmetric departure in a small group. This connects directly to sample size: Shapiro-Wilk becomes very sensitive with large groups (roughly n > 300 per group) and may lack power in small groups (n < 15) to detect real departures, so significance alone says little without also looking at group size."),
                         sep = "\n\n"
                     ))
                 ))
@@ -1453,44 +1258,26 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 homog_coh_agree_dir <- sum((c(lev_median_p, bart_p, flig_p) < .05) == homog_anchor_sig, na.rm = TRUE)
 
                 self$results$homogeneityInterpretation$setContent(html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     block96(paste(
-                        tr(
-                            paste0("Levene (primary test): p = ", fmt_p(lev_mean_p), " (n = ", n_total, ", ", n_groups, " groups)."),
-                            paste0("Levene (prueba principal): p = ", fmt_p(lev_mean_p), " (n = ", n_total, ", ", n_groups, " grupos).")
-                        ),
-                        tr(
-                            "Levene's test is used as the primary test because it is the classical, most widely recognized test for equality of variances across groups (Levene, 1960; see references). Brown-Forsythe (median-centered) and Fligner-Killeen are more robust when normality is doubtful, and are reported alongside for comparison.",
-                            "La prueba de Levene se usa como prueba principal por ser la más clásica y ampliamente reconocida para igualdad de varianzas entre grupos (Levene, 1960; ver referencias). Brown-Forsythe (centrada en la mediana) y Fligner-Killeen son más robustas cuando la normalidad es dudosa, y se reportan junto a esta para comparar."
-                        ),
+                        sprintf(.("Levene (primary test): p = %s (n = %s, %s groups)."), fmt_p(lev_mean_p), n_total, n_groups),
+                        .("Levene's test is used as the primary test because it is the classical, most widely recognized test for equality of variances across groups (Levene, 1960; see references). Brown-Forsythe (median-centered) and Fligner-Killeen are more robust when normality is doubtful, and are reported alongside for comparison."),
                         if (homog_coh_total > 0) {
                             if (homog_coh_agree_dir == homog_coh_total) {
-                                tr(
-                                    paste0("The other ", homog_coh_total, " test(s) in the table agree with this conclusion."),
-                                    paste0("Las otras ", homog_coh_total, " pruebas de la tabla coinciden con esta conclusión.")
-                                )
+                                sprintf(.("The other %s test(s) in the table agree with this conclusion."), homog_coh_total)
                             } else {
-                                tr(
-                                    paste0(homog_coh_agree_dir, " of the other ", homog_coh_total, " tests in the table agree with this conclusion; check the table to see which one(s) differ."),
-                                    paste0(homog_coh_agree_dir, " de las otras ", homog_coh_total, " pruebas de la tabla coinciden con esta conclusión; revise la tabla para ver cuál(es) difieren.")
-                                )
+                                sprintf(.("%s of the other %s tests in the table agree with this conclusion; check the table to see which one(s) differ."), homog_coh_agree_dir, homog_coh_total)
                             }
                         } else "",
-                        tr(
-                            "Unequal variances (heteroscedasticity) mainly threaten the classical Student's t-test and standard ANOVA when group sizes are also unequal \u2014 with equal group sizes, these tests are fairly robust to moderate variance differences \u2014 which is why a significant Levene test is not, by itself, a reason to abandon the comparison entirely: the direct remedy is switching to Welch's t-test or Welch's ANOVA, which do not assume equal variances, rather than discarding the analysis.",
-                            "Las varianzas desiguales (heterocedasticidad) amenazan principalmente a la t de Student clásica y al ANOVA estándar cuando además los tamaños de grupo son desiguales \u2014con tamaños de grupo iguales, estas pruebas son bastante robustas a diferencias moderadas de varianza\u2014, por lo que un Levene significativo no es, por sí solo, motivo para abandonar por completo la comparación: el remedio directo es cambiar a la t de Welch o al ANOVA de Welch, que no asumen varianzas iguales, en vez de descartar el análisis."
-                        ),
-                        tr(
-                            "Sample-size caveat: with very unequal group sizes, even a moderate variance ratio can distort the classical test's Type I error rate; with equal group sizes, the classical test tolerates larger variance differences reasonably well.",
-                            "Matiz de tamaño de muestra: con tamaños de grupo muy desiguales, incluso una razón de varianzas moderada puede distorsionar la tasa de error Tipo I de la prueba clásica; con tamaños de grupo iguales, la prueba clásica tolera razonablemente bien diferencias de varianza más grandes."
-                        ),
+                        .("Unequal variances (heteroscedasticity) mainly threaten the classical Student's t-test and standard ANOVA when group sizes are also unequal — with equal group sizes, these tests are fairly robust to moderate variance differences — which is why a significant Levene test is not, by itself, a reason to abandon the comparison entirely: the direct remedy is switching to Welch's t-test or Welch's ANOVA, which do not assume equal variances, rather than discarding the analysis."),
+                        .("Sample-size caveat: with very unequal group sizes, even a moderate variance ratio can distort the classical test's Type I error rate; with equal group sizes, the classical test tolerates larger variance differences reasonably well."),
                         sep = "\n\n"
                     ))
                 ))
 
             } else {
-                add_homogeneity("Bartlett", "K²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Requires at least two groups", "Requiere al menos dos grupos"))
-                add_homogeneity("Fligner-Killeen", "χ²", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Requires at least two groups", "Requiere al menos dos grupos"))
+                add_homogeneity("Bartlett", "K²", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires at least two groups"))
+                add_homogeneity("Fligner-Killeen", "χ²", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires at least two groups"))
             }
 
             # -----------------------------------------------------------------------------
@@ -1524,10 +1311,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         as.integer(ftest$parameter[1]),
                         as.integer(ftest$parameter[2]),
                         ftest$p.value,
-                        tr("Classic two-group variance test; sensitive to non-normality.", "Prueba clásica para dos grupos; sensible a la no normalidad.")
+                        .("Classic two-group variance test; sensitive to non-normality.")
                     )
                 } else {
-                    add_homogeneity("F test", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, tr("Could not be computed - each group needs at least 2 observations to estimate a variance.", "No se pudo calcular - cada grupo necesita al menos 2 observaciones para estimar una varianza."))
+                    add_homogeneity("F test", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Could not be computed - each group needs at least 2 observations to estimate a variance."))
                 }
 
             }
@@ -1537,35 +1324,14 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # ES: Textos de guía diagnóstica: gráfico de distribución y diagnóstico de
             # casos.
             # -----------------------------------------------------------------------------
-            case_diagnostics_guide <- tr(
-                c(
-                    "These diagnostics help identify cases that may have an unusual effect on the group comparison model.",
-                    "Cook's D evaluates potential influence: a flagged case may affect model estimates or group differences.",
-                    "Mahalanobis D² is a multivariate distance measure. In this module, with a single dependent variable, it reduces to an equivalent measure based on the standardized distance from the group mean (its degenerate one-dimensional case).",
-                    "A flagged case is not automatically an error and should not be removed only because it is statistically unusual.",
-                    "Recommended practice: check the original data value, verify whether the case is plausible, compare results with and without the case, and report any exclusion decision transparently."
-                ),
-                c(
-                    "Estos diagnósticos ayudan a identificar casos que pueden tener un efecto inusual sobre el modelo de comparación de grupos.",
-                    "Cook's D evalúa influencia potencial: un caso marcado puede afectar las estimaciones del modelo o las diferencias entre grupos.",
-                    "Mahalanobis D² es una medida de distancia multivariada. En este módulo, con una única variable dependiente, se reduce a una medida equivalente basada en la distancia estandarizada respecto a la media del grupo (su caso degenerado unidimensional).",
-                    "Un caso marcado no es automáticamente un error y no debe eliminarse solo por ser estadísticamente inusual.",
-                    "Práctica recomendada: revise el valor original, verifique si el caso es plausible, compare los resultados con y sin el caso y reporte cualquier decisión de exclusión de forma transparente."
-                )
-            )
+            case_diagnostics_guide <- c(.("These diagnostics help identify cases that may have an unusual effect on the group comparison model."), .("Cook's D evaluates potential influence: a flagged case may affect model estimates or group differences."), .("Mahalanobis D² is a multivariate distance measure. In this module, with a single dependent variable, it reduces to an equivalent measure based on the standardized distance from the group mean (its degenerate one-dimensional case)."), .("A flagged case is not automatically an error and should not be removed only because it is statistically unusual."), .("Recommended practice: check the original data value, verify whether the case is plausible, compare results with and without the case, and report any exclusion decision transparently."))
 
             self$results$distributionPlotGuide$setContent(html_block(
                 txt("common", "briefGuide"),
                 .al_html_list(c(
-                    tr(
-                        "Use this plot to compare the median, IQR, approximate shape, spread, sample size and extreme values across groups.",
-                        "Use este gráfico para comparar mediana, IQR, forma aproximada, dispersión, tamaño de grupo y valores extremos entre grupos."),
-                    tr(
-                        "The boxplot keeps the median visible. Optional layers can add violin density, individual observations and the mean marker.",
-                        "El boxplot mantiene visible la mediana. Las capas opcionales pueden añadir densidad tipo violin, observaciones individuales y marca de media."),
-                    tr(
-                        "Interpret visual differences together with descriptive statistics, outlier screening and assumption tests.",
-                        "Interprete las diferencias visuales junto con descriptivos, revisión de atípicos y pruebas de supuestos.")
+                    .("Use this plot to compare the median, IQR, approximate shape, spread, sample size and extreme values across groups."),
+                    .("The boxplot keeps the median visible. Optional layers can add violin density, individual observations and the mean marker."),
+                    .("Interpret visual differences together with descriptive statistics, outlier screening and assumption tests.")
                 )),
                 raw = TRUE))
 
@@ -1579,22 +1345,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # Normality guide text.
             # ES: Texto de guía de normalidad.
             # -----------------------------------------------------------------------------
-            normality_guide_text <- tr(
-                c(
-                    "Normality is evaluated within each independent group because parametric group comparisons assume approximately normal distributions at each level of the grouping factor.",
-                    "A p value greater than or equal to .05 is compatible with approximate normality, but it does not prove that the distribution is perfectly normal.",
-                    "A p value below .05 suggests a statistically significant deviation from normality. The practical importance of that deviation should be judged together with sample size, outliers, and graphical evidence.",
-                    "With large samples, normality tests can detect small deviations that may not seriously affect the analysis. With small samples, tests may have low power, so visual inspection and substantive judgment are especially important.",
-                    "When normality evidence is mixed, a parametric test can still be defensible if deviations are limited and sample sizes are adequate; robust or non-parametric alternatives can be reported as sensitivity analyses."
-                ),
-                c(
-                    "La normalidad se evalúa dentro de cada grupo independiente porque las comparaciones paramétricas suponen distribuciones aproximadamente normales en cada nivel del factor de agrupación.",
-                    "Un valor p mayor o igual que .05 es compatible con normalidad aproximada, pero no demuestra que la distribución sea perfectamente normal.",
-                    "Un valor p menor que .05 sugiere una desviación estadísticamente significativa respecto a la normalidad. La importancia práctica de esa desviación debe evaluarse junto con el tamaño muestral, los valores atípicos y la evidencia gráfica.",
-                    "Con muestras grandes, las pruebas de normalidad pueden detectar desviaciones pequeñas que quizá no afecten seriamente el análisis. Con muestras pequeñas, las pruebas pueden tener baja potencia, por lo que la inspección visual y el juicio sustantivo son especialmente importantes.",
-                    "Cuando la evidencia de normalidad es mixta, una prueba paramétrica todavía puede ser defendible si las desviaciones son limitadas y los tamaños muestrales son adecuados; las alternativas robustas o no paramétricas pueden reportarse como análisis de sensibilidad."
-                )
-            )
+            normality_guide_text <- c(.("Normality is evaluated within each independent group because parametric group comparisons assume approximately normal distributions at each level of the grouping factor."), .("A p value greater than or equal to .05 is compatible with approximate normality, but it does not prove that the distribution is perfectly normal."), .("A p value below .05 suggests a statistically significant deviation from normality. The practical importance of that deviation should be judged together with sample size, outliers, and graphical evidence."), .("With large samples, normality tests can detect small deviations that may not seriously affect the analysis. With small samples, tests may have low power, so visual inspection and substantive judgment are especially important."), .("When normality evidence is mixed, a parametric test can still be defensible if deviations are limited and sample sizes are adequate; robust or non-parametric alternatives can be reported as sensitivity analyses."))
 
             self$results$normalityGuide$setContent(html_block(
                 txt("common", "briefGuide"),
@@ -1646,7 +1397,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 if (length(qq_y) >= 10 && stats::sd(qq_y, na.rm = TRUE) > 0) {
                     qq_parts[[length(qq_parts) + 1]] <- data.frame(
                         value = qq_y,
-                        group = tr("All valid cases", "Todos los casos válidos"),
+                        group = .("All valid cases"),
                         stringsAsFactors = FALSE
                     )
                 }
@@ -1721,7 +1472,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 if (length(nc_y) >= 20 && stats::sd(nc_y, na.rm = TRUE) > 0) {
                     nc_parts[[length(nc_parts) + 1]] <- data.frame(
                         z = as.numeric(scale(nc_y)),
-                        group = tr("All valid cases", "Todos los casos válidos"),
+                        group = .("All valid cases"),
                         stringsAsFactors = FALSE
                     )
                 }
@@ -1759,20 +1510,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # Visual guide texts: Q-Q and observed-vs-normal-curve plots.
             # ES: Textos de guía visual: gráficos Q-Q y de curva observada vs normal.
             # -----------------------------------------------------------------------------
-            qq_plot_guide_text <- tr(
-                c(
-                    "Q-Q plots compare the observed quantiles of each selected group with the quantiles expected under a normal distribution.",
-                    "Points close to the reference line are compatible with approximate normality.",
-                    "Systematic curvature, strong tail departures, or isolated points far from the line suggest that the normality assumption should be reviewed together with the numerical tests.",
-                    "AssumptionsLab draws the global plot and every group-level plot that is methodologically viable. To avoid unstable visual interpretations, Q-Q plots require at least 10 valid cases and non-zero variability."
-                ),
-                c(
-                    "Los Q-Q plots comparan los cuantiles observados del conjunto global y de cada grupo viable con los cuantiles esperados bajo una distribución normal.",
-                    "Puntos cercanos a la línea de referencia son compatibles con normalidad aproximada.",
-                    "Curvatura sistemática, desviaciones fuertes en las colas o puntos aislados alejados de la línea sugieren revisar el supuesto de normalidad junto con las pruebas numéricas.",
-                    "AssumptionsLab dibuja el gráfico global y cada gráfico por grupo que sea metodológicamente viable. Para evitar interpretaciones visuales inestables, los Q-Q plots requieren al menos 10 casos válidos y variabilidad mayor que cero."
-                )
-            )
+            qq_plot_guide_text <- c(.("Q-Q plots compare the observed quantiles of each selected group with the quantiles expected under a normal distribution."), .("Points close to the reference line are compatible with approximate normality."), .("Systematic curvature, strong tail departures, or isolated points far from the line suggest that the normality assumption should be reviewed together with the numerical tests."), .("AssumptionsLab draws the global plot and every group-level plot that is methodologically viable. To avoid unstable visual interpretations, Q-Q plots require at least 10 valid cases and non-zero variability."))
 
             self$results$qqNormalityGuide$setContent(html_block(
                 txt("common", "briefGuide"),
@@ -1780,20 +1518,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
-            normal_curve_guide_text <- tr(
-                c(
-                    "This plot compares the observed standardized distribution with the theoretical normal curve.",
-                    "AssumptionsLab draws the global plot and every group-level plot that is methodologically viable.",
-                    "To avoid unstable visual interpretations, observed-vs-normal curves require at least 20 valid cases and non-zero variability.",
-                    "Clear asymmetry, heavy tails, multiple peaks, or strong separation from the theoretical curve suggest reviewing the normality assumption together with the Q-Q plots and numerical tests."
-                ),
-                c(
-                    "Este gráfico compara la distribución estandarizada observada con la curva normal teórica.",
-                    "AssumptionsLab dibuja el gráfico global y cada gráfico por grupo que sea metodológicamente viable.",
-                    "Para evitar interpretaciones visuales inestables, las curvas observadas vs normal teórica requieren al menos 20 casos válidos y variabilidad mayor que cero.",
-                    "Asimetría clara, colas pesadas, varios picos o separación marcada respecto a la curva teórica sugieren revisar el supuesto de normalidad junto con los Q-Q plots y las pruebas numéricas."
-                )
-            )
+            normal_curve_guide_text <- c(.("This plot compares the observed standardized distribution with the theoretical normal curve."), .("AssumptionsLab draws the global plot and every group-level plot that is methodologically viable."), .("To avoid unstable visual interpretations, observed-vs-normal curves require at least 20 valid cases and non-zero variability."), .("Clear asymmetry, heavy tails, multiple peaks, or strong separation from the theoretical curve suggest reviewing the normality assumption together with the Q-Q plots and numerical tests."))
 
             self$results$normalCurveGuide$setContent(html_block(
                 txt("common", "briefGuide"),
@@ -1833,22 +1558,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # Variance guide text.
             # ES: Texto de guía de varianza.
             # -----------------------------------------------------------------------------
-            variance_guide_text <- tr(
-                c(
-                    "These tests evaluate whether the group variances are reasonably similar.",
-                    "A p value greater than or equal to .05 is compatible with homogeneous variances, although it does not prove that variances are identical.",
-                    "A p value below .05 suggests statistically significant variance heterogeneity. This matters because unequal variances can affect the standard error, confidence intervals, and p values of classic parametric comparisons.",
-                    "When group sizes are unequal, heterogeneity of variances is more consequential. Welch procedures are usually preferable in that situation because they do not require equal variances.",
-                    "Bartlett's test is sensitive to non-normality. Levene, Brown-Forsythe, and Fligner-Killeen are often more robust choices for applied data."
-                ),
-                c(
-                    "Estas pruebas evalúan si las varianzas de los grupos son razonablemente similares.",
-                    "Un valor p mayor o igual que .05 es compatible con varianzas homogéneas, aunque no demuestra que las varianzas sean idénticas.",
-                    "Un valor p menor que .05 sugiere heterogeneidad de varianzas estadísticamente significativa. Esto importa porque las varianzas desiguales pueden afectar el error estándar, los intervalos de confianza y los valores p de las comparaciones paramétricas clásicas.",
-                    "Cuando los tamaños de grupo son desiguales, la heterogeneidad de varianzas es más importante. En esa situación, los procedimientos de Welch suelen ser preferibles porque no requieren igualdad de varianzas.",
-                    "La prueba de Bartlett es sensible a la no normalidad. Levene, Brown-Forsythe y Fligner-Killeen suelen ser opciones más robustas para datos aplicados."
-                )
-            )
+            variance_guide_text <- c(.("These tests evaluate whether the group variances are reasonably similar."), .("A p value greater than or equal to .05 is compatible with homogeneous variances, although it does not prove that variances are identical."), .("A p value below .05 suggests statistically significant variance heterogeneity. This matters because unequal variances can affect the standard error, confidence intervals, and p values of classic parametric comparisons."), .("When group sizes are unequal, heterogeneity of variances is more consequential. Welch procedures are usually preferable in that situation because they do not require equal variances."), .("Bartlett's test is sensitive to non-normality. Levene, Brown-Forsythe, and Fligner-Killeen are often more robust choices for applied data."))
 
             self$results$homogeneityGuide$setContent(html_block(
                 txt("common", "briefGuide"),
@@ -1877,11 +1587,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             total_extreme <- sum(outlier_table$extreme, na.rm = TRUE)
 
             normality_group_note <- if (length(group_levels) >= 2) {
-                paste0(
-                    tr("Normality table groups: ", "Grupos en la tabla de normalidad: "),
-                    "Grupo 1 = ", group_levels[1], "; ",
-                    "Grupo 2 = ", group_levels[2], "."
-                )
+                sprintf(.("Normality table groups: Grupo 1 = %s; Grupo 2 = %s."), group_levels[1], group_levels[2])
             } else {
                 ""
             }
@@ -1892,26 +1598,18 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             caution_sources <- character(0)
 
             if (normality_significant > 0)
-                caution_sources <- c(caution_sources, tr("normality diagnostics", "diagnósticos de normalidad"))
+                caution_sources <- c(caution_sources, .("normality diagnostics"))
 
             if (homogeneity_significant > 0)
-                caution_sources <- c(caution_sources, tr("variance homogeneity diagnostics", "diagnósticos de homogeneidad de varianzas"))
+                caution_sources <- c(caution_sources, .("variance homogeneity diagnostics"))
 
             if (total_extreme > 0)
-                caution_sources <- c(caution_sources, tr("extreme values", "valores extremos"))
+                caution_sources <- c(caution_sources, .("extreme values"))
 
             caution_text <- if (length(caution_sources) == 0) {
-                tr(
-                    "No major assumption warning was detected by the selected screening rules.",
-                    "No se detectó una advertencia importante sobre los supuestos con las reglas de cribado seleccionadas."
-                )
+                .("No major assumption warning was detected by the selected screening rules.")
             } else {
-                tr(
-                    paste0("Caution is suggested because the following source(s) require review: ",
-                           paste(caution_sources, collapse = ", "), "."),
-                    paste0("Se sugiere cautela porque las siguientes fuentes requieren revisión: ",
-                           paste(caution_sources, collapse = ", "), ".")
-                )
+                sprintf(.("Caution is suggested because the following source(s) require review: %s."), paste(caution_sources, collapse = ", "))
             }
 
             # -----------------------------------------------------------------------------
@@ -1937,71 +1635,31 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
             decision_label <- if (n_groups == 2) {
                 if (homogeneity_significant == 0 && normality_significant == 0 && total_extreme == 0) {
-                    tr(
-                        "Independent-samples t-test",
-                        "t de Student para grupos independientes"
-                    )
+                    .("Independent-samples t-test")
                 } else if (homogeneity_significant > 0) {
-                    tr(
-                        "Welch's t-test or a robust alternative",
-                        "t de Welch o alternativa robusta"
-                    )
+                    .("Welch's t-test or a robust alternative")
                 } else if (n_model >= 30) {
-                    tr(
-                        "Independent-samples t-test (Welch's t-test and Mann-Whitney U as sensitivity checks)",
-                        "t de Student para grupos independientes (t de Welch y U de Mann-Whitney como verificación de sensibilidad)"
-                    )
+                    .("Independent-samples t-test (Welch's t-test and Mann-Whitney U as sensitivity checks)")
                 } else {
-                    tr(
-                        "Independent-samples t-test, Welch's t-test, or Mann-Whitney U depending on the analytic priority",
-                        "t de Student, t de Welch o U de Mann-Whitney según la prioridad analítica"
-                    )
+                    .("Independent-samples t-test, Welch's t-test, or Mann-Whitney U depending on the analytic priority")
                 }
             } else if (n_groups > 2) {
                 if (homogeneity_significant == 0 && normality_significant == 0 && total_extreme == 0) {
-                    tr(
-                        "One-way ANOVA",
-                        "ANOVA de un factor"
-                    )
+                    .("One-way ANOVA")
                 } else if (homogeneity_significant > 0) {
-                    tr(
-                        "Welch ANOVA or a robust ANOVA alternative",
-                        "ANOVA de Welch o alternativa robusta"
-                    )
+                    .("Welch ANOVA or a robust ANOVA alternative")
                 } else if (n_model >= 30) {
-                    tr(
-                        "One-way ANOVA (Welch ANOVA and Kruskal-Wallis as sensitivity checks)",
-                        "ANOVA de un factor (ANOVA de Welch y Kruskal-Wallis como verificación de sensibilidad)"
-                    )
+                    .("One-way ANOVA (Welch ANOVA and Kruskal-Wallis as sensitivity checks)")
                 } else {
-                    tr(
-                        "One-way ANOVA, Welch ANOVA, or Kruskal-Wallis depending on the analytic priority",
-                        "ANOVA de un factor, ANOVA de Welch o Kruskal-Wallis según la prioridad analítica"
-                    )
+                    .("One-way ANOVA, Welch ANOVA, or Kruskal-Wallis depending on the analytic priority")
                 }
             } else {
-                tr(
-                    "Not applicable",
-                    "No aplicable"
-                )
+                .("Not applicable")
             }
 
-            evidence_title <- tr("Evidence considered:", "Evidencia considerada:")
+            evidence_title <- .("Evidence considered:")
 
-            evidence_items <- tr(
-                c(
-                    paste0("Detected groups: ", n_groups, "."),
-                    paste0("Normality tests with significant results: ", normality_significant, "."),
-                    paste0("Variance tests with significant results: ", homogeneity_significant, "."),
-                    paste0("Extreme values detected by the IQR rule: ", total_extreme, ".")
-                ),
-                c(
-                    paste0("Grupos detectados: ", n_groups, "."),
-                    paste0("Pruebas de normalidad con resultados significativos: ", normality_significant, "."),
-                    paste0("Pruebas de varianza con resultados significativos: ", homogeneity_significant, "."),
-                    paste0("Valores extremos detectados mediante la regla IQR: ", total_extreme, ".")
-                )
-            )
+            evidence_items <- c(sprintf(.("Detected groups: %s."), n_groups), sprintf(.("Normality tests with significant results: %s."), normality_significant), sprintf(.("Variance tests with significant results: %s."), homogeneity_significant), sprintf(.("Extreme values detected by the IQR rule: %s."), total_extreme))
 
             # -----------------------------------------------------------------------------
             # Narrative guidance text by design and evidence pattern.
@@ -2022,148 +1680,33 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             guidance <- if (n_groups == 2) {
 
                 if (homogeneity_significant == 0 && normality_significant == 0 && total_extreme == 0) {
-                    tr(
-                        c(
-                            "The available evidence is compatible with a parametric comparison between two independent groups.",
-                            "Because the variance tests do not show significant heterogeneity and the normality diagnostics do not show relevant deviations, the independent-samples t-test is a defensible primary option.",
-                            "Welch's t-test may still be reported as a robustness check, especially when group sizes are unequal.",
-                            "The final decision should also consider the study design, measurement scale, sample size, and the consequences of using a parametric or robust strategy."
-                        ),
-                        c(
-                            "La evidencia disponible es compatible con una comparación paramétrica entre dos grupos independientes.",
-                            "Como las pruebas de varianza no muestran heterogeneidad significativa y los diagnósticos de normalidad no muestran desviaciones relevantes, la t de Student para grupos independientes es una opción principal defendible.",
-                            "La t de Welch también puede reportarse como verificación robusta, especialmente cuando los tamaños de grupo son desiguales.",
-                            "La decisión final también debe considerar el diseño del estudio, la escala de medición, el tamaño muestral y las consecuencias de usar una estrategia paramétrica o robusta."
-                        )
-                    )
+                    c(.("The available evidence is compatible with a parametric comparison between two independent groups."), .("Because the variance tests do not show significant heterogeneity and the normality diagnostics do not show relevant deviations, the independent-samples t-test is a defensible primary option."), .("Welch's t-test may still be reported as a robustness check, especially when group sizes are unequal."), .("The final decision should also consider the study design, measurement scale, sample size, and the consequences of using a parametric or robust strategy."))
                 } else if (homogeneity_significant > 0) {
-                    tr(
-                        c(
-                            "The evidence suggests that the equal-variance assumption may not be fully defensible.",
-                            "In this situation, Welch's t-test is usually preferable to the classic equal-variance t-test because it adjusts the inference for unequal variances.",
-                            "A non-parametric alternative such as Mann-Whitney U may be considered if distributional concerns are also important or if the interpretation focuses on ranks rather than means.",
-                            "Do not choose the test mechanically: report the evidence, explain the assumption concern, and justify the selected strategy."
-                        ),
-                        c(
-                            "La evidencia sugiere que el supuesto de igualdad de varianzas puede no ser completamente defendible.",
-                            "En esta situación, la t de Welch suele ser preferible a la t clásica con varianzas iguales porque ajusta la inferencia ante varianzas desiguales.",
-                            "Una alternativa no paramétrica como U de Mann-Whitney puede considerarse si también existen preocupaciones distribucionales o si la interpretación se centra en rangos más que en medias.",
-                            "No elija la prueba de forma mecánica: reporte la evidencia, explique la preocupación sobre el supuesto y justifique la estrategia seleccionada."
-                        )
-                    )
+                    c(.("The evidence suggests that the equal-variance assumption may not be fully defensible."), .("In this situation, Welch's t-test is usually preferable to the classic equal-variance t-test because it adjusts the inference for unequal variances."), .("A non-parametric alternative such as Mann-Whitney U may be considered if distributional concerns are also important or if the interpretation focuses on ranks rather than means."), .("Do not choose the test mechanically: report the evidence, explain the assumption concern, and justify the selected strategy."))
                 } else {
                     if (n_model >= 30) {
-                        tr(
-                            c(
-                                paste0(
-                                    "The independent-samples t-test is defensible for this comparison given the sample size (n = ", n_model,
-                                    ") and the homogeneous variances observed; by the central limit theorem, the sampling distribution of the group means is approximately normal at this size even when individual normality tests flag deviations."
-                                ),
-                                caution_text,
-                                "As a sensitivity check, Welch's t-test and Mann-Whitney U can additionally be reported; a comparable conclusion across all three would reinforce the result."
-                            ),
-                            c(
-                                paste0(
-                                    "La t de Student para grupos independientes es defendible para esta comparación dado el tamaño muestral (n = ", n_model,
-                                    ") y la homogeneidad de varianzas observada; por el teorema central del límite, la distribución muestral de las medias de grupo es aproximadamente normal a este tamaño, aunque las pruebas individuales de normalidad marquen desviaciones."
-                                ),
-                                caution_text,
-                                "Como análisis de sensibilidad pueden reportarse adicionalmente la t de Welch y la U de Mann-Whitney; una conclusión comparable entre las tres reforzaría el resultado."
-                            )
-                        )
+                        c(sprintf(.("The independent-samples t-test is defensible for this comparison given the sample size (n = %s) and the homogeneous variances observed; by the central limit theorem, the sampling distribution of the group means is approximately normal at this size even when individual normality tests flag deviations."), n_model), caution_text, .("As a sensitivity check, Welch's t-test and Mann-Whitney U can additionally be reported; a comparable conclusion across all three would reinforce the result."))
                     } else {
-                    tr(
-                        c(
-                            "The variance assumption appears acceptable, but at least one diagnostic suggests that the distributional evidence should be reviewed carefully.",
-                            caution_text,
-                            "A parametric comparison may still be defensible when deviations are limited, the sample size is adequate, and the substantive interpretation focuses on group means.",
-                            "Welch's t-test is a useful robust parametric option. Mann-Whitney U is appropriate when the analyst prioritizes a non-parametric interpretation or when distributional concerns are considered substantively important."
-                        ),
-                        c(
-                            "El supuesto de varianzas parece aceptable, pero al menos un diagnóstico sugiere que la evidencia distribucional debe revisarse con cuidado.",
-                            caution_text,
-                            "Una comparación paramétrica todavía puede ser defendible cuando las desviaciones son limitadas, el tamaño muestral es adecuado y la interpretación sustantiva se centra en medias de grupo.",
-                            "La t de Welch es una opción paramétrica robusta útil. La U de Mann-Whitney es apropiada cuando se prioriza una interpretación no paramétrica o cuando las preocupaciones distribucionales se consideran sustantivamente importantes."
-                        )
-                    )
+                    c(.("The variance assumption appears acceptable, but at least one diagnostic suggests that the distributional evidence should be reviewed carefully."), caution_text, .("A parametric comparison may still be defensible when deviations are limited, the sample size is adequate, and the substantive interpretation focuses on group means."), .("Welch's t-test is a useful robust parametric option. Mann-Whitney U is appropriate when the analyst prioritizes a non-parametric interpretation or when distributional concerns are considered substantively important."))
                     }
                 }
 
             } else if (n_groups > 2) {
 
                 if (homogeneity_significant == 0 && normality_significant == 0 && total_extreme == 0) {
-                    tr(
-                        c(
-                            "The available evidence is compatible with a parametric comparison among independent groups.",
-                            "Because the normality and variance diagnostics are acceptable, one-way ANOVA is a defensible primary option.",
-                            "Robust or non-parametric alternatives may still be reported as sensitivity analyses when the research context requires additional caution.",
-                            "The final decision should connect the statistical evidence with the research design and the intended interpretation of group differences."
-                        ),
-                        c(
-                            "La evidencia disponible es compatible con una comparación paramétrica entre grupos independientes.",
-                            "Como los diagnósticos de normalidad y varianza son aceptables, el ANOVA de un factor es una opción principal defendible.",
-                            "Las alternativas robustas o no paramétricas pueden reportarse como análisis de sensibilidad cuando el contexto de investigación requiere cautela adicional.",
-                            "La decisión final debe conectar la evidencia estadística con el diseño de investigación y la interpretación prevista de las diferencias entre grupos."
-                        )
-                    )
+                    c(.("The available evidence is compatible with a parametric comparison among independent groups."), .("Because the normality and variance diagnostics are acceptable, one-way ANOVA is a defensible primary option."), .("Robust or non-parametric alternatives may still be reported as sensitivity analyses when the research context requires additional caution."), .("The final decision should connect the statistical evidence with the research design and the intended interpretation of group differences."))
                 } else if (homogeneity_significant > 0) {
-                    tr(
-                        c(
-                            "The evidence suggests that the equal-variance assumption may not be fully defensible.",
-                            "Welch ANOVA is usually preferable to classic one-way ANOVA when variances are heterogeneous, especially with unequal group sizes.",
-                            "A robust ANOVA procedure may also be considered, depending on the research question and available methods.",
-                            "The report should explain that the choice is based on the observed variance evidence rather than on a purely automatic rule."
-                        ),
-                        c(
-                            "La evidencia sugiere que el supuesto de igualdad de varianzas puede no ser completamente defendible.",
-                            "El ANOVA de Welch suele ser preferible al ANOVA clásico cuando las varianzas son heterogéneas, especialmente con tamaños de grupo desiguales.",
-                            "También puede considerarse un procedimiento robusto de ANOVA, según la pregunta de investigación y los métodos disponibles.",
-                            "El reporte debe explicar que la elección se basa en la evidencia observada sobre varianzas y no en una regla puramente automática."
-                        )
-                    )
+                    c(.("The evidence suggests that the equal-variance assumption may not be fully defensible."), .("Welch ANOVA is usually preferable to classic one-way ANOVA when variances are heterogeneous, especially with unequal group sizes."), .("A robust ANOVA procedure may also be considered, depending on the research question and available methods."), .("The report should explain that the choice is based on the observed variance evidence rather than on a purely automatic rule."))
                 } else {
                     if (n_model >= 30) {
-                        tr(
-                            c(
-                                paste0(
-                                    "One-way ANOVA is defensible for this comparison given the sample size (n = ", n_model,
-                                    ") and the homogeneous variances observed; by the central limit theorem, the sampling distribution of the group means is approximately normal at this size even when individual normality tests flag deviations."
-                                ),
-                                caution_text,
-                                "As a sensitivity check, Welch ANOVA and Kruskal-Wallis can additionally be reported; a comparable conclusion across all three would reinforce the result."
-                            ),
-                            c(
-                                paste0(
-                                    "El ANOVA de un factor es defendible para esta comparación dado el tamaño muestral (n = ", n_model,
-                                    ") y la homogeneidad de varianzas observada; por el teorema central del límite, la distribución muestral de las medias de grupo es aproximadamente normal a este tamaño, aunque las pruebas individuales de normalidad marquen desviaciones."
-                                ),
-                                caution_text,
-                                "Como análisis de sensibilidad pueden reportarse adicionalmente el ANOVA de Welch y Kruskal-Wallis; una conclusión comparable entre los tres reforzaría el resultado."
-                            )
-                        )
+                        c(sprintf(.("One-way ANOVA is defensible for this comparison given the sample size (n = %s) and the homogeneous variances observed; by the central limit theorem, the sampling distribution of the group means is approximately normal at this size even when individual normality tests flag deviations."), n_model), caution_text, .("As a sensitivity check, Welch ANOVA and Kruskal-Wallis can additionally be reported; a comparable conclusion across all three would reinforce the result."))
                     } else {
-                    tr(
-                        c(
-                            "The variance assumption appears acceptable, but at least one diagnostic suggests that the distributional evidence should be reviewed carefully.",
-                            caution_text,
-                            "One-way ANOVA may still be defensible when deviations are limited and sample sizes are adequate.",
-                            "Welch ANOVA provides a robust parametric alternative. Kruskal-Wallis is appropriate when the analyst prioritizes a non-parametric comparison."
-                        ),
-                        c(
-                            "El supuesto de varianzas parece aceptable, pero al menos un diagnóstico sugiere que la evidencia distribucional debe revisarse con cuidado.",
-                            caution_text,
-                            "El ANOVA de un factor todavía puede ser defendible cuando las desviaciones son limitadas y los tamaños muestrales son adecuados.",
-                            "El ANOVA de Welch ofrece una alternativa paramétrica robusta. Kruskal-Wallis es apropiada cuando se prioriza una comparación no paramétrica."
-                        )
-                    )
+                    c(.("The variance assumption appears acceptable, but at least one diagnostic suggests that the distributional evidence should be reviewed carefully."), caution_text, .("One-way ANOVA may still be defensible when deviations are limited and sample sizes are adequate."), .("Welch ANOVA provides a robust parametric alternative. Kruskal-Wallis is appropriate when the analyst prioritizes a non-parametric comparison."))
                     }
                 }
 
             } else {
-                tr(
-                    "A methodological decision cannot be suggested because fewer than two groups were detected.",
-                    "No se puede sugerir una decisión metodológica porque se detectaron menos de dos grupos."
-)
+                .("A methodological decision cannot be suggested because fewer than two groups were detected.")
             }
 
             # -----------------------------------------------------------------------------
@@ -2183,65 +1726,35 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             check_mark <- "\u2713"
 
             outlier_line <- if (total_outliers == 0 && total_extreme == 0) {
-                tr(
-                    paste0(check_mark, " No outliers were detected by the IQR rule."),
-                    paste0(check_mark, " No se detectaron valores atípicos por la regla IQR.")
-                )
+                sprintf(.("%s No outliers were detected by the IQR rule."), check_mark)
             } else {
-                tr(
-                    paste0(check_mark, " ", total_outliers, " outlier(s) and ", total_extreme, " extreme value(s) were detected by the IQR rule \u2014 worth a quick look, not automatically a problem."),
-                    paste0(check_mark, " Se detectaron ", total_outliers, " valor(es) atípico(s) y ", total_extreme, " extremo(s) por la regla IQR \u2014 vale la pena revisarlos, no son automáticamente un problema.")
-                )
+                sprintf(.("%s %s outlier(s) and %s extreme value(s) were detected by the IQR rule — worth a quick look, not automatically a problem."), check_mark, total_outliers, total_extreme)
             }
 
             influence_line <- if (n_any_flagged == 0) {
-                tr(
-                    paste0(check_mark, " No potentially influential cases were flagged (Cook's D / Mahalanobis)."),
-                    paste0(check_mark, " No se marcaron casos potencialmente influyentes (Cook's D / Mahalanobis).")
-                )
+                sprintf(.("%s No potentially influential cases were flagged (Cook's D / Mahalanobis)."), check_mark)
             } else {
-                tr(
-                    paste0(check_mark, " ", n_any_flagged, " potentially influential case(s) were flagged and are worth reviewing."),
-                    paste0(check_mark, " Existen ", n_any_flagged, " caso(s) potencialmente influyente(s) que conviene revisar.")
-                )
+                sprintf(.("%s %s potentially influential case(s) were flagged and are worth reviewing."), check_mark, n_any_flagged)
             }
 
             normality_line <- if (normality_significant == 0) {
-                tr(
-                    paste0(check_mark, " Normality shows no relevant deviations."),
-                    paste0(check_mark, " La normalidad no muestra desviaciones relevantes.")
-                )
+                sprintf(.("%s Normality shows no relevant deviations."), check_mark)
             } else if (n_total >= 200) {
-                tr(
-                    paste0(check_mark, " Normality shows deviations expected at this sample size, not necessarily a practical problem."),
-                    paste0(check_mark, " La normalidad muestra desviaciones esperables en muestras grandes, no necesariamente un problema práctico.")
-                )
+                sprintf(.("%s Normality shows deviations expected at this sample size, not necessarily a practical problem."), check_mark)
             } else {
-                tr(
-                    paste0(check_mark, " Normality shows deviations that should be weighed in the decision."),
-                    paste0(check_mark, " La normalidad muestra desviaciones que conviene ponderar en la decisión.")
-                )
+                sprintf(.("%s Normality shows deviations that should be weighed in the decision."), check_mark)
             }
 
             homogeneity_line <- if (homogeneity_significant == 0) {
-                tr(
-                    paste0(check_mark, " Variance homogeneity is satisfied."),
-                    paste0(check_mark, " La homogeneidad de varianzas se cumple.")
-                )
+                sprintf(.("%s Variance homogeneity is satisfied."), check_mark)
             } else {
-                tr(
-                    paste0(check_mark, " Variance homogeneity is not fully satisfied."),
-                    paste0(check_mark, " La homogeneidad de varianzas no se cumple completamente.")
-                )
+                sprintf(.("%s Variance homogeneity is not fully satisfied."), check_mark)
             }
 
-            verdict_line <- tr(
-                paste0("The comparison using ", decision_label, " is methodologically defensible."),
-                paste0("La comparación mediante ", decision_label, " es metodológicamente defendible.")
-            )
+            verdict_line <- sprintf(.("The comparison using %s is methodologically defensible."), decision_label)
 
             self$results$executiveSummary$setContent(html_block(
-                tr("Methodological Conclusion", "Conclusión Metodológica"),
+                .("Methodological Conclusion"),
                 paste(
                     outlier_line,
                     influence_line,
@@ -2269,12 +1782,12 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # símbolos estadísticos, para que el informe sea autocontenido.
             # -----------------------------------------------------------------------------
             self$results$notes$setContent(html_block(
-                tr("Notes and recommendation", "Notas y recomendación"),
+                .("Notes and recommendation"),
                 paste0(
                     paste0(
                         "<p style=\"margin: 0.15em 0 0.65em 0; line-height: 1.40;\">",
                         html_escape(.al_clean_text(c(
-                            paste0(tr("Suggested decision: ", "Decisión sugerida: "), decision_label, "."),
+                            sprintf(.("Suggested decision: %s."), decision_label),
                             evidence_title
                         ))),
                         "</p>",
@@ -2293,17 +1806,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
-            # Titles/columns are translated again here (identical call to the one
-            # near the top of .run()) so that any table/panel titled after that first
-            # call (e.g. once group_levels is known) also ends up in the correct
-            # report language.
-            # ES: los títulos/columnas se traducen de nuevo aquí (llamada idéntica a
-            # la del inicio de .run()) para que cualquier tabla/panel titulado
-            # después de esa primera llamada (p. ej. una vez que group_levels es
-            # conocido) también quede en el idioma de informe correcto.
-            # BEGIN AL_FINAL_TITLES_AND_REFERENCE
-            translate_titles_and_columns()
-            # END AL_FINAL_TITLES_AND_REFERENCE
 
         },
 
@@ -2336,15 +1838,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # replica aquí llamando al mismo jmvcore::colorPalette() que usa
         # jamovi internamente.
         # -----------------------------------------------------------------------------
-        .plotTr = function(en, es = NULL) {
-            if (is.null(es))
-                es <- en
-            reportLang <- .al_normalize_lang(self$options$reportLang)
-            if (identical(reportLang, "es"))
-                es
-            else
-                en
-        },
 
         .plotColors = function(theme) {
             base_color <- if (!is.null(theme$color) && length(theme$color) >= 1) theme$color[1] else "#333333"
@@ -2398,9 +1891,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # puntos no se puede sostener una visualización de cuartiles significativa.
         # -----------------------------------------------------------------------------
         .plotGroupDistribution = function(image, theme, ...) {
-
-            reportLang <- .al_normalize_lang(self$options$reportLang)
-            tr <- function(en, es = NULL) private$.plotTr(en, es)
+            . <- .al_lang(self$options)$tr
 
             if (!isTRUE(self$options$showDistributionPlot))
                 return(invisible(TRUE))
@@ -2421,23 +1912,19 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             d <- image$state
 
             if (is.null(d) || !is.data.frame(d) || nrow(d) == 0)
-                return(draw_message(tr(
-                    "No valid cases were available for the distribution plot.",
-                    "No hubo casos válidos disponibles para el gráfico de distribución.")))
+                return(draw_message(.("No valid cases were available for the distribution plot.")))
 
             d$value <- suppressWarnings(as.numeric(d$value))
             d$group <- as.character(d$group)
             d <- d[is.finite(d$value) & !is.na(d$group), , drop = FALSE]
 
             if (nrow(d) == 0)
-                return(draw_message(tr(
-                    "No valid cases were available for the distribution plot.",
-                    "No hubo casos válidos disponibles para el gráfico de distribución.")))
+                return(draw_message(.("No valid cases were available for the distribution plot.")))
 
             dep <- if ("depLabel" %in% names(d) && length(unique(d$depLabel)) > 0) {
                 as.character(unique(d$depLabel)[1])
             } else {
-                tr("Analyzed variable", "Variable analizada")
+                .("Analyzed variable")
             }
 
             groups <- unique(d$group)
@@ -2451,9 +1938,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             box_viable <- n_by_group >= 3
 
             if (!any(box_viable))
-                return(draw_message(tr(
-                    "No boxplot was generated. At least one group with 3 valid cases is required.",
-                    "No se generó el boxplot. Se requiere al menos un grupo con 3 casos válidos.")))
+                return(draw_message(.("No boxplot was generated. At least one group with 3 valid cases is required.")))
 
             values_by_group <- values_by_group[box_viable]
             groups <- names(values_by_group)
@@ -2486,9 +1971,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 xaxt = "n",
                 xlab = "",
                 ylab = dep,
-                main = tr(
-                    "Distribution of the analyzed variable by group",
-                    "Distribución de la variable analizada por grupo"),
+                main = .("Distribution of the analyzed variable by group"),
                 col.axis = pal$axis,
                 col.lab = pal$axis,
                 col.main = pal$axis)
@@ -2586,28 +2069,28 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 col = pal$axis)
 
             legend_items <- c(
-                tr("Boxplot: median and IQR", "Boxplot: mediana e IQR"))
+                .("Boxplot: median and IQR"))
 
             legend_pch <- c(15)
             legend_col <- c(pal$box_border)
             legend_pt_bg <- c(grDevices::adjustcolor(pal$box_fill, alpha.f = 0.90))
 
             if (isTRUE(self$options$addViolinPlot)) {
-                legend_items <- c(legend_items, tr("Violin: approximate shape", "Violin: forma aproximada"))
+                legend_items <- c(legend_items, .("Violin: approximate shape"))
                 legend_pch <- c(legend_pch, 15)
                 legend_col <- c(legend_col, pal$box_border)
                 legend_pt_bg <- c(legend_pt_bg, grDevices::adjustcolor(pal$violin_fill, alpha.f = 0.55))
             }
 
             if (isTRUE(self$options$showJitterPoints)) {
-                legend_items <- c(legend_items, tr("Points: observed cases", "Puntos: casos observados"))
+                legend_items <- c(legend_items, .("Points: observed cases"))
                 legend_pch <- c(legend_pch, 16)
                 legend_col <- c(legend_col, grDevices::adjustcolor(pal$point, alpha.f = 0.65))
                 legend_pt_bg <- c(legend_pt_bg, NA)
             }
 
             if (isTRUE(self$options$showMeanMarker)) {
-                legend_items <- c(legend_items, tr("Diamond: mean", "Rombo: media"))
+                legend_items <- c(legend_items, .("Diamond: mean"))
                 legend_pch <- c(legend_pch, 23)
                 legend_col <- c(legend_col, pal$mean)
                 legend_pt_bg <- c(legend_pt_bg, grDevices::adjustcolor(pal$mean, alpha.f = 0.80))
@@ -2643,11 +2126,11 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # puramente como apoyo visual junto a los diagnósticos numéricos.
         # -----------------------------------------------------------------------------
         .plotGroupQQNormality = function(image, theme, ...) {
+            . <- .al_lang(self$options)$tr
 
             d <- image$state
 
             pal <- private$.plotColors(theme)
-            tr <- function(en, es = NULL) private$.plotTr(en, es)
 
             draw_message <- function(msg) {
                 graphics::plot.new()
@@ -2662,10 +2145,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             }
 
             if (is.null(d) || ! is.data.frame(d) || nrow(d) == 0) {
-                return(draw_message(tr(
-                    "No Q-Q plot was generated. At least 10 valid cases and non-zero variability are required.",
-                    "No se generó el Q-Q plot. Se requieren al menos 10 casos válidos y variabilidad mayor que cero."
-                )))
+                return(draw_message(.("No Q-Q plot was generated. At least 10 valid cases and non-zero variability are required.")))
             }
 
             d$value <- suppressWarnings(as.numeric(d$value))
@@ -2674,20 +2154,14 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             d <- d[is.finite(d$value) & ! is.na(d$group), , drop = FALSE]
 
             if (nrow(d) < 10) {
-                return(draw_message(tr(
-                    "No Q-Q plot was generated. At least 10 valid cases are required.",
-                    "No se generó el Q-Q plot. Se requieren al menos 10 casos válidos."
-                )))
+                return(draw_message(.("No Q-Q plot was generated. At least 10 valid cases are required.")))
             }
 
             groups <- unique(d$group)
             n_panels <- length(groups)
 
             if (n_panels < 1) {
-                return(draw_message(tr(
-                    "No valid groups were available for Q-Q plots.",
-                    "No hubo grupos válidos disponibles para los Q-Q plots."
-                )))
+                return(draw_message(.("No valid groups were available for Q-Q plots.")))
             }
 
             n_col <- if (n_panels <= 2) n_panels else 2
@@ -2713,10 +2187,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     graphics::text(
                         0.5,
                         0.5,
-                        labels = tr(
-                            "Not enough valid cases",
-                            "Casos válidos insuficientes"
-                        ),
+                        labels = .("Not enough valid cases"),
                         cex = 0.85,
                         col = pal$line
                     )
@@ -2730,8 +2201,8 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         qq_res$y,
                         type = "n",
                         main = g,
-                        xlab = tr("Theoretical quantiles", "Cuantiles teóricos"),
-                        ylab = tr("Observed quantiles", "Cuantiles observados"),
+                        xlab = .("Theoretical quantiles"),
+                        ylab = .("Observed quantiles"),
                         col.main = pal$line,
                         col.lab = pal$line,
                         col.axis = pal$line
@@ -2800,11 +2271,11 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # estadísticos resumen.
         # -----------------------------------------------------------------------------
         .plotGroupNormalCurve = function(image, theme, ...) {
+            . <- .al_lang(self$options)$tr
 
             d <- image$state
 
             pal <- private$.plotColors(theme)
-            tr <- function(en, es = NULL) private$.plotTr(en, es)
 
             draw_message <- function(msg) {
                 graphics::plot.new()
@@ -2819,10 +2290,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             }
 
             if (is.null(d) || ! is.data.frame(d) || nrow(d) == 0) {
-                return(draw_message(tr(
-                    "No observed-vs-normal curve was generated. At least 20 valid cases and non-zero variability are required.",
-                    "No se generó la curva observada vs normal teórica. Se requieren al menos 20 casos válidos y variabilidad mayor que cero."
-                )))
+                return(draw_message(.("No observed-vs-normal curve was generated. At least 20 valid cases and non-zero variability are required.")))
             }
 
             d$z <- suppressWarnings(as.numeric(d$z))
@@ -2831,20 +2299,14 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             d <- d[is.finite(d$z) & ! is.na(d$group), , drop = FALSE]
 
             if (nrow(d) < 20) {
-                return(draw_message(tr(
-                    "No observed-vs-normal curve was generated. At least 20 valid cases are required.",
-                    "No se generó la curva observada vs normal teórica. Se requieren al menos 20 casos válidos."
-                )))
+                return(draw_message(.("No observed-vs-normal curve was generated. At least 20 valid cases are required.")))
             }
 
             groups <- unique(d$group)
             n_panels <- length(groups)
 
             if (n_panels < 1) {
-                return(draw_message(tr(
-                    "No valid groups were available for observed-vs-normal curves.",
-                    "No hubo grupos válidos disponibles para las curvas observadas vs normal teórica."
-                )))
+                return(draw_message(.("No valid groups were available for observed-vs-normal curves.")))
             }
 
             n_col <- if (n_panels <= 2) n_panels else 2
@@ -2870,10 +2332,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     graphics::text(
                         0.5,
                         0.5,
-                        labels = tr(
-                            "Not enough valid cases",
-                            "Casos válidos insuficientes"
-                        ),
+                        labels = .("Not enough valid cases"),
                         cex = 0.85,
                         col = pal$line
                     )
@@ -2887,8 +2346,8 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     graphics::plot(
                         den,
                         main = g,
-                        xlab = tr("Standardized values", "Valores estandarizados"),
-                        ylab = tr("Density", "Densidad"),
+                        xlab = .("Standardized values"),
+                        ylab = .("Density"),
                         xlim = c(-4, 4),
                         lwd = 1.5,
                         col = pal$smooth,
@@ -2916,8 +2375,8 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     graphics::legend(
                         "topright",
                         legend = c(
-                            tr("Observed density", "Densidad observada"),
-                            tr("Theoretical normal", "Normal teórica")
+                            .("Observed density"),
+                            .("Theoretical normal")
                         ),
                         col = c(pal$smooth, pal$alert),
                         lty = c(1, 2),
