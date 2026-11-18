@@ -54,12 +54,6 @@ children:
             name: factors
             isTarget: true
   - type: CollapseBox
-    label: Report Language
-    collapsed: false
-    children:
-      - type: ComboBox
-        name: reportLang
-  - type: CollapseBox
     label: Diagnostic Plots
     collapsed: true
     children:

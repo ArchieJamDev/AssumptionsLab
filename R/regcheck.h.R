@@ -9,7 +9,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             dep = NULL,
             covs = NULL,
             factors = NULL,
-            reportLang = "en",
             showPlots = TRUE,
             linShowPlots = TRUE,
             linSmoother = "none",
@@ -63,13 +62,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 permitted=list(
                     "factor"),
                 default=NULL)
-            private$..reportLang <- jmvcore::OptionList$new(
-                "reportLang",
-                reportLang,
-                options=list(
-                    "en",
-                    "es"),
-                default="en")
             private$..showPlots <- jmvcore::OptionBool$new(
                 "showPlots",
                 showPlots,
@@ -187,7 +179,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
             self$.addOption(private$..factors)
-            self$.addOption(private$..reportLang)
             self$.addOption(private$..showPlots)
             self$.addOption(private$..linShowPlots)
             self$.addOption(private$..linSmoother)
@@ -215,7 +206,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         dep = function() private$..dep$value,
         covs = function() private$..covs$value,
         factors = function() private$..factors$value,
-        reportLang = function() private$..reportLang$value,
         showPlots = function() private$..showPlots$value,
         linShowPlots = function() private$..linShowPlots$value,
         linSmoother = function() private$..linSmoother$value,
@@ -242,7 +232,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..dep = NA,
         ..covs = NA,
         ..factors = NA,
-        ..reportLang = NA,
         ..showPlots = NA,
         ..linShowPlots = NA,
         ..linSmoother = NA,
@@ -354,8 +343,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -372,8 +360,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -396,8 +383,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -437,8 +423,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="scope", 
@@ -485,8 +470,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 rows=0,
                 visible=FALSE,
                 columns=list(
@@ -503,8 +487,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 rows=0,
                 visible=FALSE,
                 columns=list(
@@ -532,8 +515,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 rows=0,
                 visible=FALSE,
                 columns=list(
@@ -658,8 +640,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -733,8 +714,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="family", 
@@ -795,8 +775,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -837,8 +816,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 visible=FALSE,
                 columns=list(
                     list(
@@ -876,8 +854,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -963,8 +940,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="criterion", 
@@ -995,8 +971,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "dep",
                     "covs",
-                    "factors",
-                    "reportLang"),
+                    "factors"),
                 columns=list(
                     list(
                         `name`="criterion", 
@@ -1059,7 +1034,6 @@ regCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param dep .
 #' @param covs .
 #' @param factors .
-#' @param reportLang .
 #' @param showPlots Uncheck for a text-only report.
 #' @param linShowPlots .
 #' @param linSmoother .
@@ -1159,7 +1133,6 @@ regCheck <- function(
     dep,
     covs = NULL,
     factors = NULL,
-    reportLang = "en",
     showPlots = TRUE,
     linShowPlots = TRUE,
     linSmoother = "none",
@@ -1202,7 +1175,6 @@ regCheck <- function(
         dep = dep,
         covs = covs,
         factors = factors,
-        reportLang = reportLang,
         showPlots = showPlots,
         linShowPlots = linShowPlots,
         linSmoother = linSmoother,

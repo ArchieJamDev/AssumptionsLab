@@ -49,12 +49,9 @@
 # `reportLang` option at all, so that option (and its separate "Report
 # Language" control) was removed from this analysis entirely - keeping it
 # around after nothing used it would have been actively misleading, not
-# neutral. See CODE_STYLE.md §20/§21 and ARCHITECTURE.md §11 for why this
-# is safe here (static content) but not for the 9 analysis modules' guide/
-# interpretation text (computed from the user's data on every run, so it
-# still needs `tr()`/`reportLang`, never `.()` called from R - that call is
-# literally the cached `Options$translate()` behind the FiabilityLab
-# translator regression).
+# neutral. The 9 analysis modules now use the same native catalog for
+# their data-dependent text: English strings inside `.()`, translated at run
+# time through `.al_lang()` (see shared-helpers.R and ARCHITECTURE.md §11).
 #
 # Each category is still several result items (a guide paragraph, its
 # table, a closing guide paragraph - five items for homoscedasticity,
@@ -81,13 +78,10 @@
 # automáticamente y no necesitó ninguna opción `reportLang`, así que esa
 # opción (y su control "Report Language" aparte) se quitó por completo de
 # este análisis - dejarla ahí sin que nada la usara habría sido activamente
-# engañoso, no neutral. Ver CODE_STYLE.md §20/§21 y ARCHITECTURE.md §11 para
-# por qué esto es seguro aquí (contenido estático) pero no para el texto de
-# guía/interpretación de los 9 módulos de análisis (calculado a partir de
-# los datos del usuario en cada corrida, así que sigue necesitando
-# `tr()`/`reportLang`, nunca `.()` llamado desde R - esa llamada es
-# literalmente el `Options$translate()` cacheado detrás de la regresión del
-# traductor de FiabilityLab).
+# engañoso, no neutral. Los 9 módulos de análisis usan ahora el mismo
+# catálogo nativo para su texto que depende de los datos: cadenas en inglés
+# dentro de `.()`, traducidas en tiempo de ejecución con `.al_lang()` (ver
+# shared-helpers.R y ARCHITECTURE.md §11).
 #
 # Cada categoría sigue siendo varios ítems de resultado (un párrafo de
 # guía, su tabla, un párrafo de guía de cierre - cinco ítems para

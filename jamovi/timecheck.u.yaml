@@ -78,18 +78,6 @@ children:
         format: number
 
   - type: CollapseBox
-    label: Report Language
-    collapsed: false
-    children:
-      - type: LayoutBox
-        margin: normal
-        children:
-          - type: ComboBox
-            name: reportLang
-            stretchFactor: 0
-      - type: Label
-        label: 'Statistical symbols remain in international format: n, p, ACF, PACF, ADF, KPSS, PP, etc.'
-  - type: CollapseBox
     label: Plots
     collapsed: false
     children:

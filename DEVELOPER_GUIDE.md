@@ -660,40 +660,34 @@ English
 
 Spanish
 
-AssumptionsLab has three separate bilingual mechanisms — do not confuse
-them.
+AssumptionsLab has two bilingual mechanisms.
 
 1. **Source comments.** Every `.R`/`.yaml` comment: English, then a
    Spanish `# ES:` block immediately below. Governed by CODE_STYLE.md.
-2. **Report content.** The `reportLang` option, `tr()`, and `texts.R`.
-   Controls the language of the analytical content the user sees inside a
-   running analysis's results — chosen per-analysis by the user,
-   independent of jamovi's own interface language.
-3. **Interface catalog.** jamovi's own native i18n mechanism
-   (`jamovi/i18n/catalog.pot` + `es.po`). Controls option-panel titles,
-   descriptions, and result/table headers — follows jamovi's own
-   UI-language setting, entirely independent of `reportLang`. See
-   ARCHITECTURE.md §12.
+2. **jamovi's translation catalog** (`jamovi/i18n/catalog.pot` + `es.po`,
+   compiled to `inst/i18n/es.json`). It covers the yaml text (option
+   panels, result titles, static content) and all report text built in R,
+   written in English inside `.()` and translated through `.al_lang()`.
+   Everything follows jamovi's own language setting; there is no
+   per-analysis language option. See ARCHITECTURE.md §12 and
+   CODE_STYLE.md §20.
 
 -------------------------------------------------------------------------------
 
 # ES:
 
-AssumptionsLab tiene tres mecanismos bilingües separados — no
-confundirlos.
+AssumptionsLab tiene dos mecanismos bilingües.
 
 1. **Comentarios de código fuente.** Cada comentario `.R`/`.yaml`: inglés,
    seguido de un bloque `# ES:` en español inmediatamente debajo. Regido
    por CODE_STYLE.md.
-2. **Contenido del informe.** La opción `reportLang`, `tr()` y `texts.R`.
-   Controla el idioma del contenido analítico que el usuario ve dentro de
-   los resultados de un análisis en ejecución — elegido por el usuario
-   para cada análisis, independiente del idioma de interfaz de jamovi.
-3. **Catálogo de interfaz.** El propio mecanismo nativo de i18n de jamovi
-   (`jamovi/i18n/catalog.pot` + `es.po`). Controla los títulos del panel
-   de opciones, descripciones y encabezados de resultado/tabla — sigue el
-   propio ajuste de idioma de interfaz de jamovi, totalmente independiente
-   de `reportLang`. Ver ARCHITECTURE.md §12.
+2. **Catálogo de traducción de jamovi** (`jamovi/i18n/catalog.pot` +
+   `es.po`, compilado a `inst/i18n/es.json`). Cubre el texto del yaml
+   (paneles de opciones, títulos de resultados, contenido estático) y todo
+   el texto del informe construido en R, escrito en inglés dentro de `.()`
+   y traducido con `.al_lang()`. Todo sigue el idioma configurado en
+   jamovi; no existe una opción de idioma por análisis. Ver
+   ARCHITECTURE.md §12 y CODE_STYLE.md §20.
 
 -------------------------------------------------------------------------------
 

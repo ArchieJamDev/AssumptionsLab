@@ -47,18 +47,6 @@ children:
             maxItemCount: 1
             isTarget: true
   - type: CollapseBox
-    label: Report Language
-    collapsed: false
-    children:
-      - type: LayoutBox
-        margin: normal
-        children:
-          - type: ComboBox
-            name: reportLang
-            stretchFactor: 0
-      - type: Label
-        label: 'Statistical symbols remain in international format: n, M, SD, Mdn, Min, Max, IQR, CI, p, df.'
-  - type: CollapseBox
     label: 'Plots: Distribution by Group'
     collapsed: true
     children:
