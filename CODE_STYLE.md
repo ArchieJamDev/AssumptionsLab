@@ -1,6 +1,7 @@
 # AssumptionsLab Code Style Guide
 
-Version: 1.2 (2026-10-08: added to §21 that `refs:` only renders for
+Version: 1.3 (2026-11-18: §20 now covers run-time report text through
+`.()` and `.al_lang()`, replacing `tr()`/`reportLang`; 2026-10-08: added to §21 that `refs:` only renders for
 `Table`-type results in jamovi's own client, never `Html`/`Image` —
 confirmed by reading the Electron client source directly, after Assumption
 Library's own category sections tried it and silently showed nothing;
@@ -508,15 +509,24 @@ Regenerate the catalog (`jmvtools::i18nUpdate("es")`) whenever such text
 changes.
 
 An `Html` result's static `content:` field (resolved natively, like
-`title`) is the right place for text that never changes once compiled —
-`Assumption Library`'s category guides are the precedent: fully static
-glossary text, translated through `jamovi/i18n/es.po` instead of
-`reportLang`, with zero risk of the `.()`-from-R caching bug (§21), since
-nothing is ever assembled in R for it. The moment text needs to vary at
-runtime (per row, per computed value, per dataset), it no longer qualifies
-for a static `content:` field and must go through `tr()`/`reportLang`
-like everything else in this project — never through `.()` called from
-`.b.R`.
+`title`) is the right place for text that never changes once compiled.
+`Assumption Library`'s category guides are the precedent.
+
+Text that varies at run time (per row, per computed value, per dataset)
+is written in English inside `.()` in R and goes into the same catalog:
+
+```r
+lang <- .al_lang(self$options)   # in .run()
+. <- lang$tr
+. <- .al_lang(self$options)$tr   # first line of each render method
+helper <- function(x, .) { ... } # helpers receive the translator
+```
+
+Keep each sentence whole, inserting values with
+`sprintf(.("%s could not be computed because %s."), a, b)`; never build a
+sentence from translated fragments with `paste()`. A msgid must not end in
+`[...]` (jamovi reads a trailing ` [ctx]` as a context). Do not set result
+titles from R: they belong to `.r.yaml`.
 
 -------------------------------------------------------------------------------
 
@@ -535,15 +545,20 @@ incluido el inglés. Regenerar el catálogo
 
 El campo `content:` estático de un resultado `Html` (resuelto de forma
 nativa, igual que `title`) es el lugar correcto para texto que nunca
-cambia una vez compilado — las guías por categoría de `Assumption
-Library` son el precedente: texto de glosario completamente estático,
-traducido vía `jamovi/i18n/es.po` en vez de `reportLang`, sin ningún
-riesgo del bug de caché de `.()` llamado desde R (§21), porque nada se
-ensambla en R para ese contenido. En el momento en que el texto necesita
-variar en tiempo de ejecución (por fila, por valor calculado, por
-dataset), ya no califica para un `content:` estático y debe pasar por
-`tr()`/`reportLang` como todo lo demás en este proyecto — nunca por
-`.()` llamado desde `.b.R`.
+cambia una vez compilado. Las guías por categoría de `Assumption Library`
+son el precedente.
+
+El texto que varía en tiempo de ejecución (por fila, por valor calculado,
+por dataset) se escribe en inglés dentro de `.()` en R y entra al mismo
+catálogo: `lang <- .al_lang(self$options)` y `. <- lang$tr` en `.run()`,
+`. <- .al_lang(self$options)$tr` al inicio de cada método de
+renderizado, y los helpers reciben `.` como argumento. Mantener cada
+oración completa e insertar los valores con
+`sprintf(.("%s could not be computed because %s."), a, b)`; nunca armar
+una oración con fragmentos traducidos unidos con `paste()`. Un msgid no
+debe terminar en `[...]` (jamovi interpreta un ` [ctx]` final como
+contexto). No fijar títulos de resultados desde R: pertenecen al
+`.r.yaml`.
 
 -------------------------------------------------------------------------------
 

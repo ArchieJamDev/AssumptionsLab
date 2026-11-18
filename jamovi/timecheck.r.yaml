@@ -43,7 +43,6 @@ items:
       - frequency
       - model
       - series
-      - reportLang
     rows: 0
     columns:
       - name: element
@@ -66,7 +65,6 @@ items:
       - frequency
       - model
       - series
-      - reportLang
     rows: 0
     columns:
       - name: area
@@ -88,7 +86,6 @@ items:
       - frequency
       - model
       - series
-      - reportLang
     rows: 0
     columns:
       - name: area
@@ -136,7 +133,6 @@ items:
       - frequency
       - model
       - series
-      - reportLang
     rows: 0
     columns:
       - name: test
@@ -201,7 +197,6 @@ items:
       - frequency
       - model
       - series
-      - reportLang
     rows: 0
     columns:
       - name: test

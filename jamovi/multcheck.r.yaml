@@ -137,7 +137,6 @@ items:
       - plotPalette
       - linSmoother
       - linBins
-      - reportLang
 
   - name: iiaGuide
     title: Independence of irrelevant alternatives (IIA)
@@ -398,7 +397,6 @@ items:
       - plotPalette
       - influenceLabelMode
       - influenceShowThreshold
-      - reportLang
 
   - name: coefficientsGuide
     title: Coefficients and odds ratios (by category)

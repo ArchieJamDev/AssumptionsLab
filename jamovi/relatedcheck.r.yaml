@@ -88,7 +88,6 @@ items:
       - showProfilePlot
       - plotStyle
       - plotPalette
-      - reportLang
 
   - name: differencePlot
     title: Distribution of paired differences
@@ -102,7 +101,6 @@ items:
       - showDifferencePlots
       - plotStyle
       - plotPalette
-      - reportLang
 
   - name: normalityPlot
     title: Q-Q plots of paired differences
@@ -115,7 +113,6 @@ items:
       - measures
       - showNormalityPlots
       - plotStyle
-      - reportLang
 
 
   - name: normalCurvePlot
@@ -129,7 +126,6 @@ items:
       - measures
       - showNormalityPlots
       - plotStyle
-      - reportLang
 
 
   - name: differenceGuide

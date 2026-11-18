@@ -133,7 +133,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
         # Computes descriptives, paired differences, normality/symmetry/sphericity
         # diagnostics, outlier screening, and the dynamic test recommendation for
         # every pair of related measurements; then renders every guide,
-        # interpretation, and table title in the user's selected report language.
+        # interpretation, and table title in jamovi's language.
         #
         # ES: Calcula descriptivos, diferencias pareadas, diagnósticos de
         # normalidad/simetría/esfericidad, cribado de atípicos y la recomendación
@@ -143,233 +143,9 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
         # -----------------------------------------------------------------------------
         .run = function() {
 
-        lang <- .al_normalize_lang(self$options$reportLang)
-        tr <- function(en, es = NULL) .al_tr(lang, en, es)
-        plot_tr <- function(en, es = NULL) private$.plotTr(en, es, if (exists("image", inherits = FALSE)) image else NULL)
+        lang <- .al_lang(self$options)
+        . <- lang$tr
 
-        .al_set_title <- function(name, en, es = NULL) {
-            title <- tr(en, es)
-            tryCatch({
-                self$results[[name]]$setTitle(title)
-            }, error = function(e) {
-                invisible(NULL)
-            })
-            invisible(NULL)
-        }
-
-        # -----------------------------------------------------------------------------
-        # Set every result panel's title and table/column titles in the selected
-        # report language.
-        # ES: Fijar el título de cada panel de resultados y los títulos de tabla/
-        # columna en el idioma de informe seleccionado.
-        # -----------------------------------------------------------------------------
-        set_result_titles <- function() {
-            set_title_safe <- function(name, en, es) {
-                element <- tryCatch(self$results[[name]], error = function(e) NULL)
-                if (is.null(element))
-                    return(invisible(FALSE))
-
-                tryCatch(
-                    element$setTitle(tr(en, es)),
-                    error = function(e) invisible(FALSE)
-                )
-
-                invisible(TRUE)
-            }
-
-            titles <- list(
-                c("intro", "Related Groups", "Related Groups"),
-
-                c("designGuide",
-                  "Related-groups design",
-                  "Diseño de grupos relacionados"),
-                c("designSummary",
-                  "Design summary",
-                  "Resumen del diseño"),
-
-                c("descriptiveSummary",
-                  "Descriptive statistics by measurement",
-                  "Descriptivos por medición"),
-
-                c("profilePlot",
-                  "Profile of related measurements",
-                  "Perfil de mediciones relacionadas"),
-                c("differencePlot",
-                  "Distribution of paired differences",
-                  "Distribución de diferencias pareadas"),
-                c("normalityPlot",
-                  "Q-Q plots of paired differences",
-                  "Q-Q plots de diferencias pareadas"),
-                c("normalCurvePlot",
-                  "Observed distribution vs theoretical normal curve",
-                  "Distribución observada vs curva normal teórica"),
-
-                c("differenceGuide",
-                  "Paired differences",
-                  "Diferencias pareadas"),
-                c("differenceSummary",
-                  "Paired differences",
-                  "Diferencias pareadas"),
-
-                c("normalityGuide",
-                  "Normality of paired differences",
-                  "Normalidad de las diferencias pareadas"),
-                c("normality",
-                  "Normality of paired differences",
-                  "Normalidad de las diferencias pareadas"),
-                c("normalitySummary",
-                  "Normality summary",
-                  "Resumen de normalidad"),
-                c("normalityInterpretation",
-                  "Applied Interpretation",
-                  "Interpretación Aplicada"),
-
-                c("normalityRecommendation", "Recommendation", "Recomendación"),
-                c("symmetryGuide",
-                  "Symmetry of paired differences",
-                  "Simetría de las diferencias pareadas"),
-                c("symmetry",
-                  "Symmetry of paired differences",
-                  "Simetría de las diferencias pareadas"),
-                c("symmetryInterpretation",
-                  "Applied Interpretation",
-                  "Interpretación Aplicada"),
-
-                c("sphericityGuide",
-                  "Sphericity",
-                  "Esfericidad"),
-                c("sphericity",
-                  "Sphericity",
-                  "Esfericidad"),
-                c("sphericityInterpretation",
-                  "Applied Interpretation",
-                  "Interpretación Aplicada"),
-
-                c("correlationComparisonInterpretation",
-                  "Applied Interpretation",
-                  "Interpretación Aplicada"),
-
-                c("outliersGuide",
-                  "Outliers in paired differences",
-                  "Casos atípicos en diferencias"),
-                c("outliers",
-                  "Outlier diagnostics",
-                  "Diagnóstico de valores atípicos"),
-                c("outliersInterpretation",
-                  "Applied Interpretation",
-                  "Interpretación Aplicada"),
-
-                c("methodGuide",
-                  "Method selection",
-                  "Selección de prueba"),
-                c("methodOptions",
-                  "Methodological options",
-                  "Opciones metodológicas"),
-
-                c("methodWhen", "", ""),
-                c("notes",
-                  "Notes and recommendation",
-                  "Notas y recomendación"),
-
-                c("pearsonMatrixTable",
-                  "Pearson correlation matrix (APA 7 format)",
-                  "Matriz de correlaciones de Pearson (formato APA 7)"),
-                c("dcorMatrixTable",
-                  "Distance correlation matrix (dCor, APA 7 format)",
-                  "Matriz de correlación de distancia (dCor, formato APA 7)"),
-
-                c("correlationMatrixGuide", "Correlation matrix", "Matriz de correlaciones"),
-                c("correlationMatrixNote", " ", " "),
-                c("correlationComparisonGuide",
-                  "Pearson / dCor / Copula Entropy Discordance Analysis",
-                  "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                c("correlationComparisonTable",
-                  "Pairs with a Notable Difference between Pearson and dCor",
-                  "Pares con diferencia notable entre Pearson y dCor")
-            )
-
-            for (item in titles)
-                set_title_safe(item[[1]], item[[2]], item[[3]])
-
-            invisible(NULL)
-        }
-
-            set_table_column_titles <- function() {
-            set_col_title_safe <- function(table_name, col_name, en, es) {
-                table <- tryCatch(self$results[[table_name]], error = function(e) NULL)
-                if (is.null(table))
-                    return(invisible(FALSE))
-
-                column <- tryCatch(table$getColumn(col_name), error = function(e) NULL)
-                if (is.null(column))
-                    return(invisible(FALSE))
-
-                tryCatch(
-                    column$setTitle(tr(en, es)),
-                    error = function(e) invisible(FALSE)
-                )
-
-                invisible(TRUE)
-            }
-
-            columns <- list(
-                c("designSummary", "item", "Item", "Elemento"),
-                c("designSummary", "value", "Value", "Valor"),
-
-                c("descriptiveSummary", "measure", "Measurement", "Medición"),
-                c("descriptiveSummary", "missing", "Missing", "Faltantes"),
-
-                c("differenceSummary", "comparison", "Comparison", "Comparación"),
-                c("differenceSummary", "meanDiff", "M difference", "M diferencia"),
-                c("differenceSummary", "sdDiff", "SD difference", "SD diferencia"),
-                c("differenceSummary", "medianDiff", "Mdn difference", "Mdn diferencia"),
-
-                c("normality", "scope", "Scope", "Alcance"),
-                c("normality", "test", "Test", "Prueba"),
-                c("normality", "statistic", "Statistic", "Estadístico"),
-                c("normality", "value", "Value", "Valor"),
-
-                c("normalitySummary", "comparison", "Comparison", "Comparación"),
-                c("normalitySummary", "tests", "Valid tests", "Pruebas válidas"),
-                c("normalitySummary", "significant", "Significant tests", "Pruebas significativas"),
-                c("normalitySummary", "interpretation", "Interpretation", "Interpretación"),
-
-                c("symmetry", "comparison", "Comparison", "Comparación"),
-                c("symmetry", "statistic", "Statistic", "Estadístico"),
-                c("symmetry", "value", "Value", "Valor"),
-
-                c("sphericity", "diagnostic", "Diagnostic", "Diagnóstico"),
-                c("sphericity", "statistic", "Statistic", "Estadístico"),
-                c("sphericity", "value", "Value", "Valor"),
-
-                c("outliers", "case", "Case", "Caso"),
-                c("outliers", "comparison", "Comparison", "Comparación"),
-                c("outliers", "difference", "Difference", "Diferencia"),
-                c("outliers", "criterion", "Triggered criterion", "Criterio activado"),
-
-                c("methodOptions", "design", "Design", "Diseño"),
-                c("methodOptions", "evidence", "Evidence", "Evidencia"),
-                c("methodOptions", "suggestion", "Suggested test", "Prueba sugerida"),
-
-                c("pearsonMatrixTable", "var", "Variable", "Variable"),
-                c("dcorMatrixTable", "var", "Variable", "Variable"),
-
-                c("correlationComparisonTable", "var1", "Variable 1", "Variable 1"),
-                c("correlationComparisonTable", "var2", "Variable 2", "Variable 2"),
-                c("correlationComparisonTable", "pearson", "Pearson r", "Pearson r"),
-                c("correlationComparisonTable", "dcor", "dCor", "dCor"),
-                c("correlationComparisonTable", "gap", "Gap (dCor - |r|)", "Brecha (dCor − |r|)"),
-                c("correlationComparisonTable", "ce", "Copula entropy", "Entropía copular"),
-                c("correlationComparisonTable", "ceP", "p (CE)", "p (CE)"),
-                c("correlationComparisonTable", "ceSig", "Sig. (CE)", "Sig. (CE)"),
-                c("correlationComparisonTable", "flag", "Notable difference", "Diferencia notable")
-            )
-
-            for (item in columns)
-                set_col_title_safe(item[[1]], item[[2]], item[[3]], item[[4]])
-
-            invisible(NULL)
-        }
 
         clean_num <- function(x) {
                 if (length(x) == 0)
@@ -401,94 +177,49 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             format_p <- function(p) {
                 p <- clean_num(p)
                 if (is.na(p))
-                    return(tr("not calculated", "no calculado"))
+                    return(.("not calculated"))
                 if (p < .001)
                     return("< .001")
                 sub("^0", "", sprintf("%.3f", p))
-            }
-
-            sample_note <- function(n) {
-                if (is.na(n))
-                    return("El tamaño muestral no pudo determinarse para esta prueba.")
-                if (n < 10)
-                    return(paste0(
-                        "Con n = ", n, ", el tamaño muestral es muy pequeño; ",
-                        "interprete este diagnóstico con mucha cautela."
-                    ))
-                if (n < 30)
-                    return(paste0(
-                        "Con n = ", n, ", la muestra es pequeña; la prueba puede tener ",
-                        "baja potencia para detectar desviaciones relevantes."
-                    ))
-                if (n <= 200)
-                    return(paste0(
-                        "Con n = ", n, ", la muestra es moderada; este resultado puede ",
-                        "usarse como diagnóstico inicial."
-                    ))
-                paste0(
-                    "Con n = ", n, ", la muestra es grande; desviaciones pequeñas pueden ",
-                    "producir resultados estadísticamente significativos."
-                )
             }
 
             interpret_normality <- function(test, p_value, n, scope) {
                 p_value <- clean_num(p_value)
 
                 if (is.na(p_value))
-                    return(paste0(test, tr(": not calculated.", ": no calculado.")))
+                    return(sprintf(.("%s: not calculated."), test))
 
                 if (p_value < .05)
-                    return(paste0(
-                        test, ": p = ", format_p(p_value), ", n = ", n,
-                        tr(". Significant deviation from normality.", ". Desviación significativa de normalidad.")
-                    ))
+                    return(sprintf(.("%s: p = %s, n = %s. Significant deviation from normality."), test, format_p(p_value), n))
 
-                paste0(
-                    test, ": p = ", format_p(p_value), ", n = ", n,
-                    tr(". Compatible with approximate normality.", ". Compatible con normalidad aproximada.")
-                )
+                sprintf(.("%s: p = %s, n = %s. Compatible with approximate normality."), test, format_p(p_value), n)
             }
 
             interpret_symmetry <- function(comparison, p_value, n) {
                 p_value <- clean_num(p_value)
 
                 if (is.na(p_value))
-                    return(paste0(comparison, tr(": symmetry not calculated.", ": simetría no calculada.")))
+                    return(sprintf(.("%s: symmetry not calculated."), comparison))
 
                 if (p_value < .05)
-                    return(paste0(
-                        comparison, ": p = ", format_p(p_value),
-                        tr(". Suggests significant asymmetry in the differences.", ". Sugiere asimetría significativa de las diferencias.")
-                    ))
+                    return(sprintf(.("%s: p = %s. Suggests significant asymmetry in the differences."), comparison, format_p(p_value)))
 
-                paste0(
-                    comparison, ": p = ", format_p(p_value),
-                    tr(". Compatible with approximate symmetry.", ". Compatible con simetría aproximada.")
-                )
+                sprintf(.("%s: p = %s. Compatible with approximate symmetry."), comparison, format_p(p_value))
             }
 
             interpret_sphericity <- function(p_value, n, k) {
                 p_value <- clean_num(p_value)
 
                 if (k < 3)
-                    return(tr("Not applicable: sphericity requires three or more measurements.", "No aplica: la esfericidad requiere tres o más mediciones."))
+                    return(.("Not applicable: sphericity requires three or more measurements."))
 
                 if (is.na(p_value))
-                    return(tr(
-                        "Mauchly: not computable (the covariance matrix of the measurements needs more complete cases than measurements).",
-                        "Mauchly: no calculable (la matriz de covarianzas de las mediciones necesita más casos completos que mediciones)."
-                    ))
+                    return(.("Mauchly: not computable (the covariance matrix of the measurements needs more complete cases than measurements)."))
 
                 if (p_value < .05)
-                    return(paste0(
-                        "Mauchly: p = ", format_p(p_value), ", n = ", n,
-                        tr(". Significant deviation from sphericity.", ". Desviación significativa de esfericidad.")
-                    ))
+                    return(sprintf(.("Mauchly: p = %s, n = %s. Significant deviation from sphericity."), format_p(p_value), n))
 
-                paste0(
-                    "Mauchly: p = ", format_p(p_value), ", n = ", n,
-                    tr(". Compatible with approximate sphericity.", ". Compatible con esfericidad aproximada.")
-                )
+                sprintf(.("Mauchly: p = %s, n = %s. Compatible with approximate sphericity."), format_p(p_value), n)
             }
 
             add_table_row <- function(table, key, values) {
@@ -552,8 +283,6 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
         measures <- self$options$measures
             k <- length(measures)
-            set_result_titles()
-        set_table_column_titles()
 
             self$results$sphericityGuide$setVisible(k >= 3)
             self$results$sphericity$setVisible(k >= 3)
@@ -568,7 +297,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             self$results$correlationComparisonInterpretation$setVisible(k >= 2)
 
             if (length(measures) < 2) {
-                jmvcore::reject(tr("Select at least two related numeric variables.", "Seleccione al menos dos variables numéricas relacionadas."))
+                jmvcore::reject(.("Select at least two related numeric variables."))
             }
 
             dat <- self$data[, measures, drop = FALSE]
@@ -580,7 +309,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             n_excluded <- n_total - n_used
 
             if (n_used < 3) {
-                jmvcore::reject(tr("There are not enough complete cases to evaluate related groups.", "No hay suficientes casos completos para evaluar grupos relacionados."))
+                jmvcore::reject(.("There are not enough complete cases to evaluate related groups."))
             }
 
             normality_problem <- FALSE
@@ -588,7 +317,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             sphericity_problem <- FALSE
             outlier_problem <- FALSE
 
-            recommendation <- tr("Interpret the results considering design, assumptions, and sample size.", "Interprete los resultados considerando diseño, supuestos y tamaño muestral.")
+            recommendation <- .("Interpret the results considering design, assumptions, and sample size.")
 
             self$results$profilePlot$setVisible(isTRUE(self$options$showProfilePlot))
             self$results$differencePlot$setVisible(isTRUE(self$options$showDifferencePlots))
@@ -602,14 +331,14 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             self$results$intro$setContent(paste0(
             "<div style=\"line-height:1.25; margin:0.05em 0 0.35em 0;\">",
             "<p style=\"font-weight:700; margin:0 0 0.10em 0;\">AssumptionsLab</p>",
-            paste0("<p style=\"margin:0 0 0.20em 0;\">", tr("Assumption check for related groups", "Revisión de supuestos para grupos relacionados"), "</p>"),
+            .("<p style=\"margin:0 0 0.20em 0;\">Assumption check for related groups</p>"),
             "<p style=\"margin:0 0 0.20em 0;\">\u00A0</p>",
-            paste0("<p style=\"margin:0 0 0.20em 0;\">", tr("Use this analysis when you want to review whether a comparison between related groups has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.", "Use este análisis cuando quiera revisar si una comparación entre grupos relacionados tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."), "</p>"),
+            .("<p style=\"margin:0 0 0.20em 0;\">Use this analysis when you want to review whether a comparison between related groups has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.</p>"),
             "<p style=\"margin:0 0 0.20em 0;\">\u00A0</p>",
-            paste0("<p style=\"margin:0 0 0.08em 0;\">", tr("<b>Number of related measurements:</b> ", "<b>Número de mediciones relacionadas:</b> "), k, "</p>"),
-            paste0("<p style=\"margin:0 0 0.08em 0;\">", tr("<b>Measurements:</b> ", "<b>Mediciones:</b> "), html_escape(paste(measures, collapse = ", ")), "</p>"),
-            paste0("<p style=\"margin:0 0 0.08em 0;\">", tr("<b>Design type:</b> ", "<b>Tipo de diseño:</b> ")),
-                html_escape(ifelse(k == 2, tr("two paired measurements", "dos mediciones pareadas"), tr("Three or more repeated measurements", "tres o más mediciones repetidas"))),
+            sprintf(.("<p style=\"margin:0 0 0.08em 0;\"><b>Number of related measurements:</b> %s</p>"), k),
+            paste0("<p style=\"margin:0 0 0.08em 0;\">", .("<b>Measurements:</b> "), html_escape(paste(measures, collapse = ", ")), "</p>"),
+            .("<p style=\"margin:0 0 0.08em 0;\"><b>Design type:</b> "),
+                html_escape(ifelse(k == 2, .("two paired measurements"), .("Three or more repeated measurements"))),
             "</p>",
             "</div>"
         ))
@@ -624,23 +353,23 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 ds_i <<- ds_i + 1
             }
 
-            add_ds(tr("Selected measurements", "Mediciones seleccionadas"), paste(measures, collapse = ", "))
-            add_ds(tr("Number of measurements", "Número de mediciones"), as.character(k))
-            add_ds(tr("Total cases", "Casos totales"), as.character(n_total))
-            add_ds(tr("Complete cases used", "Casos completos usados"), as.character(n_used))
-            add_ds(tr("Cases excluded because of missing data", "Casos excluidos por datos faltantes"), as.character(n_excluded))
+            add_ds(.("Selected measurements"), paste(measures, collapse = ", "))
+            add_ds(.("Number of measurements"), as.character(k))
+            add_ds(.("Total cases"), as.character(n_total))
+            add_ds(.("Complete cases used"), as.character(n_used))
+            add_ds(.("Cases excluded because of missing data"), as.character(n_excluded))
             add_ds(
-                tr("Suggested analysis type", "Tipo de análisis sugerido"),
-                ifelse(k == 2, tr("Paired comparison", "Comparación pareada"), tr("Repeated measures", "Medidas repetidas"))
+                .("Suggested analysis type"),
+                ifelse(k == 2, .("Paired comparison"), .("Repeated measures"))
             )
 
             self$results$designGuide$setContent(html_block(
-            tr("Brief guide", "Guía breve"),
+            .("Brief guide"),
             .al_html_list(c(
-                tr("Use this option when the same units are measured two or more times.", "Use esta opción cuando las mismas unidades se miden dos o más veces."),
-                tr("Each row should represent one person, unit, or related pair.", "Cada fila debe representar una persona, unidad o par relacionado."),
-                tr("With two measurements, paired differences are analyzed.", "Con dos mediciones se analizan diferencias pareadas."),
-                tr("With three or more measurements, repeated-measures assumptions are reviewed.", "Con tres o más mediciones se revisan supuestos de medidas repetidas.")
+                .("Use this option when the same units are measured two or more times."),
+                .("Each row should represent one person, unit, or related pair."),
+                .("With two measurements, paired differences are analyzed."),
+                .("With three or more measurements, repeated-measures assumptions are reviewed.")
             )),
             raw = TRUE
         ))
@@ -788,7 +517,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 dat_profile <- dat[stats::complete.cases(dat), , drop = FALSE]
 
                 if (nrow(dat_profile) == 0) {
-                    self$results$profilePlot$setState(data.frame(reportLang = character()))
+                    self$results$profilePlot$setState(data.frame())
                 } else {
                     case_id <- seq_len(nrow(dat_profile))
 
@@ -859,12 +588,12 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
             self$results$differenceGuide$setContent(html_block(
-            tr("Brief guide", "Guía breve"),
+            .("Brief guide"),
             .al_html_list(c(
-                tr("In related groups, changes within the same unit are analyzed.", "En grupos relacionados se analizan cambios dentro de la misma unidad."),
-                tr("With two measurements, the key variable is the paired difference.", "Con dos mediciones, la variable clave es la diferencia pareada."),
-                tr("A positive mean indicates an increase; a negative mean indicates a decrease.", "Una media positiva indica aumento; una media negativa indica disminución."),
-                tr("Review normality, symmetry, and outliers in the differences.", "Revise normalidad, simetría y casos atípicos de las diferencias.")
+                .("In related groups, changes within the same unit are analyzed."),
+                .("With two measurements, the key variable is the paired difference."),
+                .("A positive mean indicates an increase; a negative mean indicates a decrease."),
+                .("Review normality, symmetry, and outliers in the differences.")
             )),
             raw = TRUE
         ))
@@ -907,7 +636,6 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 )
             }
 
-            normality_plot_state$reportLang <- lang
             self$results$normalityPlot$setState(normality_plot_state)
             self$results$normalCurvePlot$setState(normality_plot_state)
         }
@@ -925,18 +653,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 }
 
                 if (p_value < 0.05) {
-                    return(paste0(
-                        scope, " | ", test, ": p = ", format_p(p_value),
-                        ", n = ", n,
-                        tr(". Significant deviation from normality.", ". Desviación significativa de normalidad.")
-                    ))
+                    return(sprintf(.("%s | %s: p = %s, n = %s. Significant deviation from normality."), scope, test, format_p(p_value), n))
                 }
 
-                paste0(
-                    scope, " | ", test, ": p = ", format_p(p_value),
-                    ", n = ", n,
-                    tr(". Compatible with approximate normality.", ". Compatible con normalidad aproximada.")
-                )
+                sprintf(.("%s | %s: p = %s, n = %s. Compatible with approximate normality."), scope, test, format_p(p_value), n)
             }
 
 
@@ -990,8 +710,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     if (n_norm < 3 || !is.finite(sd_norm) || sd_norm <= 0) {
                         add_norm_row(
                             nm,
-                            tr("Normality", "Normalidad"),
-                            tr("Not calculated", "No calculado"),
+                            .("Normality"),
+                            .("Not calculated"),
                             NA_real_,
                             NA_real_,
                             n_norm
@@ -999,11 +719,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
                         normality_texts <- c(
                             normality_texts,
-                            paste0(
-                                nm,
-                                ": pruebas no calculadas; se requieren al menos 3 diferencias válidas ",
-                                "y variabilidad mayor que cero."
-                            )
+                            sprintf(.("%s: tests not computed; at least 3 valid differences with non-zero variability are required."), nm)
                         )
 
                         next
@@ -1033,7 +749,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, "Shapiro-Wilk", "W", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$sw, tr))
+                        add_norm_row(nm, "Shapiro-Wilk", "W", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$sw, .))
                     }
 
                     # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
@@ -1046,14 +762,14 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     if (!is.null(li)) {
                         add_norm_row(
                             nm,
-                            tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"),
+                            .("Lilliefors (corrected K-S)"),
                             "D",
                             unname(li$statistic),
                             li$p.value,
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$li, tr))
+                        add_norm_row(nm, .("Lilliefors (corrected K-S)"), "D", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$li, .))
                     }
 
                     if (!is.null(ad)) {
@@ -1066,7 +782,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, "Anderson-Darling", "A²", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$ad, tr))
+                        add_norm_row(nm, "Anderson-Darling", "A²", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$ad, .))
                     }
 
                     if (!is.null(cvm)) {
@@ -1079,7 +795,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, "Cramer-von Mises", "W²", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$cvm, tr))
+                        add_norm_row(nm, "Cramer-von Mises", "W²", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$cvm, .))
                     }
 
                     if (!is.null(sf)) {
@@ -1092,20 +808,20 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, "Shapiro-Francia", "W'", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$sf, tr))
+                        add_norm_row(nm, "Shapiro-Francia", "W'", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$sf, .))
                     }
 
                     if (!is.null(pt)) {
                         add_norm_row(
                             nm,
-                            tr("Pearson chi-square", "Pearson chi-cuadrado"),
+                            .("Pearson chi-square"),
                             "P",
                             unname(pt$statistic),
                             pt$p.value,
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$pt, tr))
+                        add_norm_row(nm, .("Pearson chi-square"), "P", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$pt, .))
                     }
 
                     jb <- .nc_d$jb
@@ -1120,7 +836,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, "Jarque-Bera", "JB", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$jb, tr))
+                        add_norm_row(nm, "Jarque-Bera", "JB", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$jb, .))
                     }
 
                     sk <- .nc_d$skew
@@ -1128,14 +844,14 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     if (!is.null(sk)) {
                         add_norm_row(
                             nm,
-                            tr("Skewness test", "Prueba de asimetría"),
+                            .("Skewness test"),
                             "z",
                             sk$value,
                             sk$p,
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, tr("Skewness test", "Prueba de asimetría"), "z", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$skew, tr))
+                        add_norm_row(nm, .("Skewness test"), "z", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$skew, .))
                     }
 
                     ku <- .nc_d$kurt
@@ -1143,28 +859,28 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     if (!is.null(ku)) {
                         add_norm_row(
                             nm,
-                            tr("Kurtosis test", "Prueba de curtosis"),
+                            .("Kurtosis test"),
                             "z",
                             ku$value,
                             ku$p,
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, tr("Kurtosis test", "Prueba de curtosis"), "z", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$kurt, tr))
+                        add_norm_row(nm, .("Kurtosis test"), "z", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$kurt, .))
                     }
                 }
             }
 
             self$results$normalityGuide$setContent(html_block(
-                tr("Brief guide", "Guía breve"),
+                .("Brief guide"),
                 .al_html_list(c(
-                    tr("With two measurements, normality is evaluated in the paired differences.", "Con dos mediciones, la normalidad se evalúa en las diferencias pareadas."),
-                    tr("With three or more measurements, paired differences and within-subject residuals are reviewed.", "Con tres o más mediciones, se revisan diferencias pareadas y residuos intra-sujeto."),
-                    tr("Shapiro-Wilk is sensitive in small and moderate samples.", "Shapiro-Wilk es sensible en muestras pequeñas y moderadas."),
-                    tr("KS and Anderson-Darling compare the empirical shape with a theoretical normal distribution.", "KS y Anderson-Darling comparan la forma empírica con una normal teórica."),
-                    tr("Jarque-Bera, skewness, and kurtosis help identify the type of deviation.", "Jarque-Bera, asimetría y curtosis ayudan a identificar el tipo de desviación."),
-                    tr("p >= .05 is compatible with approximate normality.", "p >= .05 es compatible con normalidad aproximada."),
-                    tr("p < .05 suggests a significant deviation from normality.", "p < .05 sugiere desviación significativa de normalidad.")
+                    .("With two measurements, normality is evaluated in the paired differences."),
+                    .("With three or more measurements, paired differences and within-subject residuals are reviewed."),
+                    .("Shapiro-Wilk is sensitive in small and moderate samples."),
+                    .("KS and Anderson-Darling compare the empirical shape with a theoretical normal distribution."),
+                    .("Jarque-Bera, skewness, and kurtosis help identify the type of deviation."),
+                    .("p >= .05 is compatible with approximate normality."),
+                    .("p < .05 suggests a significant deviation from normality.")
                 )),
                 raw = TRUE
             ))
@@ -1180,19 +896,14 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     significant <- sum(rr$significant, na.rm = TRUE)
 
                     if (total == 0) {
-                        interpretation <- tr("Not calculated", "No calculado")
-                        norm_recommendation <- tr("Review valid data and variability before deciding.", "Revise datos válidos y variabilidad antes de decidir.")
+                        interpretation <- .("Not calculated")
+                        norm_recommendation <- .("Review valid data and variability before deciding.")
                     } else if (significant == 0) {
-                        interpretation <- tr("Compatible with approximate normality", "Compatible con normalidad aproximada")
-                        norm_recommendation <- tr("The overall evidence does not suggest significant deviation.", "La evidencia global no sugiere desviación significativa.")
+                        interpretation <- .("Compatible with approximate normality")
+                        norm_recommendation <- .("The overall evidence does not suggest significant deviation.")
                     } else {
-                        interpretation <- paste0(
-                            significant,
-                            " de ",
-                            total,
-                            tr(" tests suggest significant deviation", " pruebas sugieren desviación significativa")
-                        )
-                        norm_recommendation <- tr("Review the Q-Q plot, outliers, and robustness of the decision.", "Revise gráfico Q-Q, casos atípicos y robustez de la decisión.")
+                        interpretation <- sprintf(.("%s de %s tests suggest significant deviation"), significant, total)
+                        norm_recommendation <- .("Review the Q-Q plot, outliers, and robustness of the decision.")
                     }
 
                     add_table_row(
@@ -1216,25 +927,19 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
             self$results$normalityInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 block96(
-                    tr("The previous table summarizes the normality battery by comparison.", "La tabla anterior sintetiza la batería de normalidad por comparación."),
-                    tr("Use the detailed table to identify which specific test activated the signal.", "Use la tabla detallada para identificar qué prueba específica activó la señal."),
-                    tr("Use Q-Q plots and outlier review before changing the methodological decision.", "Use gráficos Q-Q y revisión de casos atípicos antes de cambiar la decisión metodológica."),
-                    tr(
-                        "This battery treats Shapiro-Wilk as the most trustworthy test in the group: it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason.",
-                        "Esta batería trata a Shapiro-Wilk como la prueba más confiable del grupo: mantiene el mayor poder estadístico entre las pruebas de normalidad más comunes para prácticamente todo rango de tamaño muestral (Razali & Wah, 2011; ver referencias). La recomendación extendida de preferir Kolmogorov-Smirnov cuando n crece es un remanente de limitaciones de software antiguo, no una razón estadística."
-                    ),
-                    tr(
-                        "Common error: treating a single significant test out of nine as proof that the differences are not usable. A better reading is: how many of the nine tests agree, and does the Q-Q plot show a mild or severe departure.",
-                        "Error común: interpretar una sola prueba significativa de las nueve como prueba de que las diferencias no son utilizables. Una mejor lectura es: cuántas de las nueve pruebas coinciden, y si el gráfico Q-Q muestra una desviación leve o severa."
-                    )
+                    .("The previous table summarizes the normality battery by comparison."),
+                    .("Use the detailed table to identify which specific test activated the signal."),
+                    .("Use Q-Q plots and outlier review before changing the methodological decision."),
+                    .("This battery treats Shapiro-Wilk as the most trustworthy test in the group: it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason."),
+                    .("Common error: treating a single significant test out of nine as proof that the differences are not usable. A better reading is: how many of the nine tests agree, and does the Q-Q plot show a mild or severe departure.")
                 )
             ))
 
         if (length(normality_summary_texts) > 0) {
             self$results$normalityRecommendation$setContent(html_block(
-                tr("Recommendation", "Recomendación"),
+                .("Recommendation"),
                 paste(normality_summary_texts, collapse = "
 ")
             ))
@@ -1301,50 +1006,32 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 }, error = function(e) NULL)
 
                 if (!is.null(sk) && is.finite(sk$p)) {
-                    add_sym(nm, tr("Skewness z", "Asimetría z"), sk$value, sk$p)
+                    add_sym(nm, .("Skewness z"), sk$value, sk$p)
                 } else {
-                    sk_reason <- if (length(d) < 2) tr(
-                        "Could not be computed - fewer than 2 valid differences.",
-                        "No se pudo calcular - menos de 2 diferencias válidas."
-                    ) else tr(
-                        "Could not be computed - the differences have no variation (they are constant).",
-                        "No se pudo calcular - las diferencias no tienen variación (son constantes)."
-                    )
-                    add_sym(nm, tr("Skewness z", "Asimetría z"), NA_real_, NA_real_, reason = sk_reason)
+                    sk_reason <- if (length(d) < 2) .("Could not be computed - fewer than 2 valid differences.") else .("Could not be computed - the differences have no variation (they are constant).")
+                    add_sym(nm, .("Skewness z"), NA_real_, NA_real_, reason = sk_reason)
                 }
             }
 
             self$results$symmetryGuide$setContent(html_block(
-            tr("Brief guide", "Guía breve"),
+            .("Brief guide"),
             .al_html_list(c(
-                tr("Symmetry of differences is important for the Wilcoxon signed-rank test.", "La simetría de diferencias es importante para Wilcoxon signed-rank."),
-                tr("p >= .05 is compatible with approximate symmetry.", "p >= .05 es compatible con simetría aproximada."),
-                tr("p < .05 suggests significant asymmetry in the differences.", "p < .05 sugiere asimetría significativa de las diferencias."),
-                tr("If there is strong asymmetry, consider the sign test.", "Si hay asimetría fuerte, considere prueba de signos.")
+                .("Symmetry of differences is important for the Wilcoxon signed-rank test."),
+                .("p >= .05 is compatible with approximate symmetry."),
+                .("p < .05 suggests significant asymmetry in the differences."),
+                .("If there is strong asymmetry, consider the sign test.")
             )),
             raw = TRUE
         ))
 
             self$results$symmetryInterpretation$setContent(html_block(
-            tr("Applied Interpretation", "Interpretación Aplicada"),
+            .("Applied Interpretation"),
             block96(paste(
                 paste(symmetry_texts, collapse = "\n"),
-                tr(
-                    "Why it matters: symmetry of the differences is the key requirement behind the Wilcoxon signed-rank test, which assumes the distribution of differences is symmetric around the (unknown) median. If that assumption fails, the test can still run, but what it is really testing shifts from \"are medians different\" to a vaguer statement about distributions, making the result harder to interpret in plain terms.",
-                    "Por qué importa: la simetría de las diferencias es el requisito clave detrás de la prueba de Wilcoxon signed-rank, que asume que la distribución de las diferencias es simétrica alrededor de la mediana (desconocida). Si ese supuesto falla, la prueba igual puede correr, pero lo que realmente evalúa cambia de \"¿son distintas las medianas?\" a una afirmación más vaga sobre las distribuciones, lo cual hace el resultado más difícil de interpretar en términos simples."
-                ),
-                tr(
-                    "Common error: treating symmetry and normality as the same thing. This test only checks whether skewness is close to zero; a distribution can be symmetric and still not normal (e.g., too flat or too peaked), or slightly asymmetric yet close enough to normal for practical purposes.",
-                    "Error común: tratar simetría y normalidad como lo mismo. Esta prueba solo revisa si la asimetría es cercana a cero; una distribución puede ser simétrica y aun así no ser normal (por ejemplo, demasiado plana o demasiado apuntada), o levemente asimétrica y aun así cercana a lo normal para fines prácticos."
-                ),
-                tr(
-                    "Sample-size caveat: skewness-based tests have limited power with small samples (they may miss real asymmetry) and can flag trivial asymmetry as significant with very large samples.",
-                    "Matiz de tamaño de muestra: las pruebas basadas en asimetría tienen poder limitado en muestras pequeñas (pueden no detectar asimetría real) y pueden marcar como significativa una asimetría trivial con muestras muy grandes."
-                ),
-                tr(
-                    "If asymmetry is strong, prefer the sign test over Wilcoxon signed-rank, since the sign test does not require symmetry of the differences.",
-                    "Si la asimetría es fuerte, prefiera la prueba de signos sobre Wilcoxon signed-rank, ya que la prueba de signos no requiere simetría de las diferencias."
-                ),
+                .("Why it matters: symmetry of the differences is the key requirement behind the Wilcoxon signed-rank test, which assumes the distribution of differences is symmetric around the (unknown) median. If that assumption fails, the test can still run, but what it is really testing shifts from \"are medians different\" to a vaguer statement about distributions, making the result harder to interpret in plain terms."),
+                .("Common error: treating symmetry and normality as the same thing. This test only checks whether skewness is close to zero; a distribution can be symmetric and still not normal (e.g., too flat or too peaked), or slightly asymmetric yet close enough to normal for practical purposes."),
+                .("Sample-size caveat: skewness-based tests have limited power with small samples (they may miss real asymmetry) and can flag trivial asymmetry as significant with very large samples."),
+                .("If asymmetry is strong, prefer the sign test over Wilcoxon signed-rank, since the sign test does not require symmetry of the differences."),
                 sep = "\n\n"
             ))
         ))
@@ -1365,7 +1052,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                         statistic = statistic,
                         value = clean_num(value),
                         df = ifelse(is.na(clean_num(df)), NA_integer_, as.integer(df)),
-                        p = ifelse(is.na(clean_num(p_value)), tr("Not applicable", "No aplica"), format_p(p_value)),
+                        p = ifelse(is.na(clean_num(p_value)), .("Not applicable"), format_p(p_value)),
                         pSig = p_sig(p_value)
                     )
                 )
@@ -1379,7 +1066,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             }
 
             if (k < 3) {
-                add_spher(tr("Not applicable", "No aplicable"), tr("Two measurements", "Dos mediciones"), NA_real_, NA_integer_, NA_real_)
+                add_spher(.("Not applicable"), .("Two measurements"), NA_real_, NA_integer_, NA_real_)
             } else {
                 sph <- tryCatch({
                     Y <- as.matrix(dat2[, measures, drop = FALSE])
@@ -1411,7 +1098,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
                 if (!is.null(sph)) {
                     mauchly_p_value <- sph$p
-                    add_spher(tr("Approximate Mauchly", "Mauchly aproximado"), "W", sph$W, sph$df, sph$p)
+                    add_spher(.("Approximate Mauchly"), "W", sph$W, sph$df, sph$p)
                     add_spher("Greenhouse-Geisser epsilon", "epsilon",
                               sph$gg, NA_integer_, NA_real_)
                     add_spher("Huynh-Feldt epsilon", "epsilon",
@@ -1419,14 +1106,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     add_spher("Lower-bound epsilon", "epsilon",
                               sph$lb, NA_integer_, NA_real_)
                 } else {
-                    sph_reason <- if (n_used <= k) tr(
-                        paste0("Could not be computed - the covariance matrix of the ", k, " measurements needs more than ", k, " complete cases (there are ", n_used, ")."),
-                        paste0("No se pudo calcular - la matriz de covarianzas de las ", k, " mediciones necesita más de ", k, " casos completos (hay ", n_used, ").")
-                    ) else tr(
-                        "Could not be computed for these measurements.",
-                        "No se pudo calcular para estas mediciones."
-                    )
-                    add_spher(tr("Approximate Mauchly", "Mauchly aproximado"), "W", NA_real_, NA_integer_, NA_real_, reason = sph_reason)
+                    sph_reason <- if (n_used <= k) sprintf(.("Could not be computed - the covariance matrix of the %s measurements needs more than %s complete cases (there are %s)."), k, k, n_used) else .("Could not be computed for these measurements.")
+                    add_spher(.("Approximate Mauchly"), "W", NA_real_, NA_integer_, NA_real_, reason = sph_reason)
                     add_spher("Greenhouse-Geisser epsilon", "epsilon",
                               NA_real_, NA_integer_, NA_real_, reason = sph_reason)
                     add_spher("Huynh-Feldt epsilon", "epsilon",
@@ -1439,36 +1120,24 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             sphericity_text <- interpret_sphericity(mauchly_p_value, n_used, k)
 
             self$results$sphericityGuide$setContent(html_block(
-            tr("Brief guide", "Guía breve"),
+            .("Brief guide"),
             .al_html_list(c(
-                tr("Sphericity applies only with three or more related measurements.", "La esfericidad aplica solo con tres o más mediciones relacionadas."),
-                tr("p >= .05 is compatible with approximate sphericity.", "p >= .05 es compatible con esfericidad aproximada."),
-                tr("p < .05 suggests a significant deviation from sphericity.", "p < .05 sugiere desviación significativa de esfericidad."),
-                tr("If it fails, consider GG/HF corrections, Friedman, or mixed models.", "Si falla, considere correcciones GG/HF, Friedman o modelos mixtos.")
+                .("Sphericity applies only with three or more related measurements."),
+                .("p >= .05 is compatible with approximate sphericity."),
+                .("p < .05 suggests a significant deviation from sphericity."),
+                .("If it fails, consider GG/HF corrections, Friedman, or mixed models.")
             )),
             raw = TRUE
         ))
 
             self$results$sphericityInterpretation$setContent(html_block(
-            tr("Applied Interpretation", "Interpretación Aplicada"),
+            .("Applied Interpretation"),
             block96(paste(
                 sphericity_text,
-                tr(
-                    "Why it matters: repeated-measures ANOVA assumes the variances of the differences between every pair of measurements are equal (sphericity). When this fails, the F-test's degrees of freedom are effectively smaller than assumed, so the uncorrected test rejects the null hypothesis more often than it should, even when there is no real effect.",
-                    "Por qué importa: el ANOVA de medidas repetidas asume que las varianzas de las diferencias entre cada par de mediciones son iguales (esfericidad). Cuando esto falla, los grados de libertad efectivos de la prueba F son en realidad menores de lo que se asume, así que la prueba sin corrección rechaza la hipótesis nula con más frecuencia de la debida, incluso cuando no hay un efecto real."
-                ),
-                tr(
-                    "Common error: assuming that a significant Mauchly test means repeated-measures ANOVA cannot be used at all. In practice, it means the uncorrected F-test is likely too liberal; Greenhouse-Geisser or Huynh-Feldt corrections adjust the degrees of freedom precisely to compensate for this.",
-                    "Error común: asumir que un Mauchly significativo impide usar por completo el ANOVA de medidas repetidas. En la práctica, significa que la prueba F sin corrección probablemente es demasiado liberal; las correcciones Greenhouse-Geisser o Huynh-Feldt ajustan los grados de libertad precisamente para compensar esto."
-                ),
-                tr(
-                    "Sample-size caveat: Mauchly's test is sensitive to non-normality and can be unreliable with small samples; with very large samples it may flag small, practically unimportant violations of sphericity as significant.",
-                    "Matiz de tamaño de muestra: la prueba de Mauchly es sensible a la no normalidad y puede ser poco confiable con muestras pequeñas; con muestras muy grandes puede marcar como significativas violaciones de esfericidad pequeñas y poco relevantes en la práctica."
-                ),
-                tr(
-                    "If sphericity is doubtful, use the Greenhouse-Geisser or Huynh-Feldt corrected p-values in the \"Sphericity and Corrections\" table, switch to Friedman's non-parametric test, or use a mixed model that does not require this assumption.",
-                    "Si la esfericidad es dudosa, use los valores p corregidos por Greenhouse-Geisser o Huynh-Feldt de la tabla \"Esfericidad y correcciones\", cambie a la prueba no paramétrica de Friedman, o use un modelo mixto que no requiera este supuesto."
-                ),
+                .("Why it matters: repeated-measures ANOVA assumes the variances of the differences between every pair of measurements are equal (sphericity). When this fails, the F-test's degrees of freedom are effectively smaller than assumed, so the uncorrected test rejects the null hypothesis more often than it should, even when there is no real effect."),
+                .("Common error: assuming that a significant Mauchly test means repeated-measures ANOVA cannot be used at all. In practice, it means the uncorrected F-test is likely too liberal; Greenhouse-Geisser or Huynh-Feldt corrections adjust the degrees of freedom precisely to compensate for this."),
+                .("Sample-size caveat: Mauchly's test is sensitive to non-normality and can be unreliable with small samples; with very large samples it may flag small, practically unimportant violations of sphericity as significant."),
+                .("If sphericity is doubtful, use the Greenhouse-Geisser or Huynh-Feldt corrected p-values in the \"Sphericity and Corrections\" table, switch to Friedman's non-parametric test, or use a mixed model that does not require this assumption."),
                 sep = "\n\n"
             ))
         ))
@@ -1477,16 +1146,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             # ES: Matrices de correlación (Pearson y dCor, formato APA 7) + discordancia con copent.
 
             self$results$correlationMatrixGuide$setContent(html_block(
-                tr("Quick guide", "Guía breve"),
+                .("Quick guide"),
                 block96(paste(
-                    tr(
-                        "These two tables show the intercorrelation structure of the measured variables, each in APA 7 format (lower triangle, numbered variables). This is directly relevant to a related-samples design: strong or weak correlations among the measures affect the power and interpretation of within-subject comparisons.",
-                        "Estas dos tablas muestran la estructura de intercorrelación de las variables medidas, cada una en formato APA 7 (triángulo inferior, variables numeradas). Esto es directamente relevante para un diseño de muestras relacionadas: correlaciones fuertes o débiles entre las mediciones afectan la potencia y la interpretación de las comparaciones intrasujeto."
-                    ),
-                    tr(
-                        "The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (dCor, Szekely et al., 2007), which detects linear and non-linear association alike.",
-                        "La primera reporta la correlación de Pearson convencional (solo detecta asociación lineal); la segunda reporta la correlación de distancia (dCor, Székely et al., 2007), que detecta asociación lineal y no lineal por igual."
-                    ),
+                    .("These two tables show the intercorrelation structure of the measured variables, each in APA 7 format (lower triangle, numbered variables). This is directly relevant to a related-samples design: strong or weak correlations among the measures affect the power and interpretation of within-subject comparisons."),
+                    .("The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (dCor, Szekely et al., 2007), which detects linear and non-linear association alike."),
                     sep = "\n\n"
                 ))
             ))
@@ -1583,29 +1246,23 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
                     self$results$correlationMatrixNote$setContent(html_block(NULL,
                         c(
-                            paste0(sprintf("N = %d.", n_used), " ", tr("* p < .05, ** p < .01, *** p < .001", "* p < .05, ** p < .01, *** p < .001")),
+                            sprintf(.("%s * p < .05, ** p < .01, *** p < .001"), sprintf("N = %d.", n_used)),
                             .al_dcor_na_note(lang)
                         ),
                         paragraphs = FALSE
                     ))
                 } else {
                     self$results$correlationMatrixNote$setContent(html_block(NULL,
-                        tr("Not applicable: fewer than two measured variables.", "No aplica: menos de dos variables medidas."),
+                        .("Not applicable: fewer than two measured variables."),
                         paragraphs = FALSE
                     ))
                 }
 
                 self$results$correlationComparisonGuide$setContent(html_block(
-                    tr("Pearson / dCor / Copula Entropy Discordance Analysis", "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
+                    .("Pearson / dCor / Copula Entropy Discordance Analysis"),
                     block96(paste(
-                        tr(
-                            "Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship.",
-                            "Dado que la r de Pearson solo capta asociación lineal mientras que dCor capta asociación lineal y no lineal por igual, un par cuyo dCor sea notablemente mayor que su |r| de Pearson es una señal (no una prueba) de una relación no lineal."
-                        ),
-                        tr(
-                            "Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10. The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence.",
-                            "Se señalan en la tabla \"Pares con diferencia notable entre Pearson y dCor\" los pares con una brecha (dCor menos |r| de Pearson) mayor a .10. El resultado de la prueba de entropía copular (CE, copent()) para el mismo par se muestra al lado como una segunda línea de evidencia libre de supuestos distribucionales."
-                        ),
+                        .("Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship."),
+                        .("Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10. The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence."),
                         .al_permutation_note(lang, 199, 20260704),
                         sep = "\n\n"
                     ))
@@ -1628,27 +1285,23 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                         dcor = apaCell(pr$dcor, pr$dcorP),
                         gap = gap, ce = pr$ce, ceP = pr$ceP,
                         ceSig = p_sig(pr$ceP),
-                        flag = tr("Yes", "Sí")
+                        flag = .("Yes")
                     ))
                 }
 
                 if (length(flaggedPairs) == 0) {
                     self$results$correlationComparisonInterpretation$setContent(html_block(
-                        tr("Applied Interpretation", "Interpretación Aplicada"),
+                        .("Applied Interpretation"),
                         if (k < 2)
-                            tr("Not applicable: fewer than two measured variables.", "No aplica: menos de dos variables medidas.")
+                            .("Not applicable: fewer than two measured variables.")
                         else
-                            tr(sprintf("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the measured variables.", gapThreshold),
-                               sprintf("Ningún par muestra una brecha Pearson/dCor mayor a %.2f; no hay indicios de asociación no lineal no modelada entre las variables medidas.", gapThreshold)),
+                            sprintf(.("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the measured variables."), gapThreshold),
                         paragraphs = FALSE
                     ))
                 } else {
                     self$results$correlationComparisonInterpretation$setContent(html_block(
-                        tr("Applied Interpretation", "Interpretación Aplicada"),
-                        tr(sprintf("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Inspect a scatterplot of each flagged pair; when copula entropy is also significant for a pair, this reinforces the suspicion of an unmodeled non-linear dependency.",
-                                   length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", ")),
-                           sprintf("%d par(es) muestran una brecha Pearson/dCor mayor a %.2f: %s. Revise un diagrama de dispersión de cada par señalado; cuando la entropía copular también es significativa para un par, esto refuerza la sospecha de una dependencia no lineal no modelada.",
-                                   length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", "))),
+                        .("Applied Interpretation"),
+                        sprintf(.("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Inspect a scatterplot of each flagged pair; when copula entropy is also significant for a pair, this reinforces the suspicion of an unmodeled non-linear dependency."), length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", ")),
                         paragraphs = FALSE
                     ))
                 }
@@ -1679,8 +1332,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                             case = as.integer(which(complete)[ii]),
                             comparison = nm,
                             difference = clean_num(d[ii]),
-                            criterion = paste0(tr("Outside [", "Fuera de ["), round(low, 4),
-                                               ", ", round(high, 4), "]")
+                            criterion = sprintf(.("Outside %s"), sprintf("[%s, %s]", round(low, 4), round(high, 4)))
                         )
                     )
 
@@ -1694,20 +1346,20 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     "out_none",
                     list(
                         case = NA_integer_,
-                        comparison = tr("No flagged cases", "Sin casos marcados"),
+                        comparison = .("No flagged cases"),
                         difference = NA_real_,
-                        criterion = tr("No differences outside 1.5*IQR were detected", "No se detectaron diferencias fuera de 1.5*IQR")
+                        criterion = .("No differences outside 1.5*IQR were detected")
                     )
                 )
             }
 
             self$results$outliersGuide$setContent(html_block(
-            tr("Brief guide", "Guía breve"),
+            .("Brief guide"),
             .al_html_list(c(
-                tr("Outliers are reviewed on paired differences.", "Los casos atípicos se revisan sobre diferencias pareadas."),
-                tr("The IQR rule is used: outside Q1 - 1.5*IQR or Q3 + 1.5*IQR.", "Se usa la regla IQR: fuera de Q1 - 1.5*IQR o Q3 + 1.5*IQR."),
-                tr("A flagged case should not be removed automatically.", "Un caso marcado no debe eliminarse automáticamente."),
-                tr("Review the value and justify any decision.", "Revise el dato y justifique cualquier decisión.")
+                .("Outliers are reviewed on paired differences."),
+                .("The IQR rule is used: outside Q1 - 1.5*IQR or Q3 + 1.5*IQR."),
+                .("A flagged case should not be removed automatically."),
+                .("Review the value and justify any decision.")
             )),
             raw = TRUE
         ))
@@ -1718,56 +1370,33 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             n_comparisons_with_outliers <- length(comparisons_with_outliers)
 
             outliers_finding_text <- if (n_outliers_total == 0) {
-                tr(
-                    paste0("Across ", n_comparisons_total, " paired comparison(s), the IQR rule flagged no outlier differences."),
-                    paste0("En ", n_comparisons_total, " comparación(es) pareada(s), la regla IQR no marcó ninguna diferencia atípica.")
-                )
+                sprintf(.("Across %s paired comparison(s), the IQR rule flagged no outlier differences."), n_comparisons_total)
             } else {
                 comparisons_desc <- paste0(
                     comparisons_with_outliers, " (", outlier_counts_by_comparison[comparisons_with_outliers], ")",
                     collapse = ", "
                 )
-                tr(
-                    paste0(
-                        "Across ", n_comparisons_total, " paired comparison(s), the IQR rule flagged ", n_outliers_total,
-                        " difference value(s) as outliers, concentrated in ", n_comparisons_with_outliers,
-                        " comparison(s): ", comparisons_desc, "."
-                    ),
-                    paste0(
-                        "En ", n_comparisons_total, " comparación(es) pareada(s), la regla IQR marcó ", n_outliers_total,
-                        " valor(es) de diferencia como atípico(s), concentrados en ", n_comparisons_with_outliers,
-                        " comparación(es): ", comparisons_desc, "."
-                    )
-                )
+                sprintf(.("Across %s paired comparison(s), the IQR rule flagged %s difference value(s) as outliers, concentrated in %s comparison(s): %s."), n_comparisons_total, n_outliers_total, n_comparisons_with_outliers, comparisons_desc)
             }
 
             self$results$outliersInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 block96(paste(
                     outliers_finding_text,
-                    tr(
-                        "Why it matters: in a paired design, a case with an unusually large or small difference pulls the mean difference and can inflate its standard deviation, weakening a paired t-test. It also contributes disproportionately to the rank sum in Wilcoxon signed-rank, so its influence does not disappear simply by switching to a non-parametric test.",
-                        "Por qué importa: en un diseño pareado, un caso con una diferencia inusualmente grande o pequeña desplaza la media de la diferencia y puede inflar su desviación estándar, debilitando una t pareada. También contribuye de forma desproporcionada a la suma de rangos en Wilcoxon signed-rank, así que su influencia no desaparece por el simple hecho de cambiar a una prueba no paramétrica."
-                    ),
-                    tr(
-                        "Common error: automatically removing every flagged pair. First check whether the value reflects a data entry error, a genuine and substantively meaningful change for that person, or measurement noise, and compare the conclusion with and without the flagged case(s) before deciding.",
-                        "Error común: eliminar automáticamente todos los pares marcados. Primero verifique si el valor refleja un error de registro, un cambio genuino y sustantivamente relevante para esa persona, o ruido de medición, y compare la conclusión con y sin el o los casos marcados antes de decidir."
-                    ),
-                    tr(
-                        "Sample-size nuance: with a small number of pairs, the IQR rule's Q1/Q3 estimates are themselves imprecise, so a case can be flagged mainly because the quartiles are unstable rather than because the difference is truly extreme.",
-                        "Matiz de tamaño de muestra: con un número pequeño de pares, las estimaciones de Q1/Q3 de la regla IQR son en sí mismas imprecisas, por lo que un caso puede quedar marcado principalmente porque los cuartiles son inestables, no porque la diferencia sea verdaderamente extrema."
-                    ),
+                    .("Why it matters: in a paired design, a case with an unusually large or small difference pulls the mean difference and can inflate its standard deviation, weakening a paired t-test. It also contributes disproportionately to the rank sum in Wilcoxon signed-rank, so its influence does not disappear simply by switching to a non-parametric test."),
+                    .("Common error: automatically removing every flagged pair. First check whether the value reflects a data entry error, a genuine and substantively meaningful change for that person, or measurement noise, and compare the conclusion with and without the flagged case(s) before deciding."),
+                    .("Sample-size nuance: with a small number of pairs, the IQR rule's Q1/Q3 estimates are themselves imprecise, so a case can be flagged mainly because the quartiles are unstable rather than because the difference is truly extreme."),
                     sep = "\n\n"
                 ))
             ))
 
             self$results$methodGuide$setContent(html_block(
-            tr("Brief guide", "Guía breve"),
+            .("Brief guide"),
             .al_html_list(c(
-                tr("The suggested test depends on the number of measurements and assumptions.", "La prueba sugerida depende del número de mediciones y los supuestos."),
-                tr("Two measurements: paired t-test, Wilcoxon signed-rank, or sign test.", "Dos mediciones: t pareada, Wilcoxon signed-rank o prueba de signos."),
-                tr("Three or more measurements: RM-ANOVA, corrections, Friedman, or mixed model.", "Tres o más mediciones: RM-ANOVA, correcciones, Friedman o modelo mixto."),
-                tr("The decision should combine evidence, design, and research question.", "La decisión debe combinar evidencia, diseño y pregunta de investigación.")
+                .("The suggested test depends on the number of measurements and assumptions."),
+                .("Two measurements: paired t-test, Wilcoxon signed-rank, or sign test."),
+                .("Three or more measurements: RM-ANOVA, corrections, Friedman, or mixed model."),
+                .("The decision should combine evidence, design, and research question.")
             )),
             raw = TRUE
         ))
@@ -1795,48 +1424,48 @@ method_i <<- method_i + 1
 
                 if (!normality_problem && !outlier_problem) {
                     add_method(
-                        tr("Two paired measurements", "Dos mediciones pareadas"),
-                        tr("Approximately normal differences and no severe outliers.", "Diferencias aproximadamente normales y sin atípicos graves."),
-                        tr("Paired t-test", "t pareada"),
-                        tr("Use when the mean of the differences is the central parameter.", "Use cuando la media de las diferencias sea el parámetro central.")
+                        .("Two paired measurements"),
+                        .("Approximately normal differences and no severe outliers."),
+                        .("Paired t-test"),
+                        .("Use when the mean of the differences is the central parameter.")
                     )
 
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("For two related measurements, the available evidence is compatible with a parametric paired comparison if the question focuses on the mean of the differences.", "Para dos mediciones relacionadas, la evidencia disponible es compatible con una comparación pareada paramétrica si la pregunta se centra en la media de las diferencias.")
+                        .("For two related measurements, the available evidence is compatible with a parametric paired comparison if the question focuses on the mean of the differences.")
                     )
                 } else {
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("For two related measurements, review the robustness of the comparison because there are signs of doubtful normality or outliers in the differences.", "Para dos mediciones relacionadas, revise la robustez de la comparación porque hay señales de normalidad dudosa o casos atípicos en las diferencias.")
+                        .("For two related measurements, review the robustness of the comparison because there are signs of doubtful normality or outliers in the differences.")
                     )
                 }
 
                 add_method(
-                    tr("Two paired measurements", "Dos mediciones pareadas"),
-                    tr("Doubtful normality, small sample, or ordinal differences.", "Normalidad dudosa, muestra pequeña o diferencias ordinales."),
+                    .("Two paired measurements"),
+                    .("Doubtful normality, small sample, or ordinal differences."),
                     "Wilcoxon signed-rank",
-                    tr("Use if the distribution of differences is approximately symmetric.", "Use si la distribución de diferencias es aproximadamente simétrica.")
+                    .("Use if the distribution of differences is approximately symmetric.")
                 )
 
                 add_method(
-                    tr("Two paired measurements", "Dos mediciones pareadas"),
-                    tr("Marked asymmetry or presence of relevant outliers.", "Asimetría marcada o presencia de atípicos relevantes."),
-                    tr("Sign test", "Prueba de signos"),
-                    tr("Use if you only want to evaluate the direction of change.", "Use si solo desea evaluar dirección del cambio.")
+                    .("Two paired measurements"),
+                    .("Marked asymmetry or presence of relevant outliers."),
+                    .("Sign test"),
+                    .("Use if you only want to evaluate the direction of change.")
                 )
 
                 if (normality_problem) {
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("The normality of the differences showed at least one significant signal; review the Q-Q plot and observed distribution before deciding.", "La normalidad de las diferencias mostró al menos una señal significativa; revise Q-Q plot y distribución observada antes de decidir.")
+                        .("The normality of the differences showed at least one significant signal; review the Q-Q plot and observed distribution before deciding.")
                     )
                 }
 
                 if (outlier_problem) {
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("Outliers were detected in the differences; they should not be removed automatically, but they should be reviewed and documented.", "Se detectaron casos atípicos en diferencias; no deben eliminarse automáticamente, pero sí revisarse y documentarse.")
+                        .("Outliers were detected in the differences; they should not be removed automatically, but they should be reviewed and documented.")
                     )
                 }
 
@@ -1844,86 +1473,86 @@ method_i <<- method_i + 1
 
                 if (!normality_problem && !sphericity_problem && !outlier_problem) {
                     add_method(
-                        tr("Three or more measurements", "Tres o más mediciones"),
-                        tr("Acceptable normality/residuals, compatible sphericity, and no relevant outliers.", "Normalidad/residuos aceptables, esfericidad compatible y sin atípicos relevantes."),
+                        .("Three or more measurements"),
+                        .("Acceptable normality/residuals, compatible sphericity, and no relevant outliers."),
                         "ANOVA de medidas repetidas",
-                        tr("Use when the design is complete and the measurements are comparable.", "Use cuando el diseño es completo y las mediciones son comparables.")
+                        .("Use when the design is complete and the measurements are comparable.")
                     )
 
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("For three or more related measurements, the overall evidence is compatible with repeated-measures ANOVA without special correction.", "Para tres o más mediciones relacionadas, la evidencia global es compatible con ANOVA de medidas repetidas sin corrección especial.")
+                        .("For three or more related measurements, the overall evidence is compatible with repeated-measures ANOVA without special correction.")
                     )
                 }
 
                 if (sphericity_problem) {
                     add_method(
-                        tr("Three or more measurements", "Tres o más mediciones"),
-                        tr("Mauchly significant or doubtful sphericity.", "Mauchly significativo o esfericidad dudosa."),
-                        tr("RM-ANOVA with GG/HF correction", "RM-ANOVA con corrección GG/HF"),
-                        tr("Use Greenhouse-Geisser or Huynh-Feldt corrections if the parametric approach is retained.", "Use correcciones Greenhouse-Geisser o Huynh-Feldt si se mantiene el enfoque paramétrico.")
+                        .("Three or more measurements"),
+                        .("Mauchly significant or doubtful sphericity."),
+                        .("RM-ANOVA with GG/HF correction"),
+                        .("Use Greenhouse-Geisser or Huynh-Feldt corrections if the parametric approach is retained.")
                     )
 
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("The sphericity test was significant; interpreting repeated-measures ANOVA without correction is not recommended.", "La prueba de esfericidad fue significativa; no se recomienda interpretar un ANOVA de medidas repetidas sin corrección.")
+                        .("The sphericity test was significant; interpreting repeated-measures ANOVA without correction is not recommended.")
                     )
                 } else {
                     add_method(
-                        tr("Three or more measurements", "Tres o más mediciones"),
-                        tr("Compatible sphericity according to the available diagnostic evidence.", "Esfericidad compatible según el diagnóstico disponible."),
+                        .("Three or more measurements"),
+                        .("Compatible sphericity according to the available diagnostic evidence."),
                         "ANOVA de medidas repetidas",
-                        tr("Use if normality, outliers, and the substantive design are also acceptable.", "Use si también son aceptables normalidad, atípicos y el diseño sustantivo.")
+                        .("Use if normality, outliers, and the substantive design are also acceptable.")
                     )
                 }
 
                 if (normality_problem || outlier_problem) {
                     add_method(
-                        tr("Three or more measurements", "Tres o más mediciones"),
-                        tr("Doubtful normality, ordinal scale, outliers, or concern about robustness.", "Normalidad dudosa, escala ordinal, atípicos o preocupación por robustez."),
+                        .("Three or more measurements"),
+                        .("Doubtful normality, ordinal scale, outliers, or concern about robustness."),
                         "Friedman",
-                        tr("Use as a nonparametric alternative if robustness of assumptions is a central concern.", "Use como alternativa no paramétrica si la robustez de los supuestos es una preocupación central.")
+                        .("Use as a nonparametric alternative if robustness of assumptions is a central concern.")
                     )
                 } else {
                     add_method(
-                        tr("Three or more measurements", "Tres o más mediciones"),
-                        tr("Main assumptions are reasonable, but a robust nonparametric alternative is desired.", "Supuestos principales razonables, pero se desea una alternativa robusta no paramétrica."),
+                        .("Three or more measurements"),
+                        .("Main assumptions are reasonable, but a robust nonparametric alternative is desired."),
                         "Friedman",
-                        tr("Use if the scale, distribution, or substantive question favors ranks over means.", "Use si la escala, distribución o pregunta sustantiva favorece rangos sobre medias.")
+                        .("Use if the scale, distribution, or substantive question favors ranks over means.")
                     )
                 }
 
                 add_method(
-                    tr("Three or more measurements", "Tres o más mediciones"),
-                    tr("Missing data, complex structure, covariates, or interest in random effects.", "Datos faltantes, estructura compleja, covariables o interés en efectos aleatorios."),
-                    tr("Mixed model", "Modelo mixto"),
-                    tr("Use when you need flexibility for incomplete cases, covariates, or complex longitudinal structure.", "Use cuando necesita flexibilidad para casos incompletos, covariables o estructura longitudinal compleja.")
+                    .("Three or more measurements"),
+                    .("Missing data, complex structure, covariates, or interest in random effects."),
+                    .("Mixed model"),
+                    .("Use when you need flexibility for incomplete cases, covariates, or complex longitudinal structure.")
                 )
 
                 if (normality_problem) {
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("Normality showed at least one significant signal; use Q-Q plots, the observed curve, and outliers to evaluate robustness.", "La normalidad mostró al menos una señal significativa; use los Q-Q plots, la curva observada y los casos atípicos para valorar robustez.")
+                        .("Normality showed at least one significant signal; use Q-Q plots, the observed curve, and outliers to evaluate robustness.")
                     )
                 }
 
                 if (outlier_problem) {
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("Outliers were detected in the differences; review those cases before supporting a definitive decision.", "Se detectaron casos atípicos en diferencias; revise esos casos antes de sostener una decisión definitiva.")
+                        .("Outliers were detected in the differences; review those cases before supporting a definitive decision.")
                     )
                 }
 
                 if (!normality_problem && !sphericity_problem && !outlier_problem) {
                     recommendation_parts <- c(
                         recommendation_parts,
-                        tr("No relevant signals for normality, sphericity, or outliers were detected according to the applied criteria.", "No se detectaron señales relevantes de normalidad, esfericidad o atípicos según los criterios aplicados.")
+                        .("No relevant signals for normality, sphericity, or outliers were detected according to the applied criteria.")
                     )
                 }
             }
 
             if (length(recommendation_parts) == 0) {
-                recommendation <- tr("Interpret the results considering design, assumptions, sample size, and research question.", "Interprete los resultados considerando diseño, supuestos, tamaño muestral y pregunta de investigación.")
+                recommendation <- .("Interpret the results considering design, assumptions, sample size, and research question.")
             } else {
                 recommendation <- paste(recommendation_parts, collapse = " ")
             }
@@ -1939,19 +1568,15 @@ method_i <<- method_i + 1
         }
 
 self$results$notes$setContent(html_block(
-            tr("Notes and recommendation", "Notas y recomendación"),
+            .("Notes and recommendation"),
             block96(
-                paste0(tr("Suggested decision: ", "Decisión sugerida: "), recommendation),
-                tr("Significance codes: * p < .05, ** p < .01, *** p < .001.", "Códigos de significancia: * p < .05, ** p < .01, *** p < .001.")
+                sprintf(.("Suggested decision: %s"), recommendation),
+                .("Significance codes: * p < .05, ** p < .01, *** p < .001.")
             )
         ))
         },
 
-        .tr = function(en, es = NULL) {
-        lang <- tryCatch(.al_normalize_lang(self$options$reportLang), error = function(e) "es")
-        if (is.null(es)) es <- en
-        if (identical(lang, "es")) es else en
-    }, .emptyRelatedPlot = function(message) {
+        .emptyRelatedPlot = function(message) {
             graphics::plot.new()
             graphics::par(mar = c(1, 1, 1, 1))
             graphics::text(
@@ -1968,30 +1593,6 @@ self$results$notes$setContent(html_block(
             )
         },
 
-        .plotTr = function(en, es = NULL, image = NULL) {
-            if (is.null(es))
-                es <- en
-
-            plot_lang <- tryCatch({
-                st <- if (!is.null(image)) image$state else NULL
-                if (!is.null(st) &&
-                    is.data.frame(st) &&
-                    "reportLang" %in% names(st) &&
-                    NROW(st) > 0 &&
-                    nzchar(as.character(st$reportLang[1]))) {
-                    as.character(st$reportLang[1])
-                } else {
-                    as.character(self$options$reportLang)
-                }
-            }, error = function(e) "es")
-
-            plot_lang <- tryCatch(.al_normalize_lang(plot_lang), error = function(e) "es")
-
-            if (identical(plot_lang, "es"))
-                es
-            else
-                en
-        },
 
         # Plot theme/palette migrated to jamovi's native ggtheme/theme
         # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
@@ -2041,6 +1642,7 @@ self$results$notes$setContent(html_block(
         },
 
         .plotProfile = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showProfilePlot))
                 return()
 
@@ -2048,13 +1650,12 @@ self$results$notes$setContent(html_block(
 
             st <- image$state
 
-        plot_tr <- function(en, es = NULL) private$.plotTr(en, es, if (exists("image", inherits = FALSE)) image else NULL)
 
             if (is.null(st) || NROW(st) == 0) {
                 private$.emptyRelatedPlot(
                     paste(
-                        plot_tr("No complete cases are available for the selected measurements.", "No hay casos completos para las mediciones seleccionadas."),
-                        plot_tr("The profile plot cannot be built.", "No es posible construir el gráfico de perfil."),
+                        .("No complete cases are available for the selected measurements."),
+                        .("The profile plot cannot be built."),
                         sep = "\n"
                     )
                 )
@@ -2069,8 +1670,8 @@ self$results$notes$setContent(html_block(
             if (!all(needed %in% names(st))) {
                 private$.emptyRelatedPlot(
                     paste(
-                        plot_tr("The plot internal state does not contain the expected columns.", "El estado interno del gráfico no contiene las columnas esperadas."),
-                        plot_tr("Run the analysis again or check the Image result definition.", "Vuelva a ejecutar el análisis o revise la definición del resultado Image."),
+                        .("The plot internal state does not contain the expected columns."),
+                        .("Run the analysis again or check the Image result definition."),
                         sep = "\n"
                     )
                 )
@@ -2088,8 +1689,8 @@ self$results$notes$setContent(html_block(
             if (length(measures) < 2) {
                 private$.emptyRelatedPlot(
                     paste(
-                        plot_tr("Select at least two related measurements.", "Seleccione al menos dos mediciones relacionadas."),
-                        plot_tr("The plot summarizes central tendency, dispersion, and change.", "El gráfico resume tendencia central, dispersión y cambio."),
+                        .("Select at least two related measurements."),
+                        .("The plot summarizes central tendency, dispersion, and change."),
                         sep = "\n"
                     )
                 )
@@ -2114,8 +1715,8 @@ self$results$notes$setContent(html_block(
             if (NROW(long_df) == 0 || NROW(stats_df) == 0) {
                 private$.emptyRelatedPlot(
                     paste(
-                        plot_tr("No finite values were obtained to build the plot.", "No se obtuvieron valores finitos para construir el gráfico."),
-                        plot_tr("Review the selected measurements.", "Revise las mediciones seleccionadas."),
+                        .("No finite values were obtained to build the plot."),
+                        .("Review the selected measurements."),
                         sep = "\n"
                     )
                 )
@@ -2136,15 +1737,10 @@ self$results$notes$setContent(html_block(
             if (n_cases > max_cases_to_draw) {
                 set.seed(1234)
                 keep_cases <- sort(sample(case_id, max_cases_to_draw))
-                traj_note <- paste0(
-                    plot_tr("Showing ", "Se muestran "), max_cases_to_draw, plot_tr(" individual trajectories from ", " trayectorias individuales de "),
-                    n_cases, plot_tr(" cases to preserve readability.", " casos para mantener legibilidad.")
-                )
+                traj_note <- sprintf(.("Showing %s individual trajectories from %s cases to preserve readability."), max_cases_to_draw, n_cases)
             } else {
                 keep_cases <- case_id
-                traj_note <- paste0(
-                    plot_tr("Individual trajectories are shown for the ", "Se muestran trayectorias individuales de los "), n_cases, plot_tr(" complete cases.", " casos completos.")
-                )
+                traj_note <- sprintf(.("Individual trajectories are shown for the %s complete cases."), n_cases)
             }
 
             long_draw <- long_df[long_df$case %in% keep_cases, , drop = FALSE]
@@ -2163,15 +1759,12 @@ self$results$notes$setContent(html_block(
             if (length(finite_ranges) >= 2) {
                 ratio_ranges <- max(finite_ranges) / min(finite_ranges)
                 if (is.finite(ratio_ranges) && ratio_ranges >= 4) {
-                    scale_note <- paste(
-                        plot_tr("Warning: the measurements appear to be on very different scales or ranges;", "Advertencia: las mediciones parecen estar en escalas o rangos muy distintos;"),
-                        plot_tr("compare the profile on the original scale with caution.", "compare el perfil en escala original con cautela.")
-                    )
+                    scale_note <- .("Warning: the measurements appear to be on very different scales or ranges; compare the profile on the original scale with caution.")
                 }
             }
 
             caption_parts <- c(
-                plot_tr("Large points = mean; bars = 95% CI; diamond = median.", "Puntos grandes = media; barras = IC 95%; rombo = mediana."),
+                .("Large points = mean; bars = 95% CI; diamond = median."),
                 traj_note
             )
 
@@ -2192,8 +1785,8 @@ self$results$notes$setContent(html_block(
             if (length(y_all) == 0) {
                 private$.emptyRelatedPlot(
                     paste(
-                        plot_tr("No finite values were obtained to build the plot.", "No se obtuvieron valores finitos para construir el gráfico."),
-                        plot_tr("Review the selected measurements.", "Revise las mediciones seleccionadas."),
+                        .("No finite values were obtained to build the plot."),
+                        .("Review the selected measurements."),
                         sep = "\n"
                     )
                 )
@@ -2268,10 +1861,10 @@ self$results$notes$setContent(html_block(
                     color = pal$point
                 ) +
                 ggplot2::labs(
-                    title = plot_tr("Profile of related measurements", "Perfil de mediciones relacionadas"),
-                    subtitle = plot_tr("Pedagogical summary of central tendency, dispersion, and change across measurements", "Resumen pedagógico de tendencia central, dispersión y cambio entre mediciones"),
-                    x = plot_tr("Measurement", "Medición"),
-                    y = plot_tr("Observed value", "Valor observado"),
+                    title = .("Profile of related measurements"),
+                    subtitle = .("Pedagogical summary of central tendency, dispersion, and change across measurements"),
+                    x = .("Measurement"),
+                    y = .("Observed value"),
                     caption = caption_text
                 ) +
                 ggplot2::scale_y_continuous(
@@ -2310,6 +1903,7 @@ self$results$notes$setContent(html_block(
         },
 
         .plotDifferences = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showDifferencePlots))
                 return()
 
@@ -2317,13 +1911,12 @@ self$results$notes$setContent(html_block(
 
             st <- image$state
 
-        plot_tr <- function(en, es = NULL) private$.plotTr(en, es, if (exists("image", inherits = FALSE)) image else NULL)
 
             if (is.null(st) || NROW(st) == 0) {
                 private$.emptyRelatedPlot(
                     paste(
-                        plot_tr("No valid paired differences are available to plot.", "No hay diferencias pareadas válidas para graficar."),
-                        plot_tr("Check that at least two numeric measurements with valid data exist.", "Revise que existan al menos dos mediciones numéricas con datos válidos."),
+                        .("No valid paired differences are available to plot."),
+                        .("Check that at least two numeric measurements with valid data exist."),
                         sep = "\n"
                     )
                 )
@@ -2338,8 +1931,8 @@ self$results$notes$setContent(html_block(
             if (!all(needed %in% names(st))) {
                 private$.emptyRelatedPlot(
                     paste(
-                        plot_tr("The internal state of the difference plot does not contain the expected columns.", "El estado interno del gráfico de diferencias no contiene las columnas esperadas."),
-                        plot_tr("Run the analysis again or check the Image result definition.", "Vuelva a ejecutar el análisis o revise la definición del resultado Image."),
+                        .("The internal state of the difference plot does not contain the expected columns."),
+                        .("Run the analysis again or check the Image result definition."),
                         sep = "\n"
                     )
                 )
@@ -2368,8 +1961,8 @@ self$results$notes$setContent(html_block(
             if (length(comparisons) == 0 || NROW(obs_df) == 0) {
                 private$.emptyRelatedPlot(
                     paste(
-                        plot_tr("No finite differences were obtained to build the plot.", "No se obtuvieron diferencias finitas para construir el gráfico."),
-                        plot_tr("Review the selected measurements.", "Revise las mediciones seleccionadas."),
+                        .("No finite differences were obtained to build the plot."),
+                        .("Review the selected measurements."),
                         sep = "\n"
                     )
                 )
@@ -2396,9 +1989,9 @@ self$results$notes$setContent(html_block(
                 0.05 * y_span
 
             caption_text <- paste(
-                plot_tr("Each point represents one individual paired difference.", "Cada punto representa una diferencia pareada individual."),
-                plot_tr("The horizontal line at 0 indicates no change.", "La línea horizontal en 0 indica ausencia de cambio."),
-                plot_tr("Box = IQR; central line = median; large point = mean.", "Caja = IQR; línea central = mediana; punto grande = media."),
+                .("Each point represents one individual paired difference."),
+                .("The horizontal line at 0 indicates no change."),
+                .("Box = IQR; central line = median; large point = mean."),
                 sep = "\n"
             )
 
@@ -2457,10 +2050,10 @@ self$results$notes$setContent(html_block(
                     color = pal$point
                 ) +
                 ggplot2::labs(
-                    title = plot_tr("Distribution of paired differences", "Distribución de diferencias pareadas"),
-                    subtitle = plot_tr("Visual diagnostic of change within the same units", "Diagnóstico visual del cambio dentro de las mismas unidades"),
-                    x = plot_tr("Comparison", "Comparación"),
-                    y = plot_tr("Paired difference", "Diferencia pareada"),
+                    title = .("Distribution of paired differences"),
+                    subtitle = .("Visual diagnostic of change within the same units"),
+                    x = .("Comparison"),
+                    y = .("Paired difference"),
                     caption = caption_text
                 ) +
                 ggplot2::scale_y_continuous(
@@ -2492,6 +2085,7 @@ self$results$notes$setContent(html_block(
         },
 
         .plotNormality = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showNormalityPlots))
                 return()
 
@@ -2499,12 +2093,11 @@ self$results$notes$setContent(html_block(
 
             st <- image$state
 
-        plot_tr <- function(en, es = NULL) private$.plotTr(en, es, if (exists("image", inherits = FALSE)) image else NULL)
 
             if (is.null(st) || NROW(st) == 0) {
                 private$.emptyRelatedPlot(paste(
-                    plot_tr("No valid paired differences are available for the Q-Q plot.", "No hay diferencias pareadas válidas para Q-Q plot."),
-                    plot_tr("At least 3 valid differences and variability greater than zero are required.", "Se requieren al menos 3 diferencias válidas y variabilidad mayor que cero."),
+                    .("No valid paired differences are available for the Q-Q plot."),
+                    .("At least 3 valid differences and variability greater than zero are required."),
                     sep = "\n"
                 ))
                 return()
@@ -2514,8 +2107,8 @@ self$results$notes$setContent(html_block(
 
             if (!all(needed %in% names(st))) {
                 private$.emptyRelatedPlot(paste(
-                    plot_tr("The Q-Q plot internal state does not contain the expected columns.", "El estado interno del Q-Q plot no contiene las columnas esperadas."),
-                    plot_tr("Run the analysis again or check the Image result definition.", "Vuelva a ejecutar el análisis o revise la definición del resultado Image."),
+                    .("The Q-Q plot internal state does not contain the expected columns."),
+                    .("Run the analysis again or check the Image result definition."),
                     sep = "\n"
                 ))
                 return()
@@ -2526,7 +2119,7 @@ self$results$notes$setContent(html_block(
             st <- st[is.finite(st$value) & nzchar(st$comparison), , drop = FALSE]
 
             if (NROW(st) == 0) {
-                private$.emptyRelatedPlot(plot_tr("No finite values are available to plot the Q-Q plot.", "No hay valores finitos para graficar Q-Q plot."))
+                private$.emptyRelatedPlot(.("No finite values are available to plot the Q-Q plot."))
                 return()
             }
 
@@ -2540,8 +2133,8 @@ self$results$notes$setContent(html_block(
 
             if (length(keep) == 0) {
                 private$.emptyRelatedPlot(paste(
-                    plot_tr("No plottable comparisons are available.", "No hay comparaciones graficables."),
-                    plot_tr("Each comparison requires at least 3 valid differences and variance greater than zero.", "Cada comparación requiere al menos 3 diferencias válidas y varianza mayor que cero."),
+                    .("No plottable comparisons are available."),
+                    .("Each comparison requires at least 3 valid differences and variance greater than zero."),
                     sep = "\n"
                 ))
                 return()
@@ -2553,8 +2146,8 @@ self$results$notes$setContent(html_block(
             pal <- private$.plotColors(theme)
 
             caption_text <- paste(
-                plot_tr("Points close to the line suggest approximate normality.", "Puntos cercanos a la línea sugieren normalidad aproximada."),
-                plot_tr("Interpret the plot together with numerical tests, sample size, and outliers.", "Interprete el gráfico junto con las pruebas numéricas, tamaño muestral y casos atípicos."),
+                .("Points close to the line suggest approximate normality."),
+                .("Interpret the plot together with numerical tests, sample size, and outliers."),
                 sep = "\n"
             )
 
@@ -2575,10 +2168,10 @@ self$results$notes$setContent(html_block(
                     ncol = if (length(keep) <= 2) 1 else 2
                 ) +
                 ggplot2::labs(
-                    title = plot_tr("Q-Q plots of paired differences", "Q-Q plots de diferencias pareadas"),
-                    subtitle = plot_tr("Visual diagnostic of normality by comparison", "Diagnóstico visual de normalidad por comparación"),
-                    x = plot_tr("Theoretical normal quantiles", "Cuantiles teóricos normales"),
-                    y = plot_tr("Observed quantiles", "Cuantiles observados"),
+                    title = .("Q-Q plots of paired differences"),
+                    subtitle = .("Visual diagnostic of normality by comparison"),
+                    x = .("Theoretical normal quantiles"),
+                    y = .("Observed quantiles"),
                     caption = caption_text
                 ) +
                 ggtheme +
@@ -2598,6 +2191,7 @@ self$results$notes$setContent(html_block(
         },
 
         .plotNormalCurve = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showNormalityPlots))
                 return()
 
@@ -2605,12 +2199,11 @@ self$results$notes$setContent(html_block(
 
             st <- image$state
 
-        plot_tr <- function(en, es = NULL) private$.plotTr(en, es, if (exists("image", inherits = FALSE)) image else NULL)
 
             if (is.null(st) || NROW(st) == 0) {
                 private$.emptyRelatedPlot(paste(
-                    plot_tr("No valid paired differences are available to compare with the theoretical normal curve.", "No hay diferencias pareadas válidas para comparar con la normal teórica."),
-                    plot_tr("At least 3 valid differences and variability greater than zero are required.", "Se requieren al menos 3 diferencias válidas y variabilidad mayor que cero."),
+                    .("No valid paired differences are available to compare with the theoretical normal curve."),
+                    .("At least 3 valid differences and variability greater than zero are required."),
                     sep = "\n"
                 ))
                 return()
@@ -2620,8 +2213,8 @@ self$results$notes$setContent(html_block(
 
             if (!all(needed %in% names(st))) {
                 private$.emptyRelatedPlot(paste(
-                    plot_tr("The normal-curve plot internal state does not contain the expected columns.", "El estado interno del gráfico de curva normal no contiene las columnas esperadas."),
-                    plot_tr("Run the analysis again or check the Image result definition.", "Vuelva a ejecutar el análisis o revise la definición del resultado Image."),
+                    .("The normal-curve plot internal state does not contain the expected columns."),
+                    .("Run the analysis again or check the Image result definition."),
                     sep = "\n"
                 ))
                 return()
@@ -2632,7 +2225,7 @@ self$results$notes$setContent(html_block(
             st <- st[is.finite(st$value) & nzchar(st$comparison), , drop = FALSE]
 
             if (NROW(st) == 0) {
-                private$.emptyRelatedPlot(plot_tr("No finite values are available to plot the distribution.", "No hay valores finitos para graficar distribución."))
+                private$.emptyRelatedPlot(.("No finite values are available to plot the distribution."))
                 return()
             }
 
@@ -2646,8 +2239,8 @@ self$results$notes$setContent(html_block(
 
             if (length(keep) == 0) {
                 private$.emptyRelatedPlot(paste(
-                    plot_tr("No plottable comparisons are available.", "No hay comparaciones graficables."),
-                    plot_tr("Each comparison requires at least 3 valid differences and variance greater than zero.", "Cada comparación requiere al menos 3 diferencias válidas y varianza mayor que cero."),
+                    .("No plottable comparisons are available."),
+                    .("Each comparison requires at least 3 valid differences and variance greater than zero."),
                     sep = "\n"
                 ))
                 return()
@@ -2667,7 +2260,7 @@ self$results$notes$setContent(html_block(
                         comparison = nm,
                         x = as.numeric(den$x),
                         y = as.numeric(den$y),
-                        curve = plot_tr("Observed density", "Densidad observada"),
+                        curve = .("Observed density"),
                         stringsAsFactors = FALSE
                     )
                     row_id <- row_id + 1L
@@ -2683,27 +2276,27 @@ self$results$notes$setContent(html_block(
                         mean = mean(x, na.rm = TRUE),
                         sd = stats::sd(x, na.rm = TRUE)
                     )),
-                    curve = plot_tr("Theoretical normal", "Normal teórica"),
+                    curve = .("Theoretical normal"),
                     stringsAsFactors = FALSE
                 )
                 row_id <- row_id + 1L
             }
 
             if (length(curve_rows) == 0) {
-                private$.emptyRelatedPlot(plot_tr("It was not possible to compute densities for plotting.", "No fue posible calcular densidades para graficar."))
+                private$.emptyRelatedPlot(.("It was not possible to compute densities for plotting."))
                 return()
             }
 
             curve_df <- do.call(rbind, curve_rows)
             curve_df$comparison <- factor(curve_df$comparison, levels = keep)
-            curve_df$curve <- factor(curve_df$curve, levels = c(plot_tr("Observed density", "Densidad observada"), plot_tr("Theoretical normal", "Normal teórica")))
+            curve_df$curve <- factor(curve_df$curve, levels = c(.("Observed density"), .("Theoretical normal")))
 
             pal <- private$.plotColors(theme)
 
             caption_text <- paste(
-                plot_tr("The solid line shows the observed density.", "La línea continua muestra la densidad observada."),
-                plot_tr("The dashed line shows a theoretical normal curve with the same mean and SD.", "La línea discontinua muestra una normal teórica con la misma media y SD."),
-                plot_tr("Use this plot together with the Q-Q plot, numerical tests, and outliers.", "Use este gráfico junto con Q-Q plot, pruebas numéricas y casos atípicos."),
+                .("The solid line shows the observed density."),
+                .("The dashed line shows a theoretical normal curve with the same mean and SD."),
+                .("Use this plot together with the Q-Q plot, numerical tests, and outliers."),
                 sep = "\n"
             )
 
@@ -2724,10 +2317,10 @@ self$results$notes$setContent(html_block(
                     values = c("solid", "dashed")
                 ) +
                 ggplot2::labs(
-                    title = plot_tr("Observed distribution vs theoretical normal curve", "Distribución observada vs normal teórica"),
-                    subtitle = plot_tr("Distribution-shape comparison by paired difference", "Comparación de forma distributiva por diferencia pareada"),
-                    x = plot_tr("Paired difference", "Diferencia pareada"),
-                    y = plot_tr("Density", "Densidad"),
+                    title = .("Observed distribution vs theoretical normal curve"),
+                    subtitle = .("Distribution-shape comparison by paired difference"),
+                    x = .("Paired difference"),
+                    y = .("Density"),
                     linetype = "",
                     caption = caption_text
                 ) +

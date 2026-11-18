@@ -11,7 +11,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             exogenous = NULL,
             model = "sarima",
             frequency = 12,
-            reportLang = "en",
             showPlots = TRUE,
             plotPalette = "jamovi", ...) {
 
@@ -62,13 +61,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 frequency,
                 min=1,
                 default=12)
-            private$..reportLang <- jmvcore::OptionList$new(
-                "reportLang",
-                reportLang,
-                options=list(
-                    "en",
-                    "es"),
-                default="en")
             private$..showPlots <- jmvcore::OptionBool$new(
                 "showPlots",
                 showPlots,
@@ -87,7 +79,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..exogenous)
             self$.addOption(private$..model)
             self$.addOption(private$..frequency)
-            self$.addOption(private$..reportLang)
             self$.addOption(private$..showPlots)
             self$.addOption(private$..plotPalette)
         }),
@@ -97,7 +88,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         exogenous = function() private$..exogenous$value,
         model = function() private$..model$value,
         frequency = function() private$..frequency$value,
-        reportLang = function() private$..reportLang$value,
         showPlots = function() private$..showPlots$value,
         plotPalette = function() private$..plotPalette$value),
     private = list(
@@ -106,7 +96,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..exogenous = NA,
         ..model = NA,
         ..frequency = NA,
-        ..reportLang = NA,
         ..showPlots = NA,
         ..plotPalette = NA)
 )
@@ -151,8 +140,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "exogenous",
                     "frequency",
                     "model",
-                    "series",
-                    "reportLang"),
+                    "series"),
                 rows=0,
                 columns=list(
                     list(
@@ -176,8 +164,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "exogenous",
                     "frequency",
                     "model",
-                    "series",
-                    "reportLang"),
+                    "series"),
                 rows=0,
                 columns=list(
                     list(
@@ -201,8 +188,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "exogenous",
                     "frequency",
                     "model",
-                    "series",
-                    "reportLang"),
+                    "series"),
                 rows=0,
                 columns=list(
                     list(
@@ -253,8 +239,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "exogenous",
                     "frequency",
                     "model",
-                    "series",
-                    "reportLang"),
+                    "series"),
                 rows=0,
                 columns=list(
                     list(
@@ -322,8 +307,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "exogenous",
                     "frequency",
                     "model",
-                    "series",
-                    "reportLang"),
+                    "series"),
                 rows=0,
                 columns=list(
                     list(
@@ -383,7 +367,6 @@ timeCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param frequency Number of observations per seasonal cycle (12 = monthly, 4
 #'   = quarterly, 7 = daily with a weekly cycle, 1 = no seasonality). Used for
 #'   seasonal tests and differencing in SARIMA and ETS.
-#' @param reportLang .
 #' @param showPlots Uncheck for a text-only report.
 #' @param plotPalette Palette used to distinguish several series in the same
 #'   plot (for example, the variables of a VAR/VECM). Follows jamovi's own theme
@@ -423,7 +406,6 @@ timeCheck <- function(
     exogenous = NULL,
     model = "sarima",
     frequency = 12,
-    reportLang = "en",
     showPlots = TRUE,
     plotPalette = "jamovi") {
 
@@ -447,7 +429,6 @@ timeCheck <- function(
         exogenous = exogenous,
         model = model,
         frequency = frequency,
-        reportLang = reportLang,
         showPlots = showPlots,
         plotPalette = plotPalette)
 

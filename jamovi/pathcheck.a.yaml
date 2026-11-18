@@ -196,20 +196,6 @@ options:
         name: viridis
     default: jamovi
 
-  # Selects which language's text bank (see texts.R) is used to render
-  # every guide, interpretation, and table/column title in the report.
-  # ES: Selecciona qué banco de textos (ver texts.R) se usa para renderizar
-  # cada guía, interpretación y título de tabla/columna en el informe.
-  - name: reportLang
-    title: Report Language
-    type: List
-    options:
-      - title: English
-        name: en
-      - title: Español
-        name: es
-    default: en
-
   - name: showDiagram
     title: Path diagram
     type: Bool

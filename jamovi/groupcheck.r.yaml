@@ -38,7 +38,6 @@ items:
     clearWith:
       - dep
       - group
-      - reportLang
     columns:
       - name: item
         title: Item
@@ -53,7 +52,6 @@ items:
     clearWith:
       - dep
       - group
-      - reportLang
     columns:
       - name: group
         title: Group
@@ -97,7 +95,6 @@ items:
     clearWith:
       - dep
       - group
-      - reportLang
     columns:
       - name: group
         title: Group
@@ -136,7 +133,6 @@ items:
     clearWith:
       - dep
       - group
-      - reportLang
     columns:
       - name: case
         title: Case
@@ -187,7 +183,6 @@ items:
     clearWith:
       - dep
       - group
-      - reportLang
     columns:
       - name: group
         title: Group
@@ -248,7 +243,6 @@ items:
     clearWith:
       - dep
       - group
-      - reportLang
     columns:
       - name: group
         title: Group
@@ -274,7 +268,6 @@ items:
     clearWith:
       - dep
       - group
-      - reportLang
     columns:
       - name: test
         title: Test

@@ -129,7 +129,6 @@ items:
       - plotPalette
       - linSmoother
       - linBins
-      - reportLang
 
   - name: proportionalOddsGuide
     title: Proportional odds (parallel lines)
@@ -371,7 +370,6 @@ items:
       - plotPalette
       - influenceLabelMode
       - influenceShowThreshold
-      - reportLang
 
   - name: coefficientsGuide
     title: Coefficients and odds ratios (proportional odds)
