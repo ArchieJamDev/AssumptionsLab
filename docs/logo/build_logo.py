@@ -3,7 +3,8 @@ AssumptionsLab logo: builds the module icon and the light/dark README logos as
 SVG, in the suite's visual system (MokkenLab, PLSsemLab, EGAnetLab): a 256 px
 rounded tile (#F4F7FB), white shapes with thick strokes in blue (#6B9DE8) and
 amber (#E6AC40), grey lines (#9F9F9F) with round caps, and the wordmark with
-the method name in blue.
+the method name in blue; the tagline is stretched to the width of the title,
+as in the other logos.
 
 The mark is a normal curve with three points on it: the mean (amber) and one
 standard deviation on each side (blue), the reference shape that most
@@ -73,9 +74,9 @@ def logo(theme):
             'role="img" aria-label="AssumptionsLab">\n  <title>AssumptionsLab</title>\n'
             f'{body}'
             f'  <text x="250" y="128" font-family="{FONT}" font-size="94" font-weight="700" '
-            f'fill="{t["text"]}" letter-spacing="-1"><tspan fill="{t["accent"]}">Assumptions</tspan>Lab</text>\n'
-            f'  <text x="254" y="172" font-family="{FONT}" font-size="25" fill="{t["tagline"]}" '
-            'letter-spacing="0.5">Statistical assumptions assessment for jamovi</text>\n'
+            f'textLength="760" lengthAdjust="spacing" fill="{t["text"]}" letter-spacing="-1"><tspan fill="{t["accent"]}">Assumptions</tspan>Lab</text>\n'
+            f'  <text x="254" y="172" font-family="{FONT}" font-size="27" fill="{t["tagline"]}" '
+            'textLength="756" lengthAdjust="spacing">Statistical assumptions assessment for jamovi</text>\n'
             '</svg>\n')
 
 
