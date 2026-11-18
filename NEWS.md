@@ -1,3 +1,29 @@
+# AssumptionsLab 1.7.0 (unreleased)
+
+## Report language follows jamovi
+
+- Every analysis now writes its report in the language set in jamovi
+  (English or Spanish), like the option panels already did. The
+  per-analysis "Report Language" option (`reportLang`) is gone, so a saved
+  `.omv` file opens in the reader's own language.
+- Report text built in R is English inside `.()` and is translated through
+  jamovi's catalog (`jamovi/i18n/es.po`, compiled to `inst/i18n/es.json`),
+  using `.al_lang()` in `R/shared-helpers.R`. jmvcore creates a new
+  translator for each run, so a language change reaches the next run; the
+  earlier note that `.()` stayed fixed at the language of the R process
+  was wrong (checked against jmvcore 2.7.38, as in MokkenLab).
+- `R/texts.R` is now one English table, `.al_text_table(.)`, instead of
+  separate English and Spanish copies (about 1,000 lines instead of 4,800).
+- Result titles come only from the `.r.yaml` files; the code that
+  overwrote them at run time was removed.
+- Sentences are kept whole for translators (`sprintf(.("... %s ..."))`)
+  instead of being joined from fragments, which also fixes several places
+  where Spanish text appeared in English reports.
+- New tests run analyses in Spanish, English and Spanish again and check
+  that every text resolves and nothing is cached between runs.
+
+---
+
 # Validation scripts (unreleased, 2026-09-05)
 
 ## Additions

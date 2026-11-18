@@ -113,7 +113,6 @@ items:
       - plotPalette
       - linSmoother
       - linBins
-      - reportLang
 
   - name: goodnessOfFitGuide
     title: Goodness of fit
@@ -158,7 +157,6 @@ items:
       - plotPalette
       - caliBins
       - caliRefLine
-      - reportLang
 
   - name: discriminationGuide
     title: Discrimination
@@ -196,7 +194,6 @@ items:
       - plotPalette
       - rocRefLine
       - rocShowAUCLabel
-      - reportLang
 
   - name: multicollinearityGuide
     title: Multicollinearity
@@ -350,7 +347,6 @@ items:
       - plotPalette
       - influenceLabelMode
       - influenceShowThreshold
-      - reportLang
 
   - name: oddsRatiosGuide
     title: Odds Ratios

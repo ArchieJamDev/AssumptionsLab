@@ -8,7 +8,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         initialize = function(
             dep = NULL,
             group = NULL,
-            reportLang = "en",
             showDistributionPlot = FALSE,
             addViolinPlot = FALSE,
             showJitterPoints = FALSE,
@@ -34,13 +33,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..group <- jmvcore::OptionVariable$new(
                 "group",
                 group)
-            private$..reportLang <- jmvcore::OptionList$new(
-                "reportLang",
-                reportLang,
-                options=list(
-                    "en",
-                    "es"),
-                default="en")
             private$..showDistributionPlot <- jmvcore::OptionBool$new(
                 "showDistributionPlot",
                 showDistributionPlot,
@@ -98,7 +90,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
             self$.addOption(private$..dep)
             self$.addOption(private$..group)
-            self$.addOption(private$..reportLang)
             self$.addOption(private$..showDistributionPlot)
             self$.addOption(private$..addViolinPlot)
             self$.addOption(private$..showJitterPoints)
@@ -115,7 +106,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         dep = function() private$..dep$value,
         group = function() private$..group$value,
-        reportLang = function() private$..reportLang$value,
         showDistributionPlot = function() private$..showDistributionPlot$value,
         addViolinPlot = function() private$..addViolinPlot$value,
         showJitterPoints = function() private$..showJitterPoints$value,
@@ -131,7 +121,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     private = list(
         ..dep = NA,
         ..group = NA,
-        ..reportLang = NA,
         ..showDistributionPlot = NA,
         ..addViolinPlot = NA,
         ..showJitterPoints = NA,
@@ -189,8 +178,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Design summary",
                 clearWith=list(
                     "dep",
-                    "group",
-                    "reportLang"),
+                    "group"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -206,8 +194,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Descriptive statistics by group",
                 clearWith=list(
                     "dep",
-                    "group",
-                    "reportLang"),
+                    "group"),
                 columns=list(
                     list(
                         `name`="group", 
@@ -258,8 +245,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Outlier screening by group",
                 clearWith=list(
                     "dep",
-                    "group",
-                    "reportLang"),
+                    "group"),
                 columns=list(
                     list(
                         `name`="group", 
@@ -306,8 +292,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "mahalanobis_1936"),
                 clearWith=list(
                     "dep",
-                    "group",
-                    "reportLang"),
+                    "group"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -366,8 +351,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "jarque_1987"),
                 clearWith=list(
                     "dep",
-                    "group",
-                    "reportLang"),
+                    "group"),
                 columns=list(
                     list(
                         `name`="group", 
@@ -433,8 +417,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Normality decision summary",
                 clearWith=list(
                     "dep",
-                    "group",
-                    "reportLang"),
+                    "group"),
                 columns=list(
                     list(
                         `name`="group", 
@@ -463,8 +446,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "fligner_1976"),
                 clearWith=list(
                     "dep",
-                    "group",
-                    "reportLang"),
+                    "group"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -542,7 +524,6 @@ groupCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param data .
 #' @param dep .
 #' @param group .
-#' @param reportLang .
 #' @param showDistributionPlot .
 #' @param addViolinPlot .
 #' @param showJitterPoints .
@@ -594,7 +575,6 @@ groupCheck <- function(
     data,
     dep,
     group,
-    reportLang = "en",
     showDistributionPlot = FALSE,
     addViolinPlot = FALSE,
     showJitterPoints = FALSE,
@@ -623,7 +603,6 @@ groupCheck <- function(
     options <- groupCheckOptions$new(
         dep = dep,
         group = group,
-        reportLang = reportLang,
         showDistributionPlot = showDistributionPlot,
         addViolinPlot = addViolinPlot,
         showJitterPoints = showJitterPoints,

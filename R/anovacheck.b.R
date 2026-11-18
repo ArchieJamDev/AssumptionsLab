@@ -55,7 +55,7 @@
 #    leverage, Cook's D), grouped by methodological purpose and
 #    parametrized per the user's plot-set selection.
 # 4. Assemble the applied-interpretation text for every diagnostic area,
-#    in the user's selected report language, and recommend a specific
+#    in jamovi's language, and recommend a specific
 #    test/alternative given the pattern of results.
 #
 # ES: Responsabilidades
@@ -70,7 +70,7 @@
 #    metodológico y parametrizados según el conjunto de gráficos
 #    seleccionado por el usuario.
 # 4. Ensamblar el texto de interpretación aplicada para cada área
-#    diagnóstica, en el idioma de informe seleccionado por el usuario, y
+#    diagnóstica, en el idioma de jamovi, y
 #    recomendar una prueba/alternativa específica según el patrón de
 #    resultados.
 #
@@ -137,178 +137,12 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .run = function() {
 
-            lang <- .al_normalize_lang(self$options$reportLang)
-            tr <- function(en, es) .al_tr(lang, en, es)
+            lang <- .al_lang(self$options)
+            . <- lang$tr
 
-            set_result_titles <- function() {
-                set_title_safe <- function(name, en, es) {
-                    element <- tryCatch(self$results[[name]], error = function(e) NULL)
-                    if (is.null(element)) return(invisible(FALSE))
-                    tryCatch(element$setTitle(tr(en, es)), error = function(e) invisible(FALSE))
-                    invisible(TRUE)
-                }
 
-                titles <- list(
-                    c("intro", "ANOVA/ANCOVA", "ANOVA/ANCOVA"),
-                    c("designGuide", "Model design", "Diseño del modelo"),
-                    c("designSummary", "Design summary", "Resumen del diseño"),
-                    c("cellSummary", "Cell size and balance", "Tamaño de celdas y balance"),
-                    c("designInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("diagnosticPlotsGuide", "ANOVA/ANCOVA diagnostic plots", "Gráficos diagnósticos de ANOVA/ANCOVA"),
 
-                    c("groupBoxplotsPlot", "Dependent variable by group", "Variable dependiente por grupo"),
-                    c("groupBoxplotsGuide", "Guide: Dependent variable by group", "Guía: Variable dependiente por grupo"),
 
-                    c("residualNormalityGuide", "Residual normality", "Normalidad de residuos"),
-                    c("residualNormality", "Residual normality", "Normalidad de residuos"),
-                    c("residualNormalityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("residualsFittedPlot", "Residuals vs fitted values", "Residuos vs valores ajustados"),
-                    c("residualsFittedGuide", "Guide: Residuals vs fitted values", "Guía: Residuos vs valores ajustados"),
-                    c("qqResidualsPlot", "Residual Q-Q plot", "Q-Q plot de residuos"),
-                    c("qqResidualsGuide", "Guide: Residual Q-Q plot", "Guía: Q-Q plot de residuos"),
-                    c("residualHistogramPlot", "Residual histogram", "Histograma de residuos"),
-                    c("residualHistogramGuide", "Guide: Residual histogram", "Guía: Histograma de residuos"),
-                    c("residualNormalCurvePlot",
-                      "Observed residual distribution vs theoretical normal curve",
-                      "Distribución observada de residuos vs curva normal teórica"),
-                    c("residualNormalCurveGuide",
-                      "Guide: Observed distribution vs theoretical normal curve",
-                      "Guía: Distribución observada vs normal teórica"),
-
-                    c("varianceGuide", "Homogeneity of variances", "Homogeneidad de varianzas"),
-                    c("varianceTests", "Homogeneity of variances across groups", "Homogeneidad de varianzas entre grupos"),
-                    c("varianceInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("slopesGuide", "Homogeneity of slopes", "Homogeneidad de pendientes"),
-                    c("slopesTests", "Homogeneity of slopes in ANCOVA", "Homogeneidad de pendientes en ANCOVA"),
-                    c("slopesInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("covariateLinearityGuide", "Covariate linearity", "Linealidad de covariables"),
-                    c("covariateLinearity", "Covariate linearity", "Linealidad de covariables"),
-                    c("covariateLinearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("multicollinearityGuide", "Multicollinearity", "Multicolinealidad"),
-                    c("multicollinearity", "Multicollinearity", "Multicolinealidad"),
-                    c("multicollinearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("correlationMatrixGuide", "Correlation matrix", "Matriz de correlaciones"),
-                    c("pearsonMatrixTable", "Pearson correlation matrix (APA 7 format)", "Matriz de correlaciones de Pearson (formato APA 7)"),
-                    c("dcorMatrixTable", "Distance correlation matrix (dCor, APA 7 format)", "Matriz de correlación de distancia (dCor, formato APA 7)"),
-                    c("correlationComparisonGuide", "Pearson / dCor / Copula Entropy Discordance Analysis", "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                    c("correlationComparisonTable", "Pairs with a notable difference between Pearson and dCor", "Pares con diferencia notable entre Pearson y dCor"),
-                    c("correlationComparisonInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("influenceGuide", "Outlying and influential cases", "Casos atípicos e influyentes"),
-                    c("influence", "Outlying and influential cases", "Casos atípicos e influyentes"),
-                    c("influenceInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("residualsLeveragePlot", "Studentized residuals vs leverage", "Residuos studentizados vs leverage"),
-                    c("residualsLeverageGuide", "Guide: Studentized residuals vs leverage", "Guía: Residuos studentizados vs leverage"),
-                    c("cooksDPlot", "Cook's D by case", "Cook's D por caso"),
-                    c("cooksDGuide", "Guide: Cook's D by case", "Guía: Cook's D por caso"),
-
-                    c("independenceGuide", "Design independence", "Independencia del diseño"),
-
-                    c("alternativesGuide", "Methodological alternatives", "Alternativas metodológicas"),
-                    c("alternatives", "Methodological alternatives", "Alternativas metodológicas"),
-                    c("alternativesWhen", "", ""),
-
-                    c("notes", "Notes and recommendation", "Notas y recomendación")
-                )
-
-                for (row in titles)
-                    set_title_safe(row[1], row[2], row[3])
-            }
-
-            set_result_titles()
-
-            set_table_column_titles <- function() {
-                set_col_title_safe <- function(table_name, col_name, en, es) {
-                    table <- tryCatch(self$results[[table_name]], error = function(e) NULL)
-                    if (is.null(table))
-                        return(invisible(FALSE))
-
-                    column <- tryCatch(table$getColumn(col_name), error = function(e) NULL)
-                    if (is.null(column))
-                        return(invisible(FALSE))
-
-                    tryCatch(
-                        column$setTitle(tr(en, es)),
-                        error = function(e) invisible(FALSE)
-                    )
-
-                    invisible(TRUE)
-                }
-
-                cols <- list(
-                    c("designSummary", "item", "Item", "Elemento"),
-                    c("designSummary", "value", "Value", "Valor"),
-
-                    c("cellSummary", "cell", "Group / cell", "Celda / grupo"),
-                    c("cellSummary", "n", "n", "n"),
-                    c("cellSummary", "mean", "M", "M"),
-                    c("cellSummary", "sd", "SD", "SD"),
-                    c("cellSummary", "variance", "Variance", "Varianza"),
-
-                    c("residualNormality", "test", "Test", "Prueba"),
-                    c("residualNormality", "statistic", "Statistic", "Estadístico"),
-                    c("residualNormality", "value", "Value", "Valor"),
-                    c("residualNormality", "pSig", "Sig.", "Sig."),
-
-                    c("varianceTests", "family", "Family", "Familia"),
-                    c("varianceTests", "test", "Test", "Prueba"),
-                    c("varianceTests", "statistic", "Statistic", "Estadístico"),
-                    c("varianceTests", "value", "Value", "Valor"),
-                    c("varianceTests", "pSig", "Sig.", "Sig."),
-
-                    c("slopesTests", "factor", "Factor", "Factor"),
-                    c("slopesTests", "covariate", "Covariate", "Covariable"),
-                    c("slopesTests", "interaction", "Interaction", "Interacción"),
-                    c("slopesTests", "statistic", "Statistic", "Estadístico"),
-                    c("slopesTests", "value", "Value", "Valor"),
-                    c("slopesTests", "pSig", "Sig.", "Sig."),
-
-                    c("covariateLinearity", "covariate", "Covariate", "Covariable"),
-                    c("covariateLinearity", "dependent", "Dependent variable", "Variable dependiente"),
-                    c("covariateLinearity", "test", "Test / criterion", "Prueba / criterio"),
-                    c("covariateLinearity", "statistic", "Statistic", "Estadístico"),
-                    c("covariateLinearity", "value", "Value", "Valor"),
-                    c("covariateLinearity", "pSig", "Sig.", "Sig."),
-
-                    c("multicollinearity", "diagnostic", "Diagnostic", "Diagnóstico"),
-                    c("multicollinearity", "item", "Item", "Elemento"),
-                    c("multicollinearity", "statistic", "Statistic", "Estadístico"),
-                    c("multicollinearity", "value", "Value", "Valor"),
-
-                    c("correlationComparisonTable", "var1", "Variable 1", "Variable 1"),
-                    c("correlationComparisonTable", "var2", "Variable 2", "Variable 2"),
-                    c("correlationComparisonTable", "pearson", "Pearson r", "Pearson r"),
-                    c("correlationComparisonTable", "dcor", "dCor", "dCor"),
-                    c("correlationComparisonTable", "gap", "Gap (dCor - |r|)", "Brecha (dCor − |r|)"),
-                    c("correlationComparisonTable", "ce", "Copula entropy", "Entropía copular"),
-                    c("correlationComparisonTable", "ceP", "p (CE)", "p (CE)"),
-                    c("correlationComparisonTable", "ceSig", "Sig. (CE)", "Sig. (CE)"),
-                    c("correlationComparisonTable", "flag", "Notable difference", "Diferencia notable"),
-
-                    c("influence", "case", "Case", "Caso"),
-                    c("influence", "fitted", "Fitted", "Ajustado"),
-                    c("influence", "residual", "Residual", "Residuo"),
-                    c("influence", "studResidual", "Studentized residual", "Residuo studentizado"),
-                    c("influence", "leverage", "Leverage", "Leverage"),
-                    c("influence", "cooksD", "Cook's D", "Cook's D"),
-                    c("influence", "dffits", "DFFITS", "DFFITS"),
-                    c("influence", "criteria", "Triggered criteria", "Criterios activados"),
-
-                    c("alternatives", "problem", "Detected problem", "Problema detectado"),
-                    c("alternatives", "evidence", "Evidence", "Evidencia"),
-                    c("alternatives", "suggestion", "Suggested option", "Opción sugerida")
-                )
-
-                for (item in cols)
-                    set_col_title_safe(item[[1]], item[[2]], item[[3]], item[[4]])
-            }
-
-            set_table_column_titles()
 
             clean_num <- function(x) {
                 if (length(x) == 0)
@@ -328,7 +162,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             fmt_num <- function(x, digits = 4) {
                 x <- clean_num(x)
                 if (is.na(x))
-                    return(tr("Not computed", "No calculado"))
+                    return(.("Not computed"))
                 format(round(x, digits), nsmall = digits)
             }
 
@@ -417,10 +251,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (length(parts) == 0)
                     return("")
 
-                heading_labels <- unique(c(
-                    tr("Quick guide", "Guía breve"), "Quick guide", "Guía breve",
-                    tr("Applied Interpretation", "Interpretación Aplicada"), "Applied Interpretation", "Interpretación Aplicada"
-                ))
+                heading_labels <- c(.("Quick guide"), .("Applied Interpretation"))
 
                 p_style <- "margin: 0 0 0.55em 0; line-height: 1.35; text-align: justify;"
                 h_style <- "margin: 0.35em 0 0.45em 0; line-height: 1.25;"
@@ -508,20 +339,20 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot_guide <- function(objective, x_axis, y_axis, expected, warning_txt, decision) {
                 html_list_guide(
-                    tr("Quick guide", "Guía breve"),
-                    paste0(tr("Objective: ", "Objetivo: "), objective),
-                    paste0(tr("X axis: ", "Eje X: "), x_axis),
-                    paste0(tr("Y axis: ", "Eje Y: "), y_axis),
-                    paste0(tr("Expected pattern: ", "Patrón esperado: "), expected),
-                    paste0(tr("Warning sign: ", "Señal de alerta: "), warning_txt),
-                    paste0(tr("Possible decision: ", "Decisión posible: "), decision)
+                    .("Quick guide"),
+                    sprintf(.("Objective: %s"), objective),
+                    sprintf(.("X axis: %s"), x_axis),
+                    sprintf(.("Y axis: %s"), y_axis),
+                    sprintf(.("Expected pattern: %s"), expected),
+                    sprintf(.("Warning sign: %s"), warning_txt),
+                    sprintf(.("Possible decision: %s"), decision)
                 )
             }
 
             format_p <- function(p) {
                 p <- clean_num(p)
                 if (is.na(p))
-                    return("no calculado")
+                    return(.("not computed"))
                 if (p < .001)
                     return("< .001")
                 sub("^0", "", sprintf("%.3f", p))
@@ -547,150 +378,80 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # en shared-helpers.R.
             copentTest <- .al_copent_test
 
-            sample_note <- function(n) {
-                if (is.na(n))
-                    return("El tamaño muestral no pudo determinarse para esta prueba.")
-                if (n < 10)
-                    return(paste0(
-                        "Con n = ", n, ", el tamaño muestral es muy pequeño; interprete ",
-                        "este diagnóstico con mucha cautela."
-                    ))
-                if (n < 30)
-                    return(paste0(
-                        "Con n = ", n, ", la muestra es pequeña; la prueba puede tener ",
-                        "baja potencia para detectar desviaciones relevantes."
-                    ))
-                if (n <= 200)
-                    return(paste0(
-                        "Con n = ", n, ", la muestra es moderada; este resultado puede ",
-                        "usarse como diagnóstico inicial."
-                    ))
-                paste0(
-                    "Con n = ", n, ", la muestra es grande; desviaciones pequeñas pueden ",
-                    "producir resultados estadísticamente significativos."
-                )
-            }
-
             interpret_normality <- function(test, p_value, n, scope) {
                 p_value <- clean_num(p_value)
 
                 if (is.na(p_value))
-                    return(paste0(test, tr(": not computed.", ": no calculado.")))
+                    return(sprintf(.("%s: not computed."), test))
 
                 if (p_value < .05)
-                    return(paste0(
-                        test, ": p = ", format_p(p_value), ", n = ", n,
-                        tr(". Significant deviation from normality.", ". Desviación significativa de normalidad.")
-                    ))
+                    return(sprintf(.("%s: p = %s, n = %s. Significant deviation from normality."), test, format_p(p_value), n))
 
-                paste0(
-                    test, ": p = ", format_p(p_value), ", n = ", n,
-                    tr(". Compatible with approximate normality.", ". Compatible con normalidad aproximada.")
-                )
+                sprintf(.("%s: p = %s, n = %s. Compatible with approximate normality."), test, format_p(p_value), n)
             }
 
             interpret_variance <- function(test, p_value, n, groups, family) {
                 p_value <- clean_num(p_value)
 
                 if (test == "Hartley Fmax")
-                    return(tr(
-                        "Hartley Fmax: descriptive variance ratio. High values suggest checking heterogeneity.",
-                        "Hartley Fmax: razón descriptiva de varianzas. Valores altos sugieren revisar heterogeneidad."
-                    ))
+                    return(.("Hartley Fmax: descriptive variance ratio. High values suggest checking heterogeneity."))
 
                 if (is.na(p_value))
-                    return(paste0(test, tr(": not computed.", ": no calculado.")))
+                    return(sprintf(.("%s: not computed."), test))
 
                 if (p_value < .05)
-                    return(paste0(
-                        test, ": p = ", format_p(p_value), ", n = ", n,
-                        tr(". Significant differences between variances.", ". Diferencias significativas entre varianzas.")
-                    ))
+                    return(sprintf(.("%s: p = %s, n = %s. Significant differences between variances."), test, format_p(p_value), n))
 
-                paste0(
-                    test, ": p = ", format_p(p_value), ", n = ", n,
-                    tr(". Compatible with homogeneous variances.", ". Compatible con varianzas homogéneas.")
-                )
+                sprintf(.("%s: p = %s, n = %s. Compatible with homogeneous variances."), test, format_p(p_value), n)
             }
 
             interpret_slope <- function(fac, cov, p_value, n) {
                 p_value <- clean_num(p_value)
 
-                if (fac == tr("Not applicable", "No aplicable"))
-                    return(tr("Not applicable: requires covariates.", "No aplica: requiere covariables."))
+                if (fac == .("Not applicable"))
+                    return(.("Not applicable: requires covariates."))
 
                 if (is.na(p_value))
-                    return(paste0(fac, " × ", cov, tr(": not computed.", ": no calculado.")))
+                    return(sprintf(.("%s × %s: not computed."), fac, cov))
 
                 if (p_value < .05)
-                    return(paste0(
-                        fac, " × ", cov, ": p = ", format_p(p_value),
-                        tr(". Different slopes between groups.", ". Pendientes diferentes entre grupos.")
-                    ))
+                    return(sprintf(.("%s × %s: p = %s. Different slopes between groups."), fac, cov, format_p(p_value)))
 
-                paste0(
-                    fac, " × ", cov, ": p = ", format_p(p_value),
-                    tr(". Compatible with homogeneous slopes.", ". Compatible con pendientes homogéneas.")
-                )
+                sprintf(.("%s × %s: p = %s. Compatible with homogeneous slopes."), fac, cov, format_p(p_value))
             }
 
             interpret_covariate_linearity <- function(cov, test, p_value, n, extra_r = NA_real_, stat_value = NA_real_) {
                 p_value <- clean_num(p_value)
 
-                if (cov == tr("Not applicable", "No aplicable"))
-                    return(tr("Not applicable: no covariates were selected.", "No aplica: no se seleccionaron covariables."))
+                if (cov == .("Not applicable"))
+                    return(.("Not applicable: no covariates were selected."))
 
-                if (test == tr("Distance correlation (dCor)", "Correlación de distancia (dCor)")) {
+                if (test == .("Distance correlation (dCor)")) {
                     dcor_val <- clean_num(stat_value)
                     pearson_r <- clean_num(extra_r)
 
                     if (is.na(dcor_val))
-                        return(paste0(test, tr(" on ", " en "), cov, tr(": not computed.", ": no calculado.")))
+                        return(sprintf(.("%s on %s: not computed."), test, cov))
 
                     gap <- if (is.na(pearson_r)) NA_real_ else dcor_val - abs(pearson_r)
 
                     if (!is.na(gap) && gap > 0.10 && !is.na(p_value) && p_value < .05) {
-                        return(paste0(
-                            test, tr(" on ", " en "), cov,
-                            ": dCor = ", format(round(dcor_val, 3), nsmall = 3),
-                            tr(", Pearson r = ", ", r de Pearson = "),
-                            format(round(pearson_r, 3), nsmall = 3),
-                            tr(
-                                ". dCor detects dependence that Pearson's r does not fully capture; inspect a scatterplot and consider a non-linear term or transformation for this covariate.",
-                                ". dCor detecta una dependencia que r de Pearson no captura por completo; revise un diagrama de dispersión y considere un término no lineal o una transformación para esta covariable."
-                            )
-                        ))
+                        return(sprintf(.("%s on %s: dCor = %s, Pearson r = %s. dCor detects dependence that Pearson's r does not fully capture; inspect a scatterplot and consider a non-linear term or transformation for this covariate."), test, cov, format(round(dcor_val, 3), nsmall = 3), format(round(pearson_r, 3), nsmall = 3)))
                     }
 
-                    return(paste0(
-                        test, tr(" on ", " en "), cov,
-                        ": dCor = ", format(round(dcor_val, 3), nsmall = 3),
-                        tr(
-                            ". Consistent with the linear association already shown by Pearson's r; no additional non-linear structure is evident.",
-                            ". Consistente con la asociación lineal ya mostrada por r de Pearson; no se evidencia estructura no lineal adicional."
-                        )
-                    ))
+                    return(sprintf(.("%s on %s: dCor = %s. Consistent with the linear association already shown by Pearson's r; no additional non-linear structure is evident."), test, cov, format(round(dcor_val, 3), nsmall = 3)))
                 }
 
                 if (is.na(p_value))
-                    return(paste0(test, tr(" on ", " en "), cov, tr(": not computed.", ": no calculado.")))
+                    return(sprintf(.("%s on %s: not computed."), test, cov))
 
-                if (test == tr("Bivariate correlation", "Correlación bivariada"))
-                    return(paste0(
-                        test, tr(" on ", " en "), cov, ": p = ", format_p(p_value),
-                        tr(". Simple linear association.", ". Asociación lineal simple.")
-                    ))
+                if (test == .("Bivariate correlation"))
+                    return(sprintf(.("%s on %s: p = %s. Simple linear association."), test, cov, format_p(p_value)))
 
                 if (p_value < .05)
-                    return(paste0(
-                        test, tr(" on ", " en "), cov, ": p = ", format_p(p_value),
-                        tr(". Possible deviation from linearity.", ". Posible desviación de linealidad.")
-                    ))
+                    return(sprintf(.("%s on %s: p = %s. Possible deviation from linearity."), test, cov, format_p(p_value)))
 
-                paste0(
-                    test, tr(" on ", " en "), cov, ": p = ", format_p(p_value),
-                    tr(". Compatible with approximate linearity.", ". Compatible con linealidad aproximada.")
-                )
+                sprintf(.("%s on %s: p = %s. Compatible with approximate linearity."), test, cov, format_p(p_value))
             }
 
             add_table_row <- function(table, key, values) {
@@ -702,11 +463,11 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             covs <- self$options$covs
 
             if (is.null(dep) || dep == "") {
-                jmvcore::reject(tr("Select a numeric dependent variable.", "Seleccione una variable dependiente numérica."))
+                jmvcore::reject(.("Select a numeric dependent variable."))
             }
 
             if (length(factors) == 0) {
-                jmvcore::reject(tr("Select at least one categorical factor for ANOVA/ANCOVA.", "Seleccione al menos un factor categórico para ANOVA/ANCOVA."))
+                jmvcore::reject(.("Select at least one categorical factor for ANOVA/ANCOVA."))
             }
 
             vars <- c(dep, factors, covs)
@@ -719,7 +480,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n_excluded <- n_total - n_used
 
             if (n_used < 5) {
-                jmvcore::reject(tr("There are not enough complete cases to fit the model.", "No hay suficientes casos completos para ajustar el modelo."))
+                jmvcore::reject(.("There are not enough complete cases to fit the model."))
             }
 
             for (f in factors)
@@ -746,10 +507,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             })
 
             if (is.null(fit)) {
-                jmvcore::reject(paste0(
-                    tr("It was not possible to fit the ANOVA/ANCOVA model: ", "No fue posible ajustar el modelo ANOVA/ANCOVA: "),
-                    fit_error
-                ))
+                jmvcore::reject(sprintf(.("It was not possible to fit the ANOVA/ANCOVA model: %s"), fit_error))
             }
 
             residuals_raw <- tryCatch(stats::residuals(fit), error = function(e) NA_real_)
@@ -801,60 +559,39 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$cooksDPlot$setState(private$.plotData)
 
             self$results$residualsFittedGuide$setContent(plot_guide(
-                tr("check for residual patterns not captured by group or cell means.",
-                   "revisar patrones en los residuos no capturados por las medias de grupo o celda."),
-                tr("fitted values (group/cell means, adjusted for covariates) for each case.",
-                   "valores ajustados (medias de grupo/celda, ajustadas por covariables) para cada caso."),
-                tr("residuals, the difference between the observed and fitted value.",
-                   "residuos, la diferencia entre el valor observado y el ajustado."),
-                tr("a random cloud around zero, without curvature or funnel shape.",
-                   "una nube aleatoria alrededor de cero, sin curvatura ni forma de embudo."),
-                tr("curvature, bands, funnel shape, or separated groups.",
-                   "curvatura, bandas, forma de embudo o grupos separados."),
-                tr("review whether a covariate, interaction, or non-linear term is missing.",
-                   "revisar si falta una covariable, interacción o término no lineal.")
+                .("check for residual patterns not captured by group or cell means."),
+                .("fitted values (group/cell means, adjusted for covariates) for each case."),
+                .("residuals, the difference between the observed and fitted value."),
+                .("a random cloud around zero, without curvature or funnel shape."),
+                .("curvature, bands, funnel shape, or separated groups."),
+                .("review whether a covariate, interaction, or non-linear term is missing.")
             ))
 
             self$results$qqResidualsGuide$setContent(plot_guide(
-                tr("evaluate whether standardized residuals approximate a normal distribution.",
-                   "evaluar si los residuos estandarizados se aproximan a una distribución normal."),
-                tr("theoretical quantiles expected under normality.",
-                   "cuantiles teóricos esperados bajo normalidad."),
-                tr("observed quantiles of the standardized residuals.",
-                   "cuantiles observados de los residuos estandarizados."),
-                tr("points close to the diagonal reference line.",
-                   "puntos cercanos a la línea diagonal de referencia."),
-                tr("strong deviations at the extremes, S-shape, or heavy tails.",
-                   "desviaciones fuertes en los extremos, forma de S o colas pesadas."),
-                tr("interpret classical inference with caution and review outliers or transformations.",
-                   "interpretar inferencias clásicas con cautela y revisar atípicos o transformaciones.")
+                .("evaluate whether standardized residuals approximate a normal distribution."),
+                .("theoretical quantiles expected under normality."),
+                .("observed quantiles of the standardized residuals."),
+                .("points close to the diagonal reference line."),
+                .("strong deviations at the extremes, S-shape, or heavy tails."),
+                .("interpret classical inference with caution and review outliers or transformations.")
             ))
 
             self$results$residualHistogramGuide$setContent(plot_guide(
-                tr("examine the shape, symmetry, and concentration of standardized residuals.",
-                   "examinar forma, simetría y concentración de los residuos estandarizados."),
-                tr("standardized residuals.", "residuos estandarizados."),
-                tr("count of cases.", "frecuencia o número de casos."),
-                tr("an approximately symmetric distribution centered near zero.",
-                   "una distribución aproximadamente simétrica y centrada en cero."),
-                tr("marked skew, multiple peaks, or very long tails.",
-                   "asimetría marcada, múltiples picos o colas muy largas."),
-                tr("complement normality tests and review extreme cases.",
-                   "complementar las pruebas de normalidad y revisar casos extremos.")
+                .("examine the shape, symmetry, and concentration of standardized residuals."),
+                .("standardized residuals."),
+                .("count of cases."),
+                .("an approximately symmetric distribution centered near zero."),
+                .("marked skew, multiple peaks, or very long tails."),
+                .("complement normality tests and review extreme cases.")
             ))
 
             self$results$residualNormalCurveGuide$setContent(plot_guide(
-                tr("compare the observed residual distribution to a theoretical normal curve.",
-                   "comparar la distribución observada de los residuos con una curva normal teórica."),
-                tr("standardized residuals.", "residuos estandarizados."),
-                tr("density, i.e. the relative concentration of cases.",
-                   "densidad, es decir, la concentración relativa de casos."),
-                tr("an empirical curve centered near zero and similar to the normal bell shape.",
-                   "una curva empírica centrada cerca de cero y similar a la campana normal."),
-                tr("skew, heavy tails, several peaks, or an excess of extreme cases.",
-                   "asimetría, colas pesadas, varios picos o exceso de casos extremos."),
-                tr("read classical tests with caution and review outliers, transformation, or specification.",
-                   "leer las pruebas clásicas con cautela y revisar atípicos, transformación o especificación.")
+                .("compare the observed residual distribution to a theoretical normal curve."),
+                .("standardized residuals."),
+                .("density, i.e. the relative concentration of cases."),
+                .("an empirical curve centered near zero and similar to the normal bell shape."),
+                .("skew, heavy tails, several peaks, or an excess of extreme cases."),
+                .("read classical tests with caution and review outliers, transformation, or specification.")
             ))
 
             normality_problem <- FALSE
@@ -881,7 +618,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (is.null(cell_factor)) {
                 self$results$intro$setContent(
-                    tr("It was not possible to build the design cells.", "No fue posible construir las celdas del diseño.")
+                    .("It was not possible to build the design cells.")
                 )
                 return()
             }
@@ -900,28 +637,25 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "AssumptionsLab",
                 "</p>",
                 "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
-                tr("Assumption check for ANOVA/ANCOVA", "Revisión de supuestos para ANOVA/ANCOVA"),
+                .("Assumption check for ANOVA/ANCOVA"),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr(
-                    "Use this analysis when you want to review whether an ANOVA/ANCOVA has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
-                    "Use este análisis cuando quiera revisar si un ANOVA/ANCOVA tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
-                ),
+                .("Use this analysis when you want to review whether an ANOVA/ANCOVA has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data."),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr("<b>Dependent variable:</b> ", "<b>Variable dependiente:</b> "), html_escape(dep),
+                .("<b>Dependent variable:</b> "), html_escape(dep),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr("<b>Factors:</b> ", "<b>Factores:</b> "), html_escape(paste(factors, collapse = ", ")),
+                .("<b>Factors:</b> "), html_escape(paste(factors, collapse = ", ")),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr("<b>Covariates:</b> ", "<b>Covariables:</b> "),
-                html_escape(ifelse(length(covs) == 0, tr("None", "Ninguna"), paste(covs, collapse = ", "))),
+                .("<b>Covariates:</b> "),
+                html_escape(ifelse(length(covs) == 0, .("None"), paste(covs, collapse = ", "))),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr("<b>Analysis type:</b> ", "<b>Tipo de análisis:</b> "),
+                .("<b>Analysis type:</b> "),
                 ifelse(length(covs) == 0, "ANOVA", "ANCOVA"),
                 "</p>",
                 "</div>"
@@ -937,16 +671,16 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ds_i <<- ds_i + 1
             }
 
-            add_ds(tr("Model", "Modelo"), gsub("`", "", formula_text))
-            add_ds(tr("Total cases", "Casos totales"), as.character(n_total))
-            add_ds(tr("Complete cases used", "Casos completos usados"), as.character(n_used))
-            add_ds(tr("Cases excluded for missing data", "Casos excluidos por datos faltantes"), as.character(n_excluded))
-            add_ds(tr("Number of factors", "Número de factores"), as.character(length(factors)))
-            add_ds(tr("Number of covariates", "Número de covariables"), as.character(length(covs)))
-            add_ds(tr("Number of observed cells", "Número de celdas observadas"), as.character(length(cell_n)))
-            add_ds(tr("Minimum cell size", "Tamaño mínimo de celda"), as.character(min_cell))
-            add_ds(tr("Maximum cell size", "Tamaño máximo de celda"), as.character(max_cell))
-            add_ds(tr("Max/min ratio", "Razón max/min"), fmt_num(balance_ratio))
+            add_ds(.("Model"), gsub("`", "", formula_text))
+            add_ds(.("Total cases"), as.character(n_total))
+            add_ds(.("Complete cases used"), as.character(n_used))
+            add_ds(.("Cases excluded for missing data"), as.character(n_excluded))
+            add_ds(.("Number of factors"), as.character(length(factors)))
+            add_ds(.("Number of covariates"), as.character(length(covs)))
+            add_ds(.("Number of observed cells"), as.character(length(cell_n)))
+            add_ds(.("Minimum cell size"), as.character(min_cell))
+            add_ds(.("Maximum cell size"), as.character(max_cell))
+            add_ds(.("Max/min ratio"), fmt_num(balance_ratio))
 
             cs_i <- 1
             y <- dat2[[dep]]
@@ -966,18 +700,12 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$groupBoxplotsPlot$setState(private$.groupPlotData)
 
             self$results$groupBoxplotsGuide$setContent(plot_guide(
-                tr("compare central tendency, spread, and univariate outliers across groups or cells.",
-                   "comparar tendencia central, dispersión y valores atípicos univariados entre grupos o celdas."),
-                tr("groups / cells defined by the selected factor(s).",
-                   "grupos / celdas definidos por el o los factores seleccionados."),
-                tr("observed values of the dependent variable.",
-                   "valores observados de la variable dependiente."),
-                tr("boxes of similar size and reasonable whiskers across groups.",
-                   "cajas de tamaño similar y bigotes razonables entre grupos."),
-                tr("very different spreads, many outliers, or strong asymmetry in one group.",
-                   "dispersiones muy distintas, muchos atípicos o asimetría fuerte en un grupo."),
-                tr("review those groups before trusting homogeneity of variance results.",
-                   "revisar esos grupos antes de confiar en los resultados de homogeneidad de varianza.")
+                .("compare central tendency, spread, and univariate outliers across groups or cells."),
+                .("groups / cells defined by the selected factor(s)."),
+                .("observed values of the dependent variable."),
+                .("boxes of similar size and reasonable whiskers across groups."),
+                .("very different spreads, many outliers, or strong asymmetry in one group."),
+                .("review those groups before trusting homogeneity of variance results.")
             ))
 
             for (cell in names(cell_n)) {
@@ -1000,70 +728,28 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             self$results$designGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "ANOVA compares means across groups; ANCOVA adds numeric covariates.",
-                    "ANOVA compara medias entre grupos; ANCOVA agrega covariables numéricas."
-                ),
-                tr(
-                    "Check cell sizes, balance, missing data, and design coherence.",
-                    "Revise tamaño de celdas, balance, datos faltantes y coherencia del diseño."
-                ),
-                tr(
-                    "The full explanation of these criteria is in Assumption Library.",
-                    "La explicación completa de estos criterios está en Assumption Library."
-                )
+                .("Quick guide"),
+                .("ANOVA compares means across groups; ANCOVA adds numeric covariates."),
+                .("Check cell sizes, balance, missing data, and design coherence."),
+                .("The full explanation of these criteria is in Assumption Library.")
             ))
 
             small_cells <- names(cell_n)[cell_n < 5]
 
             design_finding <- if (!design_problem) {
-                tr(
-                    sprintf(
-                        "Cell sizes range from %d to %d (max/min ratio %.2f), which is compatible with a reasonably balanced design.",
-                        min_cell, max_cell, balance_ratio
-                    ),
-                    sprintf(
-                        "Los tamaños de celda van de %d a %d (razón max/min %.2f), compatible con un diseño razonablemente balanceado.",
-                        min_cell, max_cell, balance_ratio
-                    )
-                )
+                sprintf(.("Cell sizes range from %d to %d (max/min ratio %.2f), which is compatible with a reasonably balanced design."), min_cell, max_cell, balance_ratio)
             } else if (length(small_cells) > 0) {
-                tr(
-                    sprintf(
-                        "%d of %d cell(s) have fewer than 5 cases (%s); the max/min ratio is %.2f.",
-                        length(small_cells), length(cell_n), paste(small_cells, collapse = ", "), balance_ratio
-                    ),
-                    sprintf(
-                        "%d de %d celda(s) tienen menos de 5 casos (%s); la razón max/min es %.2f.",
-                        length(small_cells), length(cell_n), paste(small_cells, collapse = ", "), balance_ratio
-                    )
-                )
+                sprintf(.("%d of %d cell(s) have fewer than 5 cases (%s); the max/min ratio is %.2f."), length(small_cells), length(cell_n), paste(small_cells, collapse = ", "), balance_ratio)
             } else {
-                tr(
-                    sprintf(
-                        "No cell has fewer than 5 cases, but the max/min ratio is %.2f, above the balance threshold.",
-                        balance_ratio
-                    ),
-                    sprintf(
-                        "Ninguna celda tiene menos de 5 casos, pero la razón max/min es %.2f, por encima del umbral de balance.",
-                        balance_ratio
-                    )
-                )
+                sprintf(.("No cell has fewer than 5 cases, but the max/min ratio is %.2f, above the balance threshold."), balance_ratio)
             }
 
             self$results$designInterpretation$setContent(
                 block96(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     design_finding,
-                    tr(
-                        "Why it matters: unequal cell sizes interact with variance heterogeneity. When the cell with the smallest n also has the largest variance, the classical F-test becomes anti-conservative (actual Type I error above the nominal level); when the smallest cell has the smallest variance, the test becomes conservative instead.",
-                        "Por qué importa: los tamaños de celda desiguales interactúan con la heterogeneidad de varianzas. Cuando la celda con menor n también tiene la mayor varianza, la prueba F clásica se vuelve anticonservadora (el error Tipo I real queda por encima del nominal); cuando la celda más pequeña tiene la menor varianza, la prueba se vuelve conservadora en cambio."
-                    ),
-                    tr(
-                        "Common error: treating any degree of design imbalance as automatically invalidating the ANOVA. With homogeneous variances, moderate imbalance has limited practical impact; the real risk appears specifically when imbalance and variance heterogeneity occur together, so this result should be read alongside the \"Homogeneity of Variances\" section (Maxwell & Delaney, 2004; see references).",
-                        "Error común: tratar cualquier grado de desbalance del diseño como algo que invalida automáticamente el ANOVA. Con varianzas homogéneas, un desbalance moderado tiene impacto práctico limitado; el riesgo real aparece específicamente cuando el desbalance y la heterogeneidad de varianzas ocurren juntos, por lo que este resultado debe leerse junto con la sección \"Homogeneidad de varianzas\" (Maxwell & Delaney, 2004; ver referencias)."
-                    )
+                    .("Why it matters: unequal cell sizes interact with variance heterogeneity. When the cell with the smallest n also has the largest variance, the classical F-test becomes anti-conservative (actual Type I error above the nominal level); when the smallest cell has the smallest variance, the test becomes conservative instead."),
+                    .("Common error: treating any degree of design imbalance as automatically invalidating the ANOVA. With homogeneous variances, moderate imbalance has limited practical impact; the real risk appears specifically when imbalance and variance heterogeneity occur together, so this result should be read alongside the \"Homogeneity of Variances\" section (Maxwell & Delaney, 2004; see references).")
                 )
             )
 
@@ -1122,7 +808,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(sw))
                 add_norm("Shapiro-Wilk", "W", sw$statistic[[1]], sw$p.value)
             else
-                add_norm("Shapiro-Wilk", "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, tr))
+                add_norm("Shapiro-Wilk", "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, .))
 
             # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
             # Pearson chi-square: identical tryCatch calls in every module,
@@ -1132,115 +818,82 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             li <- .nt_res$li; ad <- .nt_res$ad; cvm <- .nt_res$cvm; sf <- .nt_res$sf
 
             if (!is.null(li))
-                add_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", li$statistic[[1]], li$p.value)
+                add_norm(.("Lilliefors (corrected K-S)"), "D", li$statistic[[1]], li$p.value)
             else
-                add_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, tr))
+                add_norm(.("Lilliefors (corrected K-S)"), "D", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, .))
 
             if (!is.null(ad))
                 add_norm("Anderson-Darling", "A²", ad$statistic[[1]], ad$p.value)
             else
-                add_norm("Anderson-Darling", "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, tr))
+                add_norm("Anderson-Darling", "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, .))
 
             if (!is.null(cvm))
                 add_norm("Cramer-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
             else
-                add_norm("Cramer-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, tr))
+                add_norm("Cramer-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
 
             if (!is.null(sf))
                 add_norm("Shapiro-Francia", "W'", sf$statistic[[1]], sf$p.value)
             else
-                add_norm("Shapiro-Francia", "W'", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$sf, tr))
+                add_norm("Shapiro-Francia", "W'", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$sf, .))
 
             pt <- .nt_res$pt
 
             if (!is.null(pt))
-                add_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", pt$statistic[[1]], pt$p.value)
+                add_norm(.("Pearson chi-square"), "P", pt$statistic[[1]], pt$p.value)
             else
-                add_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$pt, tr))
+                add_norm(.("Pearson chi-square"), "P", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$pt, .))
 
             jb <- .nc_res$jb
 
             if (!is.null(jb))
                 add_norm("Jarque-Bera", "JB", jb$value, jb$p)
             else
-                add_norm("Jarque-Bera", "JB", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$jb, tr))
+                add_norm("Jarque-Bera", "JB", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$jb, .))
 
             skew_test <- .nc_res$skew
 
             if (!is.null(skew_test))
-                add_norm(tr("Skewness test", "Prueba de asimetría"), "z", skew_test$value, skew_test$p)
+                add_norm(.("Skewness test"), "z", skew_test$value, skew_test$p)
             else
-                add_norm(tr("Skewness test", "Prueba de asimetría"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$skew, tr))
+                add_norm(.("Skewness test"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$skew, .))
 
             kurt_test <- .nc_res$kurt
 
             if (!is.null(kurt_test))
-                add_norm(tr("Kurtosis test", "Prueba de curtosis"), "z", kurt_test$value, kurt_test$p)
+                add_norm(.("Kurtosis test"), "z", kurt_test$value, kurt_test$p)
             else
-                add_norm(tr("Kurtosis test", "Prueba de curtosis"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$kurt, tr))
+                add_norm(.("Kurtosis test"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$kurt, .))
 
             self$results$residualNormalityGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "Normality is evaluated on the model's residuals, not on the raw variable.",
-                    "La normalidad se evalúa sobre residuos del modelo, no sobre la variable bruta."
-                ),
-                tr(
-                    "p >= .05 is compatible with approximate normality.",
-                    "p >= .05 es compatible con normalidad aproximada."
-                ),
-                tr(
-                    "p < .05 suggests a significant deviation from normality.",
-                    "p < .05 sugiere desviación significativa de normalidad."
-                ),
-                tr(
-                    "See methodological details in Assumption Library.",
-                    "Revise detalles metodológicos en Assumption Library."
-                )
+                .("Quick guide"),
+                .("Normality is evaluated on the model's residuals, not on the raw variable."),
+                .("p >= .05 is compatible with approximate normality."),
+                .("p < .05 suggests a significant deviation from normality."),
+                .("See methodological details in Assumption Library.")
             ))
 
 
             normality_integration <- if (norm_total_count == 0) {
                 ""
             } else if (norm_sig_count == 0) {
-                tr(
-                    sprintf("None of the %d normality tests computed reached significance: consistent evidence of approximate normality.", norm_total_count),
-                    sprintf("Ninguna de las %d pruebas de normalidad calculadas resultó significativa: evidencia consistente de normalidad aproximada.", norm_total_count)
-                )
+                sprintf(.("None of the %d normality tests computed reached significance: consistent evidence of approximate normality."), norm_total_count)
             } else if (norm_sig_count == norm_total_count) {
-                tr(
-                    sprintf("All %d normality tests computed reached significance: consistent evidence of a real deviation from normality.", norm_total_count),
-                    sprintf("Las %d pruebas de normalidad calculadas resultaron significativas: evidencia consistente de una desviación real de normalidad.", norm_total_count)
-                )
+                sprintf(.("All %d normality tests computed reached significance: consistent evidence of a real deviation from normality."), norm_total_count)
             } else if (norm_sig_count == 1) {
-                tr(
-                    sprintf("Only 1 of %d normality tests reached significance. An isolated signal like this, uncorroborated by the rest of the battery, deserves more caution than a result confirmed across multiple tests.", norm_total_count),
-                    sprintf("Solo 1 de %d pruebas de normalidad resultó significativa. Una señal aislada como esta, no corroborada por el resto de la batería, merece más cautela que un resultado confirmado por varias pruebas.", norm_total_count)
-                )
+                sprintf(.("Only 1 of %d normality tests reached significance. An isolated signal like this, uncorroborated by the rest of the battery, deserves more caution than a result confirmed across multiple tests."), norm_total_count)
             } else {
-                tr(
-                    sprintf("%d of %d normality tests reached significance. This level of agreement across multiple tests strengthens the case for a real deviation from normality, beyond what a single isolated test would indicate.", norm_sig_count, norm_total_count),
-                    sprintf("%d de %d pruebas de normalidad resultaron significativas. Este nivel de acuerdo entre varias pruebas refuerza la sospecha de una desviación real de normalidad, más allá de lo que indicaría una sola prueba aislada.", norm_sig_count, norm_total_count)
-                )
+                sprintf(.("%d of %d normality tests reached significance. This level of agreement across multiple tests strengthens the case for a real deviation from normality, beyond what a single isolated test would indicate."), norm_sig_count, norm_total_count)
             }
 
             self$results$residualNormalityInterpretation$setContent(
                 block96(paste(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     paste(normality_texts, collapse = "\n"),
                     normality_integration,
-                    tr(
-                        "Shapiro-Wilk is used because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason.",
-                        "Se usa Shapiro-Wilk porque mantiene el mayor poder estadístico entre las pruebas de normalidad más comunes para prácticamente todo rango de tamaño muestral (Razali & Wah, 2011; ver referencias). La recomendación extendida de preferir Kolmogorov-Smirnov cuando n crece es un remanente de limitaciones de software antiguo, no una razón estadística."
-                    ),
-                    tr(
-                        "Why it matters: residual normality mainly affects the precision of classical inference (confidence intervals, p-values) in small samples; point estimates of group means remain valid even with moderate non-normality.",
-                        "Por qué importa: la normalidad de residuos afecta principalmente la precisión de la inferencia clásica (intervalos de confianza, valores p) en muestras pequeñas; las estimaciones puntuales de las medias de grupo siguen siendo válidas incluso con no normalidad moderada."
-                    ),
-                    tr(
-                        "Common error: assuming a significant normality test invalidates the whole ANOVA. It is a signal to inspect the shape of residuals (skewness, heavy tails, outliers) before deciding whether classical inference is still trustworthy.",
-                        "Error común: asumir que una prueba de normalidad significativa invalida todo el ANOVA. Es una señal para revisar la forma de los residuos (asimetría, colas pesadas, atípicos) antes de decidir si la inferencia clásica sigue siendo confiable."
-                    ),
+                    .("Shapiro-Wilk is used because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason."),
+                    .("Why it matters: residual normality mainly affects the precision of classical inference (confidence intervals, p-values) in small samples; point estimates of group means remain valid even with moderate non-normality."),
+                    .("Common error: assuming a significant normality test invalidates the whole ANOVA. It is a signal to inspect the shape of residuals (skewness, heavy tails, outliers) before deciding whether classical inference is still trustworthy."),
                     sep = "\n\n"
                 ))
             )
@@ -1301,44 +954,38 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # dispersión intra-celda - así que un fallo en cualquiera de
             # ellas casi siempre se explica por la celda más pequeña, no por
             # un fallo computacional aleatorio.
-            variance_test_reason <- if (length(cell_n) > 0 && min(cell_n) < 2) tr(
-                paste0("Could not be computed - the smallest factor-level combination has only ", min(cell_n), " observation(s); at least 2 are needed in every cell."),
-                paste0("No se pudo calcular - la combinación de niveles de factor más pequeña tiene solo ", min(cell_n), " observación(es); se necesitan al menos 2 en cada celda.")
-            ) else tr(
-                "Could not be computed for this design.",
-                "No se pudo calcular para este diseño."
-            )
+            variance_test_reason <- if (length(cell_n) > 0 && min(cell_n) < 2) sprintf(.("Could not be computed - the smallest factor-level combination has only %s observation(s); at least 2 are needed in every cell."), min(cell_n)) else .("Could not be computed for this design.")
 
             lev <- tryCatch(.al_levene_manual(y, cell_factor, "mean"), error = function(e) NULL)
 
             if (!is.null(lev))
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Levene", "F", lev$value, lev$df, lev$p)
+                add_var(.("Equality of variances"), "Levene", "F", lev$value, lev$df, lev$p)
             else
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Levene", "F", NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
+                add_var(.("Equality of variances"), "Levene", "F", NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
 
             bf <- tryCatch(.al_levene_manual(y, cell_factor, "median"), error = function(e) NULL)
 
             if (!is.null(bf))
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Brown-Forsythe", "F", bf$value, bf$df, bf$p)
+                add_var(.("Equality of variances"), "Brown-Forsythe", "F", bf$value, bf$df, bf$p)
             else
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Brown-Forsythe", "F", NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
+                add_var(.("Equality of variances"), "Brown-Forsythe", "F", NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
 
             bart <- tryCatch(stats::bartlett.test(y ~ cell_factor), error = function(e) NULL)
 
             if (!is.null(bart))
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Bartlett", "K²",
+                add_var(.("Equality of variances"), "Bartlett", "K²",
                         bart$statistic[[1]], bart$parameter[[1]], bart$p.value)
             else
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Bartlett", "K²",
+                add_var(.("Equality of variances"), "Bartlett", "K²",
                         NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
 
             flig <- tryCatch(stats::fligner.test(y ~ cell_factor), error = function(e) NULL)
 
             if (!is.null(flig))
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Fligner-Killeen", "χ²",
+                add_var(.("Equality of variances"), "Fligner-Killeen", "χ²",
                         flig$statistic[[1]], flig$parameter[[1]], flig$p.value)
             else
-                add_var(tr("Equality of variances", "Igualdad de varianzas"), "Fligner-Killeen", "χ²",
+                add_var(.("Equality of variances"), "Fligner-Killeen", "χ²",
                         NA_real_, NA_integer_, NA_real_, reason = variance_test_reason)
 
             hartley <- tryCatch({
@@ -1347,46 +994,25 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 max(vars) / min(vars)
             }, error = function(e) NA_real_)
 
-            add_var(tr("Variance ratio", "Razón de varianzas"), "Hartley Fmax", "Fmax",
+            add_var(.("Variance ratio"), "Hartley Fmax", "Fmax",
                     hartley, NA_integer_, NA_real_)
 
             self$results$varianceGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "These tests check whether variances are similar across groups or cells.",
-                    "Estas pruebas revisan si las varianzas son similares entre grupos o celdas."
-                ),
-                tr(
-                    "p >= .05 is compatible with approximately homogeneous variances.",
-                    "p >= .05 es compatible con varianzas aproximadamente homogéneas."
-                ),
-                tr(
-                    "p < .05 suggests significant differences between variances.",
-                    "p < .05 sugiere diferencias significativas entre varianzas."
-                ),
-                tr(
-                    "See methodological details in Assumption Library.",
-                    "Revise detalles metodológicos en Assumption Library."
-                )
+                .("Quick guide"),
+                .("These tests check whether variances are similar across groups or cells."),
+                .("p >= .05 is compatible with approximately homogeneous variances."),
+                .("p < .05 suggests significant differences between variances."),
+                .("See methodological details in Assumption Library.")
             ))
 
 
             self$results$varianceInterpretation$setContent(
                 block96(paste(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     paste(variance_texts, collapse = "\n"),
-                    tr(
-                        "Levene's test is treated as the primary reference because it is the classical, most widely recognized test for equality of variances across groups (Levene, 1960; see references); Brown-Forsythe and Bartlett are reported alongside for comparison.",
-                        "La prueba de Levene se trata como referencia principal por ser la más clásica y ampliamente reconocida para igualdad de varianzas entre grupos (Levene, 1960; ver referencias); Brown-Forsythe y Bartlett se reportan junto a esta para comparar."
-                    ),
-                    tr(
-                        "Why it matters: unequal variances mainly threaten the classical F-test when group sizes are also unequal; with equal group sizes, ANOVA is fairly robust to moderate variance differences.",
-                        "Por qué importa: las varianzas desiguales amenazan principalmente a la prueba F clásica cuando además los tamaños de grupo son desiguales; con tamaños de grupo iguales, el ANOVA es bastante robusto a diferencias moderadas de varianza."
-                    ),
-                    tr(
-                        "Common error: treating a significant variance test as reason to abandon ANOVA entirely. The direct remedy is usually switching to Welch's ANOVA, which does not assume equal variances, rather than discarding the analysis.",
-                        "Error común: tratar una prueba de varianza significativa como motivo para abandonar por completo el ANOVA. El remedio directo suele ser cambiar al ANOVA de Welch, que no asume varianzas iguales, en vez de descartar el análisis."
-                    ),
+                    .("Levene's test is treated as the primary reference because it is the classical, most widely recognized test for equality of variances across groups (Levene, 1960; see references); Brown-Forsythe and Bartlett are reported alongside for comparison."),
+                    .("Why it matters: unequal variances mainly threaten the classical F-test when group sizes are also unequal; with equal group sizes, ANOVA is fairly robust to moderate variance differences."),
+                    .("Common error: treating a significant variance test as reason to abandon ANOVA entirely. The direct remedy is usually switching to Welch's ANOVA, which does not assume equal variances, rather than discarding the analysis."),
                     sep = "\n\n"
                 ))
             )
@@ -1424,7 +1050,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             if (length(covs) == 0) {
-                add_slope(tr("Not applicable", "No aplicable"), tr("No covariates", "Sin covariables"), "", "", NA_real_, NA_real_)
+                add_slope(.("Not applicable"), .("No covariates"), "", "", NA_real_, NA_real_)
             } else {
                 for (fac in factors) {
                     for (cv in covs) {
@@ -1446,42 +1072,21 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             self$results$slopesGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "This assumption applies to ANCOVA when covariates are present.",
-                    "Este supuesto aplica a ANCOVA cuando hay covariables."
-                ),
-                tr(
-                    "p >= .05 is compatible with approximately homogeneous slopes.",
-                    "p >= .05 es compatible con pendientes aproximadamente homogéneas."
-                ),
-                tr(
-                    "p < .05 suggests the slope changes across groups.",
-                    "p < .05 sugiere que la pendiente cambia entre grupos."
-                ),
-                tr(
-                    "See methodological details in Assumption Library.",
-                    "Revise detalles metodológicos en Assumption Library."
-                )
+                .("Quick guide"),
+                .("This assumption applies to ANCOVA when covariates are present."),
+                .("p >= .05 is compatible with approximately homogeneous slopes."),
+                .("p < .05 suggests the slope changes across groups."),
+                .("See methodological details in Assumption Library.")
             ))
 
 
             self$results$slopesInterpretation$setContent(
                 block96(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     paste(slope_texts, collapse = "\n"),
-                    if (length(covs) > 0) tr(
-                        "Why it matters: if slopes are not homogeneous, a single averaged covariate adjustment misrepresents the group differences, because the covariate-response relationship itself differs by group (Huitema, 2011; see references).",
-                        "Por qué importa: si las pendientes no son homogéneas, un ajuste promedio por la covariable representa mal las diferencias entre grupos, porque la relación covariable-respuesta cambia según el grupo (Huitema, 2011; ver referencias)."
-                    ) else "",
-                    if (length(covs) > 0) tr(
-                        "Common error: running standard ANCOVA anyway and reporting adjusted means as if the covariate effect were the same for every group, when the interaction test says otherwise.",
-                        "Error común: correr ANCOVA estándar de todos modos y reportar medias ajustadas como si el efecto de la covariable fuera igual en todos los grupos, cuando la prueba de interacción indica lo contrario."
-                    ) else "",
-                    if (length(covs) > 0) tr(
-                        "Sample-size nuance: this interaction test has limited power in small or unbalanced cells, so a non-significant result should not be read as strong proof of homogeneous slopes; with very large samples, even a trivial slope difference can become significant.",
-                        "Matiz de tamaño de muestra: esta prueba de interacción tiene poder limitado en celdas pequeñas o desbalanceadas, así que un resultado no significativo no debe leerse como prueba fuerte de pendientes homogéneas; con muestras muy grandes, incluso una diferencia trivial en las pendientes puede volverse significativa."
-                    ) else ""
+                    if (length(covs) > 0) .("Why it matters: if slopes are not homogeneous, a single averaged covariate adjustment misrepresents the group differences, because the covariate-response relationship itself differs by group (Huitema, 2011; see references).") else "",
+                    if (length(covs) > 0) .("Common error: running standard ANCOVA anyway and reporting adjusted means as if the covariate effect were the same for every group, when the interaction test says otherwise.") else "",
+                    if (length(covs) > 0) .("Sample-size nuance: this interaction test has limited power in small or unbalanced cells, so a non-significant result should not be read as strong proof of homogeneous slopes; with very large samples, even a trivial slope difference can become significant.") else ""
                 )
             )
 
@@ -1493,8 +1098,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             cl_i <- 1
             add_covlin <- function(cv, test, statistic, value, p_value, extra_r = NA_real_, reason = NULL) {
                 if (!is.na(clean_num(p_value)) && clean_num(p_value) < .05 &&
-                    test %in% c(tr("Exploratory quadratic term", "Término cuadrático exploratorio"),
-                                tr("Exploratory Box-Tidwell", "Box-Tidwell exploratorio"))) {
+                    test %in% c(.("Exploratory quadratic term"),
+                                .("Exploratory Box-Tidwell"))) {
                     linearity_problem <<- TRUE
                 }
 
@@ -1530,7 +1135,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             if (length(covs) == 0) {
-                add_covlin(tr("Not applicable", "No aplicable"), tr("No covariates", "Sin covariables"), "", NA_real_, NA_real_)
+                add_covlin(.("Not applicable"), .("No covariates"), "", NA_real_, NA_real_)
             } else {
                 for (cv in covs) {
                     x <- dat2[[cv]]
@@ -1540,7 +1145,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     cor_p <- tryCatch(stats::cor.test(x, y)$p.value,
                                       error = function(e) NA_real_)
 
-                    add_covlin(cv, tr("Bivariate correlation", "Correlación bivariada"), "r", cor_val, cor_p)
+                    add_covlin(cv, .("Bivariate correlation"), "r", cor_val, cor_p)
 
                     quad_p <- tryCatch({
                         quadDat <- dat2
@@ -1552,7 +1157,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         coef(summary(fit_quad))[".x_sq_tmp", "Pr(>|t|)"]
                     }, error = function(e) NA_real_)
 
-                    add_covlin(cv, tr("Exploratory quadratic term", "Término cuadrático exploratorio"), "p", quad_p, quad_p)
+                    add_covlin(cv, .("Exploratory quadratic term"), "p", quad_p, quad_p)
 
                     bt_needs_positive <- any(x <= 0, na.rm = TRUE)
                     bt_p <- if (bt_needs_positive) NA_real_ else tryCatch({
@@ -1565,15 +1170,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         coef(summary(fit_bt))[".bt_tmp", "Pr(>|t|)"]
                     }, error = function(e) NA_real_)
 
-                    bt_reason <- if (bt_needs_positive) tr(
-                        "Box-Tidwell requires strictly positive values (it uses x*log(x)); this covariate has zero or negative values.",
-                        "Box-Tidwell requiere valores estrictamente positivos (usa x*log(x)); esta covariable tiene valores cero o negativos."
-                    ) else if (is.na(clean_num(bt_p))) tr(
-                        "Could not be computed for this covariate.",
-                        "No se pudo calcular para esta covariable."
-                    ) else NULL
+                    bt_reason <- if (bt_needs_positive) .("Box-Tidwell requires strictly positive values (it uses x*log(x)); this covariate has zero or negative values.") else if (is.na(clean_num(bt_p))) .("Could not be computed for this covariate.") else NULL
 
-                    add_covlin(cv, tr("Exploratory Box-Tidwell", "Box-Tidwell exploratorio"), "p", bt_p, bt_p, reason = bt_reason)
+                    add_covlin(cv, .("Exploratory Box-Tidwell"), "p", bt_p, bt_p, reason = bt_reason)
 
                     dcor_val <- tryCatch(dcor_stat(x, y), error = function(e) NA_real_)
                     dcor_p <- tryCatch(dcor_pvalue(x, y), error = function(e) NA_real_)
@@ -1583,62 +1182,35 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         dcor_problem <<- TRUE
                     }
 
-                    add_covlin(cv, tr("Distance correlation (dCor)", "Correlación de distancia (dCor)"), "dCor", dcor_val, dcor_p, extra_r = cor_val)
+                    add_covlin(cv, .("Distance correlation (dCor)"), "dCor", dcor_val, dcor_p, extra_r = cor_val)
 
                     ce_res <- tryCatch(copentTest(x, y), error = function(e) NULL)
 
                     if (!is.null(ce_res)) {
-                        add_covlin(cv, tr("Copula entropy (copent)", "Entropía copular (copent)"), "CE", ce_res$ce, ce_res$p)
+                        add_covlin(cv, .("Copula entropy (copent)"), "CE", ce_res$ce, ce_res$p)
                     } else {
-                        ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) tr(
-                            "The 'copent' package is not installed.",
-                            "El paquete 'copent' no está instalado."
-                        ) else tr(
-                            "Could not be computed for this covariate (copula entropy needs enough distinct values to estimate a copula density).",
-                            "No se pudo calcular para esta covariable (la entropía copular necesita suficientes valores distintos para estimar una densidad de cópula)."
-                        )
-                        add_covlin(cv, tr("Copula entropy (copent)", "Entropía copular (copent)"), "CE", NA_real_, NA_real_, reason = ce_reason)
+                        ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) .("The 'copent' package is not installed.") else .("Could not be computed for this covariate (copula entropy needs enough distinct values to estimate a copula density).")
+                        add_covlin(cv, .("Copula entropy (copent)"), "CE", NA_real_, NA_real_, reason = ce_reason)
                     }
                 }
             }
 
             self$results$covariateLinearityGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "Linearity applies to numeric covariates, not to categorical factors.",
-                    "La linealidad aplica a covariables numéricas, no a factores categóricos."
-                ),
-                tr(
-                    "p >= .05 is compatible with approximate linearity.",
-                    "p >= .05 es compatible con linealidad aproximada."
-                ),
-                tr(
-                    "p < .05 suggests possible curvature or misspecification.",
-                    "p < .05 sugiere posible curvatura o mala especificación."
-                ),
-                tr(
-                    "See methodological details in Assumption Library.",
-                    "Revise detalles metodológicos en Assumption Library."
-                )
+                .("Quick guide"),
+                .("Linearity applies to numeric covariates, not to categorical factors."),
+                .("p >= .05 is compatible with approximate linearity."),
+                .("p < .05 suggests possible curvature or misspecification."),
+                .("See methodological details in Assumption Library.")
             ))
 
 
             self$results$covariateLinearityInterpretation$setContent(
                 block96(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     paste(covlin_texts, collapse = "\n"),
-                    if (length(covs) > 0) tr(
-                        "Distance correlation (dCor): unlike Pearson's r, which only detects linear association, dCor can detect any form of statistical dependence, including non-monotonic or curved relationships, and equals zero only when the variables are independent.",
-                        "Correlación de distancia (dCor): a diferencia de r de Pearson, que solo detecta asociación lineal, dCor puede detectar cualquier forma de dependencia estadística, incluyendo relaciones no monótonas o curvas, y es igual a cero solo cuando las variables son independientes."
-                    ) else "",
-                    if (length(covs) > 0) tr(
-                        "Common error: treating a significant dCor by itself as proof that the relationship is non-linear. dCor is also significant for purely linear relationships; the real diagnostic signal here is the size of the gap between dCor and |Pearson's r|, not the significance of dCor alone.",
-                        "Error común: tratar un dCor significativo por sí solo como prueba de que la relación es no lineal. dCor también es significativo para relaciones puramente lineales; la señal diagnóstica real aquí es el tamaño de la brecha entre dCor y |r de Pearson|, no la significancia de dCor por sí sola."
-                    ) else "",
-                    if (length(covs) > 0) tr(
-                        "Sample-size nuance: the permutation test used for dCor has limited resolution in small samples, so a moderate gap should be treated as exploratory rather than conclusive.",
-                        "Matiz de tamaño de muestra: la prueba de permutación usada para dCor tiene resolución limitada en muestras pequeñas, así que una brecha moderada debe tratarse como exploratoria y no como concluyente."
-                    ) else ""
+                    if (length(covs) > 0) .("Distance correlation (dCor): unlike Pearson's r, which only detects linear association, dCor can detect any form of statistical dependence, including non-monotonic or curved relationships, and equals zero only when the variables are independent.") else "",
+                    if (length(covs) > 0) .("Common error: treating a significant dCor by itself as proof that the relationship is non-linear. dCor is also significant for purely linear relationships; the real diagnostic signal here is the size of the gap between dCor and |Pearson's r|, not the significance of dCor alone.") else "",
+                    if (length(covs) > 0) .("Sample-size nuance: the permutation test used for dCor has limited resolution in small samples, so a moderate gap should be treated as exploratory rather than conclusive.") else ""
                 )
             )
 
@@ -1701,12 +1273,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         }
                     }
 
-                    vif_reason <- if (is.na(clean_num(vif))) tr(
-                        "Could not be computed - regressing this term on the others is likely singular (more terms than complete cases, or an exact linear dependency among predictors).",
-                        "No se pudo calcular - regresar este término sobre los demás es probablemente singular (más términos que casos completos, o una dependencia lineal exacta entre predictores)."
-                    ) else NULL
+                    vif_reason <- if (is.na(clean_num(vif))) .("Could not be computed - regressing this term on the others is likely singular (more terms than complete cases, or an exact linear dependency among predictors).") else NULL
                     add_multi("VIF", colnames(X_no_intercept)[j], "VIF", vif, reason = vif_reason)
-                    add_multi(tr("Tolerance", "Tolerancia"), colnames(X_no_intercept)[j], "1/VIF", tol, reason = vif_reason)
+                    add_multi(.("Tolerance"), colnames(X_no_intercept)[j], "1/VIF", tol, reason = vif_reason)
                 }
 
                 eig <- tryCatch({
@@ -1716,13 +1285,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }, error = function(e) NULL)
 
                 if (is.null(eig)) {
-                    eig_reason <- tr(
-                        "Could not be computed - the design matrix's correlation matrix could not be decomposed (likely too few complete cases relative to the number of terms).",
-                        "No se pudo calcular - no fue posible descomponer la matriz de correlación de la matriz de diseño (probablemente muy pocos casos completos respecto al número de términos)."
-                    )
-                    add_multi(tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), NA_real_, reason = eig_reason)
-                    add_multi(tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", NA_real_, reason = eig_reason)
-                    add_multi(tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", NA_real_, reason = eig_reason)
+                    eig_reason <- .("Could not be computed - the design matrix's correlation matrix could not be decomposed (likely too few complete cases relative to the number of terms).")
+                    add_multi(.("Minimum eigenvalue"), .("Design matrix"), .("minimum λ"), NA_real_, reason = eig_reason)
+                    add_multi(.("Condition index"), .("Design matrix"), "CI", NA_real_, reason = eig_reason)
+                    add_multi(.("Determinant"), .("Correlation matrix"), "det(R)", NA_real_, reason = eig_reason)
                 }
 
                 if (!is.null(eig)) {
@@ -1735,12 +1301,12 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         error = function(e) NA_real_
                     )
 
-                    add_multi(tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), min_eig)
-                    add_multi(tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", ci)
-                    add_multi(tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", det_r)
+                    add_multi(.("Minimum eigenvalue"), .("Design matrix"), .("minimum λ"), min_eig)
+                    add_multi(.("Condition index"), .("Design matrix"), "CI", ci)
+                    add_multi(.("Determinant"), .("Correlation matrix"), "det(R)", det_r)
                 }
             } else {
-                add_multi(tr("VIF / tolerance", "VIF / tolerancia"), tr("Not applicable", "No aplicable"), "", NA_real_)
+                add_multi(.("VIF / tolerance"), .("Not applicable"), "", NA_real_)
             }
 
             if (length(covs) >= 2) {
@@ -1752,48 +1318,23 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (!is.null(cor_mat)) {
                     cor_mat[lower.tri(cor_mat, diag = TRUE)] <- NA_real_
                     max_cor <- suppressWarnings(max(abs(cor_mat), na.rm = TRUE))
-                    add_multi(tr("Maximum correlation", "Correlación máxima"), tr("Numeric covariates", "Covariables numéricas"), tr("maximum |r|", "|r| máximo"), max_cor)
+                    add_multi(.("Maximum correlation"), .("Numeric covariates"), .("maximum |r|"), max_cor)
                 }
             }
 
             self$results$multicollinearityGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "This check applies when covariates are present (ANCOVA); VIF among a single factor's own dummy-coded levels is not an actionable diagnostic and is not shown for a covariate-free ANOVA.",
-                    "Esta comprobación aplica cuando hay covariables (ANCOVA); el VIF entre las columnas dummy de un solo factor no es un diagnóstico accionable y no se muestra en un ANOVA sin covariables."
-                ),
-                tr(
-                    "VIF and tolerance describe how much each model term overlaps with the others; the eigenvalue/condition index diagnose collinearity across the whole design matrix at once.",
-                    "VIF y tolerancia describen cuánto se solapa cada término del modelo con los demás; el eigenvalue/índice de condición diagnostican la colinealidad en toda la matriz de diseño a la vez."
-                ),
-                tr(
-                    "VIF >= 5 is a moderate concern; VIF >= 10 is a severe problem.",
-                    "VIF >= 5 es una alerta moderada; VIF >= 10 es un problema severo."
-                ),
-                tr(
-                    "See methodological details in Assumption Library.",
-                    "Revise detalles metodológicos en Assumption Library."
-                )
+                .("Quick guide"),
+                .("This check applies when covariates are present (ANCOVA); VIF among a single factor's own dummy-coded levels is not an actionable diagnostic and is not shown for a covariate-free ANOVA."),
+                .("VIF and tolerance describe how much each model term overlaps with the others; the eigenvalue/condition index diagnose collinearity across the whole design matrix at once."),
+                .("VIF >= 5 is a moderate concern; VIF >= 10 is a severe problem."),
+                .("See methodological details in Assumption Library.")
             ))
 
             self$results$multicollinearityInterpretation$setContent(block96(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
-                if (length(covs) > 0) paste0(
-                    tr("Maximum VIF: ", "VIF máximo: "), format(round(clean_num(max_vif), 2), nsmall = 2),
-                    if (!is.na(max_vif_name)) paste0(tr(" (term: ", " (término: "), max_vif_name, ")") else "",
-                    tr(
-                        ". By convention, values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references).",
-                        ". Por convención, valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (Marquardt, 1970; ver referencias)."
-                    )
-                ) else tr("Not applicable: requires covariates.", "No aplica: requiere covariables."),
-                if (length(covs) > 0) tr(
-                    "Common error: assuming a high VIF means a covariate or factor should be removed. The model can still predict well overall; the issue is isolating that specific term's individual effect from the others.",
-                    "Error común: pensar que un VIF alto significa que hay que eliminar la covariable o el factor. El modelo puede seguir prediciendo bien en conjunto; el problema es aislar el efecto individual de ese término frente a los demás."
-                ) else "",
-                if (length(covs) > 0) tr(
-                    "If collinearity is a real concern with multiple covariates, consider combining the most redundant ones or centering variables involved in interactions, rather than discarding the full model.",
-                    "Si la colinealidad es una preocupación real con varias covariables, considere combinar las más redundantes o centrar las variables involucradas en interacciones, en vez de descartar el modelo completo."
-                ) else ""
+                .("Applied Interpretation"),
+                if (length(covs) > 0) sprintf(.("Maximum VIF: %s%s. By convention, values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (Marquardt, 1970; see references)."), format(round(clean_num(max_vif), 2), nsmall = 2), if (!is.na(max_vif_name)) sprintf(.(" (term: %s)"), max_vif_name) else "") else .("Not applicable: requires covariates."),
+                if (length(covs) > 0) .("Common error: assuming a high VIF means a covariate or factor should be removed. The model can still predict well overall; the issue is isolating that specific term's individual effect from the others.") else "",
+                if (length(covs) > 0) .("If collinearity is a real concern with multiple covariates, consider combining the most redundant ones or centering variables involved in interactions, rather than discarding the full model.") else ""
             ))
 
             # -----------------------------------------------------------------------------
@@ -1802,15 +1343,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
 
             self$results$correlationMatrixGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "These two tables complement the multicollinearity checks with an overview of the association between the dependent variable and all numeric covariates, each in APA 7 format (lower triangle, numbered variables).",
-                    "Estas dos tablas complementan las pruebas de multicolinealidad con una vista general de la asociación entre la variable dependiente y todas las covariables numéricas, cada una en formato APA 7 (triángulo inferior, variables numeradas)."
-                ),
-                tr(
-                    "The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (dCor, Szekely et al., 2007), which detects linear and non-linear association alike.",
-                    "La primera reporta la correlación de Pearson convencional (solo detecta asociación lineal); la segunda reporta la correlación de distancia (dCor, Székely et al., 2007), que detecta asociación lineal y no lineal por igual."
-                )
+                .("Quick guide"),
+                .("These two tables complement the multicollinearity checks with an overview of the association between the dependent variable and all numeric covariates, each in APA 7 format (lower triangle, numbered variables)."),
+                .("The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (dCor, Szekely et al., 2007), which detects linear and non-linear association alike.")
             ))
 
             {
@@ -1875,25 +1410,19 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     }
 
                     self$results$correlationMatrixNote$setContent(block96(
-                        paste0(sprintf("N = %d.", n_used), " ", tr("* p < .05, ** p < .01, *** p < .001", "* p < .05, ** p < .01, *** p < .001")),
+                        sprintf(.("%s * p < .05, ** p < .01, *** p < .001"), sprintf("N = %d.", n_used)),
                         .al_dcor_na_note(lang)
                     ))
                 } else {
                     self$results$correlationMatrixNote$setContent(block96(
-                        tr("Not applicable: fewer than two numeric model variables.", "No aplica: menos de dos variables numéricas del modelo.")
+                        .("Not applicable: fewer than two numeric model variables.")
                     ))
                 }
 
                 self$results$correlationComparisonGuide$setContent(block96(
-                    tr("Pearson / dCor / Copula Entropy Discordance Analysis", "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                    tr(
-                        "Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship.",
-                        "Dado que la r de Pearson solo capta asociación lineal mientras que dCor capta asociación lineal y no lineal por igual, un par cuyo dCor sea notablemente mayor que su |r| de Pearson es una señal (no una prueba) de una relación no lineal."
-                    ),
-                    tr(
-                        "Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10. The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence.",
-                        "Se señalan en la tabla \"Pares con diferencia notable entre Pearson y dCor\" los pares con una brecha (dCor menos |r| de Pearson) mayor a .10. El resultado de la prueba de entropía copular (CE, copent()) para el mismo par se muestra al lado como una segunda línea de evidencia libre de supuestos distribucionales."
-                    ),
+                    .("Pearson / dCor / Copula Entropy Discordance Analysis"),
+                    .("Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship."),
+                    .("Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10. The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence."),
                     .al_permutation_note(lang, 199, 20260704)
                 ))
 
@@ -1914,26 +1443,22 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         dcor = apaCell(pr$dcor, pr$dcorP),
                         gap = gap, ce = pr$ce, ceP = pr$ceP,
                         ceSig = p_sig(pr$ceP),
-                        flag = tr("Yes", "Sí")
+                        flag = .("Yes")
                     ))
                 }
 
                 if (length(flaggedPairs) == 0) {
                     self$results$correlationComparisonInterpretation$setContent(block96(
-                        tr("Applied Interpretation", "Interpretación Aplicada"),
+                        .("Applied Interpretation"),
                         if (k < 2)
-                            tr("Not applicable: fewer than two numeric model variables.", "No aplica: menos de dos variables numéricas del modelo.")
+                            .("Not applicable: fewer than two numeric model variables.")
                         else
-                            tr(sprintf("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the model's numeric variables.", gapThreshold),
-                               sprintf("Ningún par muestra una brecha Pearson/dCor mayor a %.2f; no hay indicios de asociación no lineal no modelada entre las variables numéricas del modelo.", gapThreshold))
+                            sprintf(.("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the model's numeric variables."), gapThreshold)
                     ))
                 } else {
                     self$results$correlationComparisonInterpretation$setContent(block96(
-                        tr("Applied Interpretation", "Interpretación Aplicada"),
-                        tr(sprintf("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Inspect a scatterplot of each flagged pair; when copula entropy is also significant for a pair, this reinforces the suspicion of an unmodeled non-linear dependency.",
-                                   length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", ")),
-                           sprintf("%d par(es) muestran una brecha Pearson/dCor mayor a %.2f: %s. Revise un diagrama de dispersión de cada par señalado; cuando la entropía copular también es significativa para un par, esto refuerza la sospecha de una dependencia no lineal no modelada.",
-                                   length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", ")))
+                        .("Applied Interpretation"),
+                        sprintf(.("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Inspect a scatterplot of each flagged pair; when copula entropy is also significant for a pair, this reinforces the suspicion of an unmodeled non-linear dependency."), length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", "))
                     ))
                 }
             }
@@ -1987,131 +1512,55 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             influence_count <- sum(nzchar(criteria), na.rm = TRUE)
 
             influence_text <- if (influence_count == 0) {
-                tr(
-                    paste0(
-                        "No influential cases were detected under the main numeric criteria. ",
-                        "This result is compatible with the absence of clearly influential cases ",
-                        "according to the thresholds used. Even so, it is worth reviewing the ",
-                        "table and plots if any cases show relatively high values."
-                    ),
-                    paste0(
-                        "No se detectaron casos que activen los criterios numéricos principales ",
-                        "de influencia o atipicidad. Este resultado es compatible con ausencia de ",
-                        "casos claramente influyentes según los umbrales usados. Aun así, conviene ",
-                        "revisar la tabla y los gráficos si existen casos con valores relativamente ",
-                        "altos."
-                    )
-                )
+                .("No influential cases were detected under the main numeric criteria. This result is compatible with the absence of clearly influential cases according to the thresholds used. Even so, it is worth reviewing the table and plots if any cases show relatively high values.")
             } else {
-                tr(
-                    paste0(
-                        influence_count, " case(s) were detected with at least one criterion ",
-                        "activated. This suggests reviewing those cases before interpreting the ",
-                        "model. A flagged case should not be removed automatically; first check ",
-                        "whether it reflects a data error, a valid extreme case, or substantive ",
-                        "information."
-                    ),
-                    paste0(
-                        "Se detectaron ", influence_count, " caso(s) con al menos un criterio ",
-                        "activado. Esto sugiere revisar esos casos antes de interpretar el modelo. ",
-                        "Un caso marcado no debe eliminarse automáticamente; primero debe verificarse ",
-                        "si representa error de datos, caso extremo válido o información sustantiva."
-                    )
-                )
+                sprintf(.("%s case(s) were detected with at least one criterion activated. This suggests reviewing those cases before interpreting the model. A flagged case should not be removed automatically; first check whether it reflects a data error, a valid extreme case, or substantive information."), influence_count)
             }
 
             self$results$influenceInterpretation$setContent(
                 block96(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     influence_text,
-                    tr(
-                        "Why it matters: in ANOVA/ANCOVA, an influential case can shift group means, cell variances, or the covariate slope enough to change which post hoc comparisons look significant.",
-                        "Por qué importa: en ANOVA/ANCOVA, un caso influyente puede desplazar las medias de grupo, las varianzas de celda o la pendiente de la covariable lo suficiente como para cambiar qué comparaciones post hoc resultan significativas."
-                    ),
-                    tr(
-                        "Common error: deleting every flagged case to \"clean up\" the model. This can hide genuine subgroup differences and produce a model that only fits the well-behaved majority of the data.",
-                        "Error común: eliminar todos los casos marcados para \"limpiar\" el modelo. Esto puede ocultar diferencias reales entre subgrupos y producir un modelo que solo se ajusta a la mayoría bien comportada de los datos."
-                    ),
-                    tr(
-                        "Sample-size nuance: the 4/n threshold used for Cook's D becomes stricter as the sample shrinks, so in small designs it is common to flag several cases that are not truly problematic.",
-                        "Matiz de tamaño de muestra: el umbral 4/n usado para Cook's D se vuelve más estricto a medida que la muestra es más pequeña, así que en diseños pequeños es común marcar varios casos que no son realmente problemáticos."
-                    )
+                    .("Why it matters: in ANOVA/ANCOVA, an influential case can shift group means, cell variances, or the covariate slope enough to change which post hoc comparisons look significant."),
+                    .("Common error: deleting every flagged case to \"clean up\" the model. This can hide genuine subgroup differences and produce a model that only fits the well-behaved majority of the data."),
+                    .("Sample-size nuance: the 4/n threshold used for Cook's D becomes stricter as the sample shrinks, so in small designs it is common to flag several cases that are not truly problematic.")
                 )
             )
 
             self$results$influenceGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "These diagnostics identify outlying or influential cases in the model.",
-                    "Estos diagnósticos identifican casos atípicos o influyentes en el modelo."
-                ),
-                tr(
-                    "A flagged case should not be removed automatically.",
-                    "Un caso marcado no debe eliminarse automáticamente."
-                ),
-                tr(
-                    "Check the data, compare a sensitivity analysis, and justify decisions.",
-                    "Revise el dato, compare análisis de sensibilidad y justifique decisiones."
-                ),
-                tr(
-                    "See methodological details in Assumption Library.",
-                    "Revise detalles metodológicos en Assumption Library."
-                )
+                .("Quick guide"),
+                .("These diagnostics identify outlying or influential cases in the model."),
+                .("A flagged case should not be removed automatically."),
+                .("Check the data, compare a sensitivity analysis, and justify decisions."),
+                .("See methodological details in Assumption Library.")
             ))
 
             self$results$residualsLeverageGuide$setContent(plot_guide(
-                tr("identify cases with a combination of extreme residual and high leverage.",
-                   "identificar casos con combinación de residuo extremo y alto leverage."),
-                tr("leverage, i.e. how far a case sits from the center of the predictor space.",
-                   "leverage, o distancia del caso respecto al centro del espacio de predictores."),
-                tr("studentized residual, how extreme the case's error is.",
-                   "residuo studentizado, qué tan extremo es el error del caso."),
-                tr("most cases near zero and with low leverage.",
-                   "la mayoría de los casos cerca de cero y con leverage bajo."),
-                tr("cases with a large studentized residual, high leverage, or a large Cook's D.",
-                   "casos con residuo studentizado grande, leverage alto o Cook's D elevado."),
-                tr("review influential cases and compare a sensitivity analysis.",
-                   "revisar los casos influyentes y comparar un análisis de sensibilidad.")
+                .("identify cases with a combination of extreme residual and high leverage."),
+                .("leverage, i.e. how far a case sits from the center of the predictor space."),
+                .("studentized residual, how extreme the case's error is."),
+                .("most cases near zero and with low leverage."),
+                .("cases with a large studentized residual, high leverage, or a large Cook's D."),
+                .("review influential cases and compare a sensitivity analysis.")
             ))
 
             self$results$cooksDGuide$setContent(plot_guide(
-                tr("detect observations that can change the model's fit.",
-                   "detectar observaciones que pueden cambiar el ajuste del modelo."),
-                tr("case number or position in the dataset.",
-                   "número o posición del caso en la base de datos."),
-                tr("Cook's distance, an indicator of overall influence.",
-                   "distancia de Cook, indicador de influencia global."),
-                tr("small bars, below the reference line.",
-                   "barras pequeñas y por debajo de la línea de referencia."),
-                tr("cases with Cook's D above the visual threshold.",
-                   "casos con Cook's D por encima del umbral visual."),
-                tr("verify the case's plausibility and document analyses with/without influential cases.",
-                   "verificar la plausibilidad del caso y documentar análisis con/sin casos influyentes.")
+                .("detect observations that can change the model's fit."),
+                .("case number or position in the dataset."),
+                .("Cook's distance, an indicator of overall influence."),
+                .("small bars, below the reference line."),
+                .("cases with Cook's D above the visual threshold."),
+                .("verify the case's plausibility and document analyses with/without influential cases.")
             ))
 
 
             self$results$independenceGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "Independence depends mainly on the study design.",
-                    "La independencia depende principalmente del diseño del estudio."
-                ),
-                tr(
-                    "Repeated measures, paired data, or nested data require a different approach.",
-                    "Medidas repetidas, datos pareados o datos anidados requieren otro enfoque."
-                ),
-                tr(
-                    "Use Related Groups or mixed models if independence is not defensible.",
-                    "Use Related Groups o modelos mixtos si la independencia no es defendible."
-                ),
-                tr(
-                    "Why it matters: dependent observations underestimate standard errors, making p-values look more significant than the data actually support.",
-                    "Por qué importa: las observaciones dependientes subestiman los errores estándar, haciendo que los valores p parezcan más significativos de lo que los datos realmente respaldan."
-                ),
-                tr(
-                    "Common error: assuming independence is satisfied simply because no diagnostic flagged it. Independence is a property of how the data were collected, not something a single test can confirm after the fact.",
-                    "Error común: asumir que la independencia se cumple solo porque ningún diagnóstico la marcó. La independencia es una propiedad de cómo se recolectaron los datos, no algo que una sola prueba pueda confirmar después."
-                )
+                .("Quick guide"),
+                .("Independence depends mainly on the study design."),
+                .("Repeated measures, paired data, or nested data require a different approach."),
+                .("Use Related Groups or mixed models if independence is not defensible."),
+                .("Why it matters: dependent observations underestimate standard errors, making p-values look more significant than the data actually support."),
+                .("Common error: assuming independence is satisfied simply because no diagnostic flagged it. Independence is a property of how the data were collected, not something a single test can confirm after the fact.")
             ))
 
 
@@ -2141,116 +1590,74 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (design_problem) {
                 add_alt(
-                    tr("Unbalanced design or small cells", "Diseño desbalanceado o celdas pequeñas"),
-                    tr("There are small cells or an elevated max/min ratio.", "Hay celdas pequeñas o razón max/min elevada."),
-                    tr("Review design, cell sizes, and robustness.", "Revisar diseño, tamaños de celda y robustez."),
-                    tr(
-                        "When some cells have very few cases or the design is unbalanced.",
-                        "Cuando algunas celdas tienen muy pocos casos o el diseño está desbalanceado."
-                    )
+                    .("Unbalanced design or small cells"),
+                    .("There are small cells or an elevated max/min ratio."),
+                    .("Review design, cell sizes, and robustness."),
+                    .("When some cells have very few cases or the design is unbalanced.")
                 )
             }
 
             if (variance_problem) {
                 add_alt(
-                    tr("Different variances between groups", "Varianzas diferentes entre grupos"),
-                    tr("One or more tests suggest unequal variances.", "Una o más pruebas sugieren desigualdad de varianzas."),
-                    tr("Welch ANOVA, Brown-Forsythe ANOVA, or robust methods.", "Welch ANOVA, Brown-Forsythe ANOVA o métodos robustos."),
-                    tr(
-                        "When homogeneity of variances is not defensible.",
-                        "Cuando la homogeneidad de varianzas no es defendible."
-                    )
+                    .("Different variances between groups"),
+                    .("One or more tests suggest unequal variances."),
+                    .("Welch ANOVA, Brown-Forsythe ANOVA, or robust methods."),
+                    .("When homogeneity of variances is not defensible.")
                 )
             }
 
             if (normality_problem) {
                 add_alt(
-                    tr("Non-normality of residuals", "No normalidad de residuos"),
-                    tr("One or more tests suggest a deviation from normality.", "Una o más pruebas sugieren desviación de normalidad."),
-                    tr(
-                        "Transformation, bootstrap, robust method, or non-parametric alternative.",
-                        "Transformación, bootstrap, método robusto o alternativa no paramétrica."
-                    ),
-                    tr(
-                        "When non-normality is strong or combined with outliers.",
-                        "Cuando la no normalidad es fuerte o se combina con outliers."
-                    )
+                    .("Non-normality of residuals"),
+                    .("One or more tests suggest a deviation from normality."),
+                    .("Transformation, bootstrap, robust method, or non-parametric alternative."),
+                    .("When non-normality is strong or combined with outliers.")
                 )
             }
 
             if (slopes_problem) {
                 add_alt(
-                    tr("Non-homogeneous slopes", "Pendientes no homogéneas"),
-                    tr("Some factor × covariate interaction was relevant.", "Alguna interacción factor × covariable fue relevante."),
-                    tr(
-                        "Model the interaction or use a regression approach with interaction.",
-                        "Modelar la interacción o usar un enfoque de regresión con interacción."
-                    ),
-                    tr(
-                        "When the covariate-response relationship changes across groups.",
-                        "Cuando la relación covariable-respuesta cambia entre grupos."
-                    )
+                    .("Non-homogeneous slopes"),
+                    .("Some factor × covariate interaction was relevant."),
+                    .("Model the interaction or use a regression approach with interaction."),
+                    .("When the covariate-response relationship changes across groups.")
                 )
             }
 
             if (linearity_problem) {
                 add_alt(
-                    tr("Non-linearity of covariates", "No linealidad de covariables"),
-                    tr("A covariate shows possible curvature.", "Una covariable muestra posible curvatura."),
-                    tr(
-                        "Polynomial terms, splines, or covariate transformation.",
-                        "Términos polinómicos, splines o transformación de covariable."
-                    ),
-                    tr(
-                        "When the covariate-response relationship does not appear linear.",
-                        "Cuando la relación covariable-respuesta no parece lineal."
-                    )
+                    .("Non-linearity of covariates"),
+                    .("A covariate shows possible curvature."),
+                    .("Polynomial terms, splines, or covariate transformation."),
+                    .("When the covariate-response relationship does not appear linear.")
                 )
             }
 
             if (influence_problem) {
                 add_alt(
-                    tr("Outlying or influential cases", "Casos atípicos o influyentes"),
-                    tr("Some case activated numeric criteria.", "Algún caso activó criterios numéricos."),
-                    tr("Sensitivity analysis or robust method.", "Análisis de sensibilidad o método robusto."),
-                    tr(
-                        "When some cases may dominate the results.",
-                        "Cuando algunos casos pueden dominar los resultados."
-                    )
+                    .("Outlying or influential cases"),
+                    .("Some case activated numeric criteria."),
+                    .("Sensitivity analysis or robust method."),
+                    .("When some cases may dominate the results.")
                 )
             }
 
             if (dcor_problem) {
                 add_alt(
-                    tr("Non-linear covariate dependence (dCor)", "Dependencia no lineal en covariable (dCor)"),
-                    tr(
-                        "Distance correlation is notably higher than Pearson's r for at least one covariate.",
-                        "La correlación de distancia es notablemente mayor que r de Pearson para al menos una covariable."
-                    ),
-                    tr(
-                        "Inspect a scatterplot; consider a non-linear term or transformation for that covariate.",
-                        "Revise un diagrama de dispersión; considere un término no lineal o una transformación para esa covariable."
-                    ),
-                    tr(
-                        "When dCor detects dependence that a linear covariate adjustment would miss.",
-                        "Cuando dCor detecta una dependencia que un ajuste lineal por la covariable no captaría."
-                    )
+                    .("Non-linear covariate dependence (dCor)"),
+                    .("Distance correlation is notably higher than Pearson's r for at least one covariate."),
+                    .("Inspect a scatterplot; consider a non-linear term or transformation for that covariate."),
+                    .("When dCor detects dependence that a linear covariate adjustment would miss.")
                 )
             }
 
             if (!design_problem && !variance_problem && !normality_problem &&
                 !slopes_problem && !linearity_problem && !influence_problem && !dcor_problem) {
                 add_alt(
-                    tr("No primary alert", "Sin alerta principal"),
-                    tr(
-                        "The diagnostics show no strong signals in the assumptions evaluated.",
-                        "Los diagnósticos no muestran señales fuertes en los supuestos evaluados."
-                    ),
-                    tr("Standard ANOVA/ANCOVA.", "ANOVA/ANCOVA estándar."),
-                    tr(
-                        "When the design and assumptions are reasonably defensible.",
-                        "Cuando el diseño y los supuestos son razonablemente defendibles."
-                    )
+                    .("No primary alert"),
+                    .("The diagnostics show no strong signals in the assumptions evaluated."),
+                    .("Standard ANOVA/ANCOVA."),
+                    .("When the design and assumptions are reasonably defensible.")
                 )
             }
 
@@ -2261,19 +1668,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             self$results$alternativesGuide$setContent(html_list_guide(
-                tr("Quick guide", "Guía breve"),
-                tr(
-                    "This table translates the diagnostics into possible methodological options.",
-                    "Esta tabla traduce los diagnósticos en opciones metodológicas posibles."
-                ),
-                tr(
-                    "Do not switch methods because of a single isolated test.",
-                    "No cambie de método por una sola prueba aislada."
-                ),
-                tr(
-                    "The decision should combine evidence, design, and research question.",
-                    "La decisión debe combinar evidencia, diseño y pregunta de investigación."
-                )
+                .("Quick guide"),
+                .("This table translates the diagnostics into possible methodological options."),
+                .("Do not switch methods because of a single isolated test."),
+                .("The decision should combine evidence, design, and research question.")
             ))
 
             # -----------------------------------------------------------------------------
@@ -2330,15 +1728,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (isTRUE(self$options$showPlots)) {
                 self$results$diagnosticPlotsGuide$setContent(html_list_guide(
-                    tr("ANOVA/ANCOVA diagnostic plots", "Gráficos diagnósticos de ANOVA/ANCOVA"),
-                    tr(
-                        "Diagnostic plots complement statistical tests and help evaluate patterns that a p-value may hide.",
-                        "Los gráficos diagnósticos complementan las pruebas estadísticas y ayudan a evaluar patrones que un p-valor puede ocultar."
-                    ),
-                    tr(
-                        "Use these plots to review group balance, residual normality, and influential cases.",
-                        "Use estos gráficos para revisar el balance entre grupos, la normalidad de residuos y los casos influyentes."
-                    )
+                    .("ANOVA/ANCOVA diagnostic plots"),
+                    .("Diagnostic plots complement statistical tests and help evaluate patterns that a p-value may hide."),
+                    .("Use these plots to review group balance, residual normality, and influential cases.")
                 ))
             }
 
@@ -2348,50 +1740,33 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             )
 
             recommendation <- if (problem_count == 0) {
-                tr(
-                    "No diagnostic raised a relevant concern; the ANOVA/ANCOVA model can be interpreted under its standard assumptions.",
-                    "Ningún diagnóstico mostró una alerta relevante; el modelo ANOVA/ANCOVA puede interpretarse bajo sus supuestos estándar."
-                )
+                .("No diagnostic raised a relevant concern; the ANOVA/ANCOVA model can be interpreted under its standard assumptions.")
             } else {
                 flagged <- c(
-                    if (design_problem) tr("design balance", "balance del diseño"),
-                    if (variance_problem) tr("homogeneity of variances", "homogeneidad de varianzas"),
-                    if (normality_problem) tr("residual normality", "normalidad de residuos"),
-                    if (slopes_problem) tr("homogeneity of slopes", "homogeneidad de pendientes"),
-                    if (linearity_problem) tr("covariate linearity", "linealidad de covariables"),
-                    if (influence_problem) tr("influential cases", "casos influyentes"),
-                    if (dcor_problem) tr("non-linear covariate dependence", "dependencia no lineal en covariables")
+                    if (design_problem) .("design balance"),
+                    if (variance_problem) .("homogeneity of variances"),
+                    if (normality_problem) .("residual normality"),
+                    if (slopes_problem) .("homogeneity of slopes"),
+                    if (linearity_problem) .("covariate linearity"),
+                    if (influence_problem) .("influential cases"),
+                    if (dcor_problem) .("non-linear covariate dependence")
                 )
-                tr(
-                    sprintf(
-                        "%d assumption(s) raised a concern (%s); review the suggested methodological options in this section before relying on the standard ANOVA/ANCOVA F-test.",
-                        problem_count, paste(flagged, collapse = ", ")
-                    ),
-                    sprintf(
-                        "%d supuesto(s) mostraron alerta (%s); revise las opciones metodológicas sugeridas en esta sección antes de confiar en la prueba F estándar de ANOVA/ANCOVA.",
-                        problem_count, paste(flagged, collapse = ", ")
-                    )
-                )
+                sprintf(.("%d assumption(s) raised a concern (%s); review the suggested methodological options in this section before relying on the standard ANOVA/ANCOVA F-test."), problem_count, paste(flagged, collapse = ", "))
             }
 
             self$results$notes$setContent(block96(
-                paste0(tr("Suggested decision: ", "Decisión sugerida: "), recommendation),
-                tr(
-                    "Significance codes: * p < .05, ** p < .01, *** p < .001.",
-                    "Códigos de significancia: * p < .05, ** p < .01, *** p < .001."
-                )
+                sprintf(.("Suggested decision: %s"), recommendation),
+                .("Significance codes: * p < .05, ** p < .01, *** p < .001.")
             ))
         },
 
         .requirePlotData = function(image) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(private$.plotTr(
-                    "The ggplot2 package is required to draw diagnostic plots.",
-                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
-                ))
+                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
                 return(FALSE)
             }
             # image$state, not private$.plotData: state is what survives into the
@@ -2400,40 +1775,28 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # sobrevive al contexto de renderizado nuevo que usa jamovi al
             # exportar a PDF/imagen.
             if (is.null(image$state) || nrow(image$state) == 0) {
-                image$setError(private$.plotTr(
-                    "No diagnostic plot data are available.",
-                    "No hay datos disponibles para este gráfico diagnóstico."
-                ))
+                image$setError(.("No diagnostic plot data are available."))
                 return(FALSE)
             }
             TRUE
         },
 
         .requireGroupPlotData = function(image) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(private$.plotTr(
-                    "The ggplot2 package is required to draw diagnostic plots.",
-                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
-                ))
+                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
                 return(FALSE)
             }
             if (is.null(image$state) || nrow(image$state) == 0) {
-                image$setError(private$.plotTr(
-                    "No group plot data are available.",
-                    "No hay datos disponibles para este gráfico de grupos."
-                ))
+                image$setError(.("No group plot data are available."))
                 return(FALSE)
             }
             TRUE
         },
 
-        .plotTr = function(en, es) {
-            lang <- .al_normalize_lang(self$options$reportLang)
-            if (identical(lang, "es")) es else en
-        },
 
         # Plot theme/palette migrated to jamovi's native ggtheme/theme
         # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
@@ -2587,6 +1950,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResidualsFitted = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image)) return()
             pal <- private$.plotColors(theme)
             d <- image$state
@@ -2608,8 +1972,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot <- plot +
                 ggplot2::labs(
-                    x = private$.plotTr("Fitted values", "Valores ajustados"),
-                    y = private$.plotTr("Residuals", "Residuos")
+                    x = .("Fitted values"),
+                    y = .("Residuals")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -2617,6 +1981,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotQQResiduals = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image)) return()
             pal <- private$.plotColors(theme)
             d <- image$state
@@ -2626,8 +1991,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::stat_qq(alpha = 0.75, size = 1.6, color = pal$point) +
                 ggplot2::stat_qq_line(linewidth = 0.6, color = pal$line) +
                 ggplot2::labs(
-                    x = private$.plotTr("Theoretical quantiles", "Cuantiles teóricos"),
-                    y = private$.plotTr("Standardized residuals", "Residuos estandarizados")
+                    x = .("Theoretical quantiles"),
+                    y = .("Standardized residuals")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -2635,6 +2000,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResidualHistogram = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image)) return()
             pal <- private$.plotColors(theme)
             d <- image$state
@@ -2646,8 +2012,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                          color = pal$line) +
                 ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = pal$ref) +
                 ggplot2::labs(
-                    x = private$.plotTr("Standardized residuals", "Residuos estandarizados"),
-                    y = private$.plotTr("Count", "Frecuencia")
+                    x = .("Standardized residuals"),
+                    y = .("Count")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -2655,15 +2021,13 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResidualNormalCurve = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image)) return()
             pal <- private$.plotColors(theme)
             d <- image$state
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
             if (nrow(d) < 3) {
-                image$setError(private$.plotTr(
-                    "At least three residuals are required for this plot.",
-                    "Se requieren al menos tres residuos para este gráfico."
-                ))
+                image$setError(.("At least three residuals are required for this plot."))
                 return()
             }
 
@@ -2674,7 +2038,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             normal_df <- data.frame(
                 stdResidual = x_grid,
                 density = stats::dnorm(x_grid, mean = 0, sd = 1),
-                curve = private$.plotTr("Theoretical normal N(0, 1)", "Normal teórica N(0, 1)"),
+                curve = .("Theoretical normal N(0, 1)"),
                 stringsAsFactors = FALSE
             )
 
@@ -2689,8 +2053,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_vline(xintercept = 0, linetype = "dashed", color = pal$ref) +
                 ggplot2::scale_linetype_manual(values = "dashed", name = NULL) +
                 ggplot2::labs(
-                    x = private$.plotTr("Standardized residuals", "Residuos estandarizados"),
-                    y = private$.plotTr("Density", "Densidad")
+                    x = .("Standardized residuals"),
+                    y = .("Density")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -2698,6 +2062,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotGroupBoxplots = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requireGroupPlotData(image)) return()
             colors <- private$.plotColors(theme)
             d <- image$state
@@ -2715,8 +2080,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     show.legend = FALSE
                 ) +
                 ggplot2::labs(
-                    x = private$.plotTr("Group / cell", "Grupo / celda"),
-                    y = private$.plotTr("Observed values", "Valores observados")
+                    x = .("Group / cell"),
+                    y = .("Observed values")
                 ) +
                 ggtheme + private$.plotThemeExtra() +
                 ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 25, hjust = 1))
@@ -2728,6 +2093,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResidualsLeverage = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image)) return()
             pal <- private$.plotColors(theme)
             d <- image$state
@@ -2744,8 +2110,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(ggplot2::aes(size = cooksD), alpha = 0.75, color = pal$point) +
                 ggplot2::scale_size_continuous(name = "Cook's D", range = c(1.2, 4)) +
                 ggplot2::labs(
-                    x = private$.plotTr("Leverage", "Leverage"),
-                    y = private$.plotTr("Studentized residuals", "Residuos studentizados")
+                    x = .("Leverage"),
+                    y = .("Studentized residuals")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -2763,6 +2129,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotCooksD = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image)) return()
             pal <- private$.plotColors(theme)
             d <- image$state
@@ -2779,8 +2146,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot <- plot +
                 ggplot2::labs(
-                    x = private$.plotTr("Case", "Caso"),
-                    y = private$.plotTr("Cook's D", "Cook's D")
+                    x = .("Case"),
+                    y = .("Cook's D")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 

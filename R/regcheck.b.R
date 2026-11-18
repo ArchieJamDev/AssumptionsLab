@@ -152,7 +152,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .run = function() {
 
-            lang <- .al_normalize_lang(self$options$reportLang)
+            lang <- .al_lang(self$options)
+            . <- lang$tr
 
             txt <- function(section, key) {
                 .al_text(lang, section, key)
@@ -173,540 +174,23 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             plot_guide <- function(title, objective, x_axis, y_axis,
                                    expected, warning, decision) {
 
-                lab <- function(en, es) {
-                    if (identical(lang, "es"))
-                        es
-                    else
-                        en
-                }
-
-                pg_tr <- function(x) {
-                    x <- as.character(x)
-
-                    if (identical(lang, "es"))
-                        return(x)
-
-                    map <- c(
-                        "Guía: Residuos vs valores ajustados" =
-                            "Guide: Residuals vs fitted values",
-                        "Guía: Valores observados vs predichos" =
-                            "Guide: Observed vs predicted values",
-                        "Guía: Efectos visuales de predictores numéricos" =
-                            "Guide: Visual effects of numeric predictors",
-                        "Guía: Q-Q plot de residuos" =
-                            "Guide: Residual Q-Q plot",
-                        "Guía: Histograma de residuos" =
-                            "Guide: Residual histogram",
-                        "Guía: Distribución observada vs normal teórica" =
-                            "Guide: Observed distribution vs theoretical normal curve",
-                        "Guía: Scale-location plot" =
-                            "Guide: Scale-location plot",
-                        "Guía: Boxplots de variables numéricas" =
-                            "Guide: Numeric variable boxplots",
-                        "Guía: Residuos studentizados vs leverage" =
-                            "Guide: Studentized residuals vs leverage",
-                        "Guía: Cook's D por caso" =
-                            "Guide: Cook's D by case",
-
-                        "evaluar linealidad y varianza residual constante." =
-                            "evaluate linearity and constant residual variance.",
-                        "valores ajustados o predichos por el modelo para cada caso." =
-                            "fitted or predicted values from the model for each case.",
-                        "residuos, es decir, diferencia entre valor observado y valor predicho." =
-                            "residuals, that is, the difference between observed and predicted values.",
-                        "nube aleatoria alrededor de cero, sin forma curva ni embudo." =
-                            "a random cloud around zero, without curvature or funnel shape.",
-                        "curvatura, bandas, embudo o grupos separados." =
-                            "curvature, bands, funnel shape, or separated groups.",
-                        "revisar términos no lineales, transformación o errores estándar robustos." =
-                            "review nonlinear terms, transformation, or robust standard errors.",
-
-                        "evaluar la correspondencia entre valores reales y predicciones del modelo." =
-                            "evaluate the correspondence between observed values and model predictions.",
-                        "valores predichos por el modelo." =
-                            "values predicted by the model.",
-                        "valores observados de la variable dependiente." =
-                            "observed values of the dependent variable.",
-                        "puntos cercanos a la línea diagonal de predicción perfecta." =
-                            "points close to the diagonal line of perfect prediction.",
-                        "dispersión amplia, patrones curvos o sesgo sistemático." =
-                            "wide dispersion, curved patterns, or systematic bias.",
-                        "revisar capacidad predictiva, especificación del modelo y posibles términos adicionales." =
-                            "review predictive ability, model specification, and possible additional terms.",
-
-                        "comparar la dirección e intensidad relativa de los predictores numéricos." =
-                            "compare the direction and relative strength of numeric predictors.",
-                        "valor estandarizado del predictor evaluado, de bajo a alto." =
-                            "standardized value of the evaluated predictor, from low to high.",
-                        "valor predicho de la variable dependiente manteniendo constantes los demás predictores." =
-                            "predicted dependent-variable value while holding the other predictors constant.",
-                        "líneas aproximadamente rectas y pendientes coherentes con el modelo." =
-                            "approximately straight lines with slopes consistent with the model.",
-                        "pendientes muy distintas, líneas planas o efectos difíciles de interpretar." =
-                            "very different slopes, flat lines, or effects that are difficult to interpret.",
-                        "revisar tamaño y dirección de efectos, linealidad, interacciones o términos no lineales." =
-                            "review effect size and direction, linearity, interactions, or nonlinear terms.",
-
-                        "evaluar si los residuos estandarizados se aproximan a una distribución normal." =
-                            "evaluate whether standardized residuals approximate a normal distribution.",
-                        "cuantiles teóricos esperados bajo normalidad." =
-                            "theoretical quantiles expected under normality.",
-                        "cuantiles observados de los residuos estandarizados." =
-                            "observed quantiles of the standardized residuals.",
-                        "puntos cercanos a la línea diagonal." =
-                            "points close to the diagonal line.",
-                        "desviaciones fuertes en extremos, forma de S o colas pesadas." =
-                            "strong deviations at the extremes, S-shape, or heavy tails.",
-                        "interpretar inferencias clásicas con cautela y revisar atípicos o transformaciones." =
-                            "interpret classical inferences cautiously and review outliers or transformations.",
-
-                        "examinar forma, simetría y concentración de los residuos estandarizados." =
-                            "examine the shape, symmetry, and concentration of standardized residuals.",
-                        "residuos estandarizados." =
-                            "standardized residuals.",
-                        "frecuencia o número de casos." =
-                            "frequency or number of cases.",
-                        "distribución aproximadamente simétrica y centrada en cero." =
-                            "an approximately symmetric distribution centered near zero.",
-                        "asimetría marcada, múltiples picos o colas muy largas." =
-                            "marked skewness, multiple peaks, or very long tails.",
-                        "complementar pruebas de normalidad y revisar casos extremos." =
-                            "complement normality tests and review extreme cases.",
-
-                        "comparar la distribución observada de los residuos con una normal teórica." =
-                            "compare the observed residual distribution with a theoretical normal curve.",
-                        "residuos estandarizados del modelo." =
-                            "standardized residuals from the model.",
-                        "densidad, es decir, concentración relativa de casos." =
-                            "density, that is, the relative concentration of cases.",
-                        "curva empírica centrada cerca de cero y similar a la campana normal." =
-                            "an empirical curve centered near zero and similar to the normal bell curve.",
-                        "asimetría, colas pesadas, varios picos o exceso de casos extremos." =
-                            "skewness, heavy tails, multiple peaks, or too many extreme cases.",
-                        "leer pruebas clásicas con cautela y revisar atípicos, transformación o especificación." =
-                            "read classical tests cautiously and review outliers, transformation, or specification.",
-
-                        "evaluar si la dispersión de los residuos se mantiene estable." =
-                            "evaluate whether residual dispersion remains stable.",
-                        "raíz cuadrada del valor absoluto de los residuos estandarizados." =
-                            "square root of the absolute standardized residuals.",
-                        "banda horizontal con dispersión similar a lo largo del eje X." =
-                            "a horizontal band with similar dispersion across the X axis.",
-                        "tendencia ascendente, descendente o forma de embudo." =
-                            "an increasing trend, decreasing trend, or funnel shape.",
-                        "considerar errores robustos, transformación o modelo alternativo." =
-                            "consider robust errors, transformation, or an alternative model.",
-
-                        "detectar valores atípicos univariados en la variable dependiente y predictores numéricos." =
-                            "detect univariate outliers in the dependent variable and numeric predictors.",
-                        "variables numéricas incluidas en el diagnóstico." =
-                            "numeric variables included in the diagnostic.",
-                        "valores observados de cada variable en su escala original." =
-                            "observed values of each variable on its original scale.",
-                        "cajas compactas, bigotes razonables y pocos puntos extremos." =
-                            "compact boxes, reasonable whiskers, and few extreme points.",
-                        "muchos puntos fuera de bigotes, asimetría fuerte o valores muy alejados." =
-                            "many points outside the whiskers, strong skewness, or very distant values.",
-                        "revisar datos extremos antes de interpretar influencia multivariada o residuos." =
-                            "review extreme values before interpreting multivariate influence or residuals.",
-
-                        "identificar casos con combinación de residuo extremo y alto leverage." =
-                            "identify cases combining extreme residuals and high leverage.",
-                        "leverage, o distancia del caso respecto al centro del espacio de predictores." =
-                            "leverage, or the case distance from the center of the predictor space.",
-                        "residuo studentizado, que expresa qué tan extremo es el error del caso." =
-                            "studentized residual, which indicates how extreme the case error is.",
-                        "la mayoría de casos cerca de cero y con leverage bajo." =
-                            "most cases near zero and with low leverage.",
-                        "casos con residuo studentizado grande, leverage alto o Cook's D elevado." =
-                            "cases with large studentized residuals, high leverage, or elevated Cook's D.",
-                        "revisar datos influyentes y comparar análisis de sensibilidad." =
-                            "review influential data points and compare sensitivity analyses.",
-
-                        "detectar observaciones que pueden cambiar el ajuste del modelo." =
-                            "detect observations that may change model fit.",
-                        "número o posición del caso en la base de datos." =
-                            "case number or position in the data set.",
-                        "distancia de Cook, indicador de influencia global." =
-                            "Cook's distance, an indicator of global influence.",
-                        "barras pequeñas y por debajo de la línea de referencia." =
-                            "small bars below the reference line.",
-                        "casos con Cook's D por encima del umbral visual." =
-                            "cases with Cook's D above the visual threshold.",
-                        "verificar plausibilidad del caso y documentar análisis con/sin casos influyentes." =
-                            "check case plausibility and document analyses with and without influential cases.",
-
-                        "Guía: Relación por par (Pearson / dCor)" =
-                            "Guide: Pairwise relationship (Pearson / dCor)",
-                        "comparar visualmente lo que Pearson r y dCor detectan en la relación entre dos variables." =
-                            "visually compare what Pearson r and dCor detect in the relationship between two variables.",
-                        "valores de la primera variable del par." =
-                            "values of the first variable in the pair.",
-                        "valores de la segunda variable del par." =
-                            "values of the second variable in the pair.",
-                        "puntos alineados en torno a la línea de ajuste lineal cuando r es alto; una curva clara cuando dCor supera notablemente a |r|." =
-                            "points aligned around the linear fit line when r is high; a clear curve when dCor notably exceeds |r|.",
-                        "el ajuste suavizado se separa marcadamente de la línea lineal, sobre todo en pares señalados en la tabla de discordancia." =
-                            "the smoothed fit separates markedly from the linear line, especially in pairs flagged in the discordance table.",
-                        "revisar si conviene un término no lineal, una transformación, o simplemente confirmar que la relación es lineal." =
-                            "review whether a non-linear term or transformation is warranted, or simply confirm the relationship is linear.",
-
-                        "Guía: Comparación de Pearson, dCor y entropía copular entre pares" =
-                            "Guide: Comparison of Pearson, dCor, and copula entropy across pairs",
-                        "comparar de un vistazo los tres coeficientes de asociación (Pearson, dCor, entropía copular) entre todos los pares de variables numéricas del modelo." =
-                            "compare at a glance the three association coefficients (Pearson, dCor, copula entropy) across all pairs of numeric variables in the model.",
-                        "pares de variables numéricas del modelo." =
-                            "pairs of numeric variables in the model.",
-                        "magnitud del coeficiente (Pearson r, dCor)." =
-                            "coefficient magnitude (Pearson r, dCor).",
-                        "Pearson y dCor con valores similares para la mayoría de los pares." =
-                            "Pearson and dCor with similar values for most pairs.",
-                        "una brecha grande entre Pearson y dCor en algún par, especialmente si coincide con entropía copular significativa." =
-                            "a large gap between Pearson and dCor for some pair, especially if it coincides with significant copula entropy.",
-                        "revisar el gráfico individual de ese par y considerar un término no lineal si la brecha se confirma." =
-                            "review that pair's individual chart and consider a non-linear term if the gap is confirmed."
-                    )
-
-                    if (x %in% names(map))
-                        unname(map[[x]])
-                    else
-                        x
-                }
-
                 html_block(
-                    pg_tr(title),
+                    title,
                     .al_html_list(c(
-                        paste0(lab("Objective: ", "Objetivo: "), pg_tr(objective)),
-                        paste0(lab("X axis: ", "Eje X: "), pg_tr(x_axis)),
-                        paste0(lab("Y axis: ", "Eje Y: "), pg_tr(y_axis)),
-                        paste0(lab("Expected pattern: ", "Patrón esperado: "), pg_tr(expected)),
-                        paste0(lab("Warning sign: ", "Señal de alerta: "), pg_tr(warning)),
-                        paste0(lab("Possible decision: ", "Decisión posible: "), pg_tr(decision))
+                        sprintf(.("Objective: %s"), objective),
+                        sprintf(.("X axis: %s"), x_axis),
+                        sprintf(.("Y axis: %s"), y_axis),
+                        sprintf(.("Expected pattern: %s"), expected),
+                        sprintf(.("Warning sign: %s"), warning),
+                        sprintf(.("Possible decision: %s"), decision)
                     )),
                     raw = TRUE
                 )
             }
-            tr <- function(en, es) .al_tr(lang, en, es)
 
-            set_result_titles <- function() {
 
-                set_title_safe <- function(name, en, es) {
-                    element <- tryCatch(
-                        self$results[[name]],
-                        error = function(e) NULL
-                    )
 
-                    if (is.null(element))
-                        return(invisible(FALSE))
 
-                    tryCatch(
-                        element$setTitle(tr(en, es)),
-                        error = function(e) invisible(FALSE)
-                    )
-
-                    invisible(TRUE)
-                }
-
-                titles <- list(
-                    c("intro",
-                      "AssumptionsLab — Simple & Multiple Regression",
-                      "AssumptionsLab — Simple & Multiple Regression"),
-                    c("designGuide", "Regression model", "Modelo de regresión"),
-                    c("modelSummary", "Model summary", "Resumen del modelo"),
-                    c("missingSummary", "Missing data summary", "Resumen de datos faltantes"),
-
-                    c("linearityGuide", "Linearity", "Linealidad"),
-                    c("linearityPredictor",
-                      "Linearity by numeric predictor",
-                      "Linealidad por predictor numérico"),
-                    c("linearityModel",
-                      "Global model linearity",
-                      "Linealidad global del modelo"),
-                    c("linearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("correlationMatrixGuide", "Correlation matrix", "Matriz de correlaciones"),
-                    c("pearsonMatrixTable",
-                      "Pearson correlation matrix (APA 7 format)",
-                      "Matriz de correlaciones de Pearson (formato APA 7)"),
-                    c("dcorMatrixTable",
-                      "Distance correlation matrix (dCor, APA 7 format)",
-                      "Matriz de correlación de distancia (dCor, formato APA 7)"),
-                    c("correlationMatrixNote", " ", " "),
-                    c("correlationComparisonGuide",
-                      "Pearson / dCor / Copula Entropy Discordance Analysis",
-                      "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                    c("correlationComparisonTable",
-                      "Pairs with a notable difference between Pearson and dCor",
-                      "Pares con diferencia notable entre Pearson y dCor"),
-                    c("correlationComparisonInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("correlationIndividualPlot",
-                      "Pairwise relationship (Pearson / dCor)",
-                      "Relación por par (Pearson / dCor)"),
-                    c("correlationIndividualGuide",
-                      "Guide: Pairwise relationship (Pearson / dCor)",
-                      "Guía: Relación por par (Pearson / dCor)"),
-                    c("correlationComparativePlot",
-                      "Comparison of Pearson, dCor, and copula entropy across pairs",
-                      "Comparación de Pearson, dCor y entropía copular entre pares"),
-                    c("correlationComparativeGuide",
-                      "Guide: Comparison of Pearson, dCor, and copula entropy",
-                      "Guía: Comparación de Pearson, dCor y entropía copular"),
-
-                    c("diagnosticPlotsGuide",
-                      "Regression diagnostic plots",
-                      "Gráficos diagnósticos de regresión"),
-                    c("residualsFittedPlot",
-                      "Residuals vs fitted values",
-                      "Residuos vs valores ajustados"),
-                    c("residualsFittedGuide",
-                      "Guide: Residuals vs fitted values",
-                      "Guía: Residuos vs valores ajustados"),
-                    c("observedPredictedPlot",
-                      "Observed vs predicted values",
-                      "Valores observados vs predichos"),
-                    c("observedPredictedGuide",
-                      "Guide: Observed vs predicted values",
-                      "Guía: Valores observados vs predichos"),
-                    c("predictorEffectsPlot",
-                      "Visual effects of numeric predictors on the dependent variable",
-                      "Efectos visuales de predictores numéricos sobre la dependiente"),
-                    c("predictorEffectsGuide",
-                      "Guide: Visual effects of numeric predictors",
-                      "Guía: Efectos visuales de predictores numéricos"),
-
-                    c("residualNormalityGuide",
-                      "Residual normality",
-                      "Normalidad de residuos"),
-                    c("residualNormality",
-                      "Residual normality",
-                      "Normalidad de residuos"),
-                    c("residualNormalityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("qqResidualsPlot",
-                      "Residual Q-Q plot",
-                      "Q-Q plot de residuos"),
-                    c("qqResidualsGuide",
-                      "Guide: Residual Q-Q plot",
-                      "Guía: Q-Q plot de residuos"),
-                    c("residualHistogramPlot",
-                      "Residual histogram",
-                      "Histograma de residuos"),
-                    c("residualHistogramGuide",
-                      "Guide: Residual histogram",
-                      "Guía: Histograma de residuos"),
-                    c("residualNormalCurvePlot",
-                      "Observed residual distribution vs theoretical normal curve",
-                      "Distribución observada de residuos vs curva normal teórica"),
-                    c("residualNormalCurveGuide",
-                      "Guide: Observed distribution vs theoretical normal curve",
-                      "Guía: Distribución observada vs normal teórica"),
-
-                    c("homoscedasticityGuide",
-                      "Homoscedasticity and heteroscedasticity",
-                      "Homoscedasticidad y heterocedasticidad"),
-                    c("homoscedasticity",
-                      "Homoscedasticity and heteroscedasticity",
-                      "Homoscedasticidad y heterocedasticidad"),
-                    c("homoscedasticityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("scaleLocationPlot",
-                      "Scale-location plot",
-                      "Scale-location plot"),
-                    c("scaleLocationGuide",
-                      "Guide: Scale-location plot",
-                      "Guía: Scale-location plot"),
-
-                    c("independenceGuide",
-                      "Error independence",
-                      "Independencia de errores"),
-                    c("independence",
-                      "Error independence",
-                      "Independencia de errores"),
-                    c("independenceInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("multicollinearityGuide",
-                      "Multicollinearity",
-                      "Multicolinealidad"),
-                    c("multicollinearity",
-                      "Multicollinearity",
-                      "Multicolinealidad"),
-                    c("multicollinearityInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-
-                    c("influenceGuide",
-                      "Outlying and influential cases",
-                      "Casos atípicos e influyentes"),
-                    c("influence",
-                      "Outlying and influential cases",
-                      "Casos atípicos e influyentes"),
-                    c("influenceCases",
-                      "Outlying and influential cases",
-                      "Casos atípicos e influyentes"),
-                    c("influenceInterpretation", "Applied Interpretation", "Interpretación Aplicada"),
-                    c("numericBoxplotsPlot",
-                      "Boxplots of dependent variable and numeric predictors",
-                      "Boxplots de la variable dependiente y predictores numéricos"),
-                    c("numericBoxplotsGuide",
-                      "Guide: Numeric variable boxplots",
-                      "Guía: Boxplots de variables numéricas"),
-                    c("residualsLeveragePlot",
-                      "Studentized residuals vs leverage",
-                      "Residuos studentizados vs leverage"),
-                    c("residualsLeverageGuide",
-                      "Guide: Studentized residuals vs leverage",
-                      "Guía: Residuos studentizados vs leverage"),
-                    c("cooksDPlot",
-                      "Cook's D by case",
-                      "Cook's D por caso"),
-                    c("cooksDGuide",
-                      "Guide: Cook's D by case",
-                      "Guía: Cook's D por caso"),
-
-                    c("transformGuide",
-                      "Exploratory transformations",
-                      "Transformaciones exploratorias"),
-                    c("transformationsGuide",
-                      "Exploratory transformations",
-                      "Transformaciones exploratorias"),
-                    c("transformNormality",
-                      "Residual normality by transformation",
-                      "Normalidad de residuos por transformación"),
-                    c("transformationNormality",
-                      "Residual normality by transformation",
-                      "Normalidad de residuos por transformación"),
-                    c("transformFit",
-                      "Residual fit and variance by transformation",
-                      "Ajuste y varianza residual por transformación"),
-                    c("transformationFit",
-                      "Residual fit and variance by transformation",
-                      "Ajuste y varianza residual por transformación"),
-                    c("robustGuide",
-                      "Robust and resampling options",
-                      "Opciones robustas y de remuestreo"),
-                    c("robustOptionsGuide",
-                      "Robust and resampling options",
-                      "Opciones robustas y de remuestreo"),
-                    c("robustInterpretation",
-                      "Methodological interpretation of robust options",
-                      "Interpretación metodológica de opciones robustas"),
-                    c("robustOptionsText",
-                      "Methodological interpretation of robust options",
-                      "Interpretación metodológica de opciones robustas"),
-                    c("notes",
-                      "Notes and recommendation",
-                      "Notas y recomendación")
-                )
-
-                for (item in titles)
-                    set_title_safe(item[[1]], item[[2]], item[[3]])
-            }
-
-            set_result_titles()
-
-            set_table_column_titles <- function() {
-
-                set_col_title_safe <- function(table_name, col_name, en, es) {
-                    table <- tryCatch(
-                        self$results[[table_name]],
-                        error = function(e) NULL
-                    )
-
-                    if (is.null(table))
-                        return(invisible(FALSE))
-
-                    column <- tryCatch(
-                        table$getColumn(col_name),
-                        error = function(e) NULL
-                    )
-
-                    if (is.null(column))
-                        return(invisible(FALSE))
-
-                    tryCatch(
-                        column$setTitle(tr(en, es)),
-                        error = function(e) invisible(FALSE)
-                    )
-
-                    invisible(TRUE)
-                }
-
-                cols <- list(
-                    c("modelSummary", "item", "Item", "Elemento"),
-                    c("modelSummary", "value", "Value", "Valor"),
-                    c("missingSummary", "item", "Item", "Elemento"),
-                    c("missingSummary", "value", "Value", "Valor"),
-
-                    c("linearityPredictor", "predictor", "Predictor", "Predictor"),
-                    c("linearityPredictor", "dependent", "Dependent variable", "Variable dependiente"),
-                    c("linearityPredictor", "test", "Test / criterion", "Prueba / criterio"),
-                    c("linearityPredictor", "statistic", "Statistic", "Estadístico"),
-                    c("linearityPredictor", "value", "Value", "Valor"),
-                    c("linearityPredictor", "pSig", "Sig.", "Sig."),
-
-                    c("linearityModel", "scope", "Scope", "Alcance"),
-                    c("linearityModel", "dependent", "Dependent variable", "Variable dependiente"),
-                    c("linearityModel", "test", "Test / criterion", "Prueba / criterio"),
-                    c("linearityModel", "statistic", "Statistic", "Estadístico"),
-                    c("linearityModel", "value", "Value", "Valor"),
-                    c("linearityModel", "pSig", "Sig.", "Sig."),
-
-                    c("residualNormality", "test", "Test", "Prueba"),
-                    c("residualNormality", "statistic", "Statistic", "Estadístico"),
-                    c("residualNormality", "value", "Value", "Valor"),
-                    c("residualNormality", "pSig", "Sig.", "Sig."),
-
-                    c("homoscedasticity", "family", "Family", "Familia"),
-                    c("homoscedasticity", "test", "Test", "Prueba"),
-                    c("homoscedasticity", "statistic", "Statistic", "Estadístico"),
-                    c("homoscedasticity", "value", "Value", "Valor"),
-                    c("homoscedasticity", "pSig", "Sig.", "Sig."),
-
-                    c("independence", "test", "Test", "Prueba"),
-                    c("independence", "statistic", "Statistic", "Estadístico"),
-                    c("independence", "value", "Value", "Valor"),
-                    c("independence", "pSig", "Sig.", "Sig."),
-
-                    c("multicollinearity", "diagnostic", "Diagnostic", "Diagnóstico"),
-                    c("multicollinearity", "item", "Item", "Elemento"),
-                    c("multicollinearity", "statistic", "Statistic", "Estadístico"),
-                    c("multicollinearity", "value", "Value", "Valor"),
-
-                    c("pearsonMatrixTable", "var", "Variable", "Variable"),
-                    c("dcorMatrixTable", "var", "Variable", "Variable"),
-
-                    c("correlationComparisonTable", "var1", "Variable 1", "Variable 1"),
-                    c("correlationComparisonTable", "var2", "Variable 2", "Variable 2"),
-                    c("correlationComparisonTable", "pearson", "Pearson r", "Pearson r"),
-                    c("correlationComparisonTable", "dcor", "dCor", "dCor"),
-                    c("correlationComparisonTable", "gap", "Gap (dCor - |r|)", "Brecha (dCor − |r|)"),
-                    c("correlationComparisonTable", "ce", "Copula entropy", "Entropía copular"),
-                    c("correlationComparisonTable", "ceP", "p (CE)", "p (CE)"),
-                    c("correlationComparisonTable", "ceSig", "Sig. (CE)", "Sig. (CE)"),
-                    c("correlationComparisonTable", "flag", "Notable difference", "Diferencia notable"),
-
-                    c("influence", "case", "Case", "Caso"),
-                    c("influence", "fitted", "Fitted", "Ajustado"),
-                    c("influence", "residual", "Residual", "Residuo"),
-                    c("influence", "studResidual", "Studentized residual", "Residuo studentizado"),
-                    c("influence", "leverage", "Leverage", "Leverage"),
-                    c("influence", "cooksD", "Cook's D", "Cook's D"),
-                    c("influence", "dffits", "DFFITS", "DFFITS"),
-                    c("influence", "criteria", "Triggered criteria", "Criterios activados"),
-
-                    c("transformationNormality", "criterion", "Criterion / test", "Criterio / prueba"),
-                    c("transformationNormality", "original", "Original", "Original"),
-                    c("transformationNormality", "logTrans", "log(Y)", "log(Y)"),
-                    c("transformationNormality", "sqrtTrans", "sqrt(Y)", "sqrt(Y)"),
-                    c("transformationNormality", "inverseTrans", "1/Y", "1/Y"),
-
-                    c("transformationFit", "criterion", "Criterion / test", "Criterio / prueba"),
-                    c("transformationFit", "original", "Original", "Original"),
-                    c("transformationFit", "logTrans", "log(Y)", "log(Y)"),
-                    c("transformationFit", "sqrtTrans", "sqrt(Y)", "sqrt(Y)"),
-                    c("transformationFit", "inverseTrans", "1/Y", "1/Y")
-                )
-
-                for (item in cols)
-                    set_col_title_safe(item[[1]], item[[2]], item[[3]], item[[4]])
-            }
-
-            set_table_column_titles()
 
             clean_num <- function(x) {
                 if (length(x) == 0)
@@ -739,7 +223,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             fmt_num <- function(x, digits = 4) {
                 x <- clean_num(x)
                 if (is.na(x))
-                    return(tr("Not computed", "No calculado"))
+                    return(.("Not computed"))
                 format(round(x, digits), nsmall = digits)
             }
 
@@ -789,10 +273,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             if (is.null(self$options$dep) || self$options$dep == "") {
-                jmvcore::reject(private$.plotTr(
-                    "Select a numeric dependent variable.",
-                    "Seleccione una variable dependiente numérica."
-                ))
+                jmvcore::reject(.("Select a numeric dependent variable."))
             }
 
             dep <- self$options$dep
@@ -801,10 +282,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             predictors <- c(covs, factors)
 
             if (length(predictors) == 0) {
-                jmvcore::reject(private$.plotTr(
-                    "Select at least one numeric or categorical predictor.",
-                    "Seleccione al menos un predictor numérico o categórico."
-                ))
+                jmvcore::reject(.("Select at least one numeric or categorical predictor."))
             }
 
             data <- self$data
@@ -819,10 +297,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             n_excluded <- n_total - n_used
 
             if (n_used < 5) {
-                jmvcore::reject(private$.plotTr(
-                    "There are not enough complete cases to fit the model.",
-                    "No hay suficientes casos completos para ajustar el modelo."
-                ))
+                jmvcore::reject(.("There are not enough complete cases to fit the model."))
             }
 
             formula_text <- paste(
@@ -843,13 +318,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             )
 
             if (is.null(fit)) {
-                jmvcore::reject(paste0(
-                    private$.plotTr(
-                        "It was not possible to fit the linear regression model: ",
-                        "No fue posible ajustar el modelo de regresión lineal: "
-                    ),
-                    fit_error
-                ))
+                jmvcore::reject(sprintf(.("It was not possible to fit the linear regression model: %s"), fit_error))
             }
 
             model_sum <- summary(fit)
@@ -1023,26 +492,23 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "AssumptionsLab",
                 "</p>",
                 "<p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">",
-                tr("Assumption check for simple &amp; multiple regression", "Revisión de supuestos para regresión simple y múltiple"),
+                .("Assumption check for simple &amp; multiple regression"),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr(
-                    "Use this analysis when you want to review whether a linear regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.",
-                    "Use este análisis cuando quiera revisar si un modelo de regresión lineal tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos."
-                ),
+                .("Use this analysis when you want to review whether a linear regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data."),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0;\">\u00A0</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr("<b>Dependent variable:</b> ", "<b>Variable dependiente:</b> "), html_escape(dep),
+                .("<b>Dependent variable:</b> "), html_escape(dep),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr("<b>Numeric predictors:</b> ", "<b>Predictores numéricos:</b> "),
-                html_escape(ifelse(length(covs) == 0, tr("None", "Ninguno"), paste(covs, collapse = ", "))),
+                .("<b>Numeric predictors:</b> "),
+                html_escape(ifelse(length(covs) == 0, .("None"), paste(covs, collapse = ", "))),
                 "</p>",
                 "<p style=\"margin: 0 0 0.25em 0; line-height: 1.35;\">",
-                tr("<b>Categorical predictors:</b> ", "<b>Predictores categóricos:</b> "),
-                html_escape(ifelse(length(factors) == 0, tr("None", "Ninguno"), paste(factors, collapse = ", "))),
+                .("<b>Categorical predictors:</b> "),
+                html_escape(ifelse(length(factors) == 0, .("None"), paste(factors, collapse = ", "))),
                 "</p>",
                 "</div>"
             ))
@@ -1057,16 +523,16 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ms_i <<- ms_i + 1
             }
 
-            add_ms(tr("Model", "Modelo"), gsub("`", "", formula_text))
-            add_ms(tr("Cases used", "Casos usados"), as.character(n_used))
-            add_ms(tr("Selected predictors", "Predictores seleccionados"), as.character(predictor_count))
-            add_ms(tr("Estimated parameters", "Parámetros estimados"), as.character(p_model))
+            add_ms(.("Model"), gsub("`", "", formula_text))
+            add_ms(.("Cases used"), as.character(n_used))
+            add_ms(.("Selected predictors"), as.character(predictor_count))
+            add_ms(.("Estimated parameters"), as.character(p_model))
             add_ms("R²", fmt_num(r2))
-            add_ms(tr("Adjusted R²", tr("Adjusted R²", "R² ajustado")), fmt_num(adj_r2))
-            add_ms(tr("Residual standard error", "Error estándar residual"), fmt_num(sigma))
+            add_ms(.("Adjusted R²"), fmt_num(adj_r2))
+            add_ms(.("Residual standard error"), fmt_num(sigma))
             add_ms(
-                tr("Model p", "p del modelo"),
-                ifelse(is.na(model_p), tr("Not computed", "No calculado"),
+                .("Model p"),
+                ifelse(is.na(model_p), .("Not computed"),
                        format.pval(model_p, digits = 3, eps = .001))
             )
 
@@ -1080,15 +546,15 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 miss_i <<- miss_i + 1
             }
 
-            add_miss(tr("Total rows", "Filas totales"), as.character(n_total))
-            add_miss(tr("Complete cases used", "Casos completos usados"), as.character(n_used))
-            add_miss(tr("Cases excluded due to missing data", "Casos excluidos por datos faltantes"), as.character(n_excluded))
+            add_miss(.("Total rows"), as.character(n_total))
+            add_miss(.("Complete cases used"), as.character(n_used))
+            add_miss(.("Cases excluded due to missing data"), as.character(n_excluded))
             add_miss(
-                tr("Excluded percentage", "Porcentaje excluido"),
+                .("Excluded percentage"),
                 paste0(round(100 * n_excluded / max(1, n_total), 2), "%")
             )
 
-            self$results$designGuide$setContent(html_guide(tr("Regression model", "Modelo de regresión"), "regression", "designGuide"))
+            self$results$designGuide$setContent(html_guide(.("Regression model"), "regression", "designGuide"))
 
             # ------------------------------------------------------------
             # -----------------------------------------------------------------------------
@@ -1118,8 +584,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             add_linearity_predictor <- function(predictor, test, statistic, value, p_value, reason = NULL) {
                 if (!is.na(clean_num(p_value)) && clean_num(p_value) < .05 &&
                     test %in% c(
-                        tr("Exploratory quadratic term", "Término cuadrático exploratorio"),
-                        tr("Exploratory Box-Tidwell", "Box-Tidwell exploratorio")
+                        .("Exploratory quadratic term"),
+                        .("Exploratory Box-Tidwell")
                     )) {
                     linearity_problem <<- TRUE
                 }
@@ -1171,7 +637,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (length(covs) == 0) {
                 add_linearity_predictor(
                     "No aplicable",
-                    tr("Numeric predictors", "Predictores numéricos"),
+                    .("Numeric predictors"),
                     "",
                     NA_real_,
                     NA_real_
@@ -1195,7 +661,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 add_linearity_predictor(
                     xname,
-                    tr("Bivariate correlation", "Correlación bivariada"),
+                    .("Bivariate correlation"),
                     "r",
                     cor_val,
                     cor_p
@@ -1219,7 +685,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 add_linearity_predictor(
                     xname,
-                    tr("Exploratory quadratic term", "Término cuadrático exploratorio"),
+                    .("Exploratory quadratic term"),
                     "p",
                     quad_p,
                     quad_p
@@ -1242,17 +708,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     coef(summary(fit_bt))[".bt_tmp", "Pr(>|t|)"]
                 }, error = function(e) NA_real_)
 
-                bt_reason <- if (bt_needs_positive) tr(
-                    "Box-Tidwell requires strictly positive values (it uses x*log(x)); this predictor has zero, negative, or missing values.",
-                    "Box-Tidwell requiere valores estrictamente positivos (usa x*log(x)); este predictor tiene valores cero, negativos o faltantes."
-                ) else if (is.na(clean_num(bt_p))) tr(
-                    "Could not be computed for this predictor.",
-                    "No se pudo calcular para este predictor."
-                ) else NULL
+                bt_reason <- if (bt_needs_positive) .("Box-Tidwell requires strictly positive values (it uses x*log(x)); this predictor has zero, negative, or missing values.") else if (is.na(clean_num(bt_p))) .("Could not be computed for this predictor.") else NULL
 
                 add_linearity_predictor(
                     xname,
-                    tr("Exploratory Box-Tidwell", "Box-Tidwell exploratorio"),
+                    .("Exploratory Box-Tidwell"),
                     "p",
                     bt_p,
                     bt_p,
@@ -1269,7 +729,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 add_linearity_predictor(
                     xname,
-                    tr("Distance correlation (dCor)", "Correlación de distancia (dCor)"),
+                    .("Distance correlation (dCor)"),
                     "dCor",
                     dcor_val,
                     dcor_p
@@ -1280,22 +740,16 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (!is.null(ce_res)) {
                     add_linearity_predictor(
                         xname,
-                        tr("Copula entropy (copent)", "Entropía copular (copent)"),
+                        .("Copula entropy (copent)"),
                         "CE",
                         ce_res$ce,
                         ce_res$p
                     )
                 } else {
-                    ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) tr(
-                        "The 'copent' package is not installed.",
-                        "El paquete 'copent' no está instalado."
-                    ) else tr(
-                        "Could not be computed for this predictor pair (copula entropy needs enough distinct values to estimate a copula density).",
-                        "No se pudo calcular para este par de variables (la entropía copular necesita suficientes valores distintos para estimar una densidad de cópula)."
-                    )
+                    ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) .("The 'copent' package is not installed.") else .("Could not be computed for this predictor pair (copula entropy needs enough distinct values to estimate a copula density).")
                     add_linearity_predictor(
                         xname,
-                        tr("Copula entropy (copent)", "Entropía copular (copent)"),
+                        .("Copula entropy (copent)"),
                         "CE", NA_real_, NA_real_,
                         reason = ce_reason
                     )
@@ -1321,8 +775,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }, error = function(e) NA_real_)
 
             add_linearity_model(
-                tr("Full model", "Modelo completo"),
-                tr("Approximate Ramsey RESET", "Ramsey RESET aproximado"),
+                .("Full model"),
+                .("Approximate Ramsey RESET"),
                 "p",
                 reset_p,
                 reset_p
@@ -1360,8 +814,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }, error = function(e) NA_real_)
 
             add_linearity_model(
-                tr("Full model", "Modelo completo"),
-                tr("Approximate Rainbow test", "Rainbow test aproximado"),
+                .("Full model"),
+                .("Approximate Rainbow test"),
                 "p",
                 rainbow_p,
                 rainbow_p
@@ -1379,51 +833,23 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             coherence_sentence <- function(coh) {
                 if (is.null(coh)) return(NULL)
                 if (coh$all_agree) {
-                    tr(
-                        paste0("The other ", coh$total, " test(s) in the table agree with this conclusion."),
-                        paste0("Las otras ", coh$total, " pruebas de la tabla coinciden con esta conclusión.")
-                    )
+                    sprintf(.("The other %s test(s) in the table agree with this conclusion."), coh$total)
                 } else {
-                    tr(
-                        paste0(coh$agree, " of the other ", coh$total, " tests in the table agree with this conclusion; check the table to see which one(s) differ before drawing a final conclusion."),
-                        paste0(coh$agree, " de las otras ", coh$total, " pruebas de la tabla coinciden con esta conclusión; revise la tabla para ver cuál(es) difieren antes de sacar una conclusión final.")
-                    )
+                    sprintf(.("%s of the other %s tests in the table agree with this conclusion; check the table to see which one(s) differ before drawing a final conclusion."), coh$agree, coh$total)
                 }
             }
 
-            self$results$linearityGuide$setContent(html_guide(tr("Linearity", "Linealidad"), "regression", "linearityGuide"))
+            self$results$linearityGuide$setContent(html_guide(.("Linearity"), "regression", "linearityGuide"))
 
             self$results$linearityInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
-                    paste0(
-                        tr("Ramsey RESET: p = ", "Ramsey RESET: p = "), fmt_p(reset_p),
-                        tr(". Rainbow test: p = ", ". Rainbow test: p = "), fmt_p(rainbow_p),
-                        tr(
-                            paste0(" (n = ", n_used, "). Both tests check whether the model is missing curvature that a straight line cannot capture."),
-                            paste0(" (n = ", n_used, "). Ambas pruebas revisan si el modelo pierde curvatura que una línea recta no puede capturar.")
-                        )
-                    ),
-                    tr(
-                        "A significant result (p < .05) does not mean the model is useless: it means the linear form may be missing part of the relationship, which can bias coefficients and predictions in specific ranges of the predictors.",
-                        "Un resultado significativo (p < .05) no significa que el modelo sea inútil: significa que la forma lineal puede estar dejando fuera parte de la relación, lo cual puede sesgar coeficientes y predicciones en rangos específicos de los predictores."
-                    ),
-                    tr(
-                        "Common error: treating a non-significant RESET/Rainbow test as proof of perfect linearity. These tests have limited power in small samples (they may miss real curvature) and can flag trivial, practically irrelevant curvature in very large samples. Always read them together with residual-vs-fitted plots.",
-                        "Error común: interpretar un RESET/Rainbow no significativo como prueba de linealidad perfecta. Estas pruebas tienen poder limitado en muestras pequeñas (pueden no detectar curvatura real) y pueden marcar como \"significativa\" una curvatura trivial e irrelevante en muestras muy grandes. Léalas siempre junto con los gráficos de residuos vs. valores ajustados."
-                    ),
-                    tr(
-                        "If there is evidence of non-linearity, consider adding polynomial terms, transforming variables, using splines, or reviewing whether a different model family fits the relationship better.",
-                        "Si hay evidencia de no linealidad, considere agregar términos polinomiales, transformar variables, usar splines, o revisar si otra familia de modelos se ajusta mejor a la relación."
-                    ),
-                    if (length(covs) > 0) tr(
-                        "Distance correlation (dCor): unlike Pearson's r, which only detects linear association, dCor can detect any form of statistical dependence, including non-monotonic or curved relationships, and equals zero only when the variables are independent. When dCor is notably higher than |Pearson's r| for a predictor, it signals dependence the linear model may be missing.",
-                        "Correlación de distancia (dCor): a diferencia de r de Pearson, que solo detecta asociación lineal, dCor puede detectar cualquier forma de dependencia estadística, incluyendo relaciones no monótonas o curvas, y es igual a cero solo cuando las variables son independientes. Cuando dCor es notablemente mayor que |r de Pearson| para un predictor, señala una dependencia que el modelo lineal podría no estar capturando."
-                    ) else "",
-                    if (length(covs) > 0) tr(
-                        "Common error: treating a significant dCor by itself as proof that the relationship is non-linear. dCor is also significant for purely linear relationships; the real diagnostic signal is the size of the gap between dCor and |Pearson's r|, not the significance of dCor alone.",
-                        "Error común: tratar un dCor significativo por sí solo como prueba de que la relación es no lineal. dCor también es significativo para relaciones puramente lineales; la señal diagnóstica real es el tamaño de la brecha entre dCor y |r de Pearson|, no la significancia de dCor por sí sola."
-                    ) else ""
+                    sprintf(.("Ramsey RESET: p = %s. Rainbow test: p = %s%s"), fmt_p(reset_p), fmt_p(rainbow_p), sprintf(.(" (n = %s). Both tests check whether the model is missing curvature that a straight line cannot capture."), n_used)),
+                    .("A significant result (p < .05) does not mean the model is useless: it means the linear form may be missing part of the relationship, which can bias coefficients and predictions in specific ranges of the predictors."),
+                    .("Common error: treating a non-significant RESET/Rainbow test as proof of perfect linearity. These tests have limited power in small samples (they may miss real curvature) and can flag trivial, practically irrelevant curvature in very large samples. Always read them together with residual-vs-fitted plots."),
+                    .("If there is evidence of non-linearity, consider adding polynomial terms, transforming variables, using splines, or reviewing whether a different model family fits the relationship better."),
+                    if (length(covs) > 0) .("Distance correlation (dCor): unlike Pearson's r, which only detects linear association, dCor can detect any form of statistical dependence, including non-monotonic or curved relationships, and equals zero only when the variables are independent. When dCor is notably higher than |Pearson's r| for a predictor, it signals dependence the linear model may be missing.") else "",
+                    if (length(covs) > 0) .("Common error: treating a significant dCor by itself as proof that the relationship is non-linear. dCor is also significant for purely linear relationships; the real diagnostic signal is the size of the gap between dCor and |Pearson's r|, not the significance of dCor alone.") else ""
                 ),
                 paragraphs = TRUE
             ))
@@ -1433,7 +859,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Matrices de correlaciones (Pearson y dCor, formato APA 7).
             # ------------------------------------------------------------
 
-            self$results$correlationMatrixGuide$setContent(html_guide(tr("Correlation Matrix", "Matriz de Correlaciones"), "regression", "correlationMatrixGuide"))
+            self$results$correlationMatrixGuide$setContent(html_guide(.("Correlation Matrix"), "regression", "correlationMatrixGuide"))
 
             pearsonTable <- self$results$pearsonMatrixTable
             pearsonTable$deleteRows()
@@ -1545,33 +971,21 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 self$results$correlationMatrixNote$setContent(html_block(NULL,
                     c(
-                        paste0(sprintf("N = %d.", n_used), " ", tr("* p < .05, ** p < .01, *** p < .001", "* p < .05, ** p < .01, *** p < .001")),
+                        sprintf(.("%s * p < .05, ** p < .01, *** p < .001"), sprintf("N = %d.", n_used)),
                         .al_dcor_na_note(lang)
                     ),
                     paragraphs = FALSE
                 ))
             } else {
                 self$results$correlationMatrixNote$setContent(html_block(NULL,
-                    tr("Not applicable: fewer than two numeric model variables.", "No aplica: menos de dos variables numéricas del modelo."),
+                    .("Not applicable: fewer than two numeric model variables."),
                     paragraphs = FALSE
                 ))
             }
 
             self$results$correlationComparisonGuide$setContent(html_block(
-                tr("Pearson / dCor / Copula Entropy Discordance Analysis", "Análisis de Discordancia Pearson / dCor / Entropía Copular"),
-                .al_html_list(tr(c(
-                    "Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship.",
-                    "Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10.",
-                    "The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence.",
-                    "This threshold is a heuristic, not a formal test; always inspect a scatterplot of any flagged pair before concluding the relationship is non-linear.",
-                    .al_permutation_note(lang, 199, 20260704)
-                ), c(
-                    "Dado que la r de Pearson solo capta asociación lineal mientras que dCor capta asociación lineal y no lineal por igual, un par cuyo dCor sea notablemente mayor que su |r| de Pearson es una señal (no una prueba) de una relación no lineal.",
-                    "Se señalan en la tabla \"Pares con diferencia notable entre Pearson y dCor\" los pares con una brecha (dCor menos |r| de Pearson) mayor a .10.",
-                    "El resultado de la prueba de entropía copular (CE, copent()) para el mismo par se muestra al lado como una segunda línea de evidencia libre de supuestos distribucionales.",
-                    "Este umbral es una heurística, no una prueba formal; siempre revise un diagrama de dispersión de cualquier par señalado antes de concluir que la relación es no lineal.",
-                    .al_permutation_note(lang, 199, 20260704)
-                ))),
+                .("Pearson / dCor / Copula Entropy Discordance Analysis"),
+                .al_html_list(c(.("Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship."), .("Pairs are flagged in the \"Pairs with a Notable Difference between Pearson and dCor\" table when the gap (dCor minus |Pearson r|) is greater than .10."), .("The copula entropy (CE, copent()) result for the same pair is shown alongside as a second, distribution-free line of evidence."), .("This threshold is a heuristic, not a formal test; always inspect a scatterplot of any flagged pair before concluding the relationship is non-linear."), .al_permutation_note(lang, 199, 20260704))),
                 raw = TRUE
             ))
 
@@ -1595,52 +1009,48 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ce = pr$ce,
                     ceP = pr$ceP,
                     ceSig = p_sig(pr$ceP),
-                    flag = tr("Yes", "Sí")
+                    flag = .("Yes")
                 ))
             }
 
             if (length(flaggedPairs) == 0) {
                 self$results$correlationComparisonInterpretation$setContent(html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
+                    .("Applied Interpretation"),
                     if (k < 2)
-                        tr("Not applicable: fewer than two numeric model variables.", "No aplica: menos de dos variables numéricas del modelo.")
+                        .("Not applicable: fewer than two numeric model variables.")
                     else
-                        tr(sprintf("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the model's numeric variables.", gapThreshold),
-                           sprintf("Ningún par muestra una brecha Pearson/dCor mayor a %.2f; no hay indicios de asociación no lineal no modelada entre las variables numéricas del modelo.", gapThreshold)),
+                        sprintf(.("No pair shows a Pearson/dCor gap greater than %.2f; there is no indication of unmodeled non-linear association among the model's numeric variables."), gapThreshold),
                     paragraphs = FALSE
                 ))
             } else {
                 self$results$correlationComparisonInterpretation$setContent(html_block(
-                    tr("Applied Interpretation", "Interpretación Aplicada"),
-                    tr(sprintf("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Inspect a scatterplot of each flagged pair; when copula entropy is also significant for a pair, this reinforces the suspicion of an unmodeled non-linear dependency.",
-                               length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", ")),
-                       sprintf("%d par(es) muestran una brecha Pearson/dCor mayor a %.2f: %s. Revise un diagrama de dispersión de cada par señalado; cuando la entropía copular también es significativa para un par, esto refuerza la sospecha de una dependencia no lineal no modelada.",
-                               length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", "))),
+                    .("Applied Interpretation"),
+                    sprintf(.("%d pair(s) show a Pearson/dCor gap greater than %.2f: %s. Inspect a scatterplot of each flagged pair; when copula entropy is also significant for a pair, this reinforces the suspicion of an unmodeled non-linear dependency."), length(flaggedPairs), gapThreshold, paste(flaggedPairs, collapse = ", ")),
                     paragraphs = FALSE
                 ))
             }
 
             self$results$correlationIndividualGuide$setContent(
                 plot_guide(
-                    "Guía: Relación por par (Pearson / dCor)",
-                    "comparar visualmente lo que Pearson r y dCor detectan en la relación entre dos variables.",
-                    "valores de la primera variable del par.",
-                    "valores de la segunda variable del par.",
-                    "puntos alineados en torno a la línea de ajuste lineal cuando r es alto; una curva clara cuando dCor supera notablemente a |r|.",
-                    "el ajuste suavizado se separa marcadamente de la línea lineal, sobre todo en pares señalados en la tabla de discordancia.",
-                    "revisar si conviene un término no lineal, una transformación, o simplemente confirmar que la relación es lineal."
+                    .("Guide: Pairwise relationship (Pearson / dCor)"),
+                    .("visually compare what Pearson r and dCor detect in the relationship between two variables."),
+                    .("values of the first variable in the pair."),
+                    .("values of the second variable in the pair."),
+                    .("points aligned around the linear fit line when r is high; a clear curve when dCor notably exceeds |r|."),
+                    .("the smoothed fit separates markedly from the linear line, especially in pairs flagged in the discordance table."),
+                    .("review whether a non-linear term or transformation is warranted, or simply confirm the relationship is linear.")
                 )
             )
 
             self$results$correlationComparativeGuide$setContent(
                 plot_guide(
-                    "Guía: Comparación de Pearson, dCor y entropía copular entre pares",
-                    "comparar de un vistazo los tres coeficientes de asociación (Pearson, dCor, entropía copular) entre todos los pares de variables numéricas del modelo.",
-                    "pares de variables numéricas del modelo.",
-                    "magnitud del coeficiente (Pearson r, dCor).",
-                    "Pearson y dCor con valores similares para la mayoría de los pares.",
-                    "una brecha grande entre Pearson y dCor en algún par, especialmente si coincide con entropía copular significativa.",
-                    "revisar el gráfico individual de ese par y considerar un término no lineal si la brecha se confirma."
+                    .("Guide: Comparison of Pearson, dCor, and copula entropy across pairs"),
+                    .("compare at a glance the three association coefficients (Pearson, dCor, copula entropy) across all pairs of numeric variables in the model."),
+                    .("pairs of numeric variables in the model."),
+                    .("coefficient magnitude (Pearson r, dCor)."),
+                    .("Pearson and dCor with similar values for most pairs."),
+                    .("a large gap between Pearson and dCor for some pair, especially if it coincides with significant copula entropy."),
+                    .("review that pair's individual chart and consider a non-linear term if the gap is confirmed.")
                 )
             )
 
@@ -1687,7 +1097,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     normality_problem <- TRUE
                 add_res_norm("Shapiro-Wilk", "W", sw$statistic[[1]], sw$p.value)
             } else
-                add_res_norm("Shapiro-Wilk", "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, tr))
+                add_res_norm("Shapiro-Wilk", "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, .))
 
             # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
             # Pearson chi-square: identical tryCatch calls in every module,
@@ -1697,71 +1107,65 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             li <- .nt_res$li; ad <- .nt_res$ad; cvm <- .nt_res$cvm; sf <- .nt_res$sf
 
             if (!is.null(li))
-                add_res_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", li$statistic[[1]], li$p.value)
+                add_res_norm(.("Lilliefors (corrected K-S)"), "D", li$statistic[[1]], li$p.value)
             else
-                add_res_norm(tr("Lilliefors (corrected K-S)", "Lilliefors (K-S corregido)"), "D", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, tr))
+                add_res_norm(.("Lilliefors (corrected K-S)"), "D", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, .))
 
             if (!is.null(ad))
                 add_res_norm("Anderson-Darling", "A²", ad$statistic[[1]], ad$p.value)
             else
-                add_res_norm("Anderson-Darling", "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, tr))
+                add_res_norm("Anderson-Darling", "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, .))
 
             if (!is.null(cvm))
                 add_res_norm("Cramer-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
             else
-                add_res_norm("Cramer-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, tr))
+                add_res_norm("Cramer-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
 
             if (!is.null(sf))
                 add_res_norm("Shapiro-Francia", "W'", sf$statistic[[1]], sf$p.value)
             else
-                add_res_norm("Shapiro-Francia", "W'", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$sf, tr))
+                add_res_norm("Shapiro-Francia", "W'", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$sf, .))
 
             pt <- .nt_res$pt
 
             if (!is.null(pt))
-                add_res_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", pt$statistic[[1]], pt$p.value)
+                add_res_norm(.("Pearson chi-square"), "P", pt$statistic[[1]], pt$p.value)
             else
-                add_res_norm(tr("Pearson chi-square", "Pearson chi-cuadrado"), "P", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$pt, tr))
+                add_res_norm(.("Pearson chi-square"), "P", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$pt, .))
 
             jb <- .nc_res$jb
 
             if (!is.null(jb))
                 add_res_norm("Jarque-Bera", "JB", jb$value, jb$p)
             else
-                add_res_norm("Jarque-Bera", "JB", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$jb, tr))
+                add_res_norm("Jarque-Bera", "JB", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$jb, .))
 
             skew_test <- .nc_res$skew
 
             if (!is.null(skew_test))
-                add_res_norm(tr("Skewness test", "Prueba de asimetría"), "z", skew_test$value, skew_test$p)
+                add_res_norm(.("Skewness test"), "z", skew_test$value, skew_test$p)
             else
-                add_res_norm(tr("Skewness test", "Prueba de asimetría"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$skew, tr))
+                add_res_norm(.("Skewness test"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$skew, .))
 
             kurt_test <- .nc_res$kurt
 
             if (!is.null(kurt_test))
-                add_res_norm(tr("Kurtosis test", "Prueba de curtosis"), "z", kurt_test$value, kurt_test$p)
+                add_res_norm(.("Kurtosis test"), "z", kurt_test$value, kurt_test$p)
             else
-                add_res_norm(tr("Kurtosis test", "Prueba de curtosis"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$kurt, tr))
+                add_res_norm(.("Kurtosis test"), "z", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$kurt, .))
 
-            self$results$residualNormalityGuide$setContent(html_guide(tr("Residual normality", "Normalidad de residuos"), "regression", "residualNormalityGuide"))
+            self$results$residualNormalityGuide$setContent(html_guide(.("Residual normality"), "regression", "residualNormalityGuide"))
 
             self$results$residualNormalityInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
                     paste0(
-                        tr("Shapiro-Wilk (primary test): ", "Shapiro-Wilk (prueba principal): "),
-                        if (!is.null(sw)) paste0("p = ", fmt_p(sw$p.value)) else tr("not computed", "no calculado"),
-                        tr(paste0(" (n = ", n_used, ")."), paste0(" (n = ", n_used, ").")),
-                        tr(
-                            " This test looks at the residuals of the model, not the raw dependent variable.",
-                            " Esta prueba evalúa los residuos del modelo, no la variable dependiente en bruto."
-                        )
+                        .("Shapiro-Wilk (primary test): "),
+                        if (!is.null(sw)) paste0("p = ", fmt_p(sw$p.value)) else .("not computed"),
+                        sprintf(.(" (n = %s)."), n_used),
+                        .(" This test looks at the residuals of the model, not the raw dependent variable.")
                     ),
-                    tr(
-                        "Shapiro-Wilk is used as the primary test because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to switch to Kolmogorov-Smirnov once n exceeds ~50 is a leftover from old software limitations, not a statistical reason: in practice, Kolmogorov-Smirnov is generally one of the weakest of these tests when the mean and standard deviation are estimated from the same data, as is always the case here.",
-                        "Se usa Shapiro-Wilk como prueba principal por ser la de mayor poder estadístico entre las pruebas de normalidad más comunes, para prácticamente todo rango de tamaño muestral (Razali & Wah, 2011; ver referencias). La recomendación extendida de cambiar a Kolmogorov-Smirnov cuando n supera ~50 es un remanente de limitaciones de software antiguo, no una razón estadística: en la práctica, Kolmogorov-Smirnov suele ser una de las pruebas más débiles de este grupo cuando la media y la desviación estándar se estiman de los mismos datos, como ocurre siempre aquí."
-                    ),
+                    .("Shapiro-Wilk is used as the primary test because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to switch to Kolmogorov-Smirnov once n exceeds ~50 is a leftover from old software limitations, not a statistical reason: in practice, Kolmogorov-Smirnov is generally one of the weakest of these tests when the mean and standard deviation are estimated from the same data, as is always the case here."),
                     (function() {
                         coh <- coherence_note(
                             !is.null(sw) && !is.na(sw$p.value) && sw$p.value < .05,
@@ -1778,18 +1182,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         )
                         coherence_sentence(coh)
                     })(),
-                    tr(
-                        "In practice, residual normality mainly affects the precision of classical inference (confidence intervals and p-values) in small samples. Point estimates of the coefficients remain valid even with moderate non-normality, and by the Central Limit Theorem, inference becomes more robust as sample size grows.",
-                        "En la práctica, la normalidad de residuos afecta principalmente la precisión de la inferencia clásica (intervalos de confianza y valores p) en muestras pequeñas. Las estimaciones puntuales de los coeficientes siguen siendo válidas incluso con no normalidad moderada, y por el Teorema Central del Límite, la inferencia se vuelve más robusta a medida que crece el tamaño muestral."
-                    ),
-                    tr(
-                        "Common error: assuming that a significant normality test invalidates the whole regression. It does not: it is a signal to inspect the shape of the residuals (skewness, heavy tails, outliers) before deciding whether classical inference is still trustworthy.",
-                        "Error común: asumir que una prueba de normalidad significativa invalida toda la regresión. No es así: es una señal para revisar la forma de los residuos (asimetría, colas pesadas, atípicos) antes de decidir si la inferencia clásica sigue siendo confiable."
-                    ),
-                    tr(
-                        "Sample-size caveat: Shapiro-Wilk becomes very sensitive with large samples (roughly n > 300), often flagging small, practically irrelevant deviations as statistically significant. With small samples (n < 30) it may lack power to detect real departures from normality.",
-                        "Matiz de tamaño de muestra: Shapiro-Wilk se vuelve muy sensible con muestras grandes (aproximadamente n > 300), marcando a menudo desviaciones pequeñas y poco relevantes en la práctica como estadísticamente significativas. Con muestras pequeñas (n < 30) puede carecer de poder para detectar desviaciones reales de la normalidad."
-                    )
+                    .("In practice, residual normality mainly affects the precision of classical inference (confidence intervals and p-values) in small samples. Point estimates of the coefficients remain valid even with moderate non-normality, and by the Central Limit Theorem, inference becomes more robust as sample size grows."),
+                    .("Common error: assuming that a significant normality test invalidates the whole regression. It does not: it is a signal to inspect the shape of the residuals (skewness, heavy tails, outliers) before deciding whether classical inference is still trustworthy."),
+                    .("Sample-size caveat: Shapiro-Wilk becomes very sensitive with large samples (roughly n > 300), often flagging small, practically irrelevant deviations as statistically significant. With small samples (n < 30) it may lack power to detect real departures from normality.")
                 ),
                 paragraphs = TRUE
             ))
@@ -1828,14 +1223,11 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(bp)) {
                 if (!is.na(clean_num(bp$p.value)) && clean_num(bp$p.value) < .05)
                     homo_problem <- TRUE
-                add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), "Breusch-Pagan (lmtest)",
+                add_homo(.("Heteroscedasticity"), "Breusch-Pagan (lmtest)",
                          "LM", unname(bp$statistic), unname(bp$parameter), bp$p.value)
             } else
-                add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), "Breusch-Pagan (lmtest)",
-                         "LM", NA_real_, NA_integer_, NA_real_, reason = tr(
-                             "Could not be computed - the auxiliary regression of squared residuals on the predictors is likely singular (too few residual degrees of freedom, or near-perfect collinearity among predictors).",
-                             "No se pudo calcular - la regresión auxiliar de residuos al cuadrado sobre los predictores es probablemente singular (muy pocos grados de libertad residuales, o colinealidad casi perfecta entre predictores)."
-                         ))
+                add_homo(.("Heteroscedasticity"), "Breusch-Pagan (lmtest)",
+                         "LM", NA_real_, NA_integer_, NA_real_, reason = .("Could not be computed - the auxiliary regression of squared residuals on the predictors is likely singular (too few residual degrees of freedom, or near-perfect collinearity among predictors)."))
 
             white <- tryCatch({
                 e2 <- residuals_raw^2
@@ -1865,26 +1257,20 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }, error = function(e) NULL)
 
             if (!is.null(white))
-                add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), tr("White (general)", "White (general)"),
+                add_homo(.("Heteroscedasticity"), .("White (general)"),
                          "LM", white$value, white$df, white$p)
             else
-                add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), tr("White (general)", "White (general)"),
-                         "LM", NA_real_, NA_integer_, NA_real_, reason = tr(
-                             "Could not be computed - White's auxiliary regression adds every predictor's square and cross-product, so it needs more residual degrees of freedom than Breusch-Pagan; there are likely too many predictors relative to the number of complete cases.",
-                             "No se pudo calcular - la regresión auxiliar de White agrega el cuadrado y los productos cruzados de cada predictor, así que necesita más grados de libertad residuales que Breusch-Pagan; probablemente hay demasiados predictores respecto al número de casos completos."
-                         ))
+                add_homo(.("Heteroscedasticity"), .("White (general)"),
+                         "LM", NA_real_, NA_integer_, NA_real_, reason = .("Could not be computed - White's auxiliary regression adds every predictor's square and cross-product, so it needs more residual degrees of freedom than Breusch-Pagan; there are likely too many predictors relative to the number of complete cases."))
 
             gq <- tryCatch(lmtest::gqtest(fit, order.by = fitted_values), error = function(e) NULL)
 
             if (!is.null(gq))
-                add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), "Goldfeld-Quandt (lmtest)",
+                add_homo(.("Heteroscedasticity"), "Goldfeld-Quandt (lmtest)",
                          "F", unname(gq$statistic), min(unname(gq$parameter)), gq$p.value)
             else
-                add_homo(tr("Heteroscedasticity", "Heterocedasticidad"), "Goldfeld-Quandt (lmtest)",
-                         "F", NA_real_, NA_integer_, NA_real_, reason = tr(
-                             "Could not be computed - Goldfeld-Quandt splits the sample in two (ordered by fitted values) and fits a separate regression to each half; the sample is likely too small, relative to the number of predictors, for both halves to be estimable.",
-                             "No se pudo calcular - Goldfeld-Quandt divide la muestra en dos (ordenada por valores ajustados) y ajusta una regresión separada a cada mitad; la muestra probablemente es muy pequeña, respecto al número de predictores, para que ambas mitades sean estimables."
-                         ))
+                add_homo(.("Heteroscedasticity"), "Goldfeld-Quandt (lmtest)",
+                         "F", NA_real_, NA_integer_, NA_real_, reason = .("Could not be computed - Goldfeld-Quandt splits the sample in two (ordered by fitted values) and fits a separate regression to each half; the sample is likely too small, relative to the number of predictors, for both halves to be estimable."))
 
             fitted_groups <- tryCatch({
                 r <- rank(fitted_values, ties.method = "first")
@@ -1916,8 +1302,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (!is.null(lev_mean)) {
                 add_homo(
-                    tr("Variance equality", "Igualdad de varianzas"),
-                    tr("Levene by fitted values", "Levene por valores ajustados"),
+                    .("Variance equality"),
+                    .("Levene by fitted values"),
                     "F",
                     lev_mean$value,
                     lev_mean$df,
@@ -1925,8 +1311,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             } else {
                 add_homo(
-                    tr("Variance equality", "Igualdad de varianzas"),
-                    tr("Levene by fitted values", "Levene por valores ajustados"),
+                    .("Variance equality"),
+                    .("Levene by fitted values"),
                     "F",
                     NA_real_,
                     NA_integer_,
@@ -1941,8 +1327,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (!is.null(lev_median)) {
                 add_homo(
-                    tr("Variance equality", "Igualdad de varianzas"),
-                    tr("Brown-Forsythe by fitted values", "Brown-Forsythe por valores ajustados"),
+                    .("Variance equality"),
+                    .("Brown-Forsythe by fitted values"),
                     "F",
                     lev_median$value,
                     lev_median$df,
@@ -1950,8 +1336,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             } else {
                 add_homo(
-                    tr("Variance equality", "Igualdad de varianzas"),
-                    tr("Brown-Forsythe by fitted values", "Brown-Forsythe por valores ajustados"),
+                    .("Variance equality"),
+                    .("Brown-Forsythe by fitted values"),
                     "F",
                     NA_real_,
                     NA_integer_,
@@ -1978,8 +1364,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (!is.null(fligner)) {
                 add_homo(
-                    tr("Variance equality", "Igualdad de varianzas"),
-                    tr("Fligner-Killeen by fitted values", "Fligner-Killeen por valores ajustados"),
+                    .("Variance equality"),
+                    .("Fligner-Killeen by fitted values"),
                     "χ²",
                     fligner$statistic[[1]],
                     fligner$parameter[[1]],
@@ -1987,8 +1373,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             } else {
                 add_homo(
-                    tr("Variance equality", "Igualdad de varianzas"),
-                    tr("Fligner-Killeen by fitted values", "Fligner-Killeen por valores ajustados"),
+                    .("Variance equality"),
+                    .("Fligner-Killeen by fitted values"),
                     "χ²",
                     NA_real_,
                     NA_integer_,
@@ -2007,8 +1393,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (!is.null(spearman_abs)) {
                 add_homo(
-                    tr("Heteroscedasticity", "Heterocedasticidad"),
-                    tr("Spearman |residuals| vs fitted", "Spearman |residuos| vs ajustados"),
+                    .("Heteroscedasticity"),
+                    .("Spearman |residuals| vs fitted"),
                     "ρ",
                     spearman_abs$estimate[[1]],
                     NA_integer_,
@@ -2016,8 +1402,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             } else {
                 add_homo(
-                    tr("Heteroscedasticity", "Heterocedasticidad"),
-                    tr("Spearman |residuals| vs fitted", "Spearman |residuos| vs ajustados"),
+                    .("Heteroscedasticity"),
+                    .("Spearman |residuals| vs fitted"),
                     "ρ",
                     NA_real_,
                     NA_integer_,
@@ -2025,21 +1411,18 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             }
 
-            self$results$homoscedasticityGuide$setContent(html_guide(tr("Homoscedasticity and heteroscedasticity", "Homoscedasticidad y heterocedasticidad"), "regression", "homoscedasticityGuide"))
+            self$results$homoscedasticityGuide$setContent(html_guide(.("Homoscedasticity and heteroscedasticity"), "regression", "homoscedasticityGuide"))
 
             self$results$homoscedasticityInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
                     paste0(
-                        tr("Breusch-Pagan (primary test): ", "Breusch-Pagan (prueba principal): "),
-                        if (!is.null(bp)) paste0("p = ", fmt_p(bp$p.value)) else tr("not computed", "no calculado"),
-                        tr(paste0(" (n = ", n_used, ")."), paste0(" (n = ", n_used, ").")),
-                        tr(" ", " ")
+                        .("Breusch-Pagan (primary test): "),
+                        if (!is.null(bp)) paste0("p = ", fmt_p(bp$p.value)) else .("not computed"),
+                        sprintf(.(" (n = %s)."), n_used),
+                        " "
                     ),
-                    tr(
-                        "Breusch-Pagan is used as the primary test because it was designed specifically to detect heteroscedasticity in regression residuals (Breusch & Pagan, 1979; see references), unlike Levene, Brown-Forsythe, and Fligner-Killeen, which are group-variance tests borrowed from ANOVA and applied here only approximately, by artificially splitting fitted values into bins. The White test (reported alongside) generalizes Breusch-Pagan to detect more complex, non-linear forms of heteroscedasticity (White, 1980; see references).",
-                        "Se usa Breusch-Pagan como prueba principal porque fue diseñada específicamente para detectar heterocedasticidad en los residuos de una regresión (Breusch & Pagan, 1979; ver referencias), a diferencia de Levene, Brown-Forsythe y Fligner-Killeen, que son pruebas de igualdad de varianzas tomadas del ANOVA y que aquí se aplican solo de forma aproximada, dividiendo artificialmente los valores ajustados en grupos. El White test (reportado junto a esta) generaliza a Breusch-Pagan para detectar formas más complejas y no lineales de heterocedasticidad (White, 1980; ver referencias)."
-                    ),
+                    .("Breusch-Pagan is used as the primary test because it was designed specifically to detect heteroscedasticity in regression residuals (Breusch & Pagan, 1979; see references), unlike Levene, Brown-Forsythe, and Fligner-Killeen, which are group-variance tests borrowed from ANOVA and applied here only approximately, by artificially splitting fitted values into bins. The White test (reported alongside) generalizes Breusch-Pagan to detect more complex, non-linear forms of heteroscedasticity (White, 1980; see references)."),
                     (function() {
                         coh <- coherence_note(
                             !is.null(bp) && !is.na(bp$p.value) && bp$p.value < .05,
@@ -2054,18 +1437,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         )
                         coherence_sentence(coh)
                     })(),
-                    tr(
-                        "Heteroscedasticity does not bias the regression coefficients themselves, but it does make the standard errors, confidence intervals, and p-values unreliable, because the classical formulas assume constant error variance across all predicted values.",
-                        "La heterocedasticidad no sesga los coeficientes de la regresión en sí mismos, pero sí vuelve poco confiables los errores estándar, intervalos de confianza y valores p, porque las fórmulas clásicas suponen varianza constante del error a lo largo de todos los valores predichos."
-                    ),
-                    tr(
-                        "Common error: concluding that a significant heteroscedasticity test means the model must be discarded. In most cases, the practical remedy is not a different model but heteroscedasticity-robust standard errors (also called White or Huber-White standard errors).",
-                        "Error común: concluir que una prueba de heterocedasticidad significativa obliga a descartar el modelo. En la mayoría de los casos, el remedio práctico no es otro modelo sino errores estándar robustos a heterocedasticidad (también llamados errores de White o Huber-White)."
-                    ),
-                    tr(
-                        "Sample-size note: Breusch-Pagan and White rely on a large-sample (asymptotic) approximation and can be unreliable with very small samples; in that situation, cross-check with Levene, Fligner-Killeen, or the Spearman correlation between |residuals| and fitted values shown here.",
-                        "Nota sobre tamaño de muestra: Breusch-Pagan y White dependen de una aproximación de muestra grande (asintótica) y pueden ser poco confiables con muestras muy pequeñas; en ese caso, contraste con Levene, Fligner-Killeen, o la correlación de Spearman entre |residuos| y valores ajustados que se muestra aquí."
-                    )
+                    .("Heteroscedasticity does not bias the regression coefficients themselves, but it does make the standard errors, confidence intervals, and p-values unreliable, because the classical formulas assume constant error variance across all predicted values."),
+                    .("Common error: concluding that a significant heteroscedasticity test means the model must be discarded. In most cases, the practical remedy is not a different model but heteroscedasticity-robust standard errors (also called White or Huber-White standard errors)."),
+                    .("Sample-size note: Breusch-Pagan and White rely on a large-sample (asymptotic) approximation and can be unreliable with very small samples; in that situation, cross-check with Levene, Fligner-Killeen, or the Spearman correlation between |residuals| and fitted values shown here.")
                 ),
                 paragraphs = TRUE
             ))
@@ -2139,7 +1513,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(bg)) {
                 if (!is.na(clean_num(bg$p)) && clean_num(bg$p) < .05)
                     auto_problem <- TRUE
-                add_independence(paste0("Breusch-Godfrey, ", tr("lags", "rezagos"), " = ", bg$df),
+                add_independence(sprintf(.("Breusch-Godfrey, lags = %s"), bg$df),
                                  "LM", bg$value, bg$p)
             } else
                 add_independence("Breusch-Godfrey", "LM", NA_real_, NA_real_)
@@ -2156,7 +1530,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }, error = function(e) NULL)
 
             if (!is.null(lb))
-                add_independence(paste0("Ljung-Box, ", tr("lags", "rezagos"), " = ", lb_lag),
+                add_independence(sprintf(.("Ljung-Box, lags = %s"), lb_lag),
                                  "Q", lb$statistic[[1]], lb$p.value)
             else
                 add_independence("Ljung-Box", "Q", NA_real_, NA_real_)
@@ -2193,22 +1567,19 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             else
                 add_independence("Runs test", "z", NA_real_, NA_real_)
 
-            self$results$independenceGuide$setContent(html_guide(tr("Error independence", "Independencia de errores"), "regression", "independenceGuide"))
+            self$results$independenceGuide$setContent(html_guide(.("Error independence"), "regression", "independenceGuide"))
 
             self$results$independenceInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
                     paste0(
-                        tr("Breusch-Godfrey (primary test): ", "Breusch-Godfrey (prueba principal): "),
-                        if (!is.null(bg)) paste0("p = ", fmt_p(bg$p)) else tr("not computed", "no calculado"),
-                        tr(paste0(" (n = ", n_used, "). Durbin-Watson (reported for reference): DW = "), paste0(" (n = ", n_used, "). Durbin-Watson (reportado como referencia): DW = ")),
+                        .("Breusch-Godfrey (primary test): "),
+                        if (!is.null(bg)) paste0("p = ", fmt_p(bg$p)) else .("not computed"),
+                        sprintf(.(" (n = %s). Durbin-Watson (reported for reference): DW = "), n_used),
                         fmt_num(dw, 3),
-                        tr(". Values close to 2 are compatible with independent errors.", ". Valores cercanos a 2 son compatibles con errores independientes.")
+                        .(". Values close to 2 are compatible with independent errors.")
                     ),
-                    tr(
-                        "Breusch-Godfrey is used as the primary test because it generalizes Durbin-Watson to any lag order and does not have Durbin-Watson's \"inconclusive zone\", a range of values where the classical DW test cannot reject or accept the null hypothesis (Breusch, 1978; Godfrey, 1978; see references). Durbin-Watson is still reported because it remains the most widely recognized statistic in applied practice (Durbin & Watson, 1951; see references).",
-                        "Se usa Breusch-Godfrey como prueba principal porque generaliza a Durbin-Watson a cualquier orden de rezago y no tiene la \"zona de inconclusión\" de Durbin-Watson, un rango de valores donde la prueba DW clásica no puede rechazar ni aceptar la hipótesis nula (Breusch, 1978; Godfrey, 1978; ver referencias). Durbin-Watson igual se reporta porque sigue siendo el estadístico más reconocido en la práctica aplicada (Durbin & Watson, 1951; ver referencias)."
-                    ),
+                    .("Breusch-Godfrey is used as the primary test because it generalizes Durbin-Watson to any lag order and does not have Durbin-Watson's \"inconclusive zone\", a range of values where the classical DW test cannot reject or accept the null hypothesis (Breusch, 1978; Godfrey, 1978; see references). Durbin-Watson is still reported because it remains the most widely recognized statistic in applied practice (Durbin & Watson, 1951; see references)."),
                     (function() {
                         coh <- coherence_note(
                             !is.null(bg) && !is.na(bg$p) && bg$p < .05,
@@ -2219,18 +1590,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         )
                         coherence_sentence(coh)
                     })(),
-                    tr(
-                        "Common error: running and interpreting these tests on data that has no meaningful order (for example, a cross-sectional survey where row order is arbitrary). They are only informative when the order of observations reflects a real sequence: time, spatial position, or measurement order.",
-                        "Error común: ejecutar e interpretar estas pruebas sobre datos que no tienen un orden con sentido (por ejemplo, una encuesta transversal donde el orden de las filas es arbitrario). Solo son informativas cuando el orden de las observaciones refleja una secuencia real: tiempo, posición espacial, u orden de medición."
-                    ),
-                    tr(
-                        "If your data does have a meaningful order (repeated measurements over time, data collected sequentially, or clustered/nested observations), significant autocorrelation means the standard errors of the model are likely underestimated, making results look more precise than they really are.",
-                        "Si sus datos sí tienen un orden con sentido (mediciones repetidas en el tiempo, datos recolectados secuencialmente, u observaciones agrupadas o anidadas), una autocorrelación significativa implica que los errores estándar del modelo probablemente están subestimados, haciendo que los resultados parezcan más precisos de lo que realmente son."
-                    ),
-                    tr(
-                        "If there is a real dependency structure (repeated measures, nested groups, time series), consider mixed-effects models, generalized least squares, or explicitly time-series-aware methods instead of relying only on this diagnostic.",
-                        "Si existe una estructura de dependencia real (medidas repetidas, grupos anidados, series de tiempo), considere modelos de efectos mixtos, mínimos cuadrados generalizados, o métodos específicos para series de tiempo, en vez de depender solo de este diagnóstico."
-                    )
+                    .("Common error: running and interpreting these tests on data that has no meaningful order (for example, a cross-sectional survey where row order is arbitrary). They are only informative when the order of observations reflects a real sequence: time, spatial position, or measurement order."),
+                    .("If your data does have a meaningful order (repeated measurements over time, data collected sequentially, or clustered/nested observations), significant autocorrelation means the standard errors of the model are likely underestimated, making results look more precise than they really are."),
+                    .("If there is a real dependency structure (repeated measures, nested groups, time series), consider mixed-effects models, generalized least squares, or explicitly time-series-aware methods instead of relying only on this diagnostic.")
                 ),
                 paragraphs = TRUE
             ))
@@ -2303,12 +1665,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         }
                     }
 
-                    vif_reason <- if (is.na(clean_num(vif))) tr(
-                        "Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).",
-                        "No se pudo calcular - regresar este predictor sobre los demás es probablemente singular (más predictores que casos completos, o una dependencia lineal exacta entre predictores)."
-                    ) else NULL
+                    vif_reason <- if (is.na(clean_num(vif))) .("Could not be computed - regressing this predictor on the others is likely singular (more predictors than complete cases, or an exact linear dependency among predictors).") else NULL
                     add_multi("VIF", colnames(X_no_intercept)[j], "VIF", vif, reason = vif_reason)
-                    add_multi(tr("Tolerance", "Tolerancia"), colnames(X_no_intercept)[j], "1/VIF", tol, reason = vif_reason)
+                    add_multi(.("Tolerance"), colnames(X_no_intercept)[j], "1/VIF", tol, reason = vif_reason)
                 }
 
                 eig <- tryCatch({
@@ -2318,13 +1677,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }, error = function(e) NULL)
 
                 if (is.null(eig)) {
-                    eig_reason <- tr(
-                        "Could not be computed - the predictors' correlation matrix could not be decomposed (likely too few complete cases relative to the number of predictors).",
-                        "No se pudo calcular - no fue posible descomponer la matriz de correlación de los predictores (probablemente muy pocos casos completos respecto al número de predictores)."
-                    )
-                    add_multi(tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), NA_real_, reason = eig_reason)
-                    add_multi(tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", NA_real_, reason = eig_reason)
-                    add_multi(tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", NA_real_, reason = eig_reason)
+                    eig_reason <- .("Could not be computed - the predictors' correlation matrix could not be decomposed (likely too few complete cases relative to the number of predictors).")
+                    add_multi(.("Minimum eigenvalue"), .("Design matrix"), .("minimum λ"), NA_real_, reason = eig_reason)
+                    add_multi(.("Condition index"), .("Design matrix"), "CI", NA_real_, reason = eig_reason)
+                    add_multi(.("Determinant"), .("Correlation matrix"), "det(R)", NA_real_, reason = eig_reason)
                 }
 
                 if (!is.null(eig)) {
@@ -2339,9 +1695,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         error = function(e) NA_real_
                     )
 
-                    add_multi(tr("Minimum eigenvalue", "Eigenvalue mínimo"), tr("Design matrix", "Matriz de diseño"), tr("minimum λ", "λ mínimo"), min_eig)
-                    add_multi(tr("Condition index", "Índice de condición"), tr("Design matrix", "Matriz de diseño"), "CI", ci)
-                    add_multi(tr("Determinant", "Determinante"), tr("Correlation matrix", "Matriz de correlación"), "det(R)", det_r)
+                    add_multi(.("Minimum eigenvalue"), .("Design matrix"), .("minimum λ"), min_eig)
+                    add_multi(.("Condition index"), .("Design matrix"), "CI", ci)
+                    add_multi(.("Determinant"), .("Correlation matrix"), "det(R)", det_r)
                 }
             } else {
                 add_multi("VIF / tolerancia", "No aplicable", "", NA_real_)
@@ -2356,7 +1712,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (!is.null(cor_mat)) {
                     cor_mat[lower.tri(cor_mat, diag = TRUE)] <- NA_real_
                     max_cor <- suppressWarnings(max(abs(cor_mat), na.rm = TRUE))
-                    add_multi(tr("Maximum correlation", "Correlación máxima"), tr("Numeric predictors", "Predictores numéricos"), tr("maximum |r|", "|r| máximo"), max_cor)
+                    add_multi(.("Maximum correlation"), .("Numeric predictors"), .("maximum |r|"), max_cor)
                 }
             }
 
@@ -2364,9 +1720,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             model_cols <- tryCatch(ncol(stats::model.matrix(fit)), error = function(e) NA_real_)
             non_estimable <- clean_num(model_cols - model_rank)
 
-            add_multi(tr("Model rank", "Rango del modelo"), tr("Design matrix", "Matriz de diseño"), tr("rank", "rango"), model_rank)
-            add_multi(tr("Non-estimable parameters", "Parámetros no estimables"), tr("Design matrix", "Matriz de diseño"),
-                      tr("columns - rank", "columnas - rango"), non_estimable)
+            add_multi(.("Model rank"), .("Design matrix"), .("rank"), model_rank)
+            add_multi(.("Non-estimable parameters"), .("Design matrix"),
+                      .("columns - rank"), non_estimable)
 
             if (!is.na(clean_num(max_vif)) && max_vif >= 5)
                 col_problem <- TRUE
@@ -2380,48 +1736,16 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.na(clean_num(non_estimable)) && non_estimable > 0)
                 col_problem <- TRUE
 
-            self$results$multicollinearityGuide$setContent(html_guide(tr("Multicollinearity", "Multicolinealidad"), "regression", "multicollinearityGuide"))
+            self$results$multicollinearityGuide$setContent(html_guide(.("Multicollinearity"), "regression", "multicollinearityGuide"))
 
             self$results$multicollinearityInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
-                    paste0(
-                        tr("Maximum VIF: ", "VIF máximo: "), fmt_num(max_vif, 2),
-                        if (!is.na(max_vif_name)) paste0(tr(" (predictor: ", " (predictor: "), max_vif_name, ")") else "",
-                        tr(
-                            ". By convention, values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (a threshold traceable to Marquardt, 1970, and widely adopted in reference texts such as Kutner et al.'s Applied Linear Statistical Models and Hair et al.'s Multivariate Data Analysis).",
-                            ". Por convención, valores entre 5 y 10 encienden una alerta moderada, y valores por encima de 10 se consideran un problema severo (un umbral que se remonta a Marquardt, 1970, y ampliamente adoptado en textos de referencia como Applied Linear Statistical Models de Kutner et al., y Multivariate Data Analysis de Hair et al.)."
-                        )
-                    ),
-                    paste0(
-                        tr(
-                            "In practical terms, a VIF of ", "En términos prácticos, un VIF de "
-                        ),
-                        fmt_num(max_vif, 2),
-                        tr(
-                            paste0(" means the standard error of that coefficient is about ", fmt_num(sqrt(max_vif), 2), " times larger than it would be without collinearity. This does not invalidate the model as a whole, but it does make that specific coefficient's confidence interval much less precise."),
-                            paste0(" significa que el error estándar de ese coeficiente es aproximadamente ", fmt_num(sqrt(max_vif), 2), " veces más grande de lo que sería sin colinealidad. Esto no invalida el modelo en conjunto, pero sí hace que el intervalo de confianza de ese coeficiente en particular sea mucho menos preciso.")
-                        )
-                    ),
-                    tr(
-                        "Common error: assuming a high VIF means the predictor should be removed or that the model \"does not work\". The model can still predict well overall; the issue is isolating that specific predictor's individual effect from the others. Removing a substantively relevant variable only because of a high VIF can bias the model more than the collinearity itself did.",
-                        "Error común: pensar que un VIF alto significa que hay que eliminar el predictor o que el modelo \"no sirve\". El modelo puede seguir prediciendo bien en conjunto; el problema es aislar el efecto individual de ese predictor frente a los demás. Eliminar una variable sustantivamente relevante solo porque tiene VIF alto puede sesgar el modelo más de lo que la propia colinealidad lo hacía."
-                    ),
-                    paste0(
-                        tr(
-                            "Sample-size caveat: this threshold is a convention, not a statistical law. With small samples (n < 100; here n = ",
-                            "Matiz de tamaño de muestra: este umbral es una convención, no una ley estadística. Con muestras pequeñas (n < 100; aquí n = "
-                        ),
-                        n_used,
-                        tr(
-                            "), even moderate collinearity can make coefficients quite unstable; with larger samples, a similar VIF is usually more tolerable.",
-                            "), incluso una colinealidad moderada puede volver los coeficientes bastante inestables; con muestras grandes, un VIF similar suele ser más tolerable."
-                        )
-                    ),
-                    tr(
-                        "If collinearity is a real concern, consider combining the most redundant predictors, centering variables involved in interactions, or reporting the finding and discussing its effect on that coefficient's precision rather than discarding the full model.",
-                        "Si la colinealidad es una preocupación real, considere combinar los predictores más redundantes, centrar las variables involucradas en interacciones, o reportar el hallazgo y discutir su efecto sobre la precisión de ese coeficiente, en vez de descartar el modelo completo."
-                    )
+                    sprintf(.("Maximum VIF: %s%s. By convention, values between 5 and 10 raise a moderate concern, and values above 10 are considered a severe problem (a threshold traceable to Marquardt, 1970, and widely adopted in reference texts such as Kutner et al.'s Applied Linear Statistical Models and Hair et al.'s Multivariate Data Analysis)."), fmt_num(max_vif, 2), if (!is.na(max_vif_name)) sprintf(.(" (predictor: %s)"), max_vif_name) else ""),
+                    sprintf(.("In practical terms, a VIF of %s%s"), fmt_num(max_vif, 2), sprintf(.(" means the standard error of that coefficient is about %s times larger than it would be without collinearity. This does not invalidate the model as a whole, but it does make that specific coefficient's confidence interval much less precise."), fmt_num(sqrt(max_vif), 2))),
+                    .("Common error: assuming a high VIF means the predictor should be removed or that the model \"does not work\". The model can still predict well overall; the issue is isolating that specific predictor's individual effect from the others. Removing a substantively relevant variable only because of a high VIF can bias the model more than the collinearity itself did."),
+                    sprintf(.("Sample-size caveat: this threshold is a convention, not a statistical law. With small samples (n < 100; here n = %s), even moderate collinearity can make coefficients quite unstable; with larger samples, a similar VIF is usually more tolerable."), n_used),
+                    .("If collinearity is a real concern, consider combining the most redundant predictors, centering variables involved in interactions, or reporting the finding and discussing its effect on that coefficient's precision rather than discarding the full model.")
                 ),
                 paragraphs = TRUE
             ))
@@ -2472,42 +1796,20 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             }
 
-            self$results$influenceGuide$setContent(html_guide(tr("Outlying and influential cases", "Casos atípicos e influyentes"), "regression", "influenceGuide"))
+            self$results$influenceGuide$setContent(html_guide(.("Outlying and influential cases"), "regression", "influenceGuide"))
 
             n_flagged_influence <- sum(nzchar(criteria), na.rm = TRUE)
 
             self$results$influenceInterpretation$setContent(html_block(
-                tr("Applied Interpretation", "Interpretación Aplicada"),
+                .("Applied Interpretation"),
                 c(
                     paste0(
-                        tr(
-                            paste0(n_flagged_influence, " of ", n, " cases were flagged by at least one influence criterion (Cook's D > ", fmt_num(cook_cut, 4), ", leverage > ", fmt_num(lev_cut, 4), ", |DFFITS| > ", fmt_num(dffits_cut, 4), ", or |studentized residual| > ", stud_cut, ")."),
-                            paste0(n_flagged_influence, " de ", n, " casos fueron marcados por al menos un criterio de influencia (Cook's D > ", fmt_num(cook_cut, 4), ", leverage > ", fmt_num(lev_cut, 4), ", |DFFITS| > ", fmt_num(dffits_cut, 4), ", o |residuo studentizado| > ", stud_cut, ").")
-                        )
+                        sprintf(.("%s of %s cases were flagged by at least one influence criterion (Cook's D > %s, leverage > %s, |DFFITS| > %s, or |studentized residual| > %s)."), n_flagged_influence, n, fmt_num(cook_cut, 4), fmt_num(lev_cut, 4), fmt_num(dffits_cut, 4), stud_cut)
                     ),
-                    tr(
-                        "These criteria measure different aspects of the same question: how unusual a case is (leverage), how large its residual is (studentized residual), and how much it would change the model's coefficients if removed (Cook's D, DFFITS). A flagged case is not automatically an error.",
-                        "Estos criterios miden aspectos distintos de la misma pregunta: qué tan inusual es un caso (leverage), qué tan grande es su residuo (residuo studentizado), y cuánto cambiaría los coeficientes del modelo si se eliminara (Cook's D, DFFITS). Un caso marcado no es automáticamente un error."
-                    ),
-                    tr(
-                        "Common error: deleting flagged cases automatically to \"improve\" the model. This can hide real, substantively important observations and produce a model that only fits the well-behaved majority of the data, misrepresenting the population it is meant to describe.",
-                        "Error común: eliminar automáticamente los casos marcados para \"mejorar\" el modelo. Esto puede ocultar observaciones reales y sustantivamente importantes, y producir un modelo que solo se ajusta a la mayoría bien comportada de los datos, sin representar fielmente a la población que se pretende describir."
-                    ),
-                    paste0(
-                        tr(
-                            "Sample-size caveat: the Cook's D cutoff of 4/n used here (n = ",
-                            "Matiz de tamaño de muestra: el umbral de Cook's D de 4/n usado aquí (n = "
-                        ),
-                        n,
-                        tr(
-                            paste0(") becomes stricter as the sample shrinks, so in small samples it is common to flag several cases that are not truly problematic. Treat the number of flagged cases as a starting point for inspection, not as a fixed quota to remove."),
-                            paste0(") se vuelve más estricto a medida que la muestra es más pequeña, así que en muestras pequeñas es común marcar varios casos que no son realmente problemáticos. Trate el número de casos marcados como un punto de partida para inspección, no como una cuota fija a eliminar.")
-                        )
-                    ),
-                    tr(
-                        "For each flagged case, check whether it is a data-entry error, a valid but extreme case, or a signal that the model does not represent all subgroups equally well; compare the model's conclusions with and without the case before deciding.",
-                        "Para cada caso marcado, revise si se trata de un error de registro, un caso válido pero extremo, o una señal de que el modelo no representa igual de bien a todos los subgrupos; compare las conclusiones del modelo con y sin ese caso antes de decidir."
-                    )
+                    .("These criteria measure different aspects of the same question: how unusual a case is (leverage), how large its residual is (studentized residual), and how much it would change the model's coefficients if removed (Cook's D, DFFITS). A flagged case is not automatically an error."),
+                    .("Common error: deleting flagged cases automatically to \"improve\" the model. This can hide real, substantively important observations and produce a model that only fits the well-behaved majority of the data, misrepresenting the population it is meant to describe."),
+                    sprintf(.("Sample-size caveat: the Cook's D cutoff of 4/n used here (n = %s) becomes stricter as the sample shrinks, so in small samples it is common to flag several cases that are not truly problematic. Treat the number of flagged cases as a starting point for inspection, not as a fixed quota to remove."), n),
+                    .("For each flagged case, check whether it is a data-entry error, a valid but extreme case, or a signal that the model does not represent all subgroups equally well; compare the model's conclusions with and without the case before deciding.")
                 ),
                 paragraphs = TRUE
             ))
@@ -2568,137 +1870,131 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (isTRUE(self$options$showPlots)) {
                 self$results$diagnosticPlotsGuide$setContent(
                     html_block(
-                        tr("Regression diagnostic plots", "Gráficos diagnósticos de regresión"),
+                        .("Regression diagnostic plots"),
                         c(
-                            tr(
-                                "Diagnostic plots complement statistical tests and help evaluate patterns that a p-value may hide.",
-                                "Los gráficos diagnósticos complementan las pruebas estadísticas y ayudan a evaluar patrones que un p-valor puede ocultar."
-                            ),
-                            tr(
-                                "Use these plots to review linearity, residual normality, homoscedasticity, influence, and predictive quality.",
-                                "Use estos gráficos para revisar linealidad, normalidad de residuos, homocedasticidad, influencia y calidad predictiva del modelo."
-                            )
+                            .("Diagnostic plots complement statistical tests and help evaluate patterns that a p-value may hide."),
+                            .("Use these plots to review linearity, residual normality, homoscedasticity, influence, and predictive quality.")
                         )
                     )
                 )
 
                 self$results$residualsFittedGuide$setContent(
                     plot_guide(
-                        "Guía: Residuos vs valores ajustados",
-                        "evaluar linealidad y varianza residual constante.",
-                        "valores ajustados o predichos por el modelo para cada caso.",
-                        "residuos, es decir, diferencia entre valor observado y valor predicho.",
-                        "nube aleatoria alrededor de cero, sin forma curva ni embudo.",
-                        "curvatura, bandas, embudo o grupos separados.",
-                        "revisar términos no lineales, transformación o errores estándar robustos."
+                        .("Guide: Residuals vs fitted values"),
+                        .("evaluate linearity and constant residual variance."),
+                        .("fitted or predicted values from the model for each case."),
+                        .("residuals, that is, the difference between observed and predicted values."),
+                        .("a random cloud around zero, without curvature or funnel shape."),
+                        .("curvature, bands, funnel shape, or separated groups."),
+                        .("review nonlinear terms, transformation, or robust standard errors.")
                     )
                 )
 
                 self$results$predictorEffectsGuide$setContent(
                     plot_guide(
-                        "Guía: Efectos visuales de predictores numéricos",
-                        "comparar la dirección e intensidad relativa de los predictores numéricos.",
-                        "valor estandarizado del predictor evaluado, de bajo a alto.",
-                        "valor predicho de la variable dependiente manteniendo constantes los demás predictores.",
-                        "líneas aproximadamente rectas y pendientes coherentes con el modelo.",
-                        "pendientes muy distintas, líneas planas o efectos difíciles de interpretar.",
-                        "revisar tamaño y dirección de efectos, linealidad, interacciones o términos no lineales."
+                        .("Guide: Visual effects of numeric predictors"),
+                        .("compare the direction and relative strength of numeric predictors."),
+                        .("standardized value of the evaluated predictor, from low to high."),
+                        .("predicted dependent-variable value while holding the other predictors constant."),
+                        .("approximately straight lines with slopes consistent with the model."),
+                        .("very different slopes, flat lines, or effects that are difficult to interpret."),
+                        .("review effect size and direction, linearity, interactions, or nonlinear terms.")
                     )
                 )
 
                 self$results$qqResidualsGuide$setContent(
                     plot_guide(
-                        "Guía: Q-Q plot de residuos",
-                        "evaluar si los residuos estandarizados se aproximan a una distribución normal.",
-                        "cuantiles teóricos esperados bajo normalidad.",
-                        "cuantiles observados de los residuos estandarizados.",
-                        "puntos cercanos a la línea diagonal.",
-                        "desviaciones fuertes en extremos, forma de S o colas pesadas.",
-                        "interpretar inferencias clásicas con cautela y revisar atípicos o transformaciones."
+                        .("Guide: Residual Q-Q plot"),
+                        .("evaluate whether standardized residuals approximate a normal distribution."),
+                        .("theoretical quantiles expected under normality."),
+                        .("observed quantiles of the standardized residuals."),
+                        .("points close to the diagonal line."),
+                        .("strong deviations at the extremes, S-shape, or heavy tails."),
+                        .("interpret classical inferences cautiously and review outliers or transformations.")
                     )
                 )
 
                 self$results$residualHistogramGuide$setContent(
                     plot_guide(
-                        "Guía: Histograma de residuos",
-                        "examinar forma, simetría y concentración de los residuos estandarizados.",
-                        "residuos estandarizados.",
-                        "frecuencia o número de casos.",
-                        "distribución aproximadamente simétrica y centrada en cero.",
-                        "asimetría marcada, múltiples picos o colas muy largas.",
-                        "complementar pruebas de normalidad y revisar casos extremos."
+                        .("Guide: Residual histogram"),
+                        .("examine the shape, symmetry, and concentration of standardized residuals."),
+                        .("standardized residuals."),
+                        .("frequency or number of cases."),
+                        .("an approximately symmetric distribution centered near zero."),
+                        .("marked skewness, multiple peaks, or very long tails."),
+                        .("complement normality tests and review extreme cases.")
                     )
                 )
 
                 self$results$residualNormalCurveGuide$setContent(
                     plot_guide(
-                        "Guía: Distribución observada vs normal teórica",
-                        "comparar la distribución observada de los residuos con una normal teórica.",
-                        "residuos estandarizados del modelo.",
-                        "densidad, es decir, concentración relativa de casos.",
-                        "curva empírica centrada cerca de cero y similar a la campana normal.",
-                        "asimetría, colas pesadas, varios picos o exceso de casos extremos.",
-                        "leer pruebas clásicas con cautela y revisar atípicos, transformación o especificación."
+                        .("Guide: Observed distribution vs theoretical normal curve"),
+                        .("compare the observed residual distribution with a theoretical normal curve."),
+                        .("standardized residuals from the model."),
+                        .("density, that is, the relative concentration of cases."),
+                        .("an empirical curve centered near zero and similar to the normal bell curve."),
+                        .("skewness, heavy tails, multiple peaks, or too many extreme cases."),
+                        .("read classical tests cautiously and review outliers, transformation, or specification.")
                     )
                 )
 
                 self$results$scaleLocationGuide$setContent(
                     plot_guide(
-                        "Guía: Scale-location plot",
-                        "evaluar si la dispersión de los residuos se mantiene estable.",
-                        tr("fitted or predicted values from the model.", "valores ajustados o predichos por el modelo."),
-                        "raíz cuadrada del valor absoluto de los residuos estandarizados.",
-                        "banda horizontal con dispersión similar a lo largo del eje X.",
-                        "tendencia ascendente, descendente o forma de embudo.",
-                        "considerar errores robustos, transformación o modelo alternativo."
+                        .("Guide: Scale-location plot"),
+                        .("evaluate whether residual dispersion remains stable."),
+                        .("fitted or predicted values from the model."),
+                        .("square root of the absolute standardized residuals."),
+                        .("a horizontal band with similar dispersion across the X axis."),
+                        .("an increasing trend, decreasing trend, or funnel shape."),
+                        .("consider robust errors, transformation, or an alternative model.")
                     )
                 )
 
                 self$results$numericBoxplotsGuide$setContent(
                     plot_guide(
-                        "Guía: Boxplots de variables numéricas",
-                        "detectar valores atípicos univariados en la variable dependiente y predictores numéricos.",
-                        "variables numéricas incluidas en el diagnóstico.",
-                        "valores observados de cada variable en su escala original.",
-                        "cajas compactas, bigotes razonables y pocos puntos extremos.",
-                        "muchos puntos fuera de bigotes, asimetría fuerte o valores muy alejados.",
-                        "revisar datos extremos antes de interpretar influencia multivariada o residuos."
+                        .("Guide: Numeric variable boxplots"),
+                        .("detect univariate outliers in the dependent variable and numeric predictors."),
+                        .("numeric variables included in the diagnostic."),
+                        .("observed values of each variable on its original scale."),
+                        .("compact boxes, reasonable whiskers, and few extreme points."),
+                        .("many points outside the whiskers, strong skewness, or very distant values."),
+                        .("review extreme values before interpreting multivariate influence or residuals.")
                     )
                 )
 
                 self$results$residualsLeverageGuide$setContent(
                     plot_guide(
-                        "Guía: Residuos studentizados vs leverage",
-                        "identificar casos con combinación de residuo extremo y alto leverage.",
-                        "leverage, o distancia del caso respecto al centro del espacio de predictores.",
-                        "residuo studentizado, que expresa qué tan extremo es el error del caso.",
-                        "la mayoría de casos cerca de cero y con leverage bajo.",
-                        "casos con residuo studentizado grande, leverage alto o Cook's D elevado.",
-                        "revisar datos influyentes y comparar análisis de sensibilidad."
+                        .("Guide: Studentized residuals vs leverage"),
+                        .("identify cases combining extreme residuals and high leverage."),
+                        .("leverage, or the case distance from the center of the predictor space."),
+                        .("studentized residual, which indicates how extreme the case error is."),
+                        .("most cases near zero and with low leverage."),
+                        .("cases with large studentized residuals, high leverage, or elevated Cook's D."),
+                        .("review influential data points and compare sensitivity analyses.")
                     )
                 )
 
                 self$results$cooksDGuide$setContent(
                     plot_guide(
-                        "Guía: Cook's D por caso",
-                        "detectar observaciones que pueden cambiar el ajuste del modelo.",
-                        "número o posición del caso en la base de datos.",
-                        "distancia de Cook, indicador de influencia global.",
-                        "barras pequeñas y por debajo de la línea de referencia.",
-                        "casos con Cook's D por encima del umbral visual.",
-                        "verificar plausibilidad del caso y documentar análisis con/sin casos influyentes."
+                        .("Guide: Cook's D by case"),
+                        .("detect observations that may change model fit."),
+                        .("case number or position in the data set."),
+                        .("Cook's distance, an indicator of global influence."),
+                        .("small bars below the reference line."),
+                        .("cases with Cook's D above the visual threshold."),
+                        .("check case plausibility and document analyses with and without influential cases.")
                     )
                 )
 
                 self$results$observedPredictedGuide$setContent(
                     plot_guide(
-                        "Guía: Valores observados vs predichos",
-                        "evaluar la correspondencia entre valores reales y predicciones del modelo.",
-                        "valores predichos por el modelo.",
-                        "valores observados de la variable dependiente.",
-                        "puntos cercanos a la línea diagonal de predicción perfecta.",
-                        "dispersión amplia, patrones curvos o sesgo sistemático.",
-                        "revisar capacidad predictiva, especificación del modelo y posibles términos adicionales."
+                        .("Guide: Observed vs predicted values"),
+                        .("evaluate the correspondence between observed values and model predictions."),
+                        .("values predicted by the model."),
+                        .("observed values of the dependent variable."),
+                        .("points close to the diagonal line of perfect prediction."),
+                        .("wide dispersion, curved patterns, or systematic bias."),
+                        .("review predictive ability, model specification, and possible additional terms.")
                     )
                 )
             } else {
@@ -2715,7 +2011,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 self$results$observedPredictedGuide$setContent("")
             }
 
-            self$results$transformationsGuide$setContent(html_guide(tr("Exploratory transformations", "Transformaciones exploratorias"), "regression", "transformationsGuide"))
+            self$results$transformationsGuide$setContent(html_guide(.("Exploratory transformations"), "regression", "transformationsGuide"))
 
             trans_i <- 1
             trans_results <- list()
@@ -2837,7 +2133,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         label, applicability, suggested_criterion,
                         NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_,
                         NA_real_, NA_real_,
-                        tr("Not computed", "No calculado"), tr("Not computed", "No calculado")
+                        .("Not computed"), .("Not computed")
                     )
                     return(invisible(NULL))
                 }
@@ -2857,7 +2153,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         label, applicability, suggested_criterion,
                         NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_,
                         NA_real_, NA_real_,
-                        tr("Not computed", "No calculado"), tr("Not computed", "No calculado")
+                        .("Not computed"), .("Not computed")
                     )
                     return(invisible(NULL))
                 }
@@ -2881,20 +2177,20 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 variance_ok <- !is.na(diag$bp_p) && diag$bp_p >= .05
 
                 norm_eval <- if (label == "Original") {
-                    tr("Reference", "Referencia")
+                    .("Reference")
                 } else if (normality_total > 0 &&
                            normality_ok >= ceiling(normality_total / 2)) {
-                    tr("Possible improvement", "Mejora posible")
+                    .("Possible improvement")
                 } else {
-                    tr("No clear improvement", "Sin mejora clara")
+                    .("No clear improvement")
                 }
 
                 fit_eval <- if (label == "Original") {
-                    tr("Reference", "Referencia")
+                    .("Reference")
                 } else if (variance_ok) {
-                    tr("Compatible with constant variance", "Compatible con varianza constante")
+                    .("Compatible with constant variance")
                 } else {
-                    tr("Review residual variance", "Revisar varianza residual")
+                    .("Review residual variance")
                 }
 
                 add_transformation(
@@ -2919,25 +2215,25 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             eval_transformed_model(
                 y_original,
                 "Original",
-                tr("Always applicable", "Siempre aplicable"),
-                tr("Reference model", "Modelo de referencia")
+                .("Always applicable"),
+                .("Reference model")
             )
 
             if (all(y_original > 0, na.rm = TRUE)) {
                 eval_transformed_model(
                     log(y_original),
                     paste0("log(", dep, ")"),
-                    paste0(tr("Applicable: ", "Aplicable: "), dep, " > 0"),
-                    tr("Marked/severe positive skewness", "Asimetría positiva marcada/severa")
+                    sprintf(.("Applicable: %s > 0"), dep),
+                    .("Marked/severe positive skewness")
                 )
             } else {
                 add_transformation(
                     paste0("log(", dep, ")"),
                     paste0("No aplicable: ", dep, " debe ser > 0"),
-                    tr("Marked/severe positive skewness", "Asimetría positiva marcada/severa"),
+                    .("Marked/severe positive skewness"),
                     NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_,
                     NA_real_, NA_real_,
-                    tr("Not computed", "No calculado"), tr("Not computed", "No calculado")
+                    .("Not computed"), .("Not computed")
                 )
             }
 
@@ -2945,17 +2241,17 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 eval_transformed_model(
                     sqrt(y_original),
                     paste0("sqrt(", dep, ")"),
-                    paste0(tr("Applicable: ", "Aplicable: "), dep, " >= 0"),
-                    tr("Mild/moderate positive skewness", "Asimetría positiva leve/moderada")
+                    sprintf(.("Applicable: %s >= 0"), dep),
+                    .("Mild/moderate positive skewness")
                 )
             } else {
                 add_transformation(
                     paste0("sqrt(", dep, ")"),
                     paste0("No aplicable: ", dep, " debe ser >= 0"),
-                    tr("Mild/moderate positive skewness", "Asimetría positiva leve/moderada"),
+                    .("Mild/moderate positive skewness"),
                     NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_,
                     NA_real_, NA_real_,
-                    tr("Not computed", "No calculado"), tr("Not computed", "No calculado")
+                    .("Not computed"), .("Not computed")
                 )
             }
 
@@ -2963,34 +2259,34 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 eval_transformed_model(
                     1 / y_original,
                     paste0("1/", dep),
-                    paste0(tr("Applicable: ", "Aplicable: "), dep, " != 0"),
-                    tr("Very severe positive skewness", "Asimetría positiva muy severa")
+                    sprintf(.("Applicable: %s != 0"), dep),
+                    .("Very severe positive skewness")
                 )
             } else {
                 add_transformation(
                     paste0("1/", dep),
                     paste0("No aplicable: ", dep, " no debe contener ceros"),
-                    tr("Very severe positive skewness", "Asimetría positiva muy severa"),
+                    .("Very severe positive skewness"),
                     NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_,
                     NA_real_, NA_real_,
-                    tr("Not computed", "No calculado"), tr("Not computed", "No calculado")
+                    .("Not computed"), .("Not computed")
                 )
             }
 
             transformation_value <- function(index, field, digits = 3) {
                 if (length(trans_results) < index)
-                    return(tr("Not computed", "No calculado"))
+                    return(.("Not computed"))
 
                 value <- trans_results[[index]][[field]]
 
                 if (is.null(value))
-                    return(tr("Not computed", "No calculado"))
+                    return(.("Not computed"))
 
                 if (is.numeric(value)) {
                     value <- clean_num(value)
 
                     if (is.na(value))
-                        return(tr("Not computed", "No calculado"))
+                        return(.("Not computed"))
 
                     if (field %in% c("shapiroP", "ksP", "adP", "jbP", "skewP", "kurtP", "bpP")) {
                         if (value < .001)
@@ -3022,14 +2318,14 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             add_transformation_row(
                 self$results$transformationNormality,
                 "norm_applicability",
-                tr("Applicability", "Aplicabilidad"),
+                .("Applicability"),
                 "applicability"
             )
 
             add_transformation_row(
                 self$results$transformationNormality,
                 "norm_criterion",
-                tr("Suggested criterion", "Criterio sugerido"),
+                .("Suggested criterion"),
                 "suggestedCriterion"
             )
 
@@ -3078,21 +2374,21 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             add_transformation_row(
                 self$results$transformationNormality,
                 "norm_eval",
-                tr("Evaluation", "Evaluación"),
+                .("Evaluation"),
                 "normEval"
             )
 
             add_transformation_row(
                 self$results$transformationFit,
                 "fit_applicability",
-                tr("Applicability", "Aplicabilidad"),
+                .("Applicability"),
                 "applicability"
             )
 
             add_transformation_row(
                 self$results$transformationFit,
                 "fit_criterion",
-                tr("Suggested criterion", "Criterio sugerido"),
+                .("Suggested criterion"),
                 "suggestedCriterion"
             )
 
@@ -3106,14 +2402,14 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             add_transformation_row(
                 self$results$transformationFit,
                 "fit_adj_r2",
-                tr("Adjusted R²", "R² ajustado"),
+                .("Adjusted R²"),
                 "adjR2"
             )
 
             add_transformation_row(
                 self$results$transformationFit,
                 "fit_eval",
-                tr("Evaluation", "Evaluación"),
+                .("Evaluation"),
                 "fitEval"
             )
 
@@ -3124,138 +2420,57 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # -----------------------------------------------------------------------------
             # ------------------------------------------------------------
 
-            self$results$robustOptionsGuide$setContent(html_guide(tr("Robust and resampling options", "Opciones robustas y de remuestreo"), "regression", "robustOptionsGuide"))
+            self$results$robustOptionsGuide$setContent(html_guide(.("Robust and resampling options"), "regression", "robustOptionsGuide"))
 
             robust_text <- character()
 
             if (exists("homo_problem") && isTRUE(homo_problem)) {
                 robust_text <- c(
                     robust_text,
-                    if (lang == "es") {
-                        paste(
-                            "Varianza residual no constante.",
-                            "Una o más pruebas sugieren heterocedasticidad o cambios en la varianza de los residuos.",
-                            "Esto no invalida automáticamente el modelo, pero puede afectar errores estándar, intervalos",
-                            "de confianza y valores p.",
-                            "Considere errores estándar robustos HC3, transformación de la dependiente o un modelo",
-                            "alternativo si la conclusión cambia."
-                        )
-                    } else {
-                        paste(
-                            "Nonconstant residual variance.",
-                            "One or more tests suggest heteroscedasticity or changes in residual variance.",
-                            "This does not automatically invalidate the model, but it may affect standard errors,",
-                            "confidence intervals and p-values.",
-                            "Consider HC3 robust standard errors, transforming the dependent variable or an alternative",
-                            "model if the conclusion changes."
-                        )
-                    }
+                    .("Nonconstant residual variance. One or more tests suggest heteroscedasticity or changes in residual variance. This does not automatically invalidate the model, but it may affect standard errors, confidence intervals and p-values. Consider HC3 robust standard errors, transforming the dependent variable or an alternative model if the conclusion changes.")
                 )
             }
 
             if (exists("linearity_problem") && isTRUE(linearity_problem)) {
                 robust_text <- c(
                     robust_text,
-                    if (lang == "es") {
-                        paste(
-                            "Posible no linealidad.",
-                            "Algún diagnóstico sugiere que la relación entre predictores y respuesta podría no ser",
-                            "completamente lineal.",
-                            "Revise gráficos de residuos y considere términos polinómicos, transformaciones, splines",
-                            "o un modelo no lineal si la curvatura tiene sentido sustantivo."
-                        )
-                    } else {
-                        paste(
-                            "Possible nonlinearity.",
-                            "At least one diagnostic suggests that the relationship between predictors and the outcome",
-                            "may not be fully linear.",
-                            "Review residual plots and consider polynomial terms, transformations, splines or a nonlinear",
-                            "model if the curvature is substantively meaningful."
-                        )
-                    }
+                    .("Possible nonlinearity. At least one diagnostic suggests that the relationship between predictors and the outcome may not be fully linear. Review residual plots and consider polynomial terms, transformations, splines or a nonlinear model if the curvature is substantively meaningful.")
                 )
             }
 
             if (exists("influence_problem") && isTRUE(influence_problem)) {
                 robust_text <- c(
                     robust_text,
-                    if (lang == "es") {
-                        paste(
-                            "Casos atípicos o influyentes.",
-                            "Algún caso activó criterios numéricos de influencia o atipicidad.",
-                            "La recomendación no es eliminarlo automáticamente, sino revisar el dato original, documentar",
-                            "su plausibilidad y comparar análisis de sensibilidad con y sin esos casos."
-                        )
-                    } else {
-                        paste(
-                            "Outlying or influential cases.",
-                            "At least one case activated numerical influence or outlier criteria.",
-                            "The recommendation is not automatic deletion, but reviewing the original value, documenting",
-                            "its plausibility and comparing sensitivity analyses with and without those cases."
-                        )
-                    }
+                    .("Outlying or influential cases. At least one case activated numerical influence or outlier criteria. The recommendation is not automatic deletion, but reviewing the original value, documenting its plausibility and comparing sensitivity analyses with and without those cases.")
                 )
             }
 
             if (length(robust_text) == 0) {
                 robust_text <- c(
                     robust_text,
-                    if (lang == "es") {
-                        paste(
-                            "No se detectaron señales fuertes que obliguen a abandonar el modelo lineal clásico.",
-                            "Aun así, la decisión debe considerar gráficos, diseño del estudio, tamaño muestral y sentido",
-                            "sustantivo de los coeficientes."
-                        )
-                    } else {
-                        paste(
-                            "No strong signals were detected that force abandoning the classical linear model.",
-                            "Even so, the decision should consider plots, study design, sample size and the substantive",
-                            "meaning of the coefficients."
-                        )
-                    }
+                    .("No strong signals were detected that force abandoning the classical linear model. Even so, the decision should consider plots, study design, sample size and the substantive meaning of the coefficients.")
                 )
             }
 
             self$results$robustOptionsText$setContent(
                 html_block(
-                    tr("Methodological interpretation of robust options",
-                       "Interpretación metodológica de opciones robustas"),
+                    .("Methodological interpretation of robust options"),
                     robust_text
                 )
             )
 
-            recommendation <- paste(
-                tr("The linear regression model can be interpreted cautiously,",
-                   "El modelo de regresión lineal puede interpretarse con cautela,"),
-                tr("while reviewing the reported diagnostics.",
-                   "revisando los diagnósticos reportados.")
-            )
+            recommendation <- .("The linear regression model can be interpreted cautiously, while reviewing the reported diagnostics.")
 
             if (homo_problem) {
-                recommendation <- paste(
-                    tr("There is evidence of nonconstant residual variance; consider robust standard errors,",
-                       "Hay evidencia de varianza residual no constante; considerar errores estándar"),
-                    tr("transforming the dependent variable, or using an alternative model.",
-                       "robustos, transformación de la dependiente o modelo alternativo.")
-                )
+                recommendation <- .("There is evidence of nonconstant residual variance; consider robust standard errors, transforming the dependent variable, or using an alternative model.")
             }
 
             if (auto_problem) {
-                recommendation <- paste(
-                    tr("There are signs of autocorrelation or residual patterning; consider",
-                       "Hay señales de autocorrelación o patrón en residuos; considerar"),
-                    tr("temporal structure, HAC/Newey-West errors, or GLS models.",
-                       "estructura temporal, errores HAC/Newey-West o modelos GLS.")
-                )
+                recommendation <- .("There are signs of autocorrelation or residual patterning; consider temporal structure, HAC/Newey-West errors, or GLS models.")
             }
 
             if (severe_col_problem) {
-                recommendation <- paste(
-                    tr("There is severe multicollinearity; review redundant predictors",
-                       "Hay multicolinealidad severa; revisar predictores redundantes"),
-                    tr("before interpreting coefficients.",
-                       "antes de interpretar coeficientes.")
-                )
+                recommendation <- .("There is severe multicollinearity; review redundant predictors before interpreting coefficients.")
             }
 
             # Residual non-normality mainly threatens the precision of classical
@@ -3275,33 +2490,21 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (normality_small_n_problem && !homo_problem && !auto_problem &&
                 !severe_col_problem) {
-                recommendation <- paste(
-                    tr("There is evidence of non-normal residuals in a small sample, where the Central Limit Theorem cannot yet be relied on; consider",
-                       "Hay evidencia de residuos no normales en una muestra pequeña, donde todavía no puede confiarse en el Teorema Central del Límite; considerar"),
-                    tr("a bootstrap confidence interval, a nonparametric alternative, or reporting classical inference with explicit caution.",
-                       "un intervalo de confianza bootstrap, una alternativa no paramétrica, o reportar la inferencia clásica con cautela explícita.")
-                )
+                recommendation <- .("There is evidence of non-normal residuals in a small sample, where the Central Limit Theorem cannot yet be relied on; consider a bootstrap confidence interval, a nonparametric alternative, or reporting classical inference with explicit caution.")
             }
 
             if (influence_problem && !homo_problem && !auto_problem &&
                 !severe_col_problem && !normality_small_n_problem) {
-                recommendation <- paste(
-                    tr("There are outlying or influential cases; inspect them before",
-                       "Existen casos atípicos o influyentes; inspeccionarlos antes de"),
-                    tr("making decisions about the model.",
-                       "tomar decisiones sobre el modelo.")
-                )
+                recommendation <- .("There are outlying or influential cases; inspect them before making decisions about the model.")
             }
 
             self$results$notes$setContent(
                 html_block(
-                    tr("Notes and recommendation", "Notas y recomendación"),
+                    .("Notes and recommendation"),
                     c(
-                        paste0(if (lang == "es") "Decisión sugerida: " else "Suggested decision: ", recommendation),
-                        tr("Significance codes: * p < .05, ** p < .01, *** p < .001.",
-                           "Códigos de significancia: * p < .05, ** p < .01, *** p < .001."),
-                        tr("Statistical symbols are kept in international format: n, R², p, df, VIF.",
-                           "Los símbolos estadísticos se mantienen en formato internacional: n, R², p, df, VIF.")
+                        sprintf(.("Suggested decision: %s"), recommendation),
+                        .("Significance codes: * p < .05, ** p < .01, *** p < .001."),
+                        .("Statistical symbols are kept in international format: n, R², p, df, VIF.")
                     )
                 )
 
@@ -3310,14 +2513,12 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .requirePlotData = function(image) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(private$.plotTr(
-                    "The ggplot2 package is required to draw diagnostic plots.",
-                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
-                ))
+                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
                 return(FALSE)
             }
 
@@ -3327,10 +2528,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # segura para exportación (ver el comentario de setState() en
             # .run()).
             if (is.null(image$state)) {
-                image$setError(private$.plotTr(
-                    "No diagnostic plot data are available.",
-                    "No hay datos disponibles para este gráfico diagnóstico."
-                ))
+                image$setError(.("No diagnostic plot data are available."))
                 return(FALSE)
             }
 
@@ -3338,36 +2536,23 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .requireCorrPlotData = function(image) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(private$.plotTr(
-                    "The ggplot2 package is required to draw diagnostic plots.",
-                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
-                ))
+                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
                 return(FALSE)
             }
 
             if (is.null(image$state) || length(image$state$corrPairResults) == 0) {
-                image$setError(private$.plotTr(
-                    "Not enough numeric variables are available for this plot.",
-                    "No hay suficientes variables numéricas para este gráfico."
-                ))
+                image$setError(.("Not enough numeric variables are available for this plot."))
                 return(FALSE)
             }
 
             TRUE
         },
 
-        .plotTr = function(en, es) {
-            lang <- .al_normalize_lang(self$options$reportLang)
-
-            if (identical(lang, "es"))
-                es
-            else
-                en
-        },
 
         # Plot theme/palette migrated to jamovi's native ggtheme/theme
         # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
@@ -3503,6 +2688,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResidualsFitted = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -3523,8 +2709,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(alpha = 0.75, size = 1.6,
                                     color = pal$point) +
                 ggplot2::labs(
-                    x = private$.plotTr("Fitted values", "Valores ajustados"),
-                    y = private$.plotTr("Residuals", "Residuos")
+                    x = .("Fitted values"),
+                    y = .("Residuals")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -3535,6 +2721,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotPredictorEffects = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -3542,20 +2729,14 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             d <- image$state
 
             if (is.null(d) || nrow(d) == 0) {
-                image$setError(private$.plotTr(
-                    "No numeric predictor effects are available.",
-                    "No hay efectos de predictores numéricos disponibles."
-                ))
+                image$setError(.("No numeric predictor effects are available."))
                 return()
             }
 
             d <- d[is.finite(d$predictorZ) & is.finite(d$predicted), , drop = FALSE]
 
             if (nrow(d) == 0) {
-                image$setError(private$.plotTr(
-                    "No finite predictor effects are available.",
-                    "No hay efectos de predictores con valores finitos disponibles."
-                ))
+                image$setError(.("No finite predictor effects are available."))
                 return()
             }
 
@@ -3571,15 +2752,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     color = pal$ref
                 ) +
                 ggplot2::labs(
-                    x = private$.plotTr(
-                        "Predictor value in standard deviations",
-                        "Valor del predictor en desviaciones estándar"
-                    ),
-                    y = private$.plotTr(
-                        "Predicted dependent variable",
-                        "Variable dependiente predicha"
-                    ),
-                    color = private$.plotTr("Predictor", "Predictor")
+                    x = .("Predictor value in standard deviations"),
+                    y = .("Predicted dependent variable"),
+                    color = .("Predictor")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -3593,6 +2768,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotQQResiduals = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -3635,8 +2811,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     alpha = 0.75, size = 1.6, show.legend = FALSE
                 ) +
                 ggplot2::labs(
-                    x = private$.plotTr("Theoretical quantiles", "Cuantiles teóricos"),
-                    y = private$.plotTr("Standardized residuals", "Residuos estandarizados")
+                    x = .("Theoretical quantiles"),
+                    y = .("Standardized residuals")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -3657,6 +2833,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResidualHistogram = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -3696,8 +2873,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot <- plot +
                 ggplot2::labs(
-                    x = private$.plotTr("Standardized residuals", "Residuos estandarizados"),
-                    y = private$.plotTr("Count", "Frecuencia")
+                    x = .("Standardized residuals"),
+                    y = .("Count")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -3705,6 +2882,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResidualNormalCurve = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -3713,10 +2891,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             d <- d[is.finite(d$stdResidual), , drop = FALSE]
 
             if (nrow(d) < 3) {
-                image$setError(private$.plotTr(
-                    "At least three residuals are required for this plot.",
-                    "Se requieren al menos tres residuos para este gráfico."
-                ))
+                image$setError(.("At least three residuals are required for this plot."))
                 return()
             }
 
@@ -3727,7 +2902,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             normal_df <- data.frame(
                 stdResidual = x_grid,
                 density = stats::dnorm(x_grid, mean = 0, sd = 1),
-                curve = private$.plotTr("Theoretical normal N(0, 1)", "Normal teórica N(0, 1)"),
+                curve = .("Theoretical normal N(0, 1)"),
                 stringsAsFactors = FALSE
             )
 
@@ -3749,8 +2924,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ) +
                 ggplot2::scale_linetype_manual(values = "dashed", name = NULL) +
                 ggplot2::labs(
-                    x = private$.plotTr("Standardized residuals", "Residuos estandarizados"),
-                    y = private$.plotTr("Density", "Densidad")
+                    x = .("Standardized residuals"),
+                    y = .("Density")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -3758,6 +2933,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotScaleLocation = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -3769,8 +2945,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(alpha = 0.75, size = 1.6,
                                     color = pal$point) +
                 ggplot2::labs(
-                    x = private$.plotTr("Fitted values", "Valores ajustados"),
-                    y = private$.plotTr("sqrt(|standardized residuals|)", "sqrt(|residuos estandarizados|)")
+                    x = .("Fitted values"),
+                    y = .("sqrt(|standardized residuals|)")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -3784,6 +2960,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotNumericBoxplots = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -3791,29 +2968,15 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             d <- image$state
 
             if (is.null(d) || nrow(d) == 0) {
-                image$setError(private$.plotTr(
-                    "No numeric variables are available for boxplots.",
-                    "No hay variables numéricas disponibles para los diagramas de caja."
-                ))
+                image$setError(.("No numeric variables are available for boxplots."))
                 return()
             }
 
             d <- d[is.finite(d$value), , drop = FALSE]
 
             if (nrow(d) == 0) {
-                image$setError(private$.plotTr(
-                    "No finite numeric values are available for boxplots.",
-                    "No hay valores numéricos finitos disponibles para los diagramas de caja."
-                ))
+                image$setError(.("No finite numeric values are available for boxplots."))
                 return()
-            }
-
-            lang <- .al_normalize_lang(self$options$reportLang)
-            lab <- function(en, es) {
-                if (lang == "es")
-                    es
-                else
-                    en
             }
 
             split_values <- split(d$value, d$variable)
@@ -3875,16 +3038,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (similar_scale) {
                 plot <- base_plot +
                     ggplot2::labs(
-                        title = lab(
-                            "Boxplots of dependent variable and numeric predictors",
-                            "Boxplots de la variable dependiente y predictores numéricos"
-                        ),
-                        subtitle = lab(
-                            "Common Y scale for direct comparison across variables.",
-                            "Escala Y común para comparación directa entre variables."
-                        ),
-                        x = lab("Variable", "Variable"),
-                        y = lab("Observed values", "Valores observados")
+                        title = .("Boxplots of dependent variable and numeric predictors"),
+                        subtitle = .("Common Y scale for direct comparison across variables."),
+                        x = .("Variable"),
+                        y = .("Observed values")
                     ) +
                     ggplot2::theme(
                         axis.text.x = ggplot2::element_text(angle = 25, hjust = 1)
@@ -3896,19 +3053,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         scales = "free_y"
                     ) +
                     ggplot2::labs(
-                        title = lab(
-                            "Boxplots of dependent variable and numeric predictors",
-                            "Boxplots de la variable dependiente y predictores numéricos"
-                        ),
-                        subtitle = lab(
-                            "Free Y scales are used because the variables have notably different magnitudes.",
-                            "Se usan escalas Y libres porque las variables tienen magnitudes claramente diferentes."
-                        ),
+                        title = .("Boxplots of dependent variable and numeric predictors"),
+                        subtitle = .("Free Y scales are used because the variables have notably different magnitudes."),
                         x = NULL,
-                        y = lab(
-                            "Observed values in original scale",
-                            "Valores observados en escala original"
-                        )
+                        y = .("Observed values in original scale")
                     ) +
                     ggplot2::theme(
                         axis.text.x = ggplot2::element_blank(),
@@ -3921,6 +3069,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResidualsLeverage = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -3954,8 +3103,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                     color = pal$point) +
                 ggplot2::scale_size_continuous(name = "Cook's D", range = c(1.2, 4)) +
                 ggplot2::labs(
-                    x = private$.plotTr("Leverage", "Leverage"),
-                    y = private$.plotTr("Studentized residuals", "Residuos studentizados")
+                    x = .("Leverage"),
+                    y = .("Studentized residuals")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -3983,6 +3132,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotCooksD = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -4005,8 +3155,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             plot <- plot +
                 ggplot2::labs(
-                    x = private$.plotTr("Case", "Caso"),
-                    y = private$.plotTr("Cook's D", "Cook's D")
+                    x = .("Case"),
+                    y = .("Cook's D")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -4033,6 +3183,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotCorrelationIndividual = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requireCorrPlotData(image))
                 return()
 
@@ -4073,10 +3224,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             rows <- rows[!vapply(rows, is.null, logical(1))]
 
             if (length(rows) == 0) {
-                image$setError(private$.plotTr(
-                    "Not enough data to draw this plot.",
-                    "No hay suficientes datos para este gráfico."
-                ))
+                image$setError(.("Not enough data to draw this plot."))
                 return()
             }
 
@@ -4107,8 +3255,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             plot <- plot +
                 ggplot2::facet_wrap(~pairLabel, scales = "free") +
                 ggplot2::labs(
-                    x = private$.plotTr("Standardized value (variable 1)", "Valor estandarizado (variable 1)"),
-                    y = private$.plotTr("Standardized value (variable 2)", "Valor estandarizado (variable 2)")
+                    x = .("Standardized value (variable 1)"),
+                    y = .("Standardized value (variable 2)")
                 ) +
                 ggtheme + private$.plotThemeExtra() +
                 ggplot2::theme(strip.text = ggplot2::element_text(size = 8))
@@ -4127,16 +3275,17 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     "TRUE" = pal$alert
                 ),
                 labels = c(
-                    "FALSE" = private$.plotTr("Concordant", "Concordante"),
-                    "TRUE" = private$.plotTr("Notable gap", "Brecha notable")
+                    "FALSE" = .("Concordant"),
+                    "TRUE" = .("Notable gap")
                 ),
-                name = private$.plotTr("Pearson/dCor gap", "Brecha Pearson/dCor")
+                name = .("Pearson/dCor gap")
             )
 
             print(plot)
         },
 
         .plotCorrelationComparative = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requireCorrPlotData(image))
                 return()
 
@@ -4159,10 +3308,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             d <- d[is.finite(d$pearson) & is.finite(d$dcor), , drop = FALSE]
 
             if (nrow(d) == 0) {
-                image$setError(private$.plotTr(
-                    "Not enough data to draw this plot.",
-                    "No hay suficientes datos para este gráfico."
-                ))
+                image$setError(.("Not enough data to draw this plot."))
                 return()
             }
 
@@ -4199,7 +3345,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ggplot2::coord_flip() +
                     ggplot2::labs(
                         x = NULL, fill = NULL,
-                        y = private$.plotTr("Coefficient magnitude", "Magnitud del coeficiente")
+                        y = .("Coefficient magnitude")
                     ) +
                     ggtheme + private$.plotThemeExtra()
 
@@ -4215,7 +3361,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ggplot2::geom_point(ggplot2::aes(x = pearson, color = "Pearson |r|"), size = 2.4) +
                     ggplot2::geom_point(ggplot2::aes(x = dcor, color = "dCor"), size = 2.4) +
                     ggplot2::labs(
-                        x = private$.plotTr("Coefficient magnitude", "Magnitud del coeficiente"),
+                        x = .("Coefficient magnitude"),
                         y = NULL, color = NULL
                     ) +
                     ggtheme + private$.plotThemeExtra()
@@ -4228,6 +3374,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotObservedPredicted = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlotData(image))
                 return()
 
@@ -4243,8 +3390,8 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                     color = pal$point) +
                 ggplot2::coord_equal(xlim = lims, ylim = lims) +
                 ggplot2::labs(
-                    x = private$.plotTr("Predicted values", "Valores predichos"),
-                    y = private$.plotTr("Observed values", "Valores observados")
+                    x = .("Predicted values"),
+                    y = .("Observed values")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 

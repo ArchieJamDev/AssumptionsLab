@@ -75,20 +75,6 @@ options:
       - factor
     default: null
 
-  # Selects which language's text bank (see texts.R) is used to render
-  # every guide, interpretation, and table/column title in the report.
-  # ES: Selecciona qué banco de textos (ver texts.R) se usa para renderizar
-  # cada guía, interpretación y título de tabla/columna en el informe.
-  - name: reportLang
-    title: Report Language
-    type: List
-    options:
-      - title: English
-        name: en
-      - title: Español
-        name: es
-    default: en
-
   # Master switch for the whole diagnostic-plots block. Unchecking it
   # produces a text-only report (useful for a quick methodological read,
   # or when plots are not needed for the target audience).

@@ -54,7 +54,7 @@
 # Responsibilities
 # 1. Read the selected series, model, and seasonal frequency.
 # 2. Resolve every section's text via the shared .al_text() repository
-#    (texts.R, section "time") and wire bilingual result/column titles.
+#    (texts.R, section "time"), translated through `.()`.
 # 3. Populate the static model profile and assumption/condition tables.
 # 4. Run the minimum recommended diagnostic battery for the selected model,
 #    classify each result into a graded evidence tier, and attach a concrete
@@ -65,8 +65,7 @@
 # ES: Responsabilidades
 # 1. Leer la serie seleccionada, el modelo y la frecuencia estacional.
 # 2. Resolver el texto de cada sección vía el repositorio compartido
-#    .al_text() (texts.R, sección "time") y cablear los títulos de resultado
-#    y de columna bilingües.
+#    .al_text() (texts.R, sección "time"), traducido con `.()`.
 # 3. Poblar las tablas estáticas de perfil del modelo y de supuestos/
 #    condiciones.
 # 4. Ejecutar la batería mínima de diagnóstico recomendada para el modelo
@@ -79,7 +78,7 @@
 # Workflow
 # 1. Read the selected series, model, exogenous variables, and seasonal
 #    frequency.
-# 2. Wire the bilingual text and the shared statistical/diagnostic
+# 2. Bind the translator `.` and the shared statistical/diagnostic
 #    helpers.
 # 3. Populate the model profile and the static assumption/condition
 #    matrix for the selected model.
@@ -98,7 +97,7 @@
 # ES: Flujo de trabajo
 # 1. Leer la serie o series seleccionadas, el modelo, las variables
 #    exógenas y la frecuencia estacional.
-# 2. Cablear el texto bilingüe y los auxiliares estadísticos/diagnósticos
+# 2. Enlazar el traductor `.` y los auxiliares estadísticos/diagnósticos
 #    compartidos.
 # 3. Poblar el perfil del modelo y la matriz estática de supuestos/
 #    condiciones para el modelo seleccionado.
@@ -150,12 +149,12 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.plotN <- NULL
 
             # -----------------------------------------------------------------------------
-            # Bilingual wiring (AssumptionsLab standard — see regCheck/pathCheck).
-            # ES: Cableado bilingüe (estándar AssumptionsLab — ver regCheck/pathCheck).
+            # Translator for this run (AssumptionsLab standard, see shared-helpers.R).
+            # ES: Traductor de esta ejecución (estándar AssumptionsLab).
             # -----------------------------------------------------------------------------
-            lang <- .al_normalize_lang(self$options$reportLang)
+            lang <- .al_lang(self$options)
 
-            tr <- function(en, es) .al_tr(lang, en, es)
+            . <- lang$tr
 
             txt <- function(section, key) {
                 .al_text(lang, section, key)
@@ -200,7 +199,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             classify <- function(p, direction = "low_bad") {
                 if (is.null(p) || length(p) == 0 || is.na(p))
-                    return(list(tier = "na", label = tr("Not computable", "No calculable")))
+                    return(list(tier = "na", label = .("Not computable")))
                 p <- as.numeric(p)
                 if (identical(direction, "low_good")) {
                     # H0 is the deviation itself (e.g. "unit root present"). Rejecting
@@ -225,9 +224,9 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     else tier <- "clear"
                 }
                 label <- switch(tier,
-                    none = tr("No evidence against", "Sin evidencia de incumplimiento"),
-                    moderate = tr("Moderate evidence", "Evidencia moderada"),
-                    clear = tr("Clear evidence of deviation", "Evidencia clara de incumplimiento")
+                    none = .("No evidence against"),
+                    moderate = .("Moderate evidence"),
+                    clear = .("Clear evidence of deviation")
                 )
                 list(tier = tier, label = label)
             }
@@ -387,7 +386,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (is.null(templ$mixed)) return(NULL)
                     dissenting <- tests[tiers != "none"]
                     n_agree <- sum(tiers == "none")
-                    verb <- if (length(dissenting) == 1) tr("does", "señala") else tr("do", "señalan")
+                    verb <- if (length(dissenting) == 1) .("does") else .("do")
                     sprintf(templ$mixed, n_agree, n, paste(dissenting, collapse = ", "), verb)
                 }
             }
@@ -421,14 +420,11 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 all_tiers <- vapply(synthesis_rows, function(r) r$tier, character(1))
                 closing <- if (any(all_tiers == "clear"))
-                    tr("Taken together, at least one diagnostic area shows clear evidence of deviation and should be addressed before relying on this fit.",
-                       "En conjunto, al menos un área de diagnóstico muestra evidencia clara de incumplimiento y debería atenderse antes de confiar en este ajuste.")
+                    .("Taken together, at least one diagnostic area shows clear evidence of deviation and should be addressed before relying on this fit.")
                 else if (any(all_tiers == "moderate"))
-                    tr("Taken together, the evidence is mixed: some diagnostics raise moderate concerns worth reviewing.",
-                       "En conjunto, la evidencia es mixta: algunos diagnósticos plantean dudas moderadas que conviene revisar.")
+                    .("Taken together, the evidence is mixed: some diagnostics raise moderate concerns worth reviewing.")
                 else
-                    tr("Taken together, the diagnostic battery shows no clear evidence against the assumptions checked for this model.",
-                       "En conjunto, la batería de diagnóstico no muestra evidencia clara en contra de los supuestos revisados para este modelo.")
+                    .("Taken together, the diagnostic battery shows no clear evidence against the assumptions checked for this model.")
 
                 paste(c(paragraphs, closing), collapse = " ")
             }
@@ -439,10 +435,10 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                    footnote = NULL) {
                 if (!is.null(tier_override)) {
                     default_label <- switch(tier_override,
-                        none = tr("No evidence against", "Sin evidencia de incumplimiento"),
-                        moderate = tr("Moderate evidence", "Evidencia moderada"),
-                        clear = tr("Clear evidence of deviation", "Evidencia clara de incumplimiento"),
-                        tr("Informational", "Informativo")
+                        none = .("No evidence against"),
+                        moderate = .("Moderate evidence"),
+                        clear = .("Clear evidence of deviation"),
+                        .("Informational")
                     )
                     cl <- list(tier = tier_override,
                                label = if (!is.null(evidence_override)) evidence_override else default_label)
@@ -465,13 +461,12 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (show_action && !is.null(action_key)) {
                     action_entry <- if (!is.null(model_actions)) model_actions[[action_key]] else NULL
                     connector <- switch(cl$tier,
-                        clear = tr("It is recommended to ", "Se recomienda "),
-                        moderate = tr("It may be worth considering ", "Podría valorarse "),
-                        tr("It may be advisable to consider ", "Conviene considerar ")
+                        clear = .("It is recommended to "),
+                        moderate = .("It may be worth considering "),
+                        .("It may be advisable to consider ")
                     )
                     if (is.null(action_entry)) {
-                        action_text <- tr("No specific recommendation is registered for this diagnostic.",
-                                          "No hay una recomendación específica registrada para este diagnóstico.")
+                        action_text <- .("No specific recommendation is registered for this diagnostic.")
                     } else if (is.list(action_entry)) {
                         just <- action_entry$justification
                         sugg <- action_entry$suggestion
@@ -499,100 +494,17 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             push_note <- function(message) {
                 row_idx <- as.integer(length(results_rows) + 1)
                 results_rows[[row_idx]] <<- list(
-                    test = tr("Note", "Nota"),
+                    test = .("Note"),
                     statistic = "\u2014",
                     pvalue = "\u2014",
-                    evidence = tr("See note below", "Ver nota abajo")
+                    evidence = .("See note below")
                 )
                 note_footnotes[[length(note_footnotes) + 1]] <<- list(row = row_idx, text = message)
                 invisible(NULL)
             }
 
-            set_result_titles <- function() {
 
-                set_title_safe <- function(name, en, es) {
-                    element <- tryCatch(self$results[[name]], error = function(e) NULL)
-                    if (is.null(element)) return(invisible(FALSE))
-                    tryCatch(element$setTitle(tr(en, es)), error = function(e) invisible(FALSE))
-                    invisible(TRUE)
-                }
 
-                titles <- list(
-                    c("intro", "Time Series", "Series Temporales"),
-                    c("modelProfile",
-                      "Model methodological profile",
-                      "Perfil metodológico del modelo"),
-                    c("modelDescription", "About this model", "Sobre este modelo"),
-                    c("conditionsMatrix",
-                      "Assumptions and conditions to evaluate",
-                      "Supuestos y condiciones a evaluar"),
-                    c("decisionsMatrix",
-                      "Methodological role and associated decision",
-                      "Función metodológica y decisión asociada"),
-                    c("runNotice", "Notice", "Aviso"),
-                    c("seriesPlot", "Time series", "Serie(s) temporal(es)"),
-                    c("diagnosticsResults", "Test results", "Resultados de las pruebas"),
-                    c("diagnosticsActions",
-                      "Recommended methodological action",
-                      "Acción metodológica recomendada"),
-                    c("acfPlot", "Autocorrelation (ACF)", "Autocorrelación (ACF)"),
-                    c("pacfPlot", "Partial autocorrelation (PACF)", "Autocorrelación parcial (PACF)"),
-                    c("residualsPlot", "Residuals over time", "Residuos en el tiempo"),
-                    c("volatilityPlot", "Estimated conditional volatility", "Volatilidad condicional estimada"),
-                    c("foundations",
-                      "Methodological foundations and references",
-                      "Fundamentos metodológicos y referencias"),
-                    c("interpretation", "Methodological reading", "Lectura metodológica"),
-                    c("implementationNotes", "Scope of this version", "Alcance de esta versión")
-                )
-
-                for (t in titles)
-                    set_title_safe(t[1], t[2], t[3])
-
-                invisible(TRUE)
-            }
-
-            set_table_column_titles <- function() {
-
-                set_col_title_safe <- function(table_name, col_name, en, es) {
-                    table <- tryCatch(self$results[[table_name]], error = function(e) NULL)
-                    if (is.null(table)) return(invisible(FALSE))
-                    column <- tryCatch(table$getColumn(col_name), error = function(e) NULL)
-                    if (is.null(column)) return(invisible(FALSE))
-                    tryCatch(column$setTitle(tr(en, es)), error = function(e) invisible(FALSE))
-                    invisible(TRUE)
-                }
-
-                cols <- list(
-                    c("modelProfile", "element", "Item", "Elemento"),
-                    c("modelProfile", "value", "Value", "Valor"),
-
-                    c("conditionsMatrix", "area", "Area", "Área"),
-                    c("conditionsMatrix", "condition", "Assumption / condition", "Supuesto / condición"),
-                    c("conditionsMatrix", "diagnostic", "Diagnostic", "Diagnóstico"),
-
-                    c("decisionsMatrix", "area", "Area", "Área"),
-                    c("decisionsMatrix", "condition", "Assumption / condition", "Supuesto / condición"),
-                    c("decisionsMatrix", "role", "Methodological role", "Función metodológica"),
-                    c("decisionsMatrix", "decision", "Associated decision", "Decisión asociada"),
-
-                    c("diagnosticsResults", "test", "Test", "Prueba"),
-                    c("diagnosticsResults", "statistic", "Statistic", "Estadístico"),
-                    c("diagnosticsResults", "pvalue", "p", "p"),
-                    c("diagnosticsResults", "evidence", "Evidence", "Evidencia"),
-
-                    c("diagnosticsActions", "test", "Test", "Prueba"),
-                    c("diagnosticsActions", "action", "Recommended action", "Acción recomendada")
-                )
-
-                for (col in cols)
-                    set_col_title_safe(col[1], col[2], col[3], col[4])
-
-                invisible(TRUE)
-            }
-
-            set_result_titles()
-            set_table_column_titles()
 
             # -----------------------------------------------------------------------------
             # Model profile: which series (if any) and which model are active.
@@ -622,7 +534,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (model %in% c("arima", "sarima") && !is.null(exogenous) && length(exogenous) > 0) {
                 profile_table$addRow(rowKey = "exogenous", values = list(
-                    element = tr("External regressors (ARIMAX/SARIMAX)", "Regresores externos (ARIMAX/SARIMAX)"),
+                    element = .("External regressors (ARIMAX/SARIMAX)"),
                     value = paste(exogenous, collapse = ", ")
                 ))
             }
@@ -695,24 +607,16 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             notice <- NULL
 
             if (n_series == 0) {
-                notice <- tr(
-                    "Select at least one time series to run the diagnostics below.",
-                    "Seleccione al menos una serie temporal para ejecutar los diagnósticos siguientes."
-                )
+                notice <- .("Select at least one time series to run the diagnostics below.")
             } else if (n_series < min_series_needed) {
-                notice <- tr(
-                    "VAR and VECM require at least two series. Add another series or choose a univariate model.",
-                    "VAR y VECM requieren al menos dos series. Agregue otra serie o elija un modelo univariado."
-                )
+                notice <- .("VAR and VECM require at least two series. Add another series or choose a univariate model.")
             } else {
                 missing <- missing_pkgs(required_pkgs)
                 if (length(missing) > 0) {
                     notice <- paste0(
-                        tr("This model's diagnostics require the following R package(s), which are not installed: ",
-                           "Los diagnósticos de este modelo requieren el o los siguientes paquetes de R, que no están instalados: "),
+                        .("This model's diagnostics require the following R package(s), which are not installed: "),
                         paste(missing, collapse = ", "),
-                        tr(". Please install them from R before running this diagnostic battery.",
-                           ". Instálelos desde R antes de ejecutar esta batería de diagnóstico.")
+                        .(". Please install them from R before running this diagnostic battery.")
                     )
                 }
             }
@@ -807,32 +711,26 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }
 
                 if (n_complete < n_total) {
-                    push_note(tr(
-                        paste0(n_total - n_complete, " row(s) with missing data were excluded (", n_complete, " of ", n_total, " used)."),
-                        paste0("Se excluyeron ", n_total - n_complete, " fila(s) con datos faltantes (se usaron ", n_complete, " de ", n_total, ").")
-                    ))
+                    push_note(sprintf(.("%s row(s) with missing data were excluded (%s of %s used)."), n_total - n_complete, n_complete, n_total))
                 }
 
                 min_obs <- if (needs_multivariate) 30 else 20
 
                 if (n_complete < min_obs) {
 
-                    push_note(tr(
-                        paste0("Too few complete observations (", n_complete, ") to run this model's diagnostics reliably; at least ", min_obs, " are recommended."),
-                        paste0("Muy pocas observaciones completas (", n_complete, ") para ejecutar con fiabilidad los diagnósticos de este modelo; se recomiendan al menos ", min_obs, ".")
-                    ))
+                    push_note(sprintf(.("Too few complete observations (%s) to run this model's diagnostics reliably; at least %s are recommended."), n_complete, min_obs))
 
                 } else {
 
                     diag_result <- tryCatch({
                         switch(model,
-                            arima = private$.computeArima(series_mat[, 1], freq, tr, push_diag, push_note, arch_lm_test, fmt_stat, xreg_mat),
-                            sarima = private$.computeSarima(series_mat[, 1], freq, tr, push_diag, push_note, arch_lm_test, fmt_stat, xreg_mat),
-                            ets = private$.computeEts(series_mat[, 1], freq, tr, push_diag, push_note, arch_lm_test, fmt_stat),
-                            var = private$.computeVar(series_mat, tr, push_diag, push_note, arch_lm_test, fmt_stat),
-                            vecm = private$.computeVecm(series_mat, tr, push_diag, push_note, arch_lm_test, fmt_stat),
-                            garch = private$.computeGarch(series_mat[, 1], tr, push_diag, push_note, arch_lm_test, fmt_stat),
-                            push_note(tr("Unknown model.", "Modelo desconocido."))
+                            arima = private$.computeArima(series_mat[, 1], freq, ., push_diag, push_note, arch_lm_test, fmt_stat, xreg_mat),
+                            sarima = private$.computeSarima(series_mat[, 1], freq, ., push_diag, push_note, arch_lm_test, fmt_stat, xreg_mat),
+                            ets = private$.computeEts(series_mat[, 1], freq, ., push_diag, push_note, arch_lm_test, fmt_stat),
+                            var = private$.computeVar(series_mat, ., push_diag, push_note, arch_lm_test, fmt_stat),
+                            vecm = private$.computeVecm(series_mat, ., push_diag, push_note, arch_lm_test, fmt_stat),
+                            garch = private$.computeGarch(series_mat[, 1], ., push_diag, push_note, arch_lm_test, fmt_stat),
+                            push_note(.("Unknown model."))
                         )
                         NULL
                     }, error = function(e) {
@@ -840,10 +738,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     })
 
                     if (!is.null(diag_result)) {
-                        push_note(paste0(
-                            tr("The diagnostic battery could not complete: ", "La batería de diagnóstico no pudo completarse: "),
-                            diag_result
-                        ))
+                        push_note(sprintf(.("The diagnostic battery could not complete: %s"), diag_result))
                     }
                 }
 
@@ -963,25 +858,23 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             invisible(NULL)
         },
 
-        .computeArima = function(x, freq, tr, push_diag, push_note, arch_lm_test, fmt_stat, xreg = NULL) {
+        .computeArima = function(x, freq, ., push_diag, push_note, arch_lm_test, fmt_stat, xreg = NULL) {
+            . <- .al_lang(self$options)$tr
 
             x <- as.numeric(stats::na.omit(x))
             n <- length(x)
             private$.computeAcfPacf(x)
 
-            private$.pushStationarityBattery(x, tr, push_diag)
+            private$.pushStationarityBattery(x, ., push_diag)
 
             nd <- tryCatch(forecast::ndiffs(x), error = function(e) NA)
-            push_diag(tr("Suggested differencing (ndiffs)", "Diferenciación sugerida (ndiffs)"),
-                      as.character(nd), NA, evidence_override = tr("Informational", "Informativo"),
+            push_diag(.("Suggested differencing (ndiffs)"),
+                      as.character(nd), NA, evidence_override = .("Informational"),
                       action_key = "ndiffs", force_action = (!is.na(nd) && nd > 0))
 
             has_xreg <- !is.null(xreg) && nrow(xreg) == n
             if (has_xreg)
-                push_note(tr(
-                    "External regressors were included: this is an ARIMAX fit, not a plain ARIMA.",
-                    "Se incluyeron regresores externos: este ajuste es ARIMAX, no un ARIMA simple."
-                ))
+                push_note(.("External regressors were included: this is an ARIMAX fit, not a plain ARIMA."))
 
             fit <- tryCatch(
                 if (has_xreg) forecast::auto.arima(x, xreg = xreg, seasonal = FALSE)
@@ -989,8 +882,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 error = function(e) NULL
             )
             if (is.null(fit)) {
-                push_note(tr("The ARIMA model could not be fitted (auto.arima).",
-                              "No fue posible ajustar el modelo ARIMA (auto.arima)."))
+                push_note(.("The ARIMA model could not be fitted (auto.arima)."))
                 return(invisible(NULL))
             }
 
@@ -998,7 +890,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.plotResidualsData <- data.frame(x = seq_along(resid), residual = resid)
             self$results$residualsPlot$setState(private$.plotResidualsData)
             n_params <- length(fit$coef[names(fit$coef) != "intercept"])
-            private$.pushResidualBattery(resid, tr, push_diag, arch_lm_test, n_params)
+            private$.pushResidualBattery(resid, ., push_diag, arch_lm_test, n_params)
 
             roots_ok <- tryCatch({
                 ar_coef <- fit$model$phi
@@ -1017,31 +909,25 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (!is.na(roots_ok) && is.finite(roots_ok)) {
                 ok <- roots_ok > 1
-                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"),
+                push_diag(.("AR/MA root stability"),
                           roots_ok, NA,
-                          evidence_override = if (ok) tr("No evidence against", "Sin evidencia de incumplimiento")
-                                              else tr("Clear evidence of deviation", "Evidencia clara de incumplimiento"),
+                          evidence_override = if (ok) .("No evidence against")
+                                              else .("Clear evidence of deviation"),
                           tier_override = if (ok) "none" else "clear",
                           action_key = "roots", force_action = !ok)
             } else if (is.na(roots_ok)) {
-                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"), NA, NA,
-                          evidence_override = tr("Not computable", "No calculable"),
-                          tier_override = "na", footnote = tr(
-                              "Root stability could not be computed for this model's AR/MA polynomial.",
-                              "No se pudo calcular la estabilidad de raíces para el polinomio AR/MA de este modelo."
-                          ))
+                push_diag(.("AR/MA root stability"), NA, NA,
+                          evidence_override = .("Not computable"),
+                          tier_override = "na", footnote = .("Root stability could not be computed for this model's AR/MA polynomial."))
             } else {
-                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"), NA, NA,
-                          evidence_override = tr("Not applicable", "No aplica"),
-                          tier_override = "na", footnote = tr(
-                              "The selected model has no AR or MA terms, so there is no polynomial whose roots to check.",
-                              "El modelo seleccionado no tiene términos AR ni MA, así que no hay un polinomio cuyas raíces revisar."
-                          ))
+                push_diag(.("AR/MA root stability"), NA, NA,
+                          evidence_override = .("Not applicable"),
+                          tier_override = "na", footnote = .("The selected model has no AR or MA terms, so there is no polynomial whose roots to check."))
             }
 
-            push_diag(tr("AICc / BIC", "AICc / BIC"),
+            push_diag(.("AICc / BIC"),
                       paste0("AICc=", fmt_stat(fit$aicc), ", BIC=", fmt_stat(fit$bic)),
-                      NA, evidence_override = tr("Informational", "Informativo"))
+                      NA, evidence_override = .("Informational"))
 
             invisible(NULL)
         },
@@ -1054,42 +940,39 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # unitaria estacional (OCSB, Canova-Hansen vía nsdiffs) y un Ljung-Box a
         # rezago estacional sobre los residuos del modelo estacional ajustado.
         # -----------------------------------------------------------------------------
-        .computeSarima = function(x, freq, tr, push_diag, push_note, arch_lm_test, fmt_stat, xreg = NULL) {
+        .computeSarima = function(x, freq, ., push_diag, push_note, arch_lm_test, fmt_stat, xreg = NULL) {
+            . <- .al_lang(self$options)$tr
 
             x <- as.numeric(stats::na.omit(x))
             n <- length(x)
             private$.computeAcfPacf(x)
 
-            private$.pushStationarityBattery(x, tr, push_diag)
+            private$.pushStationarityBattery(x, ., push_diag)
 
             nd <- tryCatch(forecast::ndiffs(x), error = function(e) NA)
-            push_diag(tr("Suggested non-seasonal differencing (ndiffs)", "Diferenciación no estacional sugerida (ndiffs)"),
-                      as.character(nd), NA, evidence_override = tr("Informational", "Informativo"),
+            push_diag(.("Suggested non-seasonal differencing (ndiffs)"),
+                      as.character(nd), NA, evidence_override = .("Informational"),
                       action_key = "ndiffs", force_action = (!is.na(nd) && nd > 0))
 
             xt <- stats::ts(x, frequency = freq)
 
             if (freq > 1) {
                 nsd <- tryCatch(forecast::nsdiffs(xt, test = "ch"), error = function(e) NA)
-                push_diag(tr("Suggested seasonal differencing (Canova-Hansen)", "Diferenciación estacional sugerida (Canova-Hansen)"),
-                          as.character(nsd), NA, evidence_override = tr("Informational", "Informativo"),
+                push_diag(.("Suggested seasonal differencing (Canova-Hansen)"),
+                          as.character(nsd), NA, evidence_override = .("Informational"),
                           action_key = "nsdiffs", force_action = (!is.na(nsd) && nsd > 0))
 
                 nso <- tryCatch(forecast::nsdiffs(xt, test = "ocsb"), error = function(e) NA)
-                push_diag(tr("Suggested seasonal differencing (OCSB)", "Diferenciación estacional sugerida (OCSB)"),
-                          as.character(nso), NA, evidence_override = tr("Informational", "Informativo"),
+                push_diag(.("Suggested seasonal differencing (OCSB)"),
+                          as.character(nso), NA, evidence_override = .("Informational"),
                           action_key = "nsdiffs", force_action = (!is.na(nso) && nso > 0))
             } else {
-                push_note(tr("Seasonal frequency is 1 (no seasonal cycle); seasonal diagnostics were skipped.",
-                              "La frecuencia estacional es 1 (sin ciclo estacional); se omitieron los diagnósticos estacionales."))
+                push_note(.("Seasonal frequency is 1 (no seasonal cycle); seasonal diagnostics were skipped."))
             }
 
             has_xreg <- !is.null(xreg) && nrow(xreg) == n
             if (has_xreg)
-                push_note(tr(
-                    "External regressors were included: this is a SARIMAX fit, not a plain SARIMA.",
-                    "Se incluyeron regresores externos: este ajuste es SARIMAX, no un SARIMA simple."
-                ))
+                push_note(.("External regressors were included: this is a SARIMAX fit, not a plain SARIMA."))
 
             fit <- tryCatch(
                 if (has_xreg) forecast::auto.arima(xt, xreg = xreg, seasonal = (freq > 1))
@@ -1097,8 +980,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 error = function(e) NULL
             )
             if (is.null(fit)) {
-                push_note(tr("The SARIMA model could not be fitted (auto.arima).",
-                              "No fue posible ajustar el modelo SARIMA (auto.arima)."))
+                push_note(.("The SARIMA model could not be fitted (auto.arima)."))
                 return(invisible(NULL))
             }
 
@@ -1107,7 +989,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$residualsPlot$setState(private$.plotResidualsData)
             n_params <- length(fit$coef)
 
-            private$.pushResidualBattery(resid, tr, push_diag, arch_lm_test, n_params)
+            private$.pushResidualBattery(resid, ., push_diag, arch_lm_test, n_params)
 
             if (freq > 1 && n > 2 * freq) {
                 lb_lag_s <- min(3 * freq, n - 1)
@@ -1115,14 +997,11 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                                   fitdf = min(n_params, lb_lag_s - 1)),
                                   error = function(e) NULL)
                 if (!is.null(lb_s) && is.finite(lb_s$statistic) && !is.na(lb_s$p.value)) {
-                    push_diag(tr("Ljung-Box at seasonal lags", "Ljung-Box en rezagos estacionales"),
+                    push_diag(.("Ljung-Box at seasonal lags"),
                               lb_s$statistic, lb_s$p.value, "low_bad", "ljungBoxSeasonal")
                 } else {
-                    push_diag(tr("Ljung-Box at seasonal lags", "Ljung-Box en rezagos estacionales"), NA, NA,
-                              "low_bad", "ljungBoxSeasonal", footnote = tr(
-                                  paste0("Could not be computed with ", n, " residuals at the seasonal lag order (", lb_lag_s, ")."),
-                                  paste0("No se pudo calcular con ", n, " residuos al orden de rezago estacional (", lb_lag_s, ").")
-                              ))
+                    push_diag(.("Ljung-Box at seasonal lags"), NA, NA,
+                              "low_bad", "ljungBoxSeasonal", footnote = sprintf(.("Could not be computed with %s residuals at the seasonal lag order (%s)."), n, lb_lag_s))
                 }
             }
 
@@ -1143,31 +1022,25 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             if (!is.na(roots_ok) && is.finite(roots_ok)) {
                 ok <- roots_ok > 1
-                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"),
+                push_diag(.("AR/MA root stability"),
                           roots_ok, NA,
-                          evidence_override = if (ok) tr("No evidence against", "Sin evidencia de incumplimiento")
-                                              else tr("Clear evidence of deviation", "Evidencia clara de incumplimiento"),
+                          evidence_override = if (ok) .("No evidence against")
+                                              else .("Clear evidence of deviation"),
                           tier_override = if (ok) "none" else "clear",
                           action_key = "roots", force_action = !ok)
             } else if (is.na(roots_ok)) {
-                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"), NA, NA,
-                          evidence_override = tr("Not computable", "No calculable"),
-                          tier_override = "na", footnote = tr(
-                              "Root stability could not be computed for this model's AR/MA polynomial.",
-                              "No se pudo calcular la estabilidad de raíces para el polinomio AR/MA de este modelo."
-                          ))
+                push_diag(.("AR/MA root stability"), NA, NA,
+                          evidence_override = .("Not computable"),
+                          tier_override = "na", footnote = .("Root stability could not be computed for this model's AR/MA polynomial."))
             } else {
-                push_diag(tr("AR/MA root stability", "Estabilidad de raíces AR/MA"), NA, NA,
-                          evidence_override = tr("Not applicable", "No aplica"),
-                          tier_override = "na", footnote = tr(
-                              "The selected model has no AR or MA terms, so there is no polynomial whose roots to check.",
-                              "El modelo seleccionado no tiene términos AR ni MA, así que no hay un polinomio cuyas raíces revisar."
-                          ))
+                push_diag(.("AR/MA root stability"), NA, NA,
+                          evidence_override = .("Not applicable"),
+                          tier_override = "na", footnote = .("The selected model has no AR or MA terms, so there is no polynomial whose roots to check."))
             }
 
-            push_diag(tr("AICc / BIC", "AICc / BIC"),
+            push_diag(.("AICc / BIC"),
                       paste0("AICc=", fmt_stat(fit$aicc), ", BIC=", fmt_stat(fit$bic)),
-                      NA, evidence_override = tr("Informational", "Informativo"))
+                      NA, evidence_override = .("Informational"))
 
             invisible(NULL)
         },
@@ -1183,7 +1056,8 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # modela nivel, tendencia y estacionalidad directamente en vez de asumir un
         # orden de diferenciación fijo.
         # -----------------------------------------------------------------------------
-        .computeEts = function(x, freq, tr, push_diag, push_note, arch_lm_test, fmt_stat) {
+        .computeEts = function(x, freq, ., push_diag, push_note, arch_lm_test, fmt_stat) {
+            . <- .al_lang(self$options)$tr
 
             x <- as.numeric(stats::na.omit(x))
             n <- length(x)
@@ -1192,7 +1066,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             fit <- tryCatch(forecast::ets(xt), error = function(e) NULL)
             if (is.null(fit)) {
-                push_note(tr("The ETS model could not be fitted.", "No fue posible ajustar el modelo ETS."))
+                push_note(.("The ETS model could not be fitted."))
                 return(invisible(NULL))
             }
 
@@ -1200,14 +1074,14 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.plotResidualsData <- data.frame(x = seq_along(resid), residual = resid)
             self$results$residualsPlot$setState(private$.plotResidualsData)
 
-            private$.pushResidualBattery(resid, tr, push_diag, arch_lm_test)
+            private$.pushResidualBattery(resid, ., push_diag, arch_lm_test)
 
-            push_diag(tr("AICc / BIC", "AICc / BIC"),
+            push_diag(.("AICc / BIC"),
                       paste0("AICc=", fmt_stat(fit$aicc), ", BIC=", fmt_stat(fit$bic)),
-                      NA, evidence_override = tr("Informational", "Informativo"))
+                      NA, evidence_override = .("Informational"))
 
-            push_diag(tr("Selected ETS specification", "Especificación ETS seleccionada"),
-                      fit$method, NA, evidence_override = tr("Informational", "Informativo"))
+            push_diag(.("Selected ETS specification"),
+                      fit$method, NA, evidence_override = .("Informational"))
 
             invisible(NULL)
         },
@@ -1229,21 +1103,16 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # convierte una fila que desaparece en silencio en una explicación
         # específica y metodológicamente fundamentada, en vez de un fallo genérico.
         # -----------------------------------------------------------------------------
-        .tsPrecheckReason = function(x, tr) {
+        .tsPrecheckReason = function(x, .) {
+            . <- .al_lang(self$options)$tr
             x <- x[is.finite(x)]
             n <- length(x)
             if (n < 8) {
-                return(tr(
-                    paste0("the series has only ", n, " usable observations (fewer than the ~8 these tests need)"),
-                    paste0("la serie tiene solo ", n, " observaciones utilizables (menos de las ~8 que estas pruebas requieren)")
-                ))
+                return(sprintf(.("the series has only %s usable observations (fewer than the ~8 these tests need)"), n))
             }
             sd_x <- stats::sd(x, na.rm = TRUE)
             if (!is.finite(sd_x) || sd_x == 0) {
-                return(tr(
-                    "the series has no variation (it is constant)",
-                    "la serie no tiene variación (es constante)"
-                ))
+                return(.("the series has no variation (it is constant)"))
             }
             NULL
         },
@@ -1264,19 +1133,20 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # módulo trata cualquier otro diagnóstico: ninguna comparación que el
         # lector no pueda auditar desaparece sin dejar rastro.
         # -----------------------------------------------------------------------------
-        .stationarityPerVariable = function(mat, tr, push_diag) {
+        .stationarityPerVariable = function(mat, ., push_diag) {
             for (v in colnames(mat)) {
                 xv <- as.numeric(mat[, v])
-                private$.pushStationarityBattery(xv, tr, push_diag, label = paste0(" (", v, ")"))
+                private$.pushStationarityBattery(xv, ., push_diag, label = paste0(" (", v, ")"))
             }
             invisible(NULL)
         },
 
-        .pushStationarityBattery = function(x, tr, push_diag, label = "") {
-            reason <- private$.tsPrecheckReason(x, tr)
+        .pushStationarityBattery = function(x, ., push_diag, label = "") {
+            . <- .al_lang(self$options)$tr
+            reason <- private$.tsPrecheckReason(x, .)
 
-            run_one <- function(name_en, name_es, fit_fun, direction) {
-                label_txt <- paste0(tr(name_en, name_es), label)
+            run_one <- function(name, fit_fun, direction) {
+                label_txt <- paste0(name, label)
                 res <- tryCatch(fit_fun(), error = function(e) NULL)
                 # Some of these tests do not throw on a degenerate input (e.g.
                 # tseries::adf.test() on a constant series returns statistic = NaN,
@@ -1294,22 +1164,15 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     return(invisible(NULL))
                 }
                 fnote <- if (!is.null(reason))
-                    paste0(
-                        tr(name_en, name_es), label,
-                        tr(" could not be computed because ", " no se pudo calcular porque "),
-                        reason, "."
-                    )
+                    sprintf(.("%s could not be computed because %s."), label_txt, reason)
                 else
-                    paste0(tr(name_en, name_es), label, tr(
-                        " could not be computed for this series.",
-                        " no se pudo calcular para esta serie."
-                    ))
+                    sprintf(.("%s could not be computed for this series."), label_txt)
                 push_diag(label_txt, NA, NA, direction, "stationarity", footnote = fnote)
             }
 
-            run_one("ADF (unit root)", "ADF (raíz unitaria)", function() tseries::adf.test(x), "low_good")
-            run_one("Phillips-Perron (unit root)", "Phillips-Perron (raíz unitaria)", function() tseries::pp.test(x), "low_good")
-            run_one("KPSS", "KPSS", function() tseries::kpss.test(x, null = "Level"), "low_bad")
+            run_one(.("ADF (unit root)"), function() tseries::adf.test(x), "low_good")
+            run_one(.("Phillips-Perron (unit root)"), function() tseries::pp.test(x), "low_good")
+            run_one("KPSS", function() tseries::kpss.test(x, null = "Level"), "low_bad")
 
             invisible(NULL)
         },
@@ -1331,7 +1194,8 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # elegido, no un fallo aleatorio - el mismo espíritu de causa-metodológica-
         # primero que .tsPrecheckReason().
         # -----------------------------------------------------------------------------
-        .pushResidualBattery = function(resid, tr, push_diag, arch_lm_test, n_params = 0) {
+        .pushResidualBattery = function(resid, ., push_diag, arch_lm_test, n_params = 0) {
+            . <- .al_lang(self$options)$tr
             resid <- as.numeric(resid)
             resid <- resid[is.finite(resid)]
             n <- length(resid)
@@ -1339,13 +1203,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             sd_resid <- stats::sd(resid, na.rm = TRUE)
             no_variation <- !is.finite(sd_resid) || sd_resid == 0
 
-            lb_reason <- if (n <= lb_lag) tr(
-                paste0("there are only ", n, " residuals for the chosen lag order (", lb_lag, ")"),
-                paste0("hay solo ", n, " residuos para el orden de rezago elegido (", lb_lag, ")")
-            ) else if (no_variation) tr(
-                "the residuals have no variation",
-                "los residuos no tienen variación"
-            ) else NULL
+            lb_reason <- if (n <= lb_lag) sprintf(.("there are only %s residuals for the chosen lag order (%s)"), n, lb_lag) else if (no_variation) .("the residuals have no variation") else NULL
 
             lb <- tryCatch(
                 stats::Box.test(resid, lag = lb_lag, type = "Ljung-Box", fitdf = min(n_params, lb_lag - 1)),
@@ -1358,37 +1216,37 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # (p. ej. residuos constantes devuelven statistic = NaN, p.value = NA)
             # - eso sigue siendo un fallo que reportar, no un resultado real.
             if (!is.null(lb) && is.finite(lb$statistic) && !is.na(lb$p.value)) {
-                push_diag(tr("Ljung-Box (residuals)", "Ljung-Box (residuos)"),
+                push_diag(.("Ljung-Box (residuals)"),
                           lb$statistic, lb$p.value, "low_bad", "ljungBox")
             } else {
                 fnote <- if (!is.null(lb_reason))
-                    paste0(tr("Ljung-Box could not be computed because ", "Ljung-Box no se pudo calcular porque "), lb_reason, ".")
+                    sprintf(.("Ljung-Box could not be computed because %s."), lb_reason)
                 else
-                    tr("Ljung-Box could not be computed for these residuals.", "Ljung-Box no se pudo calcular para estos residuos.")
-                push_diag(tr("Ljung-Box (residuals)", "Ljung-Box (residuos)"), NA, NA, "low_bad", "ljungBox", footnote = fnote)
+                    .("Ljung-Box could not be computed for these residuals.")
+                push_diag(.("Ljung-Box (residuals)"), NA, NA, "low_bad", "ljungBox", footnote = fnote)
             }
 
             arch <- arch_lm_test(resid, lags = min(12, max(4, floor(n / 10))))
-            push_diag(tr("ARCH-LM (residuals)", "ARCH-LM (residuos)"),
+            push_diag(.("ARCH-LM (residuals)"),
                       arch$statistic, arch$p.value, "low_bad", "archLM")
 
             jb_reason <- if (n < 3)
-                tr("there are fewer than 3 residuals", "hay menos de 3 residuos")
+                .("there are fewer than 3 residuals")
             else if (no_variation)
-                tr("the residuals have no variation", "los residuos no tienen variación")
+                .("the residuals have no variation")
             else
                 NULL
 
             jb <- tryCatch(tseries::jarque.bera.test(resid), error = function(e) NULL)
             if (!is.null(jb) && is.finite(jb$statistic) && !is.na(jb$p.value)) {
-                push_diag(tr("Jarque-Bera (residuals)", "Jarque-Bera (residuos)"),
+                push_diag(.("Jarque-Bera (residuals)"),
                           jb$statistic, jb$p.value, "low_bad", "jarqueBera")
             } else {
                 fnote <- if (!is.null(jb_reason))
-                    paste0(tr("Jarque-Bera could not be computed because ", "Jarque-Bera no se pudo calcular porque "), jb_reason, ".")
+                    sprintf(.("Jarque-Bera could not be computed because %s."), jb_reason)
                 else
-                    tr("Jarque-Bera could not be computed for these residuals.", "Jarque-Bera no se pudo calcular para estos residuos.")
-                push_diag(tr("Jarque-Bera (residuals)", "Jarque-Bera (residuos)"), NA, NA, "low_bad", "jarqueBera", footnote = fnote)
+                    .("Jarque-Bera could not be computed for these residuals.")
+                push_diag(.("Jarque-Bera (residuals)"), NA, NA, "low_bad", "jarqueBera", footnote = fnote)
             }
 
             invisible(NULL)
@@ -1407,15 +1265,15 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # normalidad multivariante residual, y estabilidad paramétrica por ecuación
         # (OLS-CUSUM).
         # -----------------------------------------------------------------------------
-        .computeVar = function(mat, tr, push_diag, push_note, arch_lm_test, fmt_stat) {
+        .computeVar = function(mat, ., push_diag, push_note, arch_lm_test, fmt_stat) {
+            . <- .al_lang(self$options)$tr
 
             if (!requireNamespace("vars", quietly = TRUE)) {
-                push_note(tr("The 'vars' package is not installed; VAR diagnostics cannot be computed.",
-                              "El paquete 'vars' no está instalado; no se pueden calcular los diagnósticos VAR."))
+                push_note(.("The 'vars' package is not installed; VAR diagnostics cannot be computed."))
                 return(invisible(NULL))
             }
 
-            private$.stationarityPerVariable(mat, tr, push_diag)
+            private$.stationarityPerVariable(mat, ., push_diag)
 
             n <- nrow(mat)
             k <- ncol(mat)
@@ -1427,13 +1285,13 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(sel)) {
                 p_lag <- unname(sel$selection["AIC(n)"])
                 if (is.na(p_lag) || p_lag < 1) p_lag <- 1
-                push_diag(tr("Suggested lag order (VARselect, AIC)", "Orden de rezago sugerido (VARselect, AIC)"),
-                          as.character(p_lag), NA, evidence_override = tr("Informational", "Informativo"))
+                push_diag(.("Suggested lag order (VARselect, AIC)"),
+                          as.character(p_lag), NA, evidence_override = .("Informational"))
             }
 
             fit <- tryCatch(vars::VAR(mat, p = p_lag, type = "const"), error = function(e) NULL)
             if (is.null(fit)) {
-                push_note(tr("The VAR model could not be fitted.", "No fue posible ajustar el modelo VAR."))
+                push_note(.("The VAR model could not be fitted."))
                 return(invisible(NULL))
             }
 
@@ -1441,10 +1299,10 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(rts) && length(rts) > 0 && !all(is.na(rts))) {
                 max_mod <- max(rts, na.rm = TRUE)
                 ok <- isTRUE(max_mod < 1)
-                push_diag(tr("VAR stability (companion-matrix roots)", "Estabilidad VAR (raíces de la matriz compañera)"),
+                push_diag(.("VAR stability (companion-matrix roots)"),
                           max_mod, NA,
-                          evidence_override = if (ok) tr("No evidence against", "Sin evidencia de incumplimiento")
-                                              else tr("Clear evidence of deviation", "Evidencia clara de incumplimiento"),
+                          evidence_override = if (ok) .("No evidence against")
+                                              else .("Clear evidence of deviation"),
                           tier_override = if (ok) "none" else "clear",
                           action_key = "stability", force_action = !ok)
             }
@@ -1453,19 +1311,18 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             serial <- tryCatch(vars::serial.test(fit, lags.pt = pt_lags, type = "PT.asymptotic"),
                                 error = function(e) NULL)
             if (!is.null(serial) && !is.null(serial$serial))
-                push_diag(tr("Portmanteau (multivariate residual autocorrelation)",
-                              "Portmanteau (autocorrelación residual multivariante)"),
+                push_diag(.("Portmanteau (multivariate residual autocorrelation)"),
                           serial$serial$statistic, serial$serial$p.value, "low_bad", "serial")
 
             arch_mv <- tryCatch(vars::arch.test(fit, lags.multi = min(5, p_lag + 2), multivariate.only = TRUE),
                                  error = function(e) NULL)
             if (!is.null(arch_mv) && !is.null(arch_mv$arch.mul))
-                push_diag(tr("ARCH-LM (multivariate)", "ARCH-LM (multivariante)"),
+                push_diag(.("ARCH-LM (multivariate)"),
                           arch_mv$arch.mul$statistic, arch_mv$arch.mul$p.value, "low_bad", "archLM")
 
             norm_mv <- tryCatch(vars::normality.test(fit, multivariate.only = TRUE), error = function(e) NULL)
             if (!is.null(norm_mv) && !is.null(norm_mv$jb.mul) && !is.null(norm_mv$jb.mul$JB))
-                push_diag(tr("Jarque-Bera (multivariate normality)", "Jarque-Bera (normalidad multivariante)"),
+                push_diag(.("Jarque-Bera (multivariate normality)"),
                           norm_mv$jb.mul$JB$statistic, norm_mv$jb.mul$JB$p.value, "low_bad", "jarqueBera")
 
             if (requireNamespace("strucchange", quietly = TRUE)) {
@@ -1479,13 +1336,11 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }, error = function(e) NULL)
                 if (!is.null(cusum_p) && length(cusum_p) > 0 && !all(is.na(cusum_p))) {
                     worst_p <- min(cusum_p, na.rm = TRUE)
-                    push_diag(tr("OLS-CUSUM (parameter stability, worst equation)",
-                                  "OLS-CUSUM (estabilidad paramétrica, peor ecuación)"),
+                    push_diag(.("OLS-CUSUM (parameter stability, worst equation)"),
                               NA, worst_p, "low_bad", "cusum")
                 }
             } else {
-                push_note(tr("The 'strucchange' package is not installed; the OLS-CUSUM stability test was skipped.",
-                              "El paquete 'strucchange' no está instalado; se omitió la prueba de estabilidad OLS-CUSUM."))
+                push_note(.("The 'strucchange' package is not installed; the OLS-CUSUM stability test was skipped."))
             }
 
             invisible(NULL)
@@ -1504,15 +1359,15 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # diagnósticos de correlación serial residual, ARCH-LM y normalidad usados
         # para VAR.
         # -----------------------------------------------------------------------------
-        .computeVecm = function(mat, tr, push_diag, push_note, arch_lm_test, fmt_stat) {
+        .computeVecm = function(mat, ., push_diag, push_note, arch_lm_test, fmt_stat) {
+            . <- .al_lang(self$options)$tr
 
             if (!requireNamespace("vars", quietly = TRUE) || !requireNamespace("urca", quietly = TRUE)) {
-                push_note(tr("The 'vars' and/or 'urca' packages are not installed; VECM diagnostics cannot be computed.",
-                              "Los paquetes 'vars' y/o 'urca' no están instalados; no se pueden calcular los diagnósticos VECM."))
+                push_note(.("The 'vars' and/or 'urca' packages are not installed; VECM diagnostics cannot be computed."))
                 return(invisible(NULL))
             }
 
-            private$.stationarityPerVariable(mat, tr, push_diag)
+            private$.stationarityPerVariable(mat, ., push_diag)
 
             n <- nrow(mat)
             k <- ncol(mat)
@@ -1524,8 +1379,8 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(sel)) {
                 k_lag <- unname(sel$selection["AIC(n)"])
                 if (is.na(k_lag) || k_lag < 2) k_lag <- 2
-                push_diag(tr("Suggested lag order (VARselect, AIC)", "Orden de rezago sugerido (VARselect, AIC)"),
-                          as.character(k_lag), NA, evidence_override = tr("Informational", "Informativo"))
+                push_diag(.("Suggested lag order (VARselect, AIC)"),
+                          as.character(k_lag), NA, evidence_override = .("Informational"))
             }
 
             jo_trace <- tryCatch(urca::ca.jo(mat, type = "trace", ecdet = "const", K = k_lag),
@@ -1549,9 +1404,9 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(jo_trace)) {
                 rank_trace <- tryCatch(determine_rank(jo_trace), error = function(e) NA)
                 if (!is.na(rank_trace)) {
-                    push_diag(tr("Johansen trace test (suggested rank)", "Prueba de traza de Johansen (rango sugerido)"),
+                    push_diag(.("Johansen trace test (suggested rank)"),
                               as.character(rank_trace), NA,
-                              evidence_override = tr("Informational", "Informativo"),
+                              evidence_override = .("Informational"),
                               action_key = "johansen", force_action = TRUE)
                     rank <- rank_trace
                 }
@@ -1559,14 +1414,14 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(jo_eigen)) {
                 rank_eigen <- tryCatch(determine_rank(jo_eigen), error = function(e) NA)
                 if (!is.na(rank_eigen))
-                    push_diag(tr("Johansen max-eigenvalue test (suggested rank)", "Prueba de máximo autovalor de Johansen (rango sugerido)"),
+                    push_diag(.("Johansen max-eigenvalue test (suggested rank)"),
                               as.character(rank_eigen), NA,
-                              evidence_override = tr("Informational", "Informativo"),
+                              evidence_override = .("Informational"),
                               action_key = "johansen", force_action = TRUE)
             }
 
             if (is.null(jo_trace)) {
-                push_note(tr("The Johansen test could not be computed.", "No fue posible calcular la prueba de Johansen."))
+                push_note(.("The Johansen test could not be computed."))
                 return(invisible(NULL))
             }
 
@@ -1574,8 +1429,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             v2v <- tryCatch(vars::vec2var(jo_trace, r = rank), error = function(e) NULL)
             if (is.null(v2v)) {
-                push_note(tr("The cointegrating VECM could not be converted to its VAR representation (vec2var).",
-                              "No fue posible convertir el VECM cointegrado a su representación VAR (vec2var)."))
+                push_note(.("The cointegrating VECM could not be converted to its VAR representation (vec2var)."))
                 return(invisible(NULL))
             }
 
@@ -1583,10 +1437,10 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(rts) && length(rts) > 0 && !all(is.na(rts))) {
                 max_mod <- max(rts, na.rm = TRUE)
                 ok <- isTRUE(max_mod < 1)
-                push_diag(tr("System stability (companion-matrix roots)", "Estabilidad del sistema (raíces de la matriz compañera)"),
+                push_diag(.("System stability (companion-matrix roots)"),
                           max_mod, NA,
-                          evidence_override = if (ok) tr("No evidence against", "Sin evidencia de incumplimiento")
-                                              else tr("Clear evidence of deviation", "Evidencia clara de incumplimiento"),
+                          evidence_override = if (ok) .("No evidence against")
+                                              else .("Clear evidence of deviation"),
                           tier_override = if (ok) "none" else "clear",
                           action_key = "stability", force_action = !ok)
             }
@@ -1595,19 +1449,18 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             serial <- tryCatch(vars::serial.test(v2v, lags.pt = pt_lags, type = "PT.asymptotic"),
                                 error = function(e) NULL)
             if (!is.null(serial) && !is.null(serial$serial))
-                push_diag(tr("Portmanteau (multivariate residual autocorrelation)",
-                              "Portmanteau (autocorrelación residual multivariante)"),
+                push_diag(.("Portmanteau (multivariate residual autocorrelation)"),
                           serial$serial$statistic, serial$serial$p.value, "low_bad", "serial")
 
             arch_mv <- tryCatch(vars::arch.test(v2v, lags.multi = min(5, k_lag + 2), multivariate.only = TRUE),
                                  error = function(e) NULL)
             if (!is.null(arch_mv) && !is.null(arch_mv$arch.mul))
-                push_diag(tr("ARCH-LM (multivariate)", "ARCH-LM (multivariante)"),
+                push_diag(.("ARCH-LM (multivariate)"),
                           arch_mv$arch.mul$statistic, arch_mv$arch.mul$p.value, "low_bad", "archLM")
 
             norm_mv <- tryCatch(vars::normality.test(v2v, multivariate.only = TRUE), error = function(e) NULL)
             if (!is.null(norm_mv) && !is.null(norm_mv$jb.mul) && !is.null(norm_mv$jb.mul$JB))
-                push_diag(tr("Jarque-Bera (multivariate normality)", "Jarque-Bera (normalidad multivariante)"),
+                push_diag(.("Jarque-Bera (multivariate normality)"),
                           norm_mv$jb.mul$JB$statistic, norm_mv$jb.mul$JB$p.value, "low_bad", "jarqueBera")
 
             invisible(NULL)
@@ -1627,37 +1480,32 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # estandarizados, ARCH-LM residual, persistencia de la varianza, prueba de
         # sesgo de signo (asimetría) y prueba de estabilidad de Nyblom.
         # -----------------------------------------------------------------------------
-        .computeGarch = function(x, tr, push_diag, push_note, arch_lm_test, fmt_stat) {
+        .computeGarch = function(x, ., push_diag, push_note, arch_lm_test, fmt_stat) {
+            . <- .al_lang(self$options)$tr
 
             x <- as.numeric(stats::na.omit(x))
             n <- length(x)
             private$.computeAcfPacf(x)
 
-            push_note(tr(
-                "GARCH assumes the selected series already represents returns (or another approximately mean-stationary series), not raw price levels.",
-                "GARCH asume que la serie seleccionada ya representa retornos (u otra serie aproximadamente estacionaria en media), no niveles de precio en bruto."
-            ))
+            push_note(.("GARCH assumes the selected series already represents returns (or another approximately mean-stationary series), not raw price levels."))
 
-            private$.pushStationarityBattery(x, tr, push_diag)
+            private$.pushStationarityBattery(x, ., push_diag)
 
             pre <- arch_lm_test(x - mean(x), lags = min(12, max(4, floor(n / 10))))
             pre_cl_ok <- !is.na(pre$p.value) && pre$p.value < 0.05
-            push_diag(tr("ARCH-LM (pre-fit, on the series)", "ARCH-LM (previo al ajuste, sobre la serie)"),
+            push_diag(.("ARCH-LM (pre-fit, on the series)"),
                       pre$statistic, pre$p.value,
                       evidence_override = if (pre_cl_ok)
-                          tr("ARCH effects detected", "Efectos ARCH detectados")
+                          .("ARCH effects detected")
                           else
-                          tr("No clear ARCH effects", "Sin efectos ARCH claros"),
+                          .("No clear ARCH effects"),
                       footnote = if (pre_cl_ok)
-                          tr("ARCH effects detected \u2014 modeling conditional heteroscedasticity is justified.",
-                             "Se detectan efectos ARCH \u2014 modelar heterocedasticidad condicional está justificado.")
+                          .("ARCH effects detected — modeling conditional heteroscedasticity is justified.")
                           else
-                          tr("No clear ARCH effects detected in the raw series.",
-                             "No se detectan efectos ARCH claros en la serie en bruto."))
+                          .("No clear ARCH effects detected in the raw series."))
 
             if (!requireNamespace("rugarch", quietly = TRUE)) {
-                push_note(tr("The 'rugarch' package is not installed; the GARCH fit and its post-fit diagnostics were skipped.",
-                              "El paquete 'rugarch' no está instalado; se omitieron el ajuste GARCH y sus diagnósticos posteriores."))
+                push_note(.("The 'rugarch' package is not installed; the GARCH fit and its post-fit diagnostics were skipped."))
                 return(invisible(NULL))
             }
 
@@ -1672,8 +1520,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             converged <- !is.null(fit) && tryCatch(isTRUE(fit@fit$convergence == 0), error = function(e) FALSE)
             if (!converged) {
-                push_note(tr("The GARCH(1,1) model did not converge; post-fit diagnostics were skipped.",
-                              "El modelo GARCH(1,1) no convergió; se omitieron los diagnósticos posteriores al ajuste."))
+                push_note(.("The GARCH(1,1) model did not converge; post-fit diagnostics were skipped."))
                 return(invisible(NULL))
             }
 
@@ -1688,18 +1535,15 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 lb <- tryCatch(stats::Box.test(std_resid, lag = lb_lag, type = "Ljung-Box"),
                                 error = function(e) NULL)
                 if (!is.null(lb) && is.finite(lb$statistic) && !is.na(lb$p.value)) {
-                    push_diag(tr("Ljung-Box (standardized residuals)", "Ljung-Box (residuos estandarizados)"),
+                    push_diag(.("Ljung-Box (standardized residuals)"),
                               lb$statistic, lb$p.value, "low_bad", "ljungBox")
                 } else {
-                    push_diag(tr("Ljung-Box (standardized residuals)", "Ljung-Box (residuos estandarizados)"), NA, NA,
-                              "low_bad", "ljungBox", footnote = tr(
-                                  paste0("Could not be computed with ", length(std_resid), " standardized residuals at this lag order (", lb_lag, ")."),
-                                  paste0("No se pudo calcular con ", length(std_resid), " residuos estandarizados a este orden de rezago (", lb_lag, ").")
-                              ))
+                    push_diag(.("Ljung-Box (standardized residuals)"), NA, NA,
+                              "low_bad", "ljungBox", footnote = sprintf(.("Could not be computed with %s standardized residuals at this lag order (%s)."), length(std_resid), lb_lag))
                 }
 
                 arch_post <- arch_lm_test(std_resid, lags = min(12, max(4, floor(n / 10))))
-                push_diag(tr("ARCH-LM (standardized residuals)", "ARCH-LM (residuos estandarizados)"),
+                push_diag(.("ARCH-LM (standardized residuals)"),
                           arch_post$statistic, arch_post$p.value, "low_bad", "archLM")
             }
 
@@ -1716,11 +1560,11 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (!is.na(a1) && !is.na(b1)) {
                     persistence <- a1 + b1
                     near_unit <- isTRUE(persistence >= 0.98)
-                    push_diag(tr("Variance persistence (alpha1 + beta1)", "Persistencia de la varianza (alpha1 + beta1)"),
+                    push_diag(.("Variance persistence (alpha1 + beta1)"),
                               persistence, NA,
                               evidence_override = if (near_unit)
-                                  tr("Very high (near-integrated variance)", "Muy alta (varianza casi integrada)")
-                                  else tr("Within a typical range", "Dentro de un rango típico"),
+                                  .("Very high (near-integrated variance)")
+                                  else .("Within a typical range"),
                               tier_override = if (near_unit) "clear" else "none",
                               action_key = "persistence", force_action = near_unit)
                 }
@@ -1736,7 +1580,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         p_val <- as.numeric(joint_row[1, p_col])
                         stat_val <- if (!is.na(stat_col)) as.numeric(joint_row[1, stat_col]) else NA
                         if (!is.na(p_val))
-                            push_diag(tr("Sign bias (joint effect)", "Sesgo de signo (efecto conjunto)"),
+                            push_diag(.("Sign bias (joint effect)"),
                                       stat_val, p_val, "low_bad", "signBias")
                     }
                 }
@@ -1753,10 +1597,10 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     crit5 <- as.numeric(crit5)
                     if (!is.na(crit5)) {
                         ok <- isTRUE(as.numeric(nyb$Joint) < crit5)
-                        push_diag(tr("Nyblom (joint parameter stability)", "Nyblom (estabilidad paramétrica conjunta)"),
+                        push_diag(.("Nyblom (joint parameter stability)"),
                                   as.numeric(nyb$Joint), NA,
-                                  evidence_override = if (ok) tr("No evidence against", "Sin evidencia de incumplimiento")
-                                                      else tr("Clear evidence of deviation", "Evidencia clara de incumplimiento"),
+                                  evidence_override = if (ok) .("No evidence against")
+                                                      else .("Clear evidence of deviation"),
                                   tier_override = if (ok) "none" else "clear",
                                   action_key = "nyblom", force_action = !ok)
                     }
@@ -1771,7 +1615,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (!is.na(p_col)) {
                         p_val <- as.numeric(gof_mat[1, p_col])
                         if (!is.na(p_val))
-                            push_diag(tr("Goodness of fit (20 groups)", "Bondad de ajuste (20 grupos)"),
+                            push_diag(.("Goodness of fit (20 groups)"),
                                       NA, p_val, "low_bad", "gof")
                     }
                 }
@@ -1781,16 +1625,11 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         # -----------------------------------------------------------------------------
-        # Shared plotting helpers (style, palette, guard, bilingual labels), matching
+        # Shared plotting helpers (style, palette, guard), matching
         # the exact pattern used across the rest of AssumptionsLab (see regCheck).
-        # ES: Auxiliares de graficación compartidos (estilo, paleta, guarda,
-        # etiquetas bilingües), calcados del patrón usado en el resto de
+        # ES: Auxiliares de graficación compartidos (estilo, paleta, guarda), calcados del patrón usado en el resto de
         # AssumptionsLab (ver regCheck).
         # -----------------------------------------------------------------------------
-        .plotTr = function(en, es) {
-            lang <- .al_normalize_lang(self$options$reportLang)
-            if (identical(lang, "es")) es else en
-        },
 
         # Plot theme/palette migrated to jamovi's native ggtheme/theme
         # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
@@ -1851,24 +1690,19 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # data.frame directamente — así que esta guarda desenvuelve cualquiera de
         # las dos formas antes de verificar que esté presente y no vacía.
         .requirePlot = function(image) {
+            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
             if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(private$.plotTr(
-                    "The ggplot2 package is required to draw diagnostic plots.",
-                    "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
-                ))
+                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
                 return(FALSE)
             }
 
             st <- image$state
             d <- if (is.list(st) && !is.data.frame(st)) st$data else st
             if (is.null(st) || is.null(d) || (is.data.frame(d) && nrow(d) == 0)) {
-                image$setError(private$.plotTr(
-                    "No plot data are available.",
-                    "No hay datos disponibles para este gráfico."
-                ))
+                image$setError(.("No plot data are available."))
                 return(FALSE)
             }
 
@@ -1876,6 +1710,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotSeries = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlot(image)) return()
 
             st <- image$state
@@ -1905,10 +1740,10 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             plot <- plot +
                 ggplot2::labs(
                     x = if (isTRUE(st$isDate))
-                        private$.plotTr("Date", "Fecha")
+                        .("Date")
                     else
-                        private$.plotTr("Observation", "Observación"),
-                    y = private$.plotTr("Value", "Valor")
+                        .("Observation"),
+                    y = .("Value")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -1927,6 +1762,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotAcf = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlot(image)) return()
 
             st <- image$state
@@ -1948,7 +1784,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_segment(ggplot2::aes(xend = lag, yend = 0),
                                        color = pal$line, linewidth = 0.6) +
                 ggplot2::labs(
-                    x = private$.plotTr("Lag", "Rezago"),
+                    x = .("Lag"),
                     y = "ACF"
                 ) +
                 ggtheme + private$.plotThemeExtra()
@@ -1957,6 +1793,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotPacf = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlot(image)) return()
 
             st <- image$state
@@ -1978,7 +1815,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_segment(ggplot2::aes(xend = lag, yend = 0),
                                        color = pal$line, linewidth = 0.6) +
                 ggplot2::labs(
-                    x = private$.plotTr("Lag", "Rezago"),
+                    x = .("Lag"),
                     y = "PACF"
                 ) +
                 ggtheme + private$.plotThemeExtra()
@@ -1987,6 +1824,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotResiduals = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlot(image)) return()
 
             d <- image$state
@@ -1997,8 +1835,8 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_line(color = pal$line, linewidth = 0.5, alpha = 0.8) +
                 ggplot2::geom_point(color = pal$point, size = 1.1, alpha = 0.7) +
                 ggplot2::labs(
-                    x = private$.plotTr("Observation", "Observación"),
-                    y = private$.plotTr("Residual", "Residuo")
+                    x = .("Observation"),
+                    y = .("Residual")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 
@@ -2006,6 +1844,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotVolatility = function(image, ggtheme, theme, ...) {
+            . <- .al_lang(self$options)$tr
             if (!private$.requirePlot(image)) return()
 
             d <- image$state
@@ -2014,8 +1853,8 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             plot <- ggplot2::ggplot(d, ggplot2::aes(x = x, y = sigma)) +
                 ggplot2::geom_line(color = pal$line, linewidth = 0.7) +
                 ggplot2::labs(
-                    x = private$.plotTr("Observation", "Observación"),
-                    y = private$.plotTr("Conditional standard deviation", "Desviación estándar condicional")
+                    x = .("Observation"),
+                    y = .("Conditional standard deviation")
                 ) +
                 ggtheme + private$.plotThemeExtra()
 

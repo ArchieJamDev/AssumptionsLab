@@ -22,7 +22,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             residShowNormalCurve = TRUE,
             residFlagOutliers = TRUE,
             plotPalette = "jamovi",
-            reportLang = "en",
             showDiagram = TRUE,
             diagramEdgeLabel = "coef",
             diagramShowErrors = FALSE,
@@ -119,13 +118,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "colorblind",
                     "viridis"),
                 default="jamovi")
-            private$..reportLang <- jmvcore::OptionList$new(
-                "reportLang",
-                reportLang,
-                options=list(
-                    "en",
-                    "es"),
-                default="en")
             private$..showDiagram <- jmvcore::OptionBool$new(
                 "showDiagram",
                 showDiagram,
@@ -205,7 +197,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..residShowNormalCurve)
             self$.addOption(private$..residFlagOutliers)
             self$.addOption(private$..plotPalette)
-            self$.addOption(private$..reportLang)
             self$.addOption(private$..showDiagram)
             self$.addOption(private$..diagramEdgeLabel)
             self$.addOption(private$..diagramShowErrors)
@@ -233,7 +224,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         residShowNormalCurve = function() private$..residShowNormalCurve$value,
         residFlagOutliers = function() private$..residFlagOutliers$value,
         plotPalette = function() private$..plotPalette$value,
-        reportLang = function() private$..reportLang$value,
         showDiagram = function() private$..showDiagram$value,
         diagramEdgeLabel = function() private$..diagramEdgeLabel$value,
         diagramShowErrors = function() private$..diagramShowErrors$value,
@@ -260,7 +250,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..residShowNormalCurve = NA,
         ..residFlagOutliers = NA,
         ..plotPalette = NA,
-        ..reportLang = NA,
         ..showDiagram = NA,
         ..diagramEdgeLabel = NA,
         ..diagramShowErrors = NA,
@@ -344,8 +333,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=1,
                 columns=list(
                     list(
@@ -381,8 +369,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 columns=list(
                     list(
@@ -407,8 +394,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(showExogenous)",
                 columns=list(
@@ -429,8 +415,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(showEndogenous)",
                 columns=list(
@@ -451,8 +436,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 columns=list(
                     list(
@@ -492,8 +476,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -536,8 +519,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized && showCoeffs)",
                 columns=list(
@@ -584,8 +566,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized && showR2)",
                 columns=list(
@@ -615,8 +596,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized && showCovs)",
                 columns=list(
@@ -663,8 +643,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized && showResiduals)",
                 columns=list(
@@ -711,8 +690,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -767,8 +745,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -813,8 +790,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -862,8 +838,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized && showCorrs)",
                 columns=list(
@@ -882,8 +857,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized && showCorrs)",
                 columns=list(
@@ -913,8 +887,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized && showCorrs)",
                 columns=list(
@@ -976,8 +949,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized && showCorrs)",
                 columns=list(
@@ -1027,8 +999,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -1093,8 +1064,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -1137,8 +1107,7 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "relations",
                     "isFinalized",
                     "permutations",
-                    "permutationSeed",
-                    "reportLang"),
+                    "permutationSeed"),
                 rows=0,
                 visible="(isFinalized)",
                 columns=list(
@@ -1211,7 +1180,6 @@ pathCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param residShowNormalCurve .
 #' @param residFlagOutliers .
 #' @param plotPalette .
-#' @param reportLang .
 #' @param showDiagram .
 #' @param diagramEdgeLabel .
 #' @param diagramShowErrors Shows, for each endogenous variable, a small error
@@ -1302,7 +1270,6 @@ pathCheck <- function(
     residShowNormalCurve = TRUE,
     residFlagOutliers = TRUE,
     plotPalette = "jamovi",
-    reportLang = "en",
     showDiagram = TRUE,
     diagramEdgeLabel = "coef",
     diagramShowErrors = FALSE,
@@ -1340,7 +1307,6 @@ pathCheck <- function(
         residShowNormalCurve = residShowNormalCurve,
         residFlagOutliers = residFlagOutliers,
         plotPalette = plotPalette,
-        reportLang = reportLang,
         showDiagram = showDiagram,
         diagramEdgeLabel = diagramEdgeLabel,
         diagramShowErrors = diagramShowErrors,

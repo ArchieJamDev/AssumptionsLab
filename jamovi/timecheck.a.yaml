@@ -156,21 +156,6 @@ options:
       quarterly, 7 = daily with a weekly cycle, 1 = no seasonality).
       Used for seasonal tests and differencing in SARIMA and ETS.
 
-  # Selects which language's text bank (see texts.R) is used to render
-  # every guide, interpretation, and table/column title in the report.
-  # ES: Selecciona qué banco de textos (ver texts.R) se usa para
-  # renderizar cada guía, interpretación y título de tabla/columna en el
-  # informe.
-  - name: reportLang
-    title: Report Language
-    type: List
-    options:
-      - title: English
-        name: en
-      - title: Español
-        name: es
-    default: en
-
   - name: showPlots
     title: Diagnostic plots
     type: Bool

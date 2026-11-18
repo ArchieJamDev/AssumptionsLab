@@ -43,7 +43,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: item
         title: Item
@@ -59,7 +58,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: cell
         title: Cell / group
@@ -112,7 +110,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: test
         title: Test
@@ -195,7 +192,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: family
         title: Family
@@ -238,7 +234,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     visible: (covs)
     columns:
       - name: factor
@@ -283,7 +278,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     visible: (covs)
     columns:
       - name: covariate
@@ -329,7 +323,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     visible: (covs)
     columns:
       - name: diagnostic
@@ -362,7 +355,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     visible: (covs)
     rows: 0
     columns:
@@ -379,7 +371,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     visible: (covs)
     rows: 0
     columns:
@@ -407,7 +398,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     visible: (covs)
     rows: 0
     columns:
@@ -459,7 +449,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: case
         title: Case
@@ -527,7 +516,6 @@ items:
       - dep
       - covs
       - factors
-      - reportLang
     columns:
       - name: problem
         title: Problem detected

@@ -45,33 +45,44 @@
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
-# .al_tr()
+# .al_lang()
 #
-# Input: lang - already-normalized language code ("es" or "en", typically the
-#   result of .al_normalize_lang()); en - English text; es - Spanish text
-#   (optional; defaults to `en` when the text is identical in both languages).
-# Output: `es` when lang is "es", otherwise `en`.
+# Input: options - self$options of the running analysis.
+# Output: an environment with `tr`, the translator of this run (jamovi's
+#   Options$translate(), which uses the language jamovi sends with every
+#   run), and `texts`, the translated text table (texts.R), built on first
+#   use by .al_text().
 #
-# This is the canonical two-language translator. Every module previously
-# defined its own local `tr()` closure with this exact behavior (some under
-# slightly different signatures). One module (regCheck) additionally accepted
-# `fr`/`pt`/`it` parameters via a 5-language switch(), but no call site in the
-# suite ever passed those three arguments - it was dead code left over from a
-# multi-language plan that is no longer in scope (suite is English/Spanish
-# only). That dead branch is retired here, not migrated.
+# Report strings are English text inside jamovi's `.()` so the jamovi
+# compiler extracts them into jamovi/i18n/es.po. Inside analysis methods and
+# helpers `.` is bound to `lang$tr` (`. <- lang$tr`), because a helper has
+# no `self` for jmvcore's own `.()` to find. A new `lang` is made at every
+# run, so nothing is cached across runs: jmvcore creates a fresh translator
+# for each analysis instance, so a change of jamovi's language reaches the
+# next run (jmvcore 2.7.38, Options$translate()). This replaces the
+# per-analysis Report Language option (`reportLang`) and the bilingual
+# `.al_tr(lang, en, es)` selector that AssumptionsLab used until 1.6.0.
 #
-# ES: Traductor canónico de dos idiomas. Cada módulo definía antes su propio
-# closure local `tr()` con este mismo comportamiento (algunos con una firma
-# ligeramente distinta). Un módulo (regCheck) además aceptaba parámetros
-# `fr`/`pt`/`it` vía un switch() de 5 idiomas, pero ningún punto de llamada
-# en la suite pasaba jamás esos tres argumentos - era código muerto de un
-# plan multi-idioma que ya no está en alcance (la suite es solo
-# inglés/español). Esa rama muerta se retira acá, no se migra.
+# ES: Los textos del informe son texto en inglés dentro de `.()` para que
+# el compilador de jamovi los extraiga a jamovi/i18n/es.po. En los métodos y
+# helpers `.` se enlaza a `lang$tr`, porque un helper no tiene `self` para
+# que lo encuentre el `.()` de jmvcore. Se crea un `lang` nuevo en cada
+# ejecución, así que nada queda guardado entre ejecuciones: jmvcore crea un
+# traductor nuevo por cada instancia del análisis, de modo que un cambio de
+# idioma en jamovi llega a la siguiente ejecución (jmvcore 2.7.38,
+# Options$translate()). Esto reemplaza la opción Report Language
+# (`reportLang`) de cada análisis y el selector bilingüe
+# `.al_tr(lang, en, es)` que AssumptionsLab usó hasta la 1.6.0.
 # -----------------------------------------------------------------------------
-.al_tr <- function(lang, en, es = NULL) {
-    if (is.null(es))
-        es <- en
-    if (identical(lang, "es")) es else en
+.al_lang <- function(options) {
+    lang <- new.env(parent = emptyenv())
+    lang$tr <- function(text) {
+        if (is.null(text) || length(text) != 1 || is.na(text) || !nzchar(text))
+            return(text)
+        tryCatch(options$translate(text), error = function(e) text)
+    }
+    lang$texts <- NULL
+    lang
 }
 
 # -----------------------------------------------------------------------------
@@ -425,8 +436,8 @@
 # .al_norm_reason_text()
 #
 # Input: info - one element of a battery's $reasons list (a
-#   list(reason=, min_n=), or NULL if the test succeeded); tr - the calling
-#   module's own bilingual selector, `function(en, es) ...`.
+#   list(reason=, min_n=), or NULL if the test succeeded); . - the
+#   translator of the run (`lang$tr`, see .al_lang()).
 # Output: NULL if the test succeeded (info$reason is NULL), otherwise a
 #   translated, test-agnostic explanation string ready to attach as a table
 #   footnote via addFootnote().
@@ -440,24 +451,15 @@
 # módulos que llaman a cualquiera de las dos no reimplementen cada uno el
 # mismo switch().
 # -----------------------------------------------------------------------------
-.al_norm_reason_text <- function(info, tr) {
+.al_norm_reason_text <- function(info, .) {
     if (is.null(info) || is.null(info$reason))
         return(NULL)
 
     switch(info$reason,
-        n_too_small = tr(
-            paste0("Could not be computed - fewer than ", info$min_n, " valid observations."),
-            paste0("No se pudo calcular - menos de ", info$min_n, " observaciones válidas.")
-        ),
-        n_too_large = tr(
-            paste0("Could not be computed - more than ", info$min_n, " observations (outside this test's valid range)."),
-            paste0("No se pudo calcular - más de ", info$min_n, " observaciones (fuera del rango válido de esta prueba).")
-        ),
-        no_variation = tr(
-            "Could not be computed - the data have no variation (they are constant).",
-            "No se pudo calcular - los datos no tienen variación (son constantes)."
-        ),
-        tr("Could not be computed for this data.", "No se pudo calcular para estos datos.")
+        n_too_small = sprintf(.("Could not be computed - fewer than %s valid observations."), info$min_n),
+        n_too_large = sprintf(.("Could not be computed - more than %s observations (outside this test's valid range)."), info$min_n),
+        no_variation = .("Could not be computed - the data have no variation (they are constant)."),
+        .("Could not be computed for this data.")
     )
 }
 
@@ -840,15 +842,10 @@
 # fijos y no estan expuestos como opciones.
 # -----------------------------------------------------------------------------
 .al_permutation_note <- function(lang, B, seed) {
+    . <- lang$tr
     floor_p <- 1 / (B + 1)
     floor_p_str <- sub("^0", "", sprintf("%.3f", floor_p))
-    .al_tr(
-        lang,
-        sprintf("Method: dCor and CE p-values are obtained by permutation (B = %d permutations, seed = %d). The minimum achievable p at this resolution is %s; a p equal to this value should be read as p \u2264 %s (Monte Carlo), not as an exact value.",
-                B, seed, floor_p_str, floor_p_str),
-        sprintf("M\u00e9todo: los valores p de dCor y CE se obtienen por permutaci\u00f3n (B = %d permutaciones, semilla = %d). El p m\u00ednimo alcanzable con esta resoluci\u00f3n es %s; un p igual a este valor debe leerse como p \u2264 %s (Monte Carlo), no como un valor exacto.",
-                B, seed, floor_p_str, floor_p_str)
-    )
+    sprintf(.("Method: dCor and CE p-values are obtained by permutation (B = %d permutations, seed = %d). The minimum achievable p at this resolution is %s; a p equal to this value should be read as p ≤ %s (Monte Carlo), not as an exact value."), B, seed, floor_p_str, floor_p_str)
 }
 
 # -----------------------------------------------------------------------------
@@ -872,11 +869,8 @@
 # explícita esa convención al lector donde sea que aparezcan las matrices.
 # -----------------------------------------------------------------------------
 .al_dcor_na_note <- function(lang) {
-    .al_tr(
-        lang,
-        "A blank dCor cell means the statistic could not be computed for that pair (e.g. one of the variables has zero variance, or there are too few complete cases) - it does not imply zero dependence.",
-        "Una celda vac\u00eda en dCor significa que el estad\u00edstico no pudo calcularse para ese par (p. ej. una de las variables tiene varianza cero, o hay muy pocos casos completos) - no implica dependencia cero."
-    )
+    . <- lang$tr
+    .("A blank dCor cell means the statistic could not be computed for that pair (e.g. one of the variables has zero variance, or there are too few complete cases) - it does not imply zero dependence.")
 }
 
 # -----------------------------------------------------------------------------

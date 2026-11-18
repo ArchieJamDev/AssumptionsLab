@@ -7,7 +7,6 @@ relatedCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
     public = list(
         initialize = function(
             measures = NULL,
-            reportLang = "en",
             showProfilePlot = FALSE,
             showDifferencePlots = FALSE,
             showNormalityPlots = FALSE,
@@ -27,13 +26,6 @@ relatedCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 permitted=list(
                     "numeric"),
                 default=NULL)
-            private$..reportLang <- jmvcore::OptionList$new(
-                "reportLang",
-                reportLang,
-                options=list(
-                    "en",
-                    "es"),
-                default="en")
             private$..showProfilePlot <- jmvcore::OptionBool$new(
                 "showProfilePlot",
                 showProfilePlot,
@@ -56,7 +48,6 @@ relatedCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 default="jamovi")
 
             self$.addOption(private$..measures)
-            self$.addOption(private$..reportLang)
             self$.addOption(private$..showProfilePlot)
             self$.addOption(private$..showDifferencePlots)
             self$.addOption(private$..showNormalityPlots)
@@ -64,14 +55,12 @@ relatedCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
         }),
     active = list(
         measures = function() private$..measures$value,
-        reportLang = function() private$..reportLang$value,
         showProfilePlot = function() private$..showProfilePlot$value,
         showDifferencePlots = function() private$..showDifferencePlots$value,
         showNormalityPlots = function() private$..showNormalityPlots$value,
         plotPalette = function() private$..plotPalette$value),
     private = list(
         ..measures = NA,
-        ..reportLang = NA,
         ..showProfilePlot = NA,
         ..showDifferencePlots = NA,
         ..showNormalityPlots = NA,
@@ -194,8 +183,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                     "measures",
                     "showProfilePlot",
                     "plotStyle",
-                    "plotPalette",
-                    "reportLang")))
+                    "plotPalette")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="differencePlot",
@@ -208,8 +196,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                     "measures",
                     "showDifferencePlots",
                     "plotStyle",
-                    "plotPalette",
-                    "reportLang")))
+                    "plotPalette")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="normalityPlot",
@@ -221,8 +208,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 clearWith=list(
                     "measures",
                     "showNormalityPlots",
-                    "plotStyle",
-                    "reportLang")))
+                    "plotStyle")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="normalCurvePlot",
@@ -234,8 +220,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 clearWith=list(
                     "measures",
                     "showNormalityPlots",
-                    "plotStyle",
-                    "reportLang")))
+                    "plotStyle")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="differenceGuide",
@@ -596,7 +581,6 @@ relatedCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' 
 #' @param data .
 #' @param measures .
-#' @param reportLang .
 #' @param showProfilePlot .
 #' @param showDifferencePlots .
 #' @param showNormalityPlots .
@@ -650,7 +634,6 @@ relatedCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 relatedCheck <- function(
     data,
     measures = NULL,
-    reportLang = "en",
     showProfilePlot = FALSE,
     showDifferencePlots = FALSE,
     showNormalityPlots = FALSE,
@@ -668,7 +651,6 @@ relatedCheck <- function(
 
     options <- relatedCheckOptions$new(
         measures = measures,
-        reportLang = reportLang,
         showProfilePlot = showProfilePlot,
         showDifferencePlots = showDifferencePlots,
         showNormalityPlots = showNormalityPlots,
