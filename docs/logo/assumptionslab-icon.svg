@@ -2,18 +2,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="AssumptionsLab">
   <title>AssumptionsLab</title>
   <rect x="6" y="6" width="244" height="244" rx="52" fill="#F4F7FB" stroke="#D5DEEA" stroke-width="2"/>
-  <g transform="translate(0 0) scale(1)">
-    <rect x="55" y="181.1" width="26" height="22.9" rx="6" fill="#0072B2" opacity="0.28"/>
-    <rect x="85" y="130.4" width="26" height="73.6" rx="6" fill="#E69F00" opacity="0.28"/>
-    <rect x="115" y="95.4" width="26" height="108.6" rx="6" fill="#009E73" opacity="0.28"/>
-    <rect x="145" y="130.4" width="26" height="73.6" rx="6" fill="#E69F00" opacity="0.28"/>
-    <rect x="175" y="181.1" width="26" height="22.9" rx="6" fill="#0072B2" opacity="0.28"/>
-    <polyline points="36,201.0 40,199.9 44,198.4 48,196.6 52,194.3 56,191.5 60,188.0 64,183.9 68,179.1 72,173.6 76,167.4 80,160.4 84,152.9 88,144.9 92,136.6 96,128.2 100,119.9 104,112.0 108,104.7 112,98.4 116,93.1 120,89.2 124,86.8 128,86.0 132,86.8 136,89.2 140,93.1 144,98.4 148,104.7 152,112.0 156,119.9 160,128.2 164,136.6 168,144.9 172,152.9 176,160.4 180,167.4 184,173.6 188,179.1 192,183.9 196,188.0 200,191.5 204,194.3 208,196.6 212,198.4 216,199.9 220,201.0" fill="none" stroke="#1F4E79" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
-    <line x1="36" y1="210" x2="220" y2="210" stroke="#8A94A6" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/>
-    <circle cx="78.0" cy="164.0" r="11.0" fill="#0072B2" stroke="#FFFFFF" stroke-width="3.5"/>
-    <circle cx="128.0" cy="86.0" r="14.0" fill="#E69F00" stroke="#FFFFFF" stroke-width="3.5"/>
-    <circle cx="170.0" cy="149.0" r="12.0" fill="#009E73" stroke="#FFFFFF" stroke-width="3.5"/>
-    <circle cx="198.0" cy="60.0" r="24.0" fill="#009E73" stroke="#FFFFFF" stroke-width="3.5"/>
-    <path d="M186 60 l8 9 l15 -17" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
+  <polyline points="40.0,198.4 42.9,197.9 45.9,197.2 48.8,196.4 51.7,195.3 54.7,194.1 57.6,192.5 60.5,190.6 63.5,188.3 66.4,185.7 69.3,182.6 72.3,179.0 75.2,174.9 78.1,170.4 81.1,165.3 84.0,159.7 86.9,153.8 89.9,147.4 92.8,140.7 95.7,133.8 98.7,126.8 101.6,119.9 104.5,113.1 107.5,106.6 110.4,100.7 113.3,95.3 116.3,90.7 119.2,87.0 122.1,84.2 125.1,82.6 128.0,82.0 130.9,82.6 133.9,84.2 136.8,87.0 139.7,90.7 142.7,95.3 145.6,100.7 148.5,106.6 151.5,113.1 154.4,119.9 157.3,126.8 160.3,133.8 163.2,140.7 166.1,147.4 169.1,153.8 172.0,159.7 174.9,165.3 177.9,170.4 180.8,174.9 183.7,179.0 186.7,182.6 189.6,185.7 192.5,188.3 195.5,190.6 198.4,192.5 201.3,194.1 204.3,195.3 207.2,196.4 210.1,197.2 213.1,197.9 216.0,198.4" fill="none" stroke="#9F9F9F" stroke-width="11.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="40.0" y1="213.2" x2="216.0" y2="213.2" stroke="#C9D2DE" stroke-width="8.0" stroke-linecap="round"/>
+  <circle cx="88.1" cy="151.3" r="17.0" fill="#FFFFFF" stroke="#6B9DE8" stroke-width="12.0"/>
+  <circle cx="128.0" cy="82.0" r="17.0" fill="#FFFFFF" stroke="#E6AC40" stroke-width="12.0"/>
+  <circle cx="167.9" cy="151.3" r="17.0" fill="#FFFFFF" stroke="#6B9DE8" stroke-width="12.0"/>
 </svg>
