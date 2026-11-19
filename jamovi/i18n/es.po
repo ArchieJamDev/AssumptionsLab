@@ -12935,6 +12935,26 @@ msgstr "Sig."
 msgid "Sig. (CE)"
 msgstr "Sig. (CE)"
 
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Sig. (dCor)"
+msgstr "Sig. (dCor)"
+
+#: anovaCheck/results/correlationComparisonTable.columns.title
+#: logCheck/results/correlationComparisonTable.columns.title
+#: multCheck/results/correlationComparisonTable.columns.title
+#: ordCheck/results/correlationComparisonTable.columns.title
+#: pathCheck/results/correlationComparisonTable.columns.title
+#: regCheck/results/correlationComparisonTable.columns.title
+#: relatedCheck/results/correlationComparisonTable.columns.title
+msgid "Sig. (r)"
+msgstr "Sig. (r)"
+
 #: R/groupcheck.b.R
 msgid "Sig. dev. 0.1%"
 msgstr "Desv. sig. 0.1%"

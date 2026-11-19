@@ -44,6 +44,19 @@
 - **Fix:** in ANOVA/ANCOVA, the residuals-vs-fitted plot failed when a
   LOESS or linear smoother was chosen (it called a palette helper that no
   longer existed); the smoother now takes the theme's accent colour.
+- **Numbers in numeric columns.** p values, test statistics and
+  correlations that were written into text columns are now numbers that
+  follow jamovi's decimal and p-value settings and paste into spreadsheets
+  as numbers. This covers:
+  - the normality and homogeneity tables of Independent Groups;
+  - the independence table of Regression;
+  - the sphericity table of Related Groups;
+  - the Mardia df of Path Analysis;
+  - the p column of the Time Series diagnostics.
+  In the Pearson/dCor gap tables, Pearson r and dCor are numbers with their
+  significance stars in new *Sig. (r)* and *Sig. (dCor)* columns, like
+  *Sig. (CE)*. A value that cannot be computed leaves an empty cell instead
+  of "Not calc.", and its footnote explains why.
 
 ---
 

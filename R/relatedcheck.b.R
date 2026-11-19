@@ -1052,7 +1052,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                         statistic = statistic,
                         value = clean_num(value),
                         df = ifelse(is.na(clean_num(df)), NA_integer_, as.integer(df)),
-                        p = ifelse(is.na(clean_num(p_value)), .("Not applicable"), format_p(p_value)),
+                        p = if (is.na(clean_num(p_value))) "" else clean_num(p_value),
                         pSig = p_sig(p_value)
                     )
                 )
@@ -1284,8 +1284,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
                     compTable$addRow(rowKey = key, values = list(
                         var1 = pr$v1, var2 = pr$v2,
-                        pearson = apaCell(pr$pearsonR, pr$pearsonP),
-                        dcor = apaCell(pr$dcor, pr$dcorP),
+                        pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
+                        dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
                         gap = gap, ce = pr$ce, ceP = pr$ceP,
                         ceSig = p_sig(pr$ceP),
                         flag = .("Yes")

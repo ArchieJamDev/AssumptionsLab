@@ -518,10 +518,18 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="pearson", 
                         `title`="Pearson r", 
+                        `type`="number"),
+                    list(
+                        `name`="pearsonSig", 
+                        `title`="Sig. (r)", 
                         `type`="text"),
                     list(
                         `name`="dcor", 
                         `title`="dCor", 
+                        `type`="number"),
+                    list(
+                        `name`="dcorSig", 
+                        `title`="Sig. (dCor)", 
                         `type`="text"),
                     list(
                         `name`="gap", 
@@ -780,7 +788,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="p", 
                         `title`="p", 
-                        `type`="text"),
+                        `type`="number", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="pSig", 
                         `title`="Sig.", 

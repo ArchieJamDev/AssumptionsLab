@@ -452,7 +452,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 results_rows[[row_idx]] <<- list(
                     test = test,
                     statistic = statistic_txt,
-                    pvalue = fmt_p(p),
+                    pvalue = if (is.null(p) || length(p) == 0 || is.na(p)) "" else as.numeric(p),
                     evidence = cl$label
                 )
                 if (!is.null(footnote))
@@ -496,7 +496,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 results_rows[[row_idx]] <<- list(
                     test = .("Note"),
                     statistic = "\u2014",
-                    pvalue = "\u2014",
+                    pvalue = "",
                     evidence = .("See note below")
                 )
                 note_footnotes[[length(note_footnotes) + 1]] <<- list(row = row_idx, text = message)

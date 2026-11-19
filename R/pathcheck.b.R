@@ -1252,7 +1252,7 @@ pathCheckClass <- R6::R6Class(
                     measure   = .("Mardia's skewness"),
                     value     = mardiaRes$b1p,
                     statistic = mardiaRes$skewStat,
-                    df        = sprintf("%.1f", mardiaRes$skewDf),
+                    df        = mardiaRes$skewDf,
                     p         = mardiaRes$skewP,
                     pSig      = p_sig_stars(mardiaRes$skewP)
                 ))
@@ -1260,7 +1260,7 @@ pathCheckClass <- R6::R6Class(
                     measure   = .("Mardia's kurtosis"),
                     value     = mardiaRes$b2p,
                     statistic = mardiaRes$kurtZ,
-                    df        = "—",
+                    df        = "",
                     p         = mardiaRes$kurtP,
                     pSig      = p_sig_stars(mardiaRes$kurtP)
                 ))
@@ -1401,8 +1401,8 @@ pathCheckClass <- R6::R6Class(
                 compTable$addRow(rowKey = key, values = list(
                     var1  = pr$v1,
                     var2  = pr$v2,
-                    pearson = .apaCell(pr$pearsonR, pr$pearsonP),
-                    dcor    = .apaCell(pr$dcor, pr$dcorP),
+                    pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
+                    dcor    = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
                     gap   = gap,
                     ce    = pr$ce,
                     ceP   = pr$ceP,

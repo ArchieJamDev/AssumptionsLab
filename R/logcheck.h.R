@@ -495,10 +495,18 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="pearson", 
                         `title`="Pearson r", 
+                        `type`="number"),
+                    list(
+                        `name`="pearsonSig", 
+                        `title`="Sig. (r)", 
                         `type`="text"),
                     list(
                         `name`="dcor", 
                         `title`="dCor", 
+                        `type`="number"),
+                    list(
+                        `name`="dcorSig", 
+                        `title`="Sig. (dCor)", 
                         `type`="text"),
                     list(
                         `name`="gap", 

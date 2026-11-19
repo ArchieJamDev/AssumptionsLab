@@ -360,11 +360,12 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="value", 
                         `title`="Value", 
-                        `type`="text"),
+                        `type`="number"),
                     list(
                         `name`="p", 
                         `title`="p", 
-                        `type`="text"),
+                        `type`="number", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="pSig", 
                         `title`="Sig.", 
@@ -447,7 +448,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="value", 
                         `title`="Value", 
-                        `type`="text"),
+                        `type`="number"),
                     list(
                         `name`="df1", 
                         `title`="df1", 
@@ -459,7 +460,8 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="p", 
                         `title`="p", 
-                        `type`="text"),
+                        `type`="number", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="pSig", 
                         `title`="Sig.", 

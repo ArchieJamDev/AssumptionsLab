@@ -1445,8 +1445,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
                     compTable$addRow(rowKey = key, values = list(
                         var1 = pr$v1, var2 = pr$v2,
-                        pearson = apaCell(pr$pearsonR, pr$pearsonP),
-                        dcor = apaCell(pr$dcor, pr$dcorP),
+                        pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
+                        dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
                         gap = gap, ce = pr$ce, ceP = pr$ceP,
                         ceSig = p_sig(pr$ceP),
                         flag = .("Yes")

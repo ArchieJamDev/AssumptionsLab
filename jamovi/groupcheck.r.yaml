@@ -198,10 +198,11 @@ items:
         type: text
       - name: value
         title: Value
-        type: text
+        type: number
       - name: p
         title: p
-        type: text
+        type: number
+        format: zto,pvalue
       - name: pSig
         title: Sig.
         type: text
@@ -277,7 +278,7 @@ items:
         type: text
       - name: value
         title: Value
-        type: text
+        type: number
       - name: df1
         title: df1
         type: integer
@@ -286,7 +287,8 @@ items:
         type: integer
       - name: p
         title: p
-        type: text
+        type: number
+        format: zto,pvalue
       - name: pSig
         title: Sig.
         type: text

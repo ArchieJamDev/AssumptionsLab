@@ -241,7 +241,8 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="pvalue", 
                         `title`="p", 
-                        `type`="text"),
+                        `type`="number", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="evidence", 
                         `title`="Evidence", 

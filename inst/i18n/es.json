@@ -4516,6 +4516,12 @@
             "Sig. (CE)": [
                 "Sig. (CE)"
             ],
+            "Sig. (dCor)": [
+                "Sig. (dCor)"
+            ],
+            "Sig. (r)": [
+                "Sig. (r)"
+            ],
             "Sig. dev. 0.1%": [
                 "Desv. sig. 0.1%"
             ],

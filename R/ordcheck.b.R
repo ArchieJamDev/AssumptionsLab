@@ -844,7 +844,7 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         notable_pairs <- notable_pairs + 1
                         add_row(self$results$correlationComparisonTable, paste0("cc_", notable_pairs), list(
                             var1 = pr$v1, var2 = pr$v2,
-                            pearson = fmt_num(pr$pearsonR, 3), dcor = fmt_num(pr$dcor, 3),
+                            pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP), dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
                             gap = gap, ce = pr$ce, ceP = pr$ceP, ceSig = p_sig(pr$ceP),
                             flag = .("Yes")
                         ))
