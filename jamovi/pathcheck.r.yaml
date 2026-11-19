@@ -460,7 +460,7 @@ items:
         type: number
       - name: df
         title: df
-        type: text
+        type: number
       - name: p
         title: p
         type: number
@@ -546,9 +546,15 @@ items:
         type: text
       - name: pearson
         title: Pearson r
+        type: number
+      - name: pearsonSig
+        title: Sig. (r)
         type: text
       - name: dcor
         title: dCor
+        type: number
+      - name: dcorSig
+        title: Sig. (dCor)
         type: text
       - name: gap
         title: Gap (dCor − |r|)

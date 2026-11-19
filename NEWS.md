@@ -22,6 +22,76 @@
 - New tests run analyses in Spanish, English and Spanish again and check
   that every text resolves and nothing is cached between runs.
 
+## Lessons from the jamovi audits of MokkenLab and EGAnetLab
+
+- **Permutation tests can be interrupted.** The dCor and copula entropy
+  permutation tests call jamovi's checkpoint before each variable pair (in
+  every analysis that runs them), so changing an option stops a long run
+  instead of waiting for every remaining pair.
+- **Whole paragraphs for translators.** Ten Time Series paragraphs (the
+  introduction, the scope note, four model descriptions and four
+  methodological foundations) were split into line-length fragments in
+  `R/texts.R`; each is now a single `.()` entry. The report reads the same
+  ("Assumptions/Conditions" loses a stray space). `catalog.pot`, `es.po`
+  and `inst/i18n/es.json` updated (72 fragments replaced by 10 entries).
+- The Time Series options box is titled "Time Series Model" (title case,
+  like every other box).
+- **Plot colours follow jamovi.** The module's own palette option
+  (`plotPalette`: Okabe-Ito, viridis) is removed from all nine analyses;
+  every plot uses the palette chosen in jamovi's settings, as jamovi asked
+  of MokkenLab and EGAnetLab. Saved analyses that still carry the option
+  open normally. `.al_plot_series_palette()` is gone with it.
+- **Fix:** in ANOVA/ANCOVA, the residuals-vs-fitted plot failed when a
+  LOESS or linear smoother was chosen (it called a palette helper that no
+  longer existed); the smoother now takes the theme's accent colour.
+- **Numbers in numeric columns.** p values, test statistics and
+  correlations that were written into text columns are now numbers that
+  follow jamovi's decimal and p-value settings and paste into spreadsheets
+  as numbers. This covers:
+  - the normality and homogeneity tables of Independent Groups;
+  - the independence table of Regression;
+  - the sphericity table of Related Groups;
+  - the Mardia df of Path Analysis;
+  - the p column of the Time Series diagnostics.
+  In the Pearson/dCor gap tables, Pearson r and dCor are numbers with their
+  significance stars in new *Sig. (r)* and *Sig. (dCor)* columns, like
+  *Sig. (CE)*. A value that cannot be computed leaves an empty cell instead
+  of "Not calc.", and its footnote explains why.
+- **Results keep their place.** The following sections no longer appear
+  or disappear when the analysis runs. Their visibility is now declared in
+  the `.r.yaml` files, so jamovi lays them out before the results arrive:
+  - the correlation sections (shown whenever there are numeric
+    predictors);
+  - multicollinearity;
+  - sphericity in Related Groups;
+  - the distribution, Q-Q and normal-curve plots of Independent Groups.
+
+  When a section does not apply, it stays in place with its "Not
+  applicable" row or note, for example sphericity with two measurements, a
+  single predictor column, or a single numeric predictor in Multinomial
+  Logistic Regression.
+- **Greyed-out options.** Plot options are disabled until the plot they
+  belong to is ticked, in ANOVA/ANCOVA, Logistic, Multinomial, Ordinal and
+  Linear Regression, and Path Analysis, as Independent Groups already did.
+- **Fix:** two cells of Linear Regression ("No aplicable" in the linearity
+  table and "VIF / tolerancia" in multicollinearity) were hard-coded in
+  Spanish and now go through the translation catalog.
+- **Correlation matrices are numeric.** The Pearson and dCor matrices keep
+  their APA layout (numbered variables, lower triangle), but each cell is
+  now a number. Its significance stars are attached with jamovi's own table
+  symbols, as in jamovi's Correlation Matrix, so the matrices follow
+  jamovi's decimal settings and paste into spreadsheets as numbers.
+- **Related Groups lays out its descriptives first.** The *Descriptives by
+  measurement* table has one row per selected measurement from the start
+  (`rows: (measures)`), so it no longer grows while the analysis runs.
+- **Native notice in Time Series.** When the diagnostics cannot run (no
+  series, a VAR/VECM with a single series, or missing R packages), a jamovi
+  notice explains why above the diagnostics. The diagnostics tables stay in
+  place, and the notice no longer appears or disappears as an Html block.
+  The missing-packages message is now one whole sentence for translators.
+- The description of Assumption Library says that entries follow jamovi's
+  language, instead of "available in English or Spanish".
+
 ---
 
 # Validation scripts (unreleased, 2026-09-05)

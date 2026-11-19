@@ -21,8 +21,7 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             rocShowAUCLabel = TRUE,
             influenceShowPlots = TRUE,
             influenceLabelMode = "top5",
-            influenceShowThreshold = TRUE,
-            plotPalette = "jamovi", ...) {
+            influenceShowThreshold = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -121,14 +120,6 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "influenceShowThreshold",
                 influenceShowThreshold,
                 default=TRUE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
 
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
@@ -146,7 +137,6 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..influenceShowPlots)
             self$.addOption(private$..influenceLabelMode)
             self$.addOption(private$..influenceShowThreshold)
-            self$.addOption(private$..plotPalette)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -164,8 +154,7 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         rocShowAUCLabel = function() private$..rocShowAUCLabel$value,
         influenceShowPlots = function() private$..influenceShowPlots$value,
         influenceLabelMode = function() private$..influenceLabelMode$value,
-        influenceShowThreshold = function() private$..influenceShowThreshold$value,
-        plotPalette = function() private$..plotPalette$value),
+        influenceShowThreshold = function() private$..influenceShowThreshold$value),
     private = list(
         ..dep = NA,
         ..covs = NA,
@@ -182,8 +171,7 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..rocShowAUCLabel = NA,
         ..influenceShowPlots = NA,
         ..influenceLabelMode = NA,
-        ..influenceShowThreshold = NA,
-        ..plotPalette = NA)
+        ..influenceShowThreshold = NA)
 )
 
 logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -325,7 +313,6 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors",
                     "plotStyle",
-                    "plotPalette",
                     "linSmoother",
                     "linBins")))
             self$add(jmvcore::Html$new(
@@ -373,7 +360,6 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors",
                     "plotStyle",
-                    "plotPalette",
                     "caliBins",
                     "caliRefLine")))
             self$add(jmvcore::Html$new(
@@ -412,19 +398,16 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors",
                     "plotStyle",
-                    "plotPalette",
                     "rocRefLine",
                     "rocShowAUCLabel")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityGuide",
-                title="Multicollinearity",
-                visible=FALSE))
+                title="Multicollinearity"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="multicollinearity",
                 title="Multicollinearity",
-                visible=FALSE,
                 refs=list(
                     "marquardt_1970",
                     "belsley_1980"),
@@ -448,19 +431,18 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityInterpretation",
-                title="Applied interpretation",
-                visible=FALSE))
+                title="Applied interpretation"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationMatrixGuide",
                 title="Correlation matrix",
-                visible=FALSE))
+                visible="(covs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pearsonMatrixTable",
                 title="Pearson correlation matrix (APA 7 format)",
                 rows=0,
-                visible=FALSE,
+                visible="(covs)",
                 columns=list(
                     list(
                         `name`="var", 
@@ -471,7 +453,7 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="dcorMatrixTable",
                 title="Distance correlation matrix (dCor, APA 7 format)",
                 rows=0,
-                visible=FALSE,
+                visible="(covs)",
                 refs=list(
                     "sz_kely_2007"),
                 columns=list(
@@ -483,18 +465,18 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationMatrixNote",
                 title=" ",
-                visible=FALSE))
+                visible="(covs)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonGuide",
                 title="Pearson / dCor / copula entropy discordance analysis",
-                visible=FALSE))
+                visible="(covs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="correlationComparisonTable",
                 title="Pairs with a notable gap between Pearson and dCor",
                 rows=0,
-                visible=FALSE,
+                visible="(covs)",
                 refs=list(
                     "sz_kely_2007",
                     "ma_2011"),
@@ -510,10 +492,18 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="pearson", 
                         `title`="Pearson r", 
+                        `type`="number"),
+                    list(
+                        `name`="pearsonSig", 
+                        `title`="Sig. (r)", 
                         `type`="text"),
                     list(
                         `name`="dcor", 
                         `title`="dCor", 
+                        `type`="number"),
+                    list(
+                        `name`="dcorSig", 
+                        `title`="Sig. (dCor)", 
                         `type`="text"),
                     list(
                         `name`="gap", 
@@ -540,7 +530,7 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationComparisonInterpretation",
                 title="Applied interpretation",
-                visible=FALSE))
+                visible="(covs)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influenceGuide",
@@ -583,7 +573,6 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors",
                     "plotStyle",
-                    "plotPalette",
                     "influenceLabelMode",
                     "influenceShowThreshold")))
             self$add(jmvcore::Html$new(
@@ -673,7 +662,6 @@ logCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param influenceShowPlots .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
-#' @param plotPalette .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -738,8 +726,7 @@ logCheck <- function(
     rocShowAUCLabel = TRUE,
     influenceShowPlots = TRUE,
     influenceLabelMode = "top5",
-    influenceShowThreshold = TRUE,
-    plotPalette = "jamovi") {
+    influenceShowThreshold = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logCheck requires jmvcore to be installed (restart may be required)")
@@ -773,8 +760,7 @@ logCheck <- function(
         rocShowAUCLabel = rocShowAUCLabel,
         influenceShowPlots = influenceShowPlots,
         influenceLabelMode = influenceLabelMode,
-        influenceShowThreshold = influenceShowThreshold,
-        plotPalette = plotPalette)
+        influenceShowThreshold = influenceShowThreshold)
 
     analysis <- logCheckClass$new(
         options = options,

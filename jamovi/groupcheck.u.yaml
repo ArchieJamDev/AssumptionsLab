@@ -89,9 +89,3 @@ children:
       - type: CheckBox
         name: curveShowRug
         enable: (showNormalCurvePlots)
-  - type: CollapseBox
-    label: Plot Color Palette
-    collapsed: true
-    children:
-      - type: ComboBox
-        name: plotPalette

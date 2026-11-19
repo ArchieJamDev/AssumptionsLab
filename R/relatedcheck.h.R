@@ -9,8 +9,7 @@ relatedCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             measures = NULL,
             showProfilePlot = FALSE,
             showDifferencePlots = FALSE,
-            showNormalityPlots = FALSE,
-            plotPalette = "jamovi", ...) {
+            showNormalityPlots = FALSE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -38,33 +37,22 @@ relatedCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 "showNormalityPlots",
                 showNormalityPlots,
                 default=FALSE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
 
             self$.addOption(private$..measures)
             self$.addOption(private$..showProfilePlot)
             self$.addOption(private$..showDifferencePlots)
             self$.addOption(private$..showNormalityPlots)
-            self$.addOption(private$..plotPalette)
         }),
     active = list(
         measures = function() private$..measures$value,
         showProfilePlot = function() private$..showProfilePlot$value,
         showDifferencePlots = function() private$..showDifferencePlots$value,
-        showNormalityPlots = function() private$..showNormalityPlots$value,
-        plotPalette = function() private$..plotPalette$value),
+        showNormalityPlots = function() private$..showNormalityPlots$value),
     private = list(
         ..measures = NA,
         ..showProfilePlot = NA,
         ..showDifferencePlots = NA,
-        ..showNormalityPlots = NA,
-        ..plotPalette = NA)
+        ..showNormalityPlots = NA)
 )
 
 relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -138,11 +126,13 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="descriptiveSummary",
                 title="Descriptives by measurement",
+                rows="(measures)",
                 columns=list(
                     list(
                         `name`="measure", 
                         `title`="Measurement", 
-                        `type`="text"),
+                        `type`="text", 
+                        `content`="($key)"),
                     list(
                         `name`="n", 
                         `title`="n", 
@@ -182,8 +172,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 clearWith=list(
                     "measures",
                     "showProfilePlot",
-                    "plotStyle",
-                    "plotPalette")))
+                    "plotStyle")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="differencePlot",
@@ -195,8 +184,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 clearWith=list(
                     "measures",
                     "showDifferencePlots",
-                    "plotStyle",
-                    "plotPalette")))
+                    "plotStyle")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="normalityPlot",
@@ -364,13 +352,11 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sphericityGuide",
-                title="Sphericity",
-                visible=FALSE))
+                title="Sphericity"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="sphericity",
                 title="Sphericity and corrections",
-                visible=FALSE,
                 refs=list(
                     "mauchly_1940",
                     "greenhouse_1959",
@@ -395,7 +381,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                     list(
                         `name`="p", 
                         `title`="p", 
-                        `type`="text"),
+                        `type`="number", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="pSig", 
                         `title`="Sig.", 
@@ -403,18 +390,15 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sphericityInterpretation",
-                title="Applied interpretation",
-                visible=FALSE))
+                title="Applied interpretation"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationMatrixGuide",
-                title="Correlation matrix",
-                visible=FALSE))
+                title="Correlation matrix"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pearsonMatrixTable",
                 title="Pearson correlation matrix (APA 7 format)",
-                visible=FALSE,
                 rows=0,
                 columns=list(
                     list(
@@ -425,7 +409,6 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="dcorMatrixTable",
                 title="Distance correlation matrix (dCor, APA 7 format)",
-                visible=FALSE,
                 refs=list(
                     "sz_kely_2007"),
                 rows=0,
@@ -437,18 +420,15 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationMatrixNote",
-                title=" ",
-                visible=FALSE))
+                title=" "))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonGuide",
-                title="Pearson / dCor / copula entropy discordance analysis",
-                visible=FALSE))
+                title="Pearson / dCor / copula entropy discordance analysis"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="correlationComparisonTable",
                 title="Pairs with a notable gap between Pearson and dCor",
-                visible=FALSE,
                 refs=list(
                     "sz_kely_2007",
                     "ma_2011"),
@@ -465,10 +445,18 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                     list(
                         `name`="pearson", 
                         `title`="Pearson r", 
+                        `type`="number"),
+                    list(
+                        `name`="pearsonSig", 
+                        `title`="Sig. (r)", 
                         `type`="text"),
                     list(
                         `name`="dcor", 
                         `title`="dCor", 
+                        `type`="number"),
+                    list(
+                        `name`="dcorSig", 
+                        `title`="Sig. (dCor)", 
                         `type`="text"),
                     list(
                         `name`="gap", 
@@ -494,8 +482,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonInterpretation",
-                title="Applied interpretation",
-                visible=FALSE))
+                title="Applied interpretation"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="outliersGuide",
@@ -584,7 +571,6 @@ relatedCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param showProfilePlot .
 #' @param showDifferencePlots .
 #' @param showNormalityPlots .
-#' @param plotPalette .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -636,8 +622,7 @@ relatedCheck <- function(
     measures = NULL,
     showProfilePlot = FALSE,
     showDifferencePlots = FALSE,
-    showNormalityPlots = FALSE,
-    plotPalette = "jamovi") {
+    showNormalityPlots = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("relatedCheck requires jmvcore to be installed (restart may be required)")
@@ -653,8 +638,7 @@ relatedCheck <- function(
         measures = measures,
         showProfilePlot = showProfilePlot,
         showDifferencePlots = showDifferencePlots,
-        showNormalityPlots = showNormalityPlots,
-        plotPalette = plotPalette)
+        showNormalityPlots = showNormalityPlots)
 
     analysis <- relatedCheckClass$new(
         options = options,

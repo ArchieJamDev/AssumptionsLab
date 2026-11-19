@@ -63,36 +63,48 @@ children:
     children:
       - type: CheckBox
         name: linShowPlots
+        enable: (showPlots)
       - type: ComboBox
         name: linSmoother
+        enable: (showPlots && linShowPlots)
       - type: CheckBox
         name: linShowBand
+        enable: (showPlots && linShowPlots)
       - type: CheckBox
         name: linRefLine
+        enable: (showPlots && linShowPlots)
   - type: CollapseBox
     label: 'Plots: Normality'
     collapsed: true
     children:
       - type: CheckBox
         name: normShowPlots
+        enable: (showPlots)
       - type: CheckBox
         name: normQQBand
+        enable: (showPlots && normShowPlots)
       - type: ComboBox
         name: normHistBins
+        enable: (showPlots && normShowPlots)
       - type: CheckBox
         name: normCurveOverlay
+        enable: (showPlots && normShowPlots)
       - type: CheckBox
         name: normFlagOutliers
+        enable: (showPlots && normShowPlots)
   - type: CollapseBox
     label: 'Plots: Homoscedasticity'
     collapsed: true
     children:
       - type: CheckBox
         name: homoShowPlots
+        enable: (showPlots)
       - type: ComboBox
         name: homoSmoother
+        enable: (showPlots && homoShowPlots)
       - type: CheckBox
         name: homoShowBand
+        enable: (showPlots && homoShowPlots)
   - type: CollapseBox
     label: 'Plots: Correlations'
     collapsed: true
@@ -103,8 +115,10 @@ children:
         name: corrShowComparative
       - type: CheckBox
         name: corrIndividualFit
+        enable: (corrShowIndividual)
       - type: ComboBox
         name: corrComparativeStyle
+        enable: (corrShowComparative)
       - type: CheckBox
         name: corrHighlightDiscordant
   - type: CollapseBox
@@ -113,13 +127,10 @@ children:
     children:
       - type: CheckBox
         name: influenceShowPlots
+        enable: (showPlots)
       - type: ComboBox
         name: influenceLabelMode
+        enable: (showPlots && influenceShowPlots)
       - type: CheckBox
         name: influenceShowThreshold
-  - type: CollapseBox
-    label: Plot Color Palette
-    collapsed: true
-    children:
-      - type: ComboBox
-        name: plotPalette
+        enable: (showPlots && influenceShowPlots)

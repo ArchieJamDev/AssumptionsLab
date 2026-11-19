@@ -101,11 +101,6 @@ items:
         title: Associated decision
         type: text
 
-  - name: runNotice
-    title: Notice
-    type: Html
-    visible: false
-
   - name: seriesPlot
     title: Time series
     type: Image
@@ -143,7 +138,8 @@ items:
         type: text
       - name: pvalue
         title: p
-        type: text
+        type: number
+        format: zto,pvalue
       - name: evidence
         title: Evidence
         type: text

@@ -126,7 +126,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     existing <- tryCatch(table$getColumn(colName), error = function(e) NULL)
                     if (is.null(existing)) {
                         tryCatch(
-                            table$addColumn(name = colName, title = as.character(i), type = "text"),
+                            table$addColumn(name = colName, title = as.character(i), type = "number"),
                             error = function(e) NULL
                         )
                     }
@@ -1138,6 +1138,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 add_covlin(.("Not applicable"), .("No covariates"), "", NA_real_, NA_real_)
             } else {
                 for (cv in covs) {
+                    # Let jamovi stop the permutation tests when an option changes.
+                    # ES: Permite que jamovi detenga las permutaciones si cambia una opción.
+                    private$.checkpoint(flush = FALSE)
                     x <- dat2[[cv]]
 
                     cor_val <- tryCatch(stats::cor(x, y, use = "complete.obs"),
@@ -1369,6 +1372,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     for (i in seq_len(k)) {
                         for (j in seq_len(k)) {
                             if (j >= i) next()
+                            # Let jamovi stop the permutation tests when an option changes.
+                            # ES: Permite que jamovi detenga las permutaciones si cambia una opción.
+                            private$.checkpoint(flush = FALSE)
                             v1 <- matVars[i]; v2 <- matVars[j]
                             x <- dat2[[v1]]; y <- dat2[[v2]]
                             ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)
@@ -1390,6 +1396,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     for (i in seq_len(k)) {
                         rowVar <- matVars[i]
                         pearsonVals <- list(var = sprintf("%d. %s", i, rowVar))
+                        pearsonSyms <- list(); dcorSyms <- list()
                         dcorVals <- list(var = sprintf("%d. %s", i, rowVar))
                         for (j in seq_len(k)) {
                             colName <- paste0("c", j)
@@ -1401,12 +1408,16 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                 dcorVals[[colName]] <- "\u2014"
                             } else {
                                 pr <- pairResults[[paste(rowVar, matVars[j], sep = "|")]]
-                                pearsonVals[[colName]] <- if (!is.null(pr)) apaCell(pr$pearsonR, pr$pearsonP) else ""
-                                dcorVals[[colName]] <- if (!is.null(pr)) apaCell(pr$dcor, pr$dcorP) else ""
+                                pearsonVals[[colName]] <- if (!is.null(pr) && !is.na(pr$pearsonR)) pr$pearsonR else ""
+                                pearsonSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$pearsonP) else ""
+                                dcorVals[[colName]] <- if (!is.null(pr) && !is.na(pr$dcor)) pr$dcor else ""
+                                dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                             }
                         }
                         pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                        for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
                         dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                        for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                     }
 
                     self$results$correlationMatrixNote$setContent(block96(
@@ -1439,8 +1450,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
                     compTable$addRow(rowKey = key, values = list(
                         var1 = pr$v1, var2 = pr$v2,
-                        pearson = apaCell(pr$pearsonR, pr$pearsonP),
-                        dcor = apaCell(pr$dcor, pr$dcorP),
+                        pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
+                        dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
                         gap = gap, ce = pr$ce, ceP = pr$ceP,
                         ceSig = p_sig(pr$ceP),
                         flag = .("Yes")
@@ -1826,13 +1837,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # llamada existente) ya que la cantidad de colores deja de ser
         # relevante al delegar en ggtheme.
         .categoricalPalette = function(n) {
-            key <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(key) || length(key) == 0 || !nzchar(key) || identical(key, "jamovi"))
-                return(NULL)
-            rep_len(.al_plot_series_palette(key), n)
+            NULL
         },
 
-        .addSmoother = function(plot, x, y) {
+        .addSmoother = function(plot, x, y, smooth_color) {
             smoother <- tryCatch(self$options$residSmoother, error = function(e) "none")
             if (is.null(smoother) || length(smoother) == 0 || !nzchar(smoother))
                 smoother <- "none"
@@ -1843,15 +1851,15 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 plot + ggplot2::geom_smooth(
                     ggplot2::aes(x = .data[[x]], y = .data[[y]]),
                     method = "loess", se = show_band, linewidth = 0.6,
-                    color = private$.plotPalette()$smooth,
-                    fill = private$.plotPalette()$smooth
+                    color = smooth_color,
+                    fill = smooth_color
                 )
             } else if (identical(smoother, "linear")) {
                 plot + ggplot2::geom_smooth(
                     ggplot2::aes(x = .data[[x]], y = .data[[y]]),
                     method = "lm", se = show_band, linewidth = 0.6,
-                    color = private$.plotPalette()$smooth,
-                    fill = private$.plotPalette()$smooth
+                    color = smooth_color,
+                    fill = smooth_color
                 )
             } else {
                 plot
@@ -1967,7 +1975,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(alpha = 0.75, size = 1.6, color = pal$point)
 
             if (length(unique(d$fitted)) >= 5) {
-                plot <- private$.addSmoother(plot, "fitted", "residual")
+                plot <- private$.addSmoother(plot, "fitted", "residual", pal$smooth)
             }
 
             plot <- plot +

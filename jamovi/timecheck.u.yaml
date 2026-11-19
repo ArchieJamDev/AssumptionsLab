@@ -68,7 +68,7 @@ children:
               - numeric
 
   - type: CollapseBox
-    label: Time series model
+    label: Time Series Model
     collapsed: false
     children:
       - type: ComboBox
@@ -83,9 +83,3 @@ children:
     children:
       - type: CheckBox
         name: showPlots
-  - type: CollapseBox
-    label: Plot Color Palette
-    collapsed: true
-    children:
-      - type: ComboBox
-        name: plotPalette

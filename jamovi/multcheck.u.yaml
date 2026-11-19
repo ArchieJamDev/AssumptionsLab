@@ -63,10 +63,13 @@ children:
     children:
       - type: CheckBox
         name: linShowPlots
+        enable: (showPlots)
       - type: ComboBox
         name: linSmoother
+        enable: (showPlots && linShowPlots)
       - type: TextBox
         name: linBins
+        enable: (showPlots && linShowPlots)
         format: number
   - type: CollapseBox
     label: 'Plots: Influence'
@@ -74,13 +77,10 @@ children:
     children:
       - type: CheckBox
         name: influenceShowPlots
+        enable: (showPlots)
       - type: ComboBox
         name: influenceLabelMode
+        enable: (showPlots && influenceShowPlots)
       - type: CheckBox
         name: influenceShowThreshold
-  - type: CollapseBox
-    label: Plot Color Palette
-    collapsed: true
-    children:
-      - type: ComboBox
-        name: plotPalette
+        enable: (showPlots && influenceShowPlots)

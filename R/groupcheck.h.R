@@ -18,8 +18,7 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             showNormalCurvePlots = FALSE,
             curveBandwidth = 1,
             curveShowRug = FALSE,
-            distColorByGroup = TRUE,
-            plotPalette = "jamovi", ...) {
+            distColorByGroup = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -79,14 +78,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "distColorByGroup",
                 distColorByGroup,
                 default=TRUE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
 
             self$.addOption(private$..dep)
             self$.addOption(private$..group)
@@ -101,7 +92,6 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..curveBandwidth)
             self$.addOption(private$..curveShowRug)
             self$.addOption(private$..distColorByGroup)
-            self$.addOption(private$..plotPalette)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -116,8 +106,7 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         showNormalCurvePlots = function() private$..showNormalCurvePlots$value,
         curveBandwidth = function() private$..curveBandwidth$value,
         curveShowRug = function() private$..curveShowRug$value,
-        distColorByGroup = function() private$..distColorByGroup$value,
-        plotPalette = function() private$..plotPalette$value),
+        distColorByGroup = function() private$..distColorByGroup$value),
     private = list(
         ..dep = NA,
         ..group = NA,
@@ -131,8 +120,7 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..showNormalCurvePlots = NA,
         ..curveBandwidth = NA,
         ..curveShowRug = NA,
-        ..distColorByGroup = NA,
-        ..plotPalette = NA)
+        ..distColorByGroup = NA)
 )
 
 groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -232,13 +220,15 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="distributionPlot",
                 title="Distribution of the analyzed variable by group",
+                visible="(showDistributionPlot)",
                 width=620,
                 height=520,
                 renderFun=".plotGroupDistribution"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="distributionPlotGuide",
-                title="Distribution plot guide"))
+                title="Distribution plot guide",
+                visible="(showDistributionPlot)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="outliers",
@@ -372,11 +362,12 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="value", 
                         `title`="Value", 
-                        `type`="text"),
+                        `type`="number"),
                     list(
                         `name`="p", 
                         `title`="p", 
-                        `type`="text"),
+                        `type`="number", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="pSig", 
                         `title`="Sig.", 
@@ -393,24 +384,28 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="qqNormalityPlot",
                 title="Normality Q-Q plots: global and by group",
+                visible="(showQQPlots)",
                 width=620,
                 height=720,
                 renderFun=".plotGroupQQNormality"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="qqNormalityGuide",
-                title="Visual normality guide"))
+                title="Visual normality guide",
+                visible="(showQQPlots)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="normalCurvePlot",
                 title="Observed distribution vs theoretical normal: global and by group",
+                visible="(showNormalCurvePlots)",
                 width=620,
                 height=720,
                 renderFun=".plotGroupNormalCurve"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normalCurveGuide",
-                title="Visual distribution guide"))
+                title="Visual distribution guide",
+                visible="(showNormalCurvePlots)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="normalitySummary",
@@ -459,7 +454,7 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="value", 
                         `title`="Value", 
-                        `type`="text"),
+                        `type`="number"),
                     list(
                         `name`="df1", 
                         `title`="df1", 
@@ -471,7 +466,8 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="p", 
                         `title`="p", 
-                        `type`="text"),
+                        `type`="number", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="pSig", 
                         `title`="Sig.", 
@@ -537,7 +533,6 @@ groupCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   more.
 #' @param curveShowRug .
 #' @param distColorByGroup .
-#' @param plotPalette .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -585,8 +580,7 @@ groupCheck <- function(
     showNormalCurvePlots = FALSE,
     curveBandwidth = 1,
     curveShowRug = FALSE,
-    distColorByGroup = TRUE,
-    plotPalette = "jamovi") {
+    distColorByGroup = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("groupCheck requires jmvcore to be installed (restart may be required)")
@@ -613,8 +607,7 @@ groupCheck <- function(
         showNormalCurvePlots = showNormalCurvePlots,
         curveBandwidth = curveBandwidth,
         curveShowRug = curveShowRug,
-        distColorByGroup = distColorByGroup,
-        plotPalette = plotPalette)
+        distColorByGroup = distColorByGroup)
 
     analysis <- groupCheckClass$new(
         options = options,

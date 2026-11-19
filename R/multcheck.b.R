@@ -304,7 +304,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     existing <- tryCatch(table$getColumn(colName), error = function(e) NULL)
                     if (is.null(existing)) {
                         tryCatch(
-                            table$addColumn(name = colName, title = as.character(i), type = "text"),
+                            table$addColumn(name = colName, title = as.character(i), type = "number"),
                             error = function(e) NULL
                         )
                     }
@@ -1058,9 +1058,6 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$multicollinearityGuide$setContent(html_guide(.("Multicollinearity"), c(.("Multicollinearity evaluates whether predictors carry very redundant information."), .("VIF values close to 1 suggest low collinearity; high values indicate a predictor is too well explained by other predictors."), .("If meaningful collinearity is present, consider combining variables, removing redundant predictors, centering variables, or changing the analytic question."))))
 
             mc_visible <- length(predictors) >= 2
-            self$results$multicollinearityGuide$setVisible(mc_visible)
-            self$results$multicollinearity$setVisible(mc_visible)
-            self$results$multicollinearityInterpretation$setVisible(mc_visible)
 
             max_vif <- NA_real_
             max_vif_name <- NA_character_
@@ -1148,19 +1145,15 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             self$results$correlationMatrixGuide$setContent(html_guide(.("Correlation Matrix (numeric predictors)"), c(.("These two tables complement the multicollinearity checks with an overview of the association among the numeric predictors, each in APA 7 format (lower triangle, numbered variables)."), .("The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (Székely et al., 2007), which detects linear and non-linear association alike."), .("The dependent variable is deliberately excluded from this matrix: unlike ordCheck's ordinal outcome, this variable's categories are unordered, so there is no defensible way to integer-code it for a correlation coefficient - its relationship to the predictors is instead reported through the coefficients/odds-ratios table."))))
 
-            self$results$correlationMatrixGuide$setVisible(k >= 2)
-            self$results$pearsonMatrixTable$setVisible(k >= 2)
-            self$results$dcorMatrixTable$setVisible(k >= 2)
-            self$results$correlationMatrixNote$setVisible(k >= 2)
-            self$results$correlationComparisonGuide$setVisible(k >= 2)
-            self$results$correlationComparisonTable$setVisible(k >= 2)
-            self$results$correlationComparisonInterpretation$setVisible(k >= 2)
 
             if (k >= 2) {
                 pairResults <- list()
                 for (i in seq_len(k)) {
                     for (j in seq_len(k)) {
                         if (j >= i) next()
+                        # Let jamovi stop the permutation tests when an option changes.
+                        # ES: Permite que jamovi detenga las permutaciones si cambia una opción.
+                        private$.checkpoint(flush = FALSE)
                         v1 <- matVars[i]; v2 <- matVars[j]
                         x <- corrData[[v1]]; y <- corrData[[v2]]
                         ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)
@@ -1182,6 +1175,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 for (i in seq_len(k)) {
                     rowVar <- matVars[i]
                     pearsonVals <- list(var = sprintf("%d. %s", i, rowVar))
+                    pearsonSyms <- list(); dcorSyms <- list()
                     dcorVals <- list(var = sprintf("%d. %s", i, rowVar))
                     for (j in seq_len(k)) {
                         colName <- paste0("c", j)
@@ -1193,12 +1187,16 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             dcorVals[[colName]] <- "—"
                         } else {
                             pr <- pairResults[[paste(rowVar, matVars[j], sep = "|")]]
-                            pearsonVals[[colName]] <- if (!is.null(pr)) apaCell(pr$pearsonR, pr$pearsonP) else ""
-                            dcorVals[[colName]] <- if (!is.null(pr)) apaCell(pr$dcor, pr$dcorP) else ""
+                            pearsonVals[[colName]] <- if (!is.null(pr) && !is.na(pr$pearsonR)) pr$pearsonR else ""
+                            pearsonSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$pearsonP) else ""
+                            dcorVals[[colName]] <- if (!is.null(pr) && !is.na(pr$dcor)) pr$dcor else ""
+                            dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                         }
                     }
                     add_row(self$results$pearsonMatrixTable, paste0("pm_", i), pearsonVals)
+                    for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) self$results$pearsonMatrixTable$addSymbol(rowNo = self$results$pearsonMatrixTable$rowCount, cn, pearsonSyms[[cn]])
                     add_row(self$results$dcorMatrixTable, paste0("dm_", i), dcorVals)
+                    for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) self$results$dcorMatrixTable$addSymbol(rowNo = self$results$dcorMatrixTable$rowCount, cn, dcorSyms[[cn]])
                 }
 
                 self$results$correlationMatrixNote$setContent(html_block(NULL, sprintf(.("N = %s. * p < .05, ** p < .01, *** p < .001. %s"), n_complete, .al_dcor_na_note(lang)), paragraphs = FALSE))
@@ -1212,7 +1210,7 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         notable_pairs <- notable_pairs + 1
                         add_row(self$results$correlationComparisonTable, paste0("cc_", notable_pairs), list(
                             var1 = pr$v1, var2 = pr$v2,
-                            pearson = fmt_num(pr$pearsonR, 3), dcor = fmt_num(pr$dcor, 3),
+                            pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP), dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
                             gap = gap, ce = pr$ce, ceP = pr$ceP, ceSig = p_sig(pr$ceP),
                             flag = .("Yes")
                         ))
@@ -1234,6 +1232,16 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     },
                     paragraphs = TRUE
                 ))
+            } else {
+                # One numeric predictor: the tables stay in place and say
+                # why they are empty, instead of disappearing.
+                # ES: Un solo predictor numérico: las tablas quedan en su
+                # lugar y explican por qué están vacías, en vez de ocultarse.
+                na_text <- .("Not applicable: fewer than two numeric model variables.")
+                for (tbl in c("pearsonMatrixTable", "dcorMatrixTable", "correlationComparisonTable"))
+                    self$results[[tbl]]$setNote("na", na_text)
+                self$results$correlationComparisonInterpretation$setContent(html_block(
+                    .("Applied Interpretation"), na_text, paragraphs = FALSE))
             }
 
             # -----------------------------------------------------------------------------
@@ -1453,11 +1461,16 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             )
         },
 
+        # Plot colors always follow the palette chosen in jamovi's settings:
+        # NULL lets ggtheme's own discrete scale color each series. The
+        # module's own palette option (Okabe-Ito, viridis) was removed, as
+        # jamovi asked in the MokkenLab and EGAnetLab audits.
+        # ES: Los colores siguen siempre la paleta elegida en jamovi: NULL
+        # deja que la escala discreta de ggtheme coloree cada serie. Se quitó
+        # la opción de paleta propia del módulo (Okabe-Ito, viridis), como
+        # pidió jamovi en las auditorías de MokkenLab y EGAnetLab.
         .plotSeriesColors = function() {
-            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
-                return(NULL)
-            .al_plot_series_palette(choice)
+            NULL
         },
 
         # -----------------------------------------------------------------------------

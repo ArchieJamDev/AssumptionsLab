@@ -452,7 +452,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 results_rows[[row_idx]] <<- list(
                     test = test,
                     statistic = statistic_txt,
-                    pvalue = fmt_p(p),
+                    pvalue = if (is.null(p) || length(p) == 0 || is.na(p)) "" else as.numeric(p),
                     evidence = cl$label
                 )
                 if (!is.null(footnote))
@@ -496,7 +496,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 results_rows[[row_idx]] <<- list(
                     test = .("Note"),
                     statistic = "\u2014",
-                    pvalue = "\u2014",
+                    pvalue = "",
                     evidence = .("See note below")
                 )
                 note_footnotes[[length(note_footnotes) + 1]] <<- list(row = row_idx, text = message)
@@ -613,25 +613,22 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             } else {
                 missing <- missing_pkgs(required_pkgs)
                 if (length(missing) > 0) {
-                    notice <- paste0(
-                        .("This model's diagnostics require the following R package(s), which are not installed: "),
-                        paste(missing, collapse = ", "),
-                        .(". Please install them from R before running this diagnostic battery.")
+                    notice <- sprintf(
+                        .("This model's diagnostics require the following R package(s), which are not installed: %s. Please install them from R before running this diagnostic battery."),
+                        paste(missing, collapse = ", ")
                     )
                 }
             }
 
             if (!is.null(notice)) {
-                set_html_safe("runNotice", html_block(NULL, notice, paragraphs = FALSE))
-                set_visible_safe("runNotice", TRUE)
-                set_visible_safe("diagnosticsResults", FALSE)
-                set_visible_safe("diagnosticsActions", FALSE)
+                # A native jamovi notice above the diagnostics, which stay
+                # in place (empty) instead of disappearing.
+                # ES: Un aviso nativo de jamovi sobre los diagnósticos, que
+                # quedan en su lugar (vacíos) en vez de ocultarse.
+                .al_notice(self, "diagnosticsResults", notice)
                 self$results$diagnosticsResults$deleteRows()
                 self$results$diagnosticsActions$deleteRows()
             } else {
-                set_visible_safe("runNotice", FALSE)
-                set_visible_safe("diagnosticsResults", TRUE)
-                set_visible_safe("diagnosticsActions", TRUE)
 
                 model_actions <- txt("time", "actions")[[model]]
 
@@ -1653,11 +1650,16 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             )
         },
 
+        # Plot colors always follow the palette chosen in jamovi's settings:
+        # NULL lets ggtheme's own discrete scale color each series. The
+        # module's own palette option (Okabe-Ito, viridis) was removed, as
+        # jamovi asked in the MokkenLab and EGAnetLab audits.
+        # ES: Los colores siguen siempre la paleta elegida en jamovi: NULL
+        # deja que la escala discreta de ggtheme coloree cada serie. Se quitó
+        # la opción de paleta propia del módulo (Okabe-Ito, viridis), como
+        # pidió jamovi en las auditorías de MokkenLab y EGAnetLab.
         .plotSeriesColors = function() {
-            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
-                return(NULL)
-            .al_plot_series_palette(choice)
+            NULL
         },
 
         .plotThemeExtra = function() {

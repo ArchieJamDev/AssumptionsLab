@@ -50,10 +50,12 @@ items:
   - name: descriptiveSummary
     title: Descriptives by measurement
     type: Table
+    rows: (measures)
     columns:
       - name: measure
         title: Measurement
         type: text
+        content: ($key)
       - name: n
         title: n
         type: integer
@@ -87,7 +89,6 @@ items:
       - measures
       - showProfilePlot
       - plotStyle
-      - plotPalette
 
   - name: differencePlot
     title: Distribution of paired differences
@@ -100,7 +101,6 @@ items:
       - measures
       - showDifferencePlots
       - plotStyle
-      - plotPalette
 
   - name: normalityPlot
     title: Q-Q plots of paired differences
@@ -248,12 +248,10 @@ items:
   - name: sphericityGuide
     title: Sphericity
     type: Html
-    visible: false
 
   - name: sphericity
     title: Sphericity and corrections
     type: Table
-    visible: false
     refs:
       - mauchly_1940
       - greenhouse_1959
@@ -273,7 +271,8 @@ items:
         type: integer
       - name: p
         title: p
-        type: text
+        type: number
+        format: zto,pvalue
       - name: pSig
         title: Sig.
         type: text
@@ -281,17 +280,14 @@ items:
   - name: sphericityInterpretation
     title: Applied interpretation
     type: Html
-    visible: false
 
   - name: correlationMatrixGuide
     title: Correlation matrix
     type: Html
-    visible: false
 
   - name: pearsonMatrixTable
     title: Pearson correlation matrix (APA 7 format)
     type: Table
-    visible: false
     rows: 0
     columns:
       - name: var
@@ -301,7 +297,6 @@ items:
   - name: dcorMatrixTable
     title: Distance correlation matrix (dCor, APA 7 format)
     type: Table
-    visible: false
     refs:
       - sz_kely_2007
     rows: 0
@@ -313,17 +308,14 @@ items:
   - name: correlationMatrixNote
     title: ' '
     type: Html
-    visible: false
 
   - name: correlationComparisonGuide
     title: Pearson / dCor / copula entropy discordance analysis
     type: Html
-    visible: false
 
   - name: correlationComparisonTable
     title: Pairs with a notable gap between Pearson and dCor
     type: Table
-    visible: false
     refs:
       - sz_kely_2007
       - ma_2011
@@ -337,9 +329,15 @@ items:
         type: text
       - name: pearson
         title: Pearson r
+        type: number
+      - name: pearsonSig
+        title: Sig. (r)
         type: text
       - name: dcor
         title: dCor
+        type: number
+      - name: dcorSig
+        title: Sig. (dCor)
         type: text
       - name: gap
         title: Gap (dCor − |r|)
@@ -361,7 +359,6 @@ items:
   - name: correlationComparisonInterpretation
     title: Applied interpretation
     type: Html
-    visible: false
 
   - name: outliersGuide
     title: Outliers in differences

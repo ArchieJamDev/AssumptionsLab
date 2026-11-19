@@ -117,7 +117,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     existing <- tryCatch(table$getColumn(colName), error = function(e) NULL)
                     if (is.null(existing)) {
                         tryCatch(
-                            table$addColumn(name = colName, title = as.character(i), type = "text"),
+                            table$addColumn(name = colName, title = as.character(i), type = "number"),
                             error = function(e) NULL
                         )
                     }
@@ -284,17 +284,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
         measures <- self$options$measures
             k <- length(measures)
 
-            self$results$sphericityGuide$setVisible(k >= 3)
-            self$results$sphericity$setVisible(k >= 3)
-            self$results$sphericityInterpretation$setVisible(k >= 3)
 
-            self$results$correlationMatrixGuide$setVisible(k >= 2)
-            self$results$pearsonMatrixTable$setVisible(k >= 2)
-            self$results$dcorMatrixTable$setVisible(k >= 2)
-            self$results$correlationMatrixNote$setVisible(k >= 2)
-            self$results$correlationComparisonGuide$setVisible(k >= 2)
-            self$results$correlationComparisonTable$setVisible(k >= 2)
-            self$results$correlationComparisonInterpretation$setVisible(k >= 2)
 
             if (length(measures) < 2) {
                 jmvcore::reject(.("Select at least two related numeric variables."))
@@ -380,11 +370,13 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 x_all <- suppressWarnings(as.numeric(dat[[v]]))
                 x_valid <- x_all[is.finite(x_all)]
 
-                add_table_row(
-                    self$results$descriptiveSummary,
-                    paste0("desc_", make.names(v)),
-                    list(
-                        measure = v,
+                # One row per measurement is laid out from `rows: (measures)`
+                # in the .r.yaml; here it is only filled.
+                # ES: Las filas (una por medición) vienen de `rows:
+                # (measures)` en el .r.yaml; aquí solo se rellenan.
+                self$results$descriptiveSummary$setRow(
+                    rowKey = v,
+                    values = list(
                         n = as.integer(length(x_valid)),
                         mean = clean_num(if (length(x_valid) > 0) mean(x_valid) else NA_real_),
                         sd = clean_num(if (length(x_valid) > 1) stats::sd(x_valid) else NA_real_),
@@ -1052,7 +1044,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                         statistic = statistic,
                         value = clean_num(value),
                         df = ifelse(is.na(clean_num(df)), NA_integer_, as.integer(df)),
-                        p = ifelse(is.na(clean_num(p_value)), .("Not applicable"), format_p(p_value)),
+                        p = if (is.na(clean_num(p_value))) "" else clean_num(p_value),
                         pSig = p_sig(p_value)
                     )
                 )
@@ -1204,6 +1196,9 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     for (i in seq_len(k)) {
                         for (j in seq_len(k)) {
                             if (j >= i) next()
+                            # Let jamovi stop the permutation tests when an option changes.
+                            # ES: Permite que jamovi detenga las permutaciones si cambia una opción.
+                            private$.checkpoint(flush = FALSE)
                             v1 <- matVars[i]; v2 <- matVars[j]
                             x <- dat2[[v1]]; y <- dat2[[v2]]
                             ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)
@@ -1225,6 +1220,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     for (i in seq_len(k)) {
                         rowVar <- matVars[i]
                         pearsonVals <- list(var = sprintf("%d. %s", i, rowVar))
+                        pearsonSyms <- list(); dcorSyms <- list()
                         dcorVals <- list(var = sprintf("%d. %s", i, rowVar))
                         for (j in seq_len(k)) {
                             colName <- paste0("c", j)
@@ -1236,12 +1232,16 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                                 dcorVals[[colName]] <- "\u2014"
                             } else {
                                 pr <- pairResults[[paste(rowVar, matVars[j], sep = "|")]]
-                                pearsonVals[[colName]] <- if (!is.null(pr)) apaCell(pr$pearsonR, pr$pearsonP) else ""
-                                dcorVals[[colName]] <- if (!is.null(pr)) apaCell(pr$dcor, pr$dcorP) else ""
+                                pearsonVals[[colName]] <- if (!is.null(pr) && !is.na(pr$pearsonR)) pr$pearsonR else ""
+                                pearsonSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$pearsonP) else ""
+                                dcorVals[[colName]] <- if (!is.null(pr) && !is.na(pr$dcor)) pr$dcor else ""
+                                dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                             }
                         }
                         pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                        for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
                         dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                        for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                     }
 
                     self$results$correlationMatrixNote$setContent(html_block(NULL,
@@ -1281,8 +1281,8 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
                     compTable$addRow(rowKey = key, values = list(
                         var1 = pr$v1, var2 = pr$v2,
-                        pearson = apaCell(pr$pearsonR, pr$pearsonP),
-                        dcor = apaCell(pr$dcor, pr$dcorP),
+                        pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
+                        dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
                         gap = gap, ce = pr$ce, ceP = pr$ceP,
                         ceSig = p_sig(pr$ceP),
                         flag = .("Yes")
@@ -1634,11 +1634,16 @@ self$results$notes$setContent(html_block(
             )
         },
 
+        # Plot colors always follow the palette chosen in jamovi's settings:
+        # NULL lets ggtheme's own discrete scale color each series. The
+        # module's own palette option (Okabe-Ito, viridis) was removed, as
+        # jamovi asked in the MokkenLab and EGAnetLab audits.
+        # ES: Los colores siguen siempre la paleta elegida en jamovi: NULL
+        # deja que la escala discreta de ggtheme coloree cada serie. Se quitó
+        # la opción de paleta propia del módulo (Okabe-Ito, viridis), como
+        # pidió jamovi en las auditorías de MokkenLab y EGAnetLab.
         .plotSeriesColors = function() {
-            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
-                return(NULL)
-            .al_plot_series_palette(choice)
+            NULL
         },
 
         .plotProfile = function(image, ggtheme, theme, ...) {

@@ -81,6 +81,7 @@ items:
   - name: distributionPlot
     title: Distribution of the analyzed variable by group
     type: Image
+    visible: (showDistributionPlot)
     width: 620
     height: 520
     renderFun: .plotGroupDistribution
@@ -88,6 +89,7 @@ items:
   - name: distributionPlotGuide
     title: Distribution plot guide
     type: Html
+    visible: (showDistributionPlot)
 
   - name: outliers
     title: Outlier screening by group
@@ -198,10 +200,11 @@ items:
         type: text
       - name: value
         title: Value
-        type: text
+        type: number
       - name: p
         title: p
-        type: text
+        type: number
+        format: zto,pvalue
       - name: pSig
         title: Sig.
         type: text
@@ -219,6 +222,7 @@ items:
   - name: qqNormalityPlot
     title: 'Normality Q-Q plots: global and by group'
     type: Image
+    visible: (showQQPlots)
     width: 620
     height: 720
     renderFun: .plotGroupQQNormality
@@ -226,10 +230,12 @@ items:
   - name: qqNormalityGuide
     title: Visual normality guide
     type: Html
+    visible: (showQQPlots)
 
   - name: normalCurvePlot
     title: 'Observed distribution vs theoretical normal: global and by group'
     type: Image
+    visible: (showNormalCurvePlots)
     width: 620
     height: 720
     renderFun: .plotGroupNormalCurve
@@ -237,6 +243,7 @@ items:
   - name: normalCurveGuide
     title: Visual distribution guide
     type: Html
+    visible: (showNormalCurvePlots)
   - name: normalitySummary
     title: Normality decision summary
     type: Table
@@ -277,7 +284,7 @@ items:
         type: text
       - name: value
         title: Value
-        type: text
+        type: number
       - name: df1
         title: df1
         type: integer
@@ -286,7 +293,8 @@ items:
         type: integer
       - name: p
         title: p
-        type: text
+        type: number
+        format: zto,pvalue
       - name: pSig
         title: Sig.
         type: text

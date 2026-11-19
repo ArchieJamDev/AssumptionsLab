@@ -295,17 +295,11 @@
             "%s: tests not computed; at least 3 valid differences with non-zero variability are required.": [
                 "%s: pruebas no calculadas; se requieren al menos 3 diferencias válidas y variabilidad mayor que cero."
             ],
-            "(ARIMAX/SARIMAX). Every result is classified as a graded evidence tier, never": [
-                "(ARIMAX/SARIMAX). Cada resultado se clasifica como un nivel de evidencia"
-            ],
             ", OR = %s (p %s).": [
                 ", OR = %s (p %s)."
             ],
             ", with Cook's D = %s.": [
                 ", con Cook's D = %s."
-            ],
-            ". Please install them from R before running this diagnostic battery.": [
-                ". Instálelos desde R antes de ejecutar esta batería de diagnóstico."
             ],
             ". Values close to 2 are compatible with independent errors.": [
                 ". Valores cercanos a 2 son compatibles con errores independientes."
@@ -535,8 +529,8 @@
             "A methodological decision cannot be suggested because fewer than two groups were detected.": [
                 "No se puede sugerir una decisión metodológica porque se detectaron menos de dos grupos."
             ],
-            "A methodological reference glossary, not a data analysis: it explains what each statistical assumption and test covered by AssumptionsLab means, why it matters, and when it applies, without computing anything from the user's dataset. Entries can be filtered by category (e.g. normality, homoscedasticity, linearity, independence, multicollinearity, outliers/influence, sphericity, proportional odds, robust alternatives) and are available in English or Spanish. Use it alongside any of the assumption-checking analyses to look up the theory behind a diagnostic, or as a stand-alone teaching aid for planning an analysis before running one.": [
-                "Un glosario metodológico de referencia, no un análisis de datos: explica qué significa cada supuesto estadístico y prueba cubiertos por AssumptionsLab, por qué importa y cuándo aplica, sin calcular nada a partir del conjunto de datos del usuario. Las entradas pueden filtrarse por categoría (p. ej. normalidad, homoscedasticidad, linealidad, independencia, multicolinealidad, atípicos/influencia, esfericidad, momios proporcionales, alternativas robustas) y están disponibles en inglés o español. Úselo junto con cualquiera de los análisis de verificación de supuestos para consultar la teoría detrás de un diagnóstico, o como material didáctico independiente para planificar un análisis antes de ejecutarlo."
+            "A methodological reference glossary, not a data analysis: it explains what each statistical assumption and test covered by AssumptionsLab means, why it matters, and when it applies, without computing anything from the user's dataset. Entries can be filtered by category (e.g. normality, homoscedasticity, linearity, independence, multicollinearity, outliers/influence, sphericity, proportional odds, robust alternatives) and are shown in jamovi's language (English or Spanish). Use it alongside any of the assumption-checking analyses to look up the theory behind a diagnostic, or as a stand-alone teaching aid for planning an analysis before running one.": [
+                "Un glosario metodológico de referencia, no un análisis de datos: explica qué significa cada supuesto estadístico y prueba cubiertos por AssumptionsLab, por qué importa y cuándo aplica, sin calcular nada a partir del conjunto de datos del usuario. Las entradas pueden filtrarse por categoría (p. ej. normalidad, homoscedasticidad, linealidad, independencia, multicolinealidad, atípicos/influencia, esfericidad, momios proporcionales, alternativas robustas) y se muestran en el idioma de jamovi (inglés o español). Úselo junto con cualquiera de los análisis de verificación de supuestos para consultar la teoría detrás de un diagnóstico, o como material didáctico independiente para planificar un análisis antes de ejecutarlo."
             ],
             "A model can be computed even when assumptions are weak, but its conclusions may be less defensible if those problems are not documented.": [
                 "Un modelo puede calcularse aunque sus supuestos sean débiles, pero sus conclusiones pueden ser poco defendibles si no se documentan esos problemas."
@@ -607,11 +601,8 @@
             "ACF / PACF / time plots": [
                 "ACF / PACF / gráficos temporales"
             ],
-            "ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, and for VAR/VECM/GARCH also": [
-                "ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, y para VAR/VECM/GARCH también"
-            ],
-            "ADF (Dickey & Fuller, 1979) and Phillips-Perron (Phillips & Perron, 1988) share the": [
-                "ADF (Dickey y Fuller, 1979) y Phillips-Perron (Phillips y Perron, 1988) comparten la"
+            "ADF (Dickey & Fuller, 1979) and Phillips-Perron (Phillips & Perron, 1988) share the same null hypothesis — the series has a unit root, i.e. it is non-stationary — but correct for possible residual autocorrelation and heteroscedasticity differently: ADF adds lagged differences as regressors; Phillips-Perron adjusts the statistic with a nonparametric, Newey-West-type correction. KPSS (Kwiatkowski et al., 1992) reverses the logic: its null hypothesis is that the series IS stationary. This is why the three tests are reported together: if ADF and Phillips-Perron reject the unit root (small p) and KPSS fails to reject stationarity (large p), the evidence converges clearly. When the two families of tests disagree, it usually points to a series with weak long-run components or an insufficient sample to distinguish between the two hypotheses, not a computational error.": [
+                "ADF (Dickey y Fuller, 1979) y Phillips-Perron (Phillips y Perron, 1988) comparten la misma hipótesis nula — la serie tiene raíz unitaria, es decir, es no estacionaria —, pero corrigen de forma distinta la posible autocorrelación y heterocedasticidad de los errores: ADF agrega rezagos de la diferencia como regresores; Phillips-Perron ajusta el estadístico con una corrección no paramétrica tipo Newey-West. KPSS (Kwiatkowski et al., 1992) invierte la lógica: su hipótesis nula es que la serie SÍ es estacionaria. Por eso las tres pruebas se reportan juntas: si ADF y Phillips-Perron rechazan la raíz unitaria (p pequeño) y KPSS no rechaza la estacionariedad (p grande), la evidencia converge con claridad. Cuando las conclusiones de ambos tipos de prueba difieren, suele indicar una serie con componentes de largo plazo débiles o una muestra insuficiente para distinguir entre ambas hipótesis, no un error de cómputo."
             ],
             "ADF (unit root)": [
                 "ADF (raíz unitaria)"
@@ -670,11 +661,8 @@
             "ARIMA": [
                 "ARIMA"
             ],
-            "ARIMA (AutoRegressive Integrated Moving Average) models a single time series from its own past: its lagged values (autoregressive component, p), the number of differences needed to make it stationary (integrated component, d), and lagged errors (moving-average component, q). Use it when you have a single series without marked seasonality, or when you want to model an already deseasonalized series. It offers short- to medium-term forecasts with confidence intervals, and is the conceptual foundation for SARIMA, ARIMAX, and": [
-                "ARIMA (AutoRegressive Integrated Moving Average) modela una única serie temporal a partir de su propio pasado: sus valores rezagados (componente autorregresivo, p), el número de diferencias necesarias para volverla estacionaria (componente integrado, d) y los errores rezagados (componente de media móvil, q). Úselo cuando tenga una sola serie sin estacionalidad marcada, o cuando quiera modelar una serie ya desestacionalizada. Ofrece pronósticos de corto y mediano plazo con intervalos de confianza, y es la base conceptual de"
-            ],
-            "ARIMA/SARIMA, it does not rely on unit-root tests or differencing: it": [
-                "amortiguamiento). A diferencia de ARIMA/SARIMA, no se apoya en pruebas de raíz"
+            "ARIMA (AutoRegressive Integrated Moving Average) models a single time series from its own past: its lagged values (autoregressive component, p), the number of differences needed to make it stationary (integrated component, d), and lagged errors (moving-average component, q). Use it when you have a single series without marked seasonality, or when you want to model an already deseasonalized series. It offers short- to medium-term forecasts with confidence intervals, and is the conceptual foundation for SARIMA, ARIMAX, and GARCH. On its own it does not capture relationships with other series (that is what VAR/VECM are for) or changes in variance over time (that is what GARCH is for).": [
+                "ARIMA (AutoRegressive Integrated Moving Average) modela una única serie temporal a partir de su propio pasado: sus valores rezagados (componente autorregresivo, p), el número de diferencias necesarias para volverla estacionaria (componente integrado, d) y los errores rezagados (componente de media móvil, q). Úselo cuando tenga una sola serie sin estacionalidad marcada, o cuando quiera modelar una serie ya desestacionalizada. Ofrece pronósticos de corto y mediano plazo con intervalos de confianza, y es la base conceptual de SARIMA, ARIMAX y GARCH. No captura por sí solo relaciones con otras series (para eso están VAR/VECM) ni cambios en la varianza a lo largo del tiempo (para eso está GARCH)."
             ],
             "AUC = %s (approx. 95%% CI %s-%s; Hanley & McNeil, 1982; see references). %s": [
                 "AUC = %s (IC 95%% aprox. %s-%s; Hanley & McNeil, 1982; ver referencias). %s"
@@ -922,9 +910,6 @@
             "Avoids specifications incompatible with the order of integration.": [
                 "Evitar especificaciones incompatibles con el orden de integración."
             ],
-            "BIC penalizes complexity more severely and tends to suggest more parsimonious specifications; when both agree, the chosen order is more trustworthy.": [
-                "VARselect() compiten entre sí en un mismo sentido: AIC tiende a favorecer modelos más parametrizados (más rezagos), mientras que BIC penaliza la complejidad con más severidad y suele sugerir especificaciones más parsimoniosas; cuando ambos coinciden, la elección del orden es más confiable."
-            ],
             "Baron and Kenny (1986) popularized the classical framework for distinguishing full from partial mediation in the social sciences and psychology.": [
                 "Baron y Kenny (1986) popularizaron el marco clásico para distinguir mediación total de mediación parcial en ciencias sociales y psicología."
             ],
@@ -1033,8 +1018,8 @@
             "Brief guide": [
                 "Guía breve"
             ],
-            "Brown et al., (1975) proposed the CUSUM of recursive residuals to detect": [
-                "Brown et al., (1975) propusieron el CUSUM de residuos recursivos para"
+            "Brown et al., (1975) proposed the CUSUM of recursive residuals to detect whether a regression's coefficients remain constant across the sample or whether a structural change occurs at some point not specified in advance. Nyblom (1989) generalized the idea to a framework where parameters can vary gradually as a martingale process, rather than only at a single discrete break point, which makes it especially suited for evaluating the joint stability of an already-fitted GARCH model's parameters.": [
+                "Brown et al., (1975) propusieron el CUSUM de residuos recursivos para detectar si los coeficientes de una regresión permanecen constantes a lo largo de la muestra o si existe un cambio estructural en algún punto no especificado de antemano. Nyblom (1989) generalizó la idea a un marco donde los parámetros pueden variar gradualmente como un proceso martingala, en vez de solo en un punto de quiebre discreto, lo que lo hace especialmente adecuado para evaluar la estabilidad conjunta de los parámetros de un modelo GARCH ya ajustado."
             ],
             "Brown-Forsythe by fitted values": [
                 "Brown-Forsythe por valores ajustados"
@@ -1183,26 +1168,8 @@
             "Cointegration (Johansen, Engle-Granger)": [
                 "Cointegración (Johansen, Engle-Granger)"
             ],
-            "Color Palette by Equation": [
-                "Paleta de Color por Ecuación"
-            ],
-            "Color Palette by Group": [
-                "Paleta de Color por Grupo"
-            ],
-            "Color Palette by Measurement": [
-                "Paleta de Color por Medición"
-            ],
-            "Color Palette for Categories/Groups": [
-                "Paleta de Color para Categorías/Grupos"
-            ],
-            "Color Palette for Series/Groups": [
-                "Paleta de Color para Series/Grupos"
-            ],
             "Color by group": [
                 "Colorear por grupo"
-            ],
-            "Colorblind-safe (Okabe-Ito)": [
-                "Apta para daltonismo (Okabe-Ito)"
             ],
             "Common Y scale for direct comparison across variables.": [
                 "Escala Y común para comparación directa entre variables."
@@ -1383,9 +1350,6 @@
             ],
             "Conditional variance persistence could not be computed for this run.": [
                 "La persistencia de la varianza condicional no pudo calcularse para esta corrida."
-            ],
-            "Conditions → Diagnostic → Methodological Role → Decision), the minimum": [
-                "condiciones → Diagnóstico → Función metodológica → Decisión), la batería"
             ],
             "Confidence band": [
                 "Banda de confianza"
@@ -1861,8 +1825,8 @@
             "EPV is below the recommended threshold; coefficients and standard errors may be unstable, consider Firth's penalized logistic regression or combining sparse categories.": [
                 "El EPV está por debajo del umbral recomendado; los coeficientes y errores estándar pueden ser inestables, considere regresión logística penalizada de Firth o combinar categorías poco frecuentes."
             ],
-            "ETS (Error, Trend, Seasonal) is a family of exponential-smoothing models that": [
-                "ETS (Error, Trend, Seasonal) es una familia de modelos de suavizamiento"
+            "ETS (Error, Trend, Seasonal) is a family of exponential-smoothing models that decomposes the series into level, trend, and seasonality, each with its own form (none, additive, or multiplicative, with or without damping). Unlike ARIMA/SARIMA, it does not rely on unit-root tests or differencing: it explicitly weights recent observations more heavily than older ones. It is a strong alternative when the series has a relatively simple and stable trend and/or seasonality, and tends to be easier to interpret and communicate than an equivalent SARIMA. It is less suited when the dynamics depend on other variables (use VAR/VECM/ARIMAX) or when volatility itself is the object of study (use GARCH).": [
+                "ETS (Error, Trend, Seasonal) es una familia de modelos de suavizamiento exponencial que descompone la serie en nivel, tendencia y estacionalidad, cada uno con su propia forma (nula, aditiva o multiplicativa, con o sin amortiguamiento). A diferencia de ARIMA/SARIMA, no se apoya en pruebas de raíz unitaria ni en diferenciación: pondera las observaciones recientes más que las antiguas de forma explícita. Es una alternativa fuerte cuando la serie tiene tendencia y/o estacionalidad relativamente simples y estables, y suele ser más fácil de interpretar y comunicar que un SARIMA equivalente. Es menos adecuado cuando la dinámica depende de otras variables (use VAR/VECM/ARIMAX) o cuando la volatilidad misma es el objeto de estudio (use GARCH)."
             ],
             "ETS / Exponential Smoothing": [
                 "ETS / Suavizado Exponencial"
@@ -2110,9 +2074,6 @@
             "Fligner-Killeen by fitted values": [
                 "Fligner-Killeen por valores ajustados"
             ],
-            "Follow jamovi theme (default)": [
-                "Seguir el tema de jamovi (por defecto)"
-            ],
             "For %s, only a single test out of the battery was significant, which is more consistent with an isolated, possibly spurious result than with a real departure from normality.": [
                 "Para %s, solo una prueba de la batería resultó significativa, lo cual es más compatible con un resultado aislado, posiblemente espurio, que con una desviación real de normalidad."
             ],
@@ -2146,20 +2107,11 @@
             "GARCH": [
                 "GARCH"
             ],
-            "GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) does not": [
-                "GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) no modela"
+            "GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) does not model the level of the series but its conditional variance: it allows volatility to change over time and cluster into calm and turbulent periods, instead of assuming it is constant. Use it with high-frequency financial or economic series (asset returns, exchange rates, interest rates) where the magnitude of fluctuations varies systematically over time. It offers risk/volatility estimates that feed more realistic prediction intervals than an ARIMA with constant variance. It assumes the input series is already approximately mean-stationary (typically returns, not price levels); if there is asymmetry between positive and negative shocks, it is worth considering GJR-GARCH or EGARCH as alternatives.": [
+                "GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) no modela el nivel de la serie sino su varianza condicional: permite que la volatilidad cambie en el tiempo y se agrupe en períodos de calma y de turbulencia, en vez de asumirla constante. Úselo con series financieras o económicas de alta frecuencia (retornos de activos, tipos de cambio, tasas) donde la magnitud de las fluctuaciones varía sistemáticamente en el tiempo. Ofrece estimaciones de riesgo/volatilidad que alimentan intervalos de predicción más realistas que un ARIMA con varianza constante. Asume que la serie de entrada ya es aproximadamente estacionaria en media (típicamente retornos, no niveles de precio); si hay asimetría entre choques positivos y negativos, valga revisar GJR-GARCH o EGARCH como alternativas."
             ],
             "GARCH assumes the selected series already represents returns (or another approximately mean-stationary series), not raw price levels.": [
                 "GARCH asume que la serie seleccionada ya representa retornos (u otra serie aproximadamente estacionaria en media), no niveles de precio en bruto."
-            ],
-            "GARCH model's parameters.": [
-                "conjunta de los parámetros de un modelo GARCH ya ajustado."
-            ],
-            "GARCH. On its own it does not capture relationships with other series (that is what VAR/VECM are for) or changes in variance over time (that is what GARCH is for).": [
-                "SARIMA, ARIMAX y GARCH. No captura por sí solo relaciones con otras series (para eso están VAR/VECM) ni cambios en la varianza a lo largo del tiempo (para eso está GARCH)."
-            ],
-            "GJR-GARCH or EGARCH as alternatives.": [
-                "GJR-GARCH o EGARCH como alternativas."
             ],
             "Gap (dCor − |r|)": [
                 "Brecha (dCor − |r|)"
@@ -2650,9 +2602,6 @@
             "Johansen trace test (suggested rank)": [
                 "Prueba de traza de Johansen (rango sugerido)"
             ],
-            "Johansen, Portmanteau, CUSUM/Nyblom, and sign bias, depending on the selected": [
-                "Johansen, Portmanteau, CUSUM/Nyblom y sesgo de signo, según el modelo"
-            ],
             "Justifies considering a volatility model.": [
                 "Justificar la consideración de un modelo de volatilidad."
             ],
@@ -2776,8 +2725,8 @@
             "Lipsitz (not computable for this model)": [
                 "Lipsitz (no calculable para este modelo)"
             ],
-            "Ljung and Box (1978) improved on the original Box-Pierce test by correcting its": [
-                "Ljung y Box (1978) mejoraron la prueba de Box-Pierce original corrigiendo su"
+            "Ljung and Box (1978) improved on the original Box-Pierce test by correcting its asymptotic approximation, especially relevant in small or moderate samples. The test jointly evaluates several lags of residual autocorrelation at once, not just one; this is why the chosen number of lags matters: too few may miss real dependence, and too many dilute the test's power by mixing lags with no genuine autocorrelation alongside those that do have it.": [
+                "Ljung y Box (1978) mejoraron la prueba de Box-Pierce original corrigiendo su aproximación asintótica, especialmente relevante en muestras pequeñas o moderadas. La prueba evalúa conjuntamente varios rezagos de autocorrelación residual a la vez, no uno solo; por eso el número de rezagos elegido importa: muy pocos pueden no detectar dependencia real, y demasiados diluyen el poder de la prueba al incluir rezagos sin autocorrelación genuina junto a los que sí la tienen."
             ],
             "Ljung-Box": [
                 "Ljung-Box"
@@ -2964,9 +2913,6 @@
             ],
             "Methodological Guide": [
                 "Guía Metodológica"
-            ],
-            "Methodological Role → Decision.": [
-                "Supuestos/condiciones → Diagnóstico → Función metodológica → Decisión."
             ],
             "Methodological alternatives": [
                 "Alternativas metodológicas"
@@ -3544,9 +3490,6 @@
             "Notes and recommendation": [
                 "Notas y recomendación"
             ],
-            "Notice": [
-                "Aviso"
-            ],
             "Number of Groups (bins) for the Empirical Logit": [
                 "Número de Grupos (bins) para el Logit Empírico"
             ],
@@ -3829,9 +3772,6 @@
             "Pairwise relationship (Pearson / dCor)": [
                 "Relación por par (Pearson / dCor)"
             ],
-            "Palette used to distinguish several series in the same plot (for example, the variables of a VAR/VECM). Follows jamovi's own theme by default; the colorblind-safe and viridis options are additive choices jamovi does not otherwise offer.": [
-                "Paleta usada para distinguir varias series en un mismo gráfico (por ejemplo, las variables de un VAR/VECM). Sigue el propio tema de jamovi por defecto; las opciones apta para daltonismo y viridis son opciones aditivas que jamovi no ofrece de otro modo."
-            ],
             "Parameter diagnostic / persistence": [
                 "Diagnóstico de parámetros / persistencia"
             ],
@@ -3927,12 +3867,6 @@
             ],
             "Phillips-Perron (unit root)": [
                 "Phillips-Perron (raíz unitaria)"
-            ],
-            "Phillips-Perron reject the unit root (small p) and KPSS fails to reject": [
-                "Phillips-Perron rechazan la raíz unitaria (p pequeño) y KPSS no rechaza la"
-            ],
-            "Plot Color Palette": [
-                "Paleta de Color del Gráfico"
             ],
             "Plot Set": [
                 "Conjunto de Gráficos"
@@ -4575,6 +4509,12 @@
             ],
             "Sig. (CE)": [
                 "Sig. (CE)"
+            ],
+            "Sig. (dCor)": [
+                "Sig. (dCor)"
+            ],
+            "Sig. (r)": [
+                "Sig. (r)"
             ],
             "Sig. dev. 0.1%": [
                 "Desv. sig. 0.1%"
@@ -5269,8 +5209,8 @@
             "The proportional-odds model treats the dependent variable's categories as ordered but not equally spaced, and models the cumulative logit - log-odds of being at or below each cutpoint - as a linear function of the predictors.": [
                 "El modelo de momios proporcionales trata las categorías de la variable dependiente como ordenadas pero no necesariamente equiespaciadas, y modela el logit acumulativo - el log-momios de estar en o por debajo de cada punto de corte - como una función lineal de los predictores."
             ],
-            "The reference treatment for lag-order selection, multivariate residual diagnostics, and the conversion between VAR and VECM representations follows the framework laid out by Lütkepohl (2005), the standard text on multivariate time-series models. The information criteria (AIC, BIC, HQ) used by VARselect() compete in a consistent direction: AIC tends to favor more heavily parameterized models (more lags), while": [
-                "El tratamiento de referencia para la selección de rezagos, el diagnóstico residual multivariante y la conversión entre representaciones VAR y VECM sigue el marco expuesto por Lütkepohl (2005), el texto estándar sobre modelos de series temporales multivariadas. Los criterios de información (AIC, BIC, HQ) usados por"
+            "The reference treatment for lag-order selection, multivariate residual diagnostics, and the conversion between VAR and VECM representations follows the framework laid out by Lütkepohl (2005), the standard text on multivariate time-series models. The information criteria (AIC, BIC, HQ) used by VARselect() compete in a consistent direction: AIC tends to favor more heavily parameterized models (more lags), while BIC penalizes complexity more severely and tends to suggest more parsimonious specifications; when both agree, the chosen order is more trustworthy.": [
+                "El tratamiento de referencia para la selección de rezagos, el diagnóstico residual multivariante y la conversión entre representaciones VAR y VECM sigue el marco expuesto por Lütkepohl (2005), el texto estándar sobre modelos de series temporales multivariadas. Los criterios de información (AIC, BIC, HQ) usados por VARselect() compiten entre sí en un mismo sentido: AIC tiende a favorecer modelos más parametrizados (más rezagos), mientras que BIC penaliza la complejidad con más severidad y suele sugerir especificaciones más parsimoniosas; cuando ambos coinciden, la elección del orden es más confiable."
             ],
             "The report should explain that the choice is based on the observed variance evidence rather than on a purely automatic rule.": [
                 "El reporte debe explicar que la elección se basa en la evidencia observada sobre varianzas y no en una regla puramente automática."
@@ -5485,8 +5425,8 @@
             "This is a reasonable approximation, not a single canonical published statistic for this model family - for a fuller graphical treatment, see Liu et al. (2009; see references).": [
                 "Esta es una aproximación razonable, no un único estadístico canónico publicado para esta familia de modelos - para un tratamiento gráfico más completo, ver Liu et al. (2009; ver referencias)."
             ],
-            "This model's diagnostics require the following R package(s), which are not installed: ": [
-                "Los diagnósticos de este modelo requieren el o los siguientes paquetes de R, que no están instalados: "
+            "This model's diagnostics require the following R package(s), which are not installed: %s. Please install them from R before running this diagnostic battery.": [
+                "Los diagnósticos de este modelo requieren el o los siguientes paquetes de R, que no están instalados: %s. Instálelos desde R antes de ejecutar esta batería de diagnóstico."
             ],
             "This plot compares the observed standardized distribution with the theoretical normal curve.": [
                 "Este gráfico compara la distribución estandarizada observada con la curva normal teórica."
@@ -5506,8 +5446,8 @@
             "This threshold is a heuristic, not a formal test; always inspect a scatterplot of any flagged pair before concluding the relationship is non-linear.": [
                 "Este umbral es una heurística, no una prueba formal; siempre revise un diagrama de dispersión de cualquier par señalado antes de concluir que la relación es no lineal."
             ],
-            "This version implements the methodological matrix (Model → Assumptions/": [
-                "Esta versión implementa la matriz metodológica (Modelo → Supuestos/"
+            "This version implements the methodological matrix (Model → Assumptions/Conditions → Diagnostic → Methodological Role → Decision), the minimum recommended battery of statistical diagnostics per model (unit-root tests, ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, and for VAR/VECM/GARCH also Johansen, Portmanteau, CUSUM/Nyblom, and sign bias, depending on the selected model), diagnostic plots (series, ACF/PACF, residuals, and, for GARCH, conditional volatility), and optional external regressors for ARIMA/SARIMA (ARIMAX/SARIMAX). Every result is classified as a graded evidence tier, never as an absolute \"assumption met/not met\" verdict.": [
+                "Esta versión implementa la matriz metodológica (Modelo → Supuestos/condiciones → Diagnóstico → Función metodológica → Decisión), la batería mínima de diagnósticos estadísticos por modelo (pruebas de raíz unitaria, ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, y para VAR/VECM/GARCH también Johansen, Portmanteau, CUSUM/Nyblom y sesgo de signo, según el modelo seleccionado), gráficos diagnósticos (serie, ACF/PACF, residuos y, en GARCH, volatilidad condicional), y regresores externos opcionales en ARIMA/SARIMA (ARIMAX/SARIMAX). Cada resultado se clasifica como un nivel de evidencia gradual, nunca como un veredicto absoluto de \"supuesto cumplido/no cumplido\"."
             ],
             "Three or more measurements": [
                 "Tres o más mediciones"
@@ -5524,8 +5464,11 @@
             "Time Series": [
                 "Series Temporales"
             ],
-            "Time Series maps the statistical assumptions and methodological conditions that should be reviewed before and after fitting a time-series model. Unlike a single assumption, temporal modeling requires checking several conditions — stationarity, lag structure, specification, and residual behavior — whose exact relevance depends on the model chosen. Select a model to see its methodological matrix: Model → Assumptions/Conditions → Diagnostic →": [
-                "Series Temporales relaciona los supuestos estadísticos y las condiciones metodológicas que deben evaluarse antes y después de ajustar un modelo de series temporales. A diferencia de un supuesto único, el modelado temporal exige revisar varias condiciones — de estacionariedad, de estructura de rezagos, de especificación y de residuos — cuya relevancia exacta depende del modelo elegido. Seleccione un modelo para ver su matriz metodológica: Modelo →"
+            "Time Series Model": [
+                "Modelo de series temporales"
+            ],
+            "Time Series maps the statistical assumptions and methodological conditions that should be reviewed before and after fitting a time-series model. Unlike a single assumption, temporal modeling requires checking several conditions — stationarity, lag structure, specification, and residual behavior — whose exact relevance depends on the model chosen. Select a model to see its methodological matrix: Model → Assumptions/Conditions → Diagnostic → Methodological Role → Decision.": [
+                "Series Temporales relaciona los supuestos estadísticos y las condiciones metodológicas que deben evaluarse antes y después de ajustar un modelo de series temporales. A diferencia de un supuesto único, el modelado temporal exige revisar varias condiciones — de estacionariedad, de estructura de rezagos, de especificación y de residuos — cuya relevancia exacta depende del modelo elegido. Seleccione un modelo para ver su matriz metodológica: Modelo → Supuestos/condiciones → Diagnóstico → Función metodológica → Decisión."
             ],
             "Time series": [
                 "Serie(s) temporal(es)"
@@ -5713,8 +5656,8 @@
             "VAR": [
                 "VAR"
             ],
-            "VAR (Vector AutoRegressive) models several series simultaneously, where each": [
-                "VAR (Vector AutoRegressive) modela varias series simultáneamente, donde cada"
+            "VAR (Vector AutoRegressive) models several series simultaneously, where each one is explained by its own lags and by the lags of every other series in the system, without imposing in advance which variable causes which. Use it when you are interested in the joint dynamics between two or more stationary series — for example, interest rate and inflation, or sales of complementary products — and want to study how a shock in one series propagates to the others (impulse-response functions) without specifying rigid causal relationships. It requires all series to be stationary (or treated to become so); if the series share a long-run equilibrium relationship while each is individually non-stationary, VECM is usually the more appropriate choice instead.": [
+                "VAR (Vector AutoRegressive) modela varias series simultáneamente, donde cada una se explica por sus propios rezagos y por los rezagos de todas las demás series del sistema, sin imponer de antemano cuál variable causa cuál. Úselo cuando le interese la dinámica conjunta entre dos o más series estacionarias —por ejemplo, tasa de interés e inflación, o ventas de productos complementarios— y quiera estudiar cómo un choque en una serie se propaga a las demás (funciones de impulso-respuesta) sin especificar relaciones causales rígidas. Requiere que todas las series sean estacionarias (o tratadas para serlo); si las series comparten una relación de equilibrio de largo plazo mientras cada una es no estacionaria individualmente, VECM suele ser la opción más apropiada en su lugar."
             ],
             "VAR and VECM require at least two series. Add another series or choose a univariate model.": [
                 "VAR y VECM requieren al menos dos series. Agregue otra serie o elija un modelo univariado."
@@ -5808,9 +5751,6 @@
             ],
             "Violin: approximate shape": [
                 "Violin: forma aproximada"
-            ],
-            "Viridis": [
-                "Viridis"
             ],
             "Visual diagnostic of change within the same units": [
                 "Diagnóstico visual del cambio dentro de las mismas unidades"
@@ -6019,12 +5959,6 @@
             "add an additional error, trend, or seasonal component to the ETS specification": [
                 "incorporar un componente de error, tendencia o estacionalidad adicional en la especificación ETS"
             ],
-            "adds lagged differences as regressors; Phillips-Perron adjusts the statistic with a": [
-                "errores: ADF agrega rezagos de la diferencia como regresores; Phillips-Perron ajusta"
-            ],
-            "an ARIMA with constant variance. It assumes the input series is already": [
-                "ARIMA con varianza constante. Asume que la serie de entrada ya es"
-            ],
             "an approximately symmetric distribution centered near zero.": [
                 "una distribución aproximadamente simétrica y centrada en cero."
             ],
@@ -6036,9 +5970,6 @@
             ],
             "an increasing trend, decreasing trend, or funnel shape.": [
                 "tendencia ascendente, descendente o forma de embudo."
-            ],
-            "and/or seasonality, and tends to be easier to interpret and communicate than an": [
-                "tendencia y/o estacionalidad relativamente simples y estables, y suele ser más"
             ],
             "apply a seasonal difference (D) as suggested before proceeding": [
                 "aplicar una diferencia estacional (D) según lo sugerido antes de proceder"
@@ -6052,20 +5983,8 @@
             "apply the suggested number of regular differences (d) before fitting the model, or let auto.arima determine it automatically; alternatively, use a variance-stabilizing transformation": [
                 "aplicar el número de diferencias regulares sugerido (d) antes de ajustar el modelo, o dejar que auto.arima lo determine automáticamente; alternativamente, usar una transformación estabilizadora de varianza"
             ],
-            "approximately mean-stationary (typically returns, not price levels); if there": [
-                "aproximadamente estacionaria en media (típicamente retornos, no niveles de"
-            ],
             "approximately straight lines with slopes consistent with the model.": [
                 "líneas aproximadamente rectas y pendientes coherentes con el modelo."
-            ],
-            "as an absolute \"assumption met/not met\" verdict.": [
-                "gradual, nunca como un veredicto absoluto de \"supuesto cumplido/no cumplido\"."
-            ],
-            "asymptotic approximation, especially relevant in small or moderate samples. The": [
-                "aproximación asintótica, especialmente relevante en muestras pequeñas o moderadas."
-            ],
-            "autocorrelation alongside those that do have it.": [
-                "rezagos sin autocorrelación genuina junto a los que sí la tienen."
             ],
             "boxes of similar size and reasonable whiskers across groups.": [
                 "cajas de tamaño similar y bigotes razonables entre grupos."
@@ -6121,9 +6040,6 @@
             "complement normality tests and review extreme cases.": [
                 "complementar las pruebas de normalidad y revisar casos extremos."
             ],
-            "conditional volatility), and optional external regressors for ARIMA/SARIMA": [
-                "volatilidad condicional), y regresores externos opcionales en ARIMA/SARIMA"
-            ],
             "confirm the series are integrated of order 1 before proceeding with VECM; if any turns out stationary in levels, reconsider its inclusion": [
                 "confirmar que las series sean integradas de orden 1 antes de proceder con VECM; si alguna resulta estacionaria en niveles, reconsiderar su inclusión"
             ],
@@ -6151,9 +6067,6 @@
             "copula entropy independence": [
                 "independencia por entropía copular"
             ],
-            "correct for possible residual autocorrelation and heteroscedasticity differently: ADF": [
-                "pero corrigen de forma distinta la posible autocorrelación y heterocedasticidad de los"
-            ],
             "count of cases.": [
                 "frecuencia o número de casos."
             ],
@@ -6166,17 +6079,11 @@
             "dCor": [
                 "dCor"
             ],
-            "decomposes the series into level, trend, and seasonality, each with its own": [
-                "exponencial que descompone la serie en nivel, tendencia y estacionalidad,"
-            ],
             "density, i.e. the relative concentration of cases.": [
                 "densidad, es decir, la concentración relativa de casos."
             ],
             "density, that is, the relative concentration of cases.": [
                 "densidad, es decir, concentración relativa de casos."
-            ],
-            "dependence, and too many dilute the test's power by mixing lags with no genuine": [
-                "detectar dependencia real, y demasiados diluyen el poder de la prueba al incluir"
             ],
             "design balance": [
                 "balance del diseño"
@@ -6205,15 +6112,6 @@
             "does": [
                 "señala"
             ],
-            "economic series (asset returns, exchange rates, interest rates) where the": [
-                "frecuencia (retornos de activos, tipos de cambio, tasas) donde la magnitud de"
-            ],
-            "equivalent SARIMA. It is less suited when the dynamics depend on other": [
-                "fácil de interpretar y comunicar que un SARIMA equivalente. Es menos adecuado"
-            ],
-            "error.": [
-                "ambas hipótesis, no un error de cómputo."
-            ],
             "evaluate GJR-GARCH or EGARCH instead of a symmetric GARCH": [
                 "evaluar GJR-GARCH o EGARCH en vez de un GARCH simétrico"
             ],
@@ -6235,9 +6133,6 @@
             "examine the shape, symmetry, and concentration of standardized residuals.": [
                 "examinar forma, simetría y concentración de los residuos estandarizados."
             ],
-            "explicitly weights recent observations more heavily than older ones. It is a": [
-                "unitaria ni en diferenciación: pondera las observaciones recientes más que las"
-            ],
             "extreme values": [
                 "valores extremos"
             ],
@@ -6250,14 +6145,8 @@
             "fitted values (group/cell means, adjusted for covariates) for each case.": [
                 "valores ajustados (medias de grupo/celda, ajustadas por covariables) para cada caso."
             ],
-            "form (none, additive, or multiplicative, with or without damping). Unlike": [
-                "cada uno con su propia forma (nula, aditiva o multiplicativa, con o sin"
-            ],
             "frequency or number of cases.": [
                 "frecuencia o número de casos."
-            ],
-            "generalized the idea to a framework where parameters can vary gradually as a": [
-                "antemano. Nyblom (1989) generalizó la idea a un marco donde los parámetros pueden"
             ],
             "groups / cells defined by the selected factor(s).": [
                 "grupos / celdas definidos por el o los factores seleccionados."
@@ -6289,32 +6178,14 @@
             "increase the number of VAR lags": [
                 "aumentar el número de rezagos del VAR"
             ],
-            "individually non-stationary, VECM is usually the more appropriate choice": [
-                "largo plazo mientras cada una es no estacionaria individualmente, VECM suele"
-            ],
             "influential cases": [
                 "casos influyentes"
-            ],
-            "instead of assuming it is constant. Use it with high-frequency financial or": [
-                "asumirla constante. Úselo con series financieras o económicas de alta"
-            ],
-            "instead.": [
-                "ser la opción más apropiada en su lugar."
-            ],
-            "insufficient sample to distinguish between the two hypotheses, not a computational": [
-                "componentes de largo plazo débiles o una muestra insuficiente para distinguir entre"
             ],
             "interpret classical inference with caution and review outliers or transformations.": [
                 "interpretar inferencias clásicas con cautela y revisar atípicos o transformaciones."
             ],
             "interpret classical inferences cautiously and review outliers or transformations.": [
                 "interpretar inferencias clásicas con cautela y revisar atípicos o transformaciones."
-            ],
-            "is asymmetry between positive and negative shocks, it is worth considering": [
-                "precio); si hay asimetría entre choques positivos y negativos, valga revisar"
-            ],
-            "it especially suited for evaluating the joint stability of an already-fitted": [
-                "quiebre discreto, lo que lo hace especialmente adecuado para evaluar la estabilidad"
             ],
             "leverage, i.e. how far a case sits from the center of the predictor space.": [
                 "leverage, o distancia del caso respecto al centro del espacio de predictores."
@@ -6325,9 +6196,6 @@
             "log(Y)": [
                 "log(Y)"
             ],
-            "magnitude of fluctuations varies systematically over time. It offers": [
-                "las fluctuaciones varía sistemáticamente en el tiempo. Ofrece estimaciones de"
-            ],
             "many points outside the whiskers, strong skewness, or very distant values.": [
                 "muchos puntos fuera de bigotes, asimetría fuerte o valores muy alejados."
             ],
@@ -6337,26 +6205,17 @@
             "marked skewness, multiple peaks, or very long tails.": [
                 "asimetría marcada, múltiples picos o colas muy largas."
             ],
-            "martingale process, rather than only at a single discrete break point, which makes": [
-                "variar gradualmente como un proceso martingala, en vez de solo en un punto de"
-            ],
             "maximum |r|": [
                 "|r| máximo"
             ],
             "minimum λ": [
                 "λ mínimo"
             ],
-            "model the level of the series but its conditional variance: it allows": [
-                "el nivel de la serie sino su varianza condicional: permite que la volatilidad"
-            ],
             "model the variance (ARIMA-GARCH) or use robust errors for inference": [
                 "modelar la varianza (ARIMA-GARCH) o usar errores robustos para la inferencia"
             ],
             "model the variance (SARIMA-GARCH) or use robust errors for inference": [
                 "modelar la varianza (SARIMA-GARCH) o usar errores robustos para la inferencia"
-            ],
-            "model), diagnostic plots (series, ACF/PACF, residuals, and, for GARCH,": [
-                "seleccionado), gráficos diagnósticos (serie, ACF/PACF, residuos y, en GARCH,"
             ],
             "most cases near zero and with low leverage.": [
                 "la mayoría de los casos cerca de cero y con leverage bajo."
@@ -6385,9 +6244,6 @@
             "non-linear covariate dependence": [
                 "dependencia no lineal en covariables"
             ],
-            "nonparametric, Newey-West-type correction. KPSS (Kwiatkowski et al., 1992)": [
-                "el estadístico con una corrección no paramétrica tipo Newey-West. KPSS (Kwiatkowski"
-            ],
             "normality diagnostics": [
                 "diagnósticos de normalidad"
             ],
@@ -6411,15 +6267,6 @@
             ],
             "observed values of the dependent variable.": [
                 "valores observados de la variable dependiente."
-            ],
-            "one is explained by its own lags and by the lags of every other series in the": [
-                "una se explica por sus propios rezagos y por los rezagos de todas las demás"
-            ],
-            "one; this is why the chosen number of lags matters: too few may miss real": [
-                "no uno solo; por eso el número de rezagos elegido importa: muy pocos pueden no"
-            ],
-            "others (impulse-response functions) without specifying rigid causal": [
-                "las demás (funciones de impulso-respuesta) sin especificar relaciones"
             ],
             "p": [
                 "p"
@@ -6487,9 +6334,6 @@
             "predicted dependent-variable value while holding the other predictors constant.": [
                 "valor predicho de la variable dependiente manteniendo constantes los demás predictores."
             ],
-            "products — and want to study how a shock in one series propagates to the": [
-                "complementarios— y quiera estudiar cómo un choque en una serie se propaga a"
-            ],
             "rank": [
                 "rango"
             ],
@@ -6502,14 +6346,8 @@
             "read classical tests with caution and review outliers, transformation, or specification.": [
                 "leer las pruebas clásicas con cautela y revisar atípicos, transformación o especificación."
             ],
-            "recommended battery of statistical diagnostics per model (unit-root tests,": [
-                "mínima de diagnósticos estadísticos por modelo (pruebas de raíz unitaria,"
-            ],
             "reduce the lag order, review the specification, or difference the series": [
                 "reducir el orden de rezago, revisar la especificación, o diferenciar las series"
-            ],
-            "relationships. It requires all series to be stationary (or treated to become": [
-                "causales rígidas. Requiere que todas las series sean estacionarias (o"
             ],
             "residual normality": [
                 "normalidad de residuos"
@@ -6519,9 +6357,6 @@
             ],
             "residuals, the difference between the observed and fitted value.": [
                 "residuos, la diferencia entre el valor observado y el ajustado."
-            ],
-            "reverses the logic: its null hypothesis is that the series IS": [
-                "et al., 1992) invierte la lógica: su hipótesis nula es que la serie"
             ],
             "review effect size and direction, linearity, interactions, or nonlinear terms.": [
                 "revisar tamaño y dirección de efectos, linealidad, interacciones o términos no lineales."
@@ -6565,12 +6400,6 @@
             "review whether a non-linear term or transformation is warranted, or simply confirm the relationship is linear.": [
                 "revisar si conviene un término no lineal, una transformación, o simplemente confirmar que la relación es lineal."
             ],
-            "risk/volatility estimates that feed more realistic prediction intervals than": [
-                "riesgo/volatilidad que alimentan intervalos de predicción más realistas que un"
-            ],
-            "same null hypothesis — the series has a unit root, i.e. it is non-stationary — but": [
-                "misma hipótesis nula — la serie tiene raíz unitaria, es decir, es no estacionaria —,"
-            ],
             "sample size": [
                 "tamaño de muestra"
             ],
@@ -6588,9 +6417,6 @@
             ],
             "small bars, below the reference line.": [
                 "barras pequeñas y por debajo de la línea de referencia."
-            ],
-            "so); if the series share a long-run equilibrium relationship while each is": [
-                "tratadas para serlo); si las series comparten una relación de equilibrio de"
             ],
             "sqrt(Y)": [
                 "sqrt(Y)"
@@ -6610,26 +6436,14 @@
             "standardized value of the evaluated predictor, from low to high.": [
                 "valor estandarizado del predictor evaluado, de bajo a alto."
             ],
-            "stationarity (large p), the evidence converges clearly. When the two families of": [
-                "estacionariedad (p grande), la evidencia converge con claridad. Cuando las"
-            ],
-            "stationary. This is why the three tests are reported together: if ADF and": [
-                "SÍ es estacionaria. Por eso las tres pruebas se reportan juntas: si ADF y"
-            ],
             "statistically significant": [
                 "estadísticamente significativo"
             ],
             "statistically significant departure from multivariate normality": [
                 "desviación estadísticamente significativa de la normalidad multivariada"
             ],
-            "strong alternative when the series has a relatively simple and stable trend": [
-                "antiguas de forma explícita. Es una alternativa fuerte cuando la serie tiene"
-            ],
             "strong deviations at the extremes, S-shape, or heavy tails.": [
                 "desviaciones fuertes en los extremos, forma de S o colas pesadas."
-            ],
-            "structural change occurs at some point not specified in advance. Nyblom (1989)": [
-                "la muestra o si existe un cambio estructural en algún punto no especificado de"
             ],
             "studentized residual, how extreme the case's error is.": [
                 "residuo studentizado, qué tan extremo es el error del caso."
@@ -6637,20 +6451,8 @@
             "studentized residual, which indicates how extreme the case error is.": [
                 "residuo studentizado, que expresa qué tan extremo es el error del caso."
             ],
-            "study (use GARCH).": [
-                "la volatilidad misma es el objeto de estudio (use GARCH)."
-            ],
-            "system, without imposing in advance which variable causes which. Use it when": [
-                "series del sistema, sin imponer de antemano cuál variable causa cuál. Úselo"
-            ],
             "t": [
                 "t"
-            ],
-            "test jointly evaluates several lags of residual autocorrelation at once, not just": [
-                "La prueba evalúa conjuntamente varios rezagos de autocorrelación residual a la vez,"
-            ],
-            "tests disagree, it usually points to a series with weak long-run components or an": [
-                "conclusiones de ambos tipos de prueba difieren, suele indicar una serie con"
             ],
             "the direct and indirect effects point in opposite directions (a suppression / inconsistent-mediation pattern), so the total effect of %1$s on %2$s is smaller than either path alone would suggest": [
                 "los efectos directo e indirecto apuntan en direcciones opuestas (un patrón de supresión / mediación inconsistente), por lo que el efecto total de %1$s sobre %2$s es menor de lo que cualquiera de las dos rutas por separado sugeriría"
@@ -6718,9 +6520,6 @@
             "values predicted by the model.": [
                 "valores predichos por el modelo."
             ],
-            "variables (use VAR/VECM/ARIMAX) or when volatility itself is the object of": [
-                "cuando la dinámica depende de otras variables (use VAR/VECM/ARIMAX) o cuando"
-            ],
             "variance homogeneity diagnostics": [
                 "diagnósticos de homogeneidad de varianzas"
             ],
@@ -6736,12 +6535,6 @@
             "visually compare what Pearson r and dCor detect in the relationship between two variables.": [
                 "comparar visualmente lo que Pearson r y dCor detectan en la relación entre dos variables."
             ],
-            "volatility to change over time and cluster into calm and turbulent periods,": [
-                "cambie en el tiempo y se agrupe en períodos de calma y de turbulencia, en vez de"
-            ],
-            "whether a regression's coefficients remain constant across the sample or whether a": [
-                "detectar si los coeficientes de una regresión permanecen constantes a lo largo de"
-            ],
             "wide dispersion, curved patterns, or systematic bias.": [
                 "dispersión amplia, patrones curvos o sesgo sistemático."
             ],
@@ -6750,12 +6543,6 @@
             ],
             "without statistical significance": [
                 "sin significancia estadística"
-            ],
-            "you are interested in the joint dynamics between two or more stationary series": [
-                "cuando le interese la dinámica conjunta entre dos o más series estacionarias"
-            ],
-            "— for example, interest rate and inflation, or sales of complementary": [
-                "—por ejemplo, tasa de interés e inflación, o ventas de productos"
             ]
         }
     }

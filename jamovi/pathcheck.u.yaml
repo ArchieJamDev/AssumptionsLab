@@ -68,26 +68,34 @@ children:
         label: Paths
       - type: ComboBox
         name: diagramEdgeLabel
+        enable: (showDiagram)
       - type: Label
         label: Show
       - type: CheckBox
         name: diagramShowErrors
+        enable: (showDiagram)
       - type: CheckBox
         name: diagramOffsetLabels
+        enable: (showDiagram)
       - type: Label
         label: Layout
       - type: ComboBox
         name: diagramLayout
+        enable: (showDiagram)
       - type: ComboBox
         name: diagramRotate
+        enable: (showDiagram)
       - type: Label
         label: Nodes
       - type: ComboBox
         name: diagramNodeSize
+        enable: (showDiagram)
       - type: ComboBox
         name: diagramShape
+        enable: (showDiagram)
       - type: ComboBox
         name: diagramAbbreviate
+        enable: (showDiagram)
 
   - type: CollapseBox
     label: 'Plots: Residuals'
@@ -97,17 +105,14 @@ children:
         name: showResiduals
       - type: ComboBox
         name: residBinMethod
+        enable: (showResiduals)
       - type: CheckBox
         name: residShowNormalCurve
+        enable: (showResiduals)
       - type: CheckBox
         name: residFlagOutliers
+        enable: (showResiduals)
 
-  - type: CollapseBox
-    label: Plot Color Palette
-    collapsed: true
-    children:
-      - type: ComboBox
-        name: plotPalette
 
   - type: CollapseBox
     label: Options

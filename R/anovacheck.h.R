@@ -15,8 +15,7 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             residShowBand = FALSE,
             residRefLine = TRUE,
             influenceLabelMode = "top5",
-            influenceShowThreshold = TRUE,
-            plotPalette = "jamovi", ...) {
+            influenceShowThreshold = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -91,14 +90,6 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "influenceShowThreshold",
                 influenceShowThreshold,
                 default=TRUE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
 
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
@@ -110,7 +101,6 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..residRefLine)
             self$.addOption(private$..influenceLabelMode)
             self$.addOption(private$..influenceShowThreshold)
-            self$.addOption(private$..plotPalette)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -122,8 +112,7 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         residShowBand = function() private$..residShowBand$value,
         residRefLine = function() private$..residRefLine$value,
         influenceLabelMode = function() private$..influenceLabelMode$value,
-        influenceShowThreshold = function() private$..influenceShowThreshold$value,
-        plotPalette = function() private$..plotPalette$value),
+        influenceShowThreshold = function() private$..influenceShowThreshold$value),
     private = list(
         ..dep = NA,
         ..covs = NA,
@@ -134,8 +123,7 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..residShowBand = NA,
         ..residRefLine = NA,
         ..influenceLabelMode = NA,
-        ..influenceShowThreshold = NA,
-        ..plotPalette = NA)
+        ..influenceShowThreshold = NA)
 )
 
 anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -623,10 +611,18 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="pearson", 
                         `title`="Pearson r", 
+                        `type`="number"),
+                    list(
+                        `name`="pearsonSig", 
+                        `title`="Sig. (r)", 
                         `type`="text"),
                     list(
                         `name`="dcor", 
                         `title`="dCor", 
+                        `type`="number"),
+                    list(
+                        `name`="dcorSig", 
+                        `title`="Sig. (dCor)", 
                         `type`="text"),
                     list(
                         `name`="gap", 
@@ -801,7 +797,6 @@ anovaCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param residRefLine .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
-#' @param plotPalette .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -874,8 +869,7 @@ anovaCheck <- function(
     residShowBand = FALSE,
     residRefLine = TRUE,
     influenceLabelMode = "top5",
-    influenceShowThreshold = TRUE,
-    plotPalette = "jamovi") {
+    influenceShowThreshold = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("anovaCheck requires jmvcore to be installed (restart may be required)")
@@ -902,8 +896,7 @@ anovaCheck <- function(
         residShowBand = residShowBand,
         residRefLine = residRefLine,
         influenceLabelMode = influenceLabelMode,
-        influenceShowThreshold = influenceShowThreshold,
-        plotPalette = plotPalette)
+        influenceShowThreshold = influenceShowThreshold)
 
     analysis <- anovaCheckClass$new(
         options = options,

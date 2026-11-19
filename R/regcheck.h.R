@@ -29,8 +29,7 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             corrHighlightDiscordant = TRUE,
             influenceShowPlots = TRUE,
             influenceLabelMode = "top5",
-            influenceShowThreshold = TRUE,
-            plotPalette = "jamovi", ...) {
+            influenceShowThreshold = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -167,14 +166,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "influenceShowThreshold",
                 influenceShowThreshold,
                 default=TRUE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
 
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
@@ -200,7 +191,6 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..influenceShowPlots)
             self$.addOption(private$..influenceLabelMode)
             self$.addOption(private$..influenceShowThreshold)
-            self$.addOption(private$..plotPalette)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -226,8 +216,7 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         corrHighlightDiscordant = function() private$..corrHighlightDiscordant$value,
         influenceShowPlots = function() private$..influenceShowPlots$value,
         influenceLabelMode = function() private$..influenceLabelMode$value,
-        influenceShowThreshold = function() private$..influenceShowThreshold$value,
-        plotPalette = function() private$..plotPalette$value),
+        influenceShowThreshold = function() private$..influenceShowThreshold$value),
     private = list(
         ..dep = NA,
         ..covs = NA,
@@ -252,8 +241,7 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..corrHighlightDiscordant = NA,
         ..influenceShowPlots = NA,
         ..influenceLabelMode = NA,
-        ..influenceShowThreshold = NA,
-        ..plotPalette = NA)
+        ..influenceShowThreshold = NA)
 )
 
 regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -462,7 +450,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationMatrixGuide",
                 title="Correlation matrix",
-                visible=FALSE))
+                visible="(covs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pearsonMatrixTable",
@@ -472,7 +460,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors"),
                 rows=0,
-                visible=FALSE,
+                visible="(covs)",
                 columns=list(
                     list(
                         `name`="var", 
@@ -489,7 +477,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors"),
                 rows=0,
-                visible=FALSE,
+                visible="(covs)",
                 columns=list(
                     list(
                         `name`="var", 
@@ -499,12 +487,12 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationMatrixNote",
                 title=" ",
-                visible=FALSE))
+                visible="(covs)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonGuide",
                 title="Pearson / dCor / copula entropy discordance analysis",
-                visible=FALSE))
+                visible="(covs)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="correlationComparisonTable",
@@ -517,7 +505,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors"),
                 rows=0,
-                visible=FALSE,
+                visible="(covs)",
                 columns=list(
                     list(
                         `name`="var1", 
@@ -530,10 +518,18 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="pearson", 
                         `title`="Pearson r", 
+                        `type`="number"),
+                    list(
+                        `name`="pearsonSig", 
+                        `title`="Sig. (r)", 
                         `type`="text"),
                     list(
                         `name`="dcor", 
                         `title`="dCor", 
+                        `type`="number"),
+                    list(
+                        `name`="dcorSig", 
+                        `title`="Sig. (dCor)", 
                         `type`="text"),
                     list(
                         `name`="gap", 
@@ -560,7 +556,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="correlationComparisonInterpretation",
                 title="Applied interpretation",
-                visible=FALSE))
+                visible="(covs)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="correlationIndividualPlot",
@@ -792,7 +788,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="p", 
                         `title`="p", 
-                        `type`="text"),
+                        `type`="number", 
+                        `format`="zto,pvalue"),
                     list(
                         `name`="pSig", 
                         `title`="Sig.", 
@@ -804,8 +801,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityGuide",
-                title="Multicollinearity",
-                visible=FALSE))
+                title="Multicollinearity"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="multicollinearity",
@@ -817,7 +813,6 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dep",
                     "covs",
                     "factors"),
-                visible=FALSE,
                 columns=list(
                     list(
                         `name`="diagnostic", 
@@ -838,8 +833,7 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityInterpretation",
-                title="Applied interpretation",
-                visible=FALSE))
+                title="Applied interpretation"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influenceGuide",
@@ -1055,7 +1049,6 @@ regCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param influenceShowPlots .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
-#' @param plotPalette .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -1153,8 +1146,7 @@ regCheck <- function(
     corrHighlightDiscordant = TRUE,
     influenceShowPlots = TRUE,
     influenceLabelMode = "top5",
-    influenceShowThreshold = TRUE,
-    plotPalette = "jamovi") {
+    influenceShowThreshold = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("regCheck requires jmvcore to be installed (restart may be required)")
@@ -1195,8 +1187,7 @@ regCheck <- function(
         corrHighlightDiscordant = corrHighlightDiscordant,
         influenceShowPlots = influenceShowPlots,
         influenceLabelMode = influenceLabelMode,
-        influenceShowThreshold = influenceShowThreshold,
-        plotPalette = plotPalette)
+        influenceShowThreshold = influenceShowThreshold)
 
     analysis <- regCheckClass$new(
         options = options,

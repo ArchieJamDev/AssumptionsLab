@@ -546,8 +546,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 stringsAsFactors = FALSE)
 
             show_distribution_plot <- isTRUE(self$options$showDistributionPlot)
-            self$results$distributionPlot$setVisible(show_distribution_plot)
-            self$results$distributionPlotGuide$setVisible(show_distribution_plot)
 
             if (show_distribution_plot) {
                 dist_y <- suppressWarnings(as.numeric(y2))
@@ -836,8 +834,8 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     test = test,
                     n = n,
                     statistic = statistic,
-                    value = fmt_num(value),
-                    p = fmt_p(p),
+                    value = value,
+                    p = p,
                     pSig = p_sig(p),
                     decision = p_decision(p),
                     use = normality_use(test),
@@ -950,8 +948,8 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                             test = sub_norm$test[j],
                             n = sub_norm$n[j],
                             statistic = sub_norm$statistic[j],
-                            value = sub_norm$value[j],
-                            p = sub_norm$p[j],
+                            value = if (is.na(sub_norm$value[j])) "" else sub_norm$value[j],
+                            p = if (is.na(sub_norm$p[j])) "" else sub_norm$p[j],
                             pSig = sub_norm$pSig[j],
                             decision = sub_norm$decision[j]
                         )
@@ -1380,8 +1378,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             show_qq_plots <- isTRUE(self$options$showQQPlots)
 
-            self$results$qqNormalityPlot$setVisible(show_qq_plots)
-            self$results$qqNormalityGuide$setVisible(show_qq_plots)
 
             if (show_qq_plots) {
 
@@ -1455,8 +1451,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             show_normal_curve_plots <- isTRUE(self$options$showNormalCurvePlots)
 
-            self$results$normalCurvePlot$setVisible(show_normal_curve_plots)
-            self$results$normalCurveGuide$setVisible(show_normal_curve_plots)
 
             if (show_normal_curve_plots) {
 
@@ -1539,10 +1533,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     values = list(
                         test = homogeneity_table$test[i],
                         statistic = homogeneity_table$statistic[i],
-                        value = homogeneity_table$value[i],
+                        value = if (is.na(homogeneity_table$value[i])) "" else homogeneity_table$value[i],
                         df1 = homogeneity_table$df1[i],
                         df2 = homogeneity_table$df2[i],
-                        p = homogeneity_table$p[i],
+                        p = if (is.na(homogeneity_table$p[i])) "" else homogeneity_table$p[i],
                         pSig = homogeneity_table$pSig[i],
                         decision = homogeneity_table$decision[i]
                     )
@@ -1854,23 +1848,17 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
         .plotSeriesColors = function(n) {
             n <- max(1, as.integer(n))
-            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi")) {
-                # Default: replicate jamovi's own N-color scheme (the same
-                # function ggtheme's embedded discrete scale calls
-                # internally for ggplot2 plots) instead of a fixed hard-
-                # coded blue/orange set.
-                # ES: por defecto, replica el esquema de N colores propio
-                # de jamovi (la misma función que llama internamente la
-                # escala discreta embebida en ggtheme para gráficos
-                # ggplot2) en vez de un conjunto azul/naranja fijo.
-                jmv_pal <- tryCatch(self$options$palette, error = function(e) "jmv")
-                if (is.null(jmv_pal) || length(jmv_pal) == 0 || !nzchar(jmv_pal)) jmv_pal <- "jmv"
-                return(tryCatch(jmvcore::colorPalette(n, jmv_pal, "fill"), error = function(e) NULL))
-            }
-            cols <- .al_plot_series_palette(choice)
-            if (is.null(cols)) return(NULL)
-            rep(cols, length.out = n)
+            # Always replicate jamovi's own N-color scheme (the same
+            # function ggtheme's embedded discrete scale calls
+            # internally for ggplot2 plots) instead of a fixed hard-
+            # coded blue/orange set.
+            # ES: replica siempre el esquema de N colores propio
+            # de jamovi (la misma función que llama internamente la
+            # escala discreta embebida en ggtheme para gráficos
+            # ggplot2) en vez de un conjunto azul/naranja fijo.
+            jmv_pal <- tryCatch(self$options$palette, error = function(e) "jmv")
+            if (is.null(jmv_pal) || length(jmv_pal) == 0 || !nzchar(jmv_pal)) jmv_pal <- "jmv"
+            return(tryCatch(jmvcore::colorPalette(n, jmv_pal, "fill"), error = function(e) NULL))
         },
 
         # -----------------------------------------------------------------------------

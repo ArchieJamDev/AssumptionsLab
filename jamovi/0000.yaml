@@ -33,7 +33,7 @@ analyses:
       user's dataset. Entries can be filtered by category (e.g. normality,
       homoscedasticity, linearity, independence, multicollinearity,
       outliers/influence, sphericity, proportional odds, robust alternatives)
-      and are available in English or Spanish. Use it alongside any of the
+      and are shown in jamovi's language (English or Spanish). Use it alongside any of the
       assumption-checking analyses to look up the theory behind a diagnostic, or
       as a stand-alone teaching aid for planning an analysis before running one.
     category: analyses

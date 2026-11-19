@@ -61,19 +61,19 @@ children:
         name: showPlots
       - type: ComboBox
         name: plotSet
+        enable: (showPlots)
       - type: ComboBox
         name: residSmoother
+        enable: (showPlots)
       - type: CheckBox
         name: residShowBand
+        enable: (showPlots)
       - type: CheckBox
         name: residRefLine
+        enable: (showPlots)
       - type: ComboBox
         name: influenceLabelMode
+        enable: (showPlots)
       - type: CheckBox
         name: influenceShowThreshold
-  - type: CollapseBox
-    label: Plot Color Palette
-    collapsed: true
-    children:
-      - type: ComboBox
-        name: plotPalette
+        enable: (showPlots)

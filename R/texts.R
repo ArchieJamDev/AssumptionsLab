@@ -326,19 +326,10 @@
     time = list(
         title = .("Time Series"),
         intro = c(
-        .("Time Series maps the statistical assumptions and methodological conditions that should be reviewed before and after fitting a time-series model. Unlike a single assumption, temporal modeling requires checking several conditions — stationarity, lag structure, specification, and residual behavior — whose exact relevance depends on the model chosen. Select a model to see its methodological matrix: Model → Assumptions/Conditions → Diagnostic →"),
-        .("Methodological Role → Decision.")),
+        .("Time Series maps the statistical assumptions and methodological conditions that should be reviewed before and after fitting a time-series model. Unlike a single assumption, temporal modeling requires checking several conditions — stationarity, lag structure, specification, and residual behavior — whose exact relevance depends on the model chosen. Select a model to see its methodological matrix: Model → Assumptions/Conditions → Diagnostic → Methodological Role → Decision.")),
         interpretation = .("The matrix shows only the conditions relevant to the selected model. Not all of them are strict mathematical requirements: applicability conditions (which must hold for the model to make sense), specification criteria (which guide the choice of parameters such as p, d, q, or the cointegration rank), and post-fit diagnostics (which evaluate whether the already-estimated model adequately captured the structure of the data) are distinguished. Conflating these categories is a common methodological error: for example, residual normality in an ARIMA model is a useful diagnostic, not a strict mathematical requirement for estimation."),
         scopeNote = c(
-        .("This version implements the methodological matrix (Model → Assumptions/"),
-        .("Conditions → Diagnostic → Methodological Role → Decision), the minimum"),
-        .("recommended battery of statistical diagnostics per model (unit-root tests,"),
-        .("ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, and for VAR/VECM/GARCH also"),
-        .("Johansen, Portmanteau, CUSUM/Nyblom, and sign bias, depending on the selected"),
-        .("model), diagnostic plots (series, ACF/PACF, residuals, and, for GARCH,"),
-        .("conditional volatility), and optional external regressors for ARIMA/SARIMA"),
-        .("(ARIMAX/SARIMAX). Every result is classified as a graded evidence tier, never"),
-        .("as an absolute \"assumption met/not met\" verdict.")),
+        .("This version implements the methodological matrix (Model → Assumptions/Conditions → Diagnostic → Methodological Role → Decision), the minimum recommended battery of statistical diagnostics per model (unit-root tests, ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, and for VAR/VECM/GARCH also Johansen, Portmanteau, CUSUM/Nyblom, and sign bias, depending on the selected model), diagnostic plots (series, ACF/PACF, residuals, and, for GARCH, conditional volatility), and optional external regressors for ARIMA/SARIMA (ARIMAX/SARIMAX). Every result is classified as a graded evidence tier, never as an absolute \"assumption met/not met\" verdict.")),
         seriesRowLabel = .("Time series"),
         modelRowLabel = .("Selected model"),
         noSeriesSelected = .("No time series variable has been selected."),
@@ -352,45 +343,15 @@
         ),
         modelDescriptions = list(
             arima = c(
-        .("ARIMA (AutoRegressive Integrated Moving Average) models a single time series from its own past: its lagged values (autoregressive component, p), the number of differences needed to make it stationary (integrated component, d), and lagged errors (moving-average component, q). Use it when you have a single series without marked seasonality, or when you want to model an already deseasonalized series. It offers short- to medium-term forecasts with confidence intervals, and is the conceptual foundation for SARIMA, ARIMAX, and"),
-        .("GARCH. On its own it does not capture relationships with other series (that is what VAR/VECM are for) or changes in variance over time (that is what GARCH is for).")),
+        .("ARIMA (AutoRegressive Integrated Moving Average) models a single time series from its own past: its lagged values (autoregressive component, p), the number of differences needed to make it stationary (integrated component, d), and lagged errors (moving-average component, q). Use it when you have a single series without marked seasonality, or when you want to model an already deseasonalized series. It offers short- to medium-term forecasts with confidence intervals, and is the conceptual foundation for SARIMA, ARIMAX, and GARCH. On its own it does not capture relationships with other series (that is what VAR/VECM are for) or changes in variance over time (that is what GARCH is for).")),
             sarima = .("SARIMA extends ARIMA by adding a seasonal component (P, D, Q, s) that explicitly models the repetition of patterns every s periods (for example, every 12 months in monthly data). Use it when the series shows a clear, recognizable seasonal pattern — sales with holiday peaks, electricity consumption with daily or weekly cycles, tourism with a high season — that a plain ARIMA could not capture. It is this module's default model precisely because it covers the most frequent case in applied practice. In exchange for that added power, it requires more historical data (ideally several complete cycles) and a correctly specified periodicity (frequency)."),
             ets = c(
-        .("ETS (Error, Trend, Seasonal) is a family of exponential-smoothing models that"),
-        .("decomposes the series into level, trend, and seasonality, each with its own"),
-        .("form (none, additive, or multiplicative, with or without damping). Unlike"),
-        .("ARIMA/SARIMA, it does not rely on unit-root tests or differencing: it"),
-        .("explicitly weights recent observations more heavily than older ones. It is a"),
-        .("strong alternative when the series has a relatively simple and stable trend"),
-        .("and/or seasonality, and tends to be easier to interpret and communicate than an"),
-        .("equivalent SARIMA. It is less suited when the dynamics depend on other"),
-        .("variables (use VAR/VECM/ARIMAX) or when volatility itself is the object of"),
-        .("study (use GARCH).")),
+        .("ETS (Error, Trend, Seasonal) is a family of exponential-smoothing models that decomposes the series into level, trend, and seasonality, each with its own form (none, additive, or multiplicative, with or without damping). Unlike ARIMA/SARIMA, it does not rely on unit-root tests or differencing: it explicitly weights recent observations more heavily than older ones. It is a strong alternative when the series has a relatively simple and stable trend and/or seasonality, and tends to be easier to interpret and communicate than an equivalent SARIMA. It is less suited when the dynamics depend on other variables (use VAR/VECM/ARIMAX) or when volatility itself is the object of study (use GARCH).")),
             var = c(
-        .("VAR (Vector AutoRegressive) models several series simultaneously, where each"),
-        .("one is explained by its own lags and by the lags of every other series in the"),
-        .("system, without imposing in advance which variable causes which. Use it when"),
-        .("you are interested in the joint dynamics between two or more stationary series"),
-        .("— for example, interest rate and inflation, or sales of complementary"),
-        .("products — and want to study how a shock in one series propagates to the"),
-        .("others (impulse-response functions) without specifying rigid causal"),
-        .("relationships. It requires all series to be stationary (or treated to become"),
-        .("so); if the series share a long-run equilibrium relationship while each is"),
-        .("individually non-stationary, VECM is usually the more appropriate choice"),
-        .("instead.")),
+        .("VAR (Vector AutoRegressive) models several series simultaneously, where each one is explained by its own lags and by the lags of every other series in the system, without imposing in advance which variable causes which. Use it when you are interested in the joint dynamics between two or more stationary series — for example, interest rate and inflation, or sales of complementary products — and want to study how a shock in one series propagates to the others (impulse-response functions) without specifying rigid causal relationships. It requires all series to be stationary (or treated to become so); if the series share a long-run equilibrium relationship while each is individually non-stationary, VECM is usually the more appropriate choice instead.")),
             vecm = .("VECM (Vector Error Correction Model) is the version of VAR appropriate when the series are not individually stationary but are cointegrated: there is a linear combination of them that is stationary, reflecting a long-run equilibrium relationship (for example, between the exchange rate and relative prices, or between consumption and income). Use it when theory or evidence suggest the series move together in the long run even though they may drift apart temporarily in the short run. Besides the short-run dynamics typical of a VAR, it offers an explicit error-correction mechanism that pushes the system back toward equilibrium. Fitting a VECM without first checking for cointegration (with the Johansen test) is a common methodological error: without genuine cointegration, a VAR in differences is usually the correct choice."),
             garch = c(
-        .("GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) does not"),
-        .("model the level of the series but its conditional variance: it allows"),
-        .("volatility to change over time and cluster into calm and turbulent periods,"),
-        .("instead of assuming it is constant. Use it with high-frequency financial or"),
-        .("economic series (asset returns, exchange rates, interest rates) where the"),
-        .("magnitude of fluctuations varies systematically over time. It offers"),
-        .("risk/volatility estimates that feed more realistic prediction intervals than"),
-        .("an ARIMA with constant variance. It assumes the input series is already"),
-        .("approximately mean-stationary (typically returns, not price levels); if there"),
-        .("is asymmetry between positive and negative shocks, it is worth considering"),
-        .("GJR-GARCH or EGARCH as alternatives."))
+        .("GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) does not model the level of the series but its conditional variance: it allows volatility to change over time and cluster into calm and turbulent periods, instead of assuming it is constant. Use it with high-frequency financial or economic series (asset returns, exchange rates, interest rates) where the magnitude of fluctuations varies systematically over time. It offers risk/volatility estimates that feed more realistic prediction intervals than an ARIMA with constant variance. It assumes the input series is already approximately mean-stationary (typically returns, not price levels); if there is asymmetry between positive and negative shocks, it is worth considering GJR-GARCH or EGARCH as alternatives."))
         ),
         matrix = list(
             arima = list(
@@ -837,29 +798,13 @@
         foundations = list(
             unitRoot = c(
         .("Unit roots (ADF, Phillips-Perron, KPSS)"),
-        .("ADF (Dickey & Fuller, 1979) and Phillips-Perron (Phillips & Perron, 1988) share the"),
-        .("same null hypothesis — the series has a unit root, i.e. it is non-stationary — but"),
-        .("correct for possible residual autocorrelation and heteroscedasticity differently: ADF"),
-        .("adds lagged differences as regressors; Phillips-Perron adjusts the statistic with a"),
-        .("nonparametric, Newey-West-type correction. KPSS (Kwiatkowski et al., 1992)"),
-        .("reverses the logic: its null hypothesis is that the series IS"),
-        .("stationary. This is why the three tests are reported together: if ADF and"),
-        .("Phillips-Perron reject the unit root (small p) and KPSS fails to reject"),
-        .("stationarity (large p), the evidence converges clearly. When the two families of"),
-        .("tests disagree, it usually points to a series with weak long-run components or an"),
-        .("insufficient sample to distinguish between the two hypotheses, not a computational"),
-        .("error.")),
+        .("ADF (Dickey & Fuller, 1979) and Phillips-Perron (Phillips & Perron, 1988) share the same null hypothesis — the series has a unit root, i.e. it is non-stationary — but correct for possible residual autocorrelation and heteroscedasticity differently: ADF adds lagged differences as regressors; Phillips-Perron adjusts the statistic with a nonparametric, Newey-West-type correction. KPSS (Kwiatkowski et al., 1992) reverses the logic: its null hypothesis is that the series IS stationary. This is why the three tests are reported together: if ADF and Phillips-Perron reject the unit root (small p) and KPSS fails to reject stationarity (large p), the evidence converges clearly. When the two families of tests disagree, it usually points to a series with weak long-run components or an insufficient sample to distinguish between the two hypotheses, not a computational error.")),
             seasonalUnitRoot = c(
         .("Seasonal unit root (Canova-Hansen, OCSB)"),
         .("Canova and Hansen (1995) test whether the seasonal pattern is stable over time or changes enough to require seasonal differencing; forecast::nsdiffs() uses this test by default. OCSB (Osborn et al., 1988) evaluates a related hypothesis through an auxiliary regression with simultaneous seasonal and non-seasonal lags. Both tests usually agree on series with clear seasonality; when they differ, it is reasonable to prefer Canova-Hansen's suggestion for the D order in a SARIMA, since it is the one implemented by default in the automatic forecasting literature (Hyndman & Khandakar, 2008), and use OCSB as a cross-check.")),
             ljungBox = c(
         .("Residual independence (Ljung-Box)"),
-        .("Ljung and Box (1978) improved on the original Box-Pierce test by correcting its"),
-        .("asymptotic approximation, especially relevant in small or moderate samples. The"),
-        .("test jointly evaluates several lags of residual autocorrelation at once, not just"),
-        .("one; this is why the chosen number of lags matters: too few may miss real"),
-        .("dependence, and too many dilute the test's power by mixing lags with no genuine"),
-        .("autocorrelation alongside those that do have it.")),
+        .("Ljung and Box (1978) improved on the original Box-Pierce test by correcting its asymptotic approximation, especially relevant in small or moderate samples. The test jointly evaluates several lags of residual autocorrelation at once, not just one; this is why the chosen number of lags matters: too few may miss real dependence, and too many dilute the test's power by mixing lags with no genuine autocorrelation alongside those that do have it.")),
             archGarch = c(
         .("Conditional heteroscedasticity (ARCH-LM, GARCH)"),
         .("Engle (1982) introduced ARCH models from a central empirical observation in financial and macroeconomic series: periods of high volatility tend to cluster in time, rather than being randomly distributed. The Lagrange multiplier test (ARCH-LM) tests exactly that: whether the variance of the residuals at a given moment depends on its own magnitude at previous moments. Bollerslev (1986) generalized the model to GARCH, allowing the conditional variance to also depend on its own lagged values, not only on past shocks, which drastically reduces the number of parameters needed compared to a high-order ARCH to capture the same persistence.")),
@@ -871,17 +816,10 @@
         .("Engle & Granger (1987) formalized the idea of cointegration: even though each series may be individually non-stationary (integrated of order 1), a specific linear combination of several of them can be stationary, reflecting a long-run equilibrium relationship. Johansen (1991) extended this idea into a maximum likelihood framework within a VAR, allowing a formal test of how many independent cointegrating relationships exist (the rank) via the trace and maximum-eigenvalue tests, instead of estimating a single relationship as in the original Engle-Granger two-step procedure.")),
             varFoundations = c(
         .("VAR/VECM specification"),
-        .("The reference treatment for lag-order selection, multivariate residual diagnostics, and the conversion between VAR and VECM representations follows the framework laid out by Lütkepohl (2005), the standard text on multivariate time-series models. The information criteria (AIC, BIC, HQ) used by VARselect() compete in a consistent direction: AIC tends to favor more heavily parameterized models (more lags), while"),
-        .("BIC penalizes complexity more severely and tends to suggest more parsimonious specifications; when both agree, the chosen order is more trustworthy.")),
+        .("The reference treatment for lag-order selection, multivariate residual diagnostics, and the conversion between VAR and VECM representations follows the framework laid out by Lütkepohl (2005), the standard text on multivariate time-series models. The information criteria (AIC, BIC, HQ) used by VARselect() compete in a consistent direction: AIC tends to favor more heavily parameterized models (more lags), while BIC penalizes complexity more severely and tends to suggest more parsimonious specifications; when both agree, the chosen order is more trustworthy.")),
             parameterStability = c(
         .("Parameter stability (CUSUM, Nyblom)"),
-        .("Brown et al., (1975) proposed the CUSUM of recursive residuals to detect"),
-        .("whether a regression's coefficients remain constant across the sample or whether a"),
-        .("structural change occurs at some point not specified in advance. Nyblom (1989)"),
-        .("generalized the idea to a framework where parameters can vary gradually as a"),
-        .("martingale process, rather than only at a single discrete break point, which makes"),
-        .("it especially suited for evaluating the joint stability of an already-fitted"),
-        .("GARCH model's parameters.")),
+        .("Brown et al., (1975) proposed the CUSUM of recursive residuals to detect whether a regression's coefficients remain constant across the sample or whether a structural change occurs at some point not specified in advance. Nyblom (1989) generalized the idea to a framework where parameters can vary gradually as a martingale process, rather than only at a single discrete break point, which makes it especially suited for evaluating the joint stability of an already-fitted GARCH model's parameters.")),
             asymmetricGarch = c(
         .("Volatility asymmetry (sign bias, GJR, EGARCH)"),
         .("A symmetric GARCH assumes that a positive and a negative shock of the same magnitude affect future variance equally. Engle and Ng (1993) designed the sign bias test precisely to detect when that assumption fails — a very common pattern in equity returns, where declines tend to raise volatility more than equally sized gains (the leverage effect). When the test is significant, two families of models respond to that asymmetry differently: GJR-GARCH (Glosten et al., 1993) adds a term that only activates on negative shocks, while EGARCH (Nelson, 1991) models the logarithm of the variance, which also avoids having to constrain the parameters to positive values to guarantee a valid variance.")),

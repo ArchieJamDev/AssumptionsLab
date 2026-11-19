@@ -167,11 +167,16 @@ pathCheckClass <- R6::R6Class(
             )
         },
 
+        # Plot colors always follow the palette chosen in jamovi's settings:
+        # NULL lets ggtheme's own discrete scale color each series. The
+        # module's own palette option (Okabe-Ito, viridis) was removed, as
+        # jamovi asked in the MokkenLab and EGAnetLab audits.
+        # ES: Los colores siguen siempre la paleta elegida en jamovi: NULL
+        # deja que la escala discreta de ggtheme coloree cada serie. Se quitó
+        # la opción de paleta propia del módulo (Okabe-Ito, viridis), como
+        # pidió jamovi en las auditorías de MokkenLab y EGAnetLab.
         .plotSeriesColors = function() {
-            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
-                return(NULL)
-            .al_plot_series_palette(choice)
+            NULL
         },
 
         .plotThemeExtra = function() {
@@ -313,7 +318,7 @@ pathCheckClass <- R6::R6Class(
                     existing <- tryCatch(table$getColumn(colName), error = function(e) NULL)
                     if (is.null(existing)) {
                         tryCatch(
-                            table$addColumn(name = colName, title = as.character(i), type = "text"),
+                            table$addColumn(name = colName, title = as.character(i), type = "number"),
                             error = function(e) NULL
                         )
                     }
@@ -1247,7 +1252,7 @@ pathCheckClass <- R6::R6Class(
                     measure   = .("Mardia's skewness"),
                     value     = mardiaRes$b1p,
                     statistic = mardiaRes$skewStat,
-                    df        = sprintf("%.1f", mardiaRes$skewDf),
+                    df        = mardiaRes$skewDf,
                     p         = mardiaRes$skewP,
                     pSig      = p_sig_stars(mardiaRes$skewP)
                 ))
@@ -1255,7 +1260,7 @@ pathCheckClass <- R6::R6Class(
                     measure   = .("Mardia's kurtosis"),
                     value     = mardiaRes$b2p,
                     statistic = mardiaRes$kurtZ,
-                    df        = "—",
+                    df        = "",
                     p         = mardiaRes$kurtP,
                     pSig      = p_sig_stars(mardiaRes$kurtP)
                 ))
@@ -1316,6 +1321,9 @@ pathCheckClass <- R6::R6Class(
             for (i in seq_len(k)) {
                 for (j in seq_len(k)) {
                     if (j >= i) next()
+                    # Let jamovi stop the permutation tests when an option changes.
+                    # ES: Permite que jamovi detenga las permutaciones si cambia una opción.
+                    private$.checkpoint(flush = FALSE)
                     v1 <- vars[i]; v2 <- vars[j]
                     x <- covData[[v1]]; y <- covData[[v2]]
                     ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)
@@ -1340,6 +1348,7 @@ pathCheckClass <- R6::R6Class(
             for (i in seq_len(k)) {
                 rowVar <- vars[i]
                 pearsonVals <- list(var = sprintf("%d. %s", i, rowVar))
+                pearsonSyms <- list(); dcorSyms <- list()
                 dcorVals    <- list(var = sprintf("%d. %s", i, rowVar))
                 for (j in seq_len(k)) {
                     colName <- paste0("c", j)
@@ -1351,12 +1360,16 @@ pathCheckClass <- R6::R6Class(
                         dcorVals[[colName]]    <- "\u2014"
                     } else {
                         pr <- pairResults[[paste(rowVar, vars[j], sep = "|")]]
-                        pearsonVals[[colName]] <- if (!is.null(pr)) .apaCell(pr$pearsonR, pr$pearsonP) else ""
-                        dcorVals[[colName]]    <- if (!is.null(pr)) .apaCell(pr$dcor, pr$dcorP) else ""
+                        pearsonVals[[colName]] <- if (!is.null(pr) && !is.na(pr$pearsonR)) pr$pearsonR else ""
+                        pearsonSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$pearsonP) else ""
+                        dcorVals[[colName]] <- if (!is.null(pr) && !is.na(pr$dcor)) pr$dcor else ""
+                        dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                     }
                 }
                 pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
                 dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
             }
 
             set_html_safe("correlationMatrixNote", html_block(NULL,
@@ -1393,8 +1406,8 @@ pathCheckClass <- R6::R6Class(
                 compTable$addRow(rowKey = key, values = list(
                     var1  = pr$v1,
                     var2  = pr$v2,
-                    pearson = .apaCell(pr$pearsonR, pr$pearsonP),
-                    dcor    = .apaCell(pr$dcor, pr$dcorP),
+                    pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
+                    dcor    = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
                     gap   = gap,
                     ce    = pr$ce,
                     ceP   = pr$ceP,
