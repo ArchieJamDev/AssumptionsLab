@@ -1061,3 +1061,35 @@
         ord = ord
     )
 }
+
+# -----------------------------------------------------------------------------
+# .al_notice()
+#
+# Adds a native jamovi notice (jmvcore::Notice) next to the result item
+# `near`, the way MokkenLab and EGAnetLab report a section that cannot run,
+# instead of an Html block that appears and disappears. `type` is "warning"
+# or "error". Notices are rebuilt on every run, so each run adds its own.
+# ES: Agrega un aviso nativo de jamovi (jmvcore::Notice) junto al elemento
+# `near`, como hacen MokkenLab y EGAnetLab cuando una sección no puede
+# ejecutarse, en vez de un bloque Html que aparece y desaparece. `type` es
+# "warning" o "error". Los avisos se reconstruyen en cada ejecución.
+# -----------------------------------------------------------------------------
+.al_notice <- function(self, near, content, type = "warning", before = TRUE) {
+    items <- self$results$items
+    names_now <- vapply(items, function(item) item$name, character(1))
+    name <- paste0(near, "Notice")
+    k <- 1
+    while (name %in% names_now) {
+        k <- k + 1
+        name <- paste0(near, "Notice", k)
+    }
+    notice <- jmvcore::Notice$new(
+        self$options,
+        name = name,
+        type = if (identical(type, "error")) jmvcore::NoticeType$ERROR else jmvcore::NoticeType$WARNING,
+        content = paste(content, collapse = " "))
+    pos <- match(near, names_now)
+    index <- if (is.na(pos)) 1 else if (isTRUE(before)) pos else pos + 1
+    self$results$insert(index, notice)
+    invisible(notice)
+}

@@ -76,6 +76,21 @@
 - **Fix:** two cells of Linear Regression ("No aplicable" in the linearity
   table and "VIF / tolerancia" in multicollinearity) were hard-coded in
   Spanish and now go through the translation catalog.
+- **Correlation matrices are numeric.** The Pearson and dCor matrices keep
+  their APA layout (numbered variables, lower triangle), but each cell is
+  now a number. Its significance stars are attached with jamovi's own table
+  symbols, as in jamovi's Correlation Matrix, so the matrices follow
+  jamovi's decimal settings and paste into spreadsheets as numbers.
+- **Related Groups lays out its descriptives first.** The *Descriptives by
+  measurement* table has one row per selected measurement from the start
+  (`rows: (measures)`), so it no longer grows while the analysis runs.
+- **Native notice in Time Series.** When the diagnostics cannot run (no
+  series, a VAR/VECM with a single series, or missing R packages), a jamovi
+  notice explains why above the diagnostics. The diagnostics tables stay in
+  place, and the notice no longer appears or disappears as an Html block.
+  The missing-packages message is now one whole sentence for translators.
+- The description of Assumption Library says that entries follow jamovi's
+  language, instead of "available in English or Spanish".
 
 ---
 

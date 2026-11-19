@@ -97,7 +97,6 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         modelDescription = function() private$.items[["modelDescription"]],
         conditionsMatrix = function() private$.items[["conditionsMatrix"]],
         decisionsMatrix = function() private$.items[["decisionsMatrix"]],
-        runNotice = function() private$.items[["runNotice"]],
         seriesPlot = function() private$.items[["seriesPlot"]],
         diagnosticsResults = function() private$.items[["diagnosticsResults"]],
         acfPlot = function() private$.items[["acfPlot"]],
@@ -195,11 +194,6 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="decision", 
                         `title`="Associated decision", 
                         `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="runNotice",
-                title="Notice",
-                visible=FALSE))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="seriesPlot",
@@ -364,7 +358,6 @@ timeCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$modelDescription} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$conditionsMatrix} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$decisionsMatrix} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$runNotice} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$seriesPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$diagnosticsResults} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$acfPlot} \tab \tab \tab \tab \tab an image \cr

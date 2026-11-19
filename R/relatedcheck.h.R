@@ -126,11 +126,13 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="descriptiveSummary",
                 title="Descriptives by measurement",
+                rows="(measures)",
                 columns=list(
                     list(
                         `name`="measure", 
                         `title`="Measurement", 
-                        `type`="text"),
+                        `type`="text", 
+                        `content`="($key)"),
                     list(
                         `name`="n", 
                         `title`="n", 

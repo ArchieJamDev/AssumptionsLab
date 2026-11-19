@@ -117,7 +117,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     existing <- tryCatch(table$getColumn(colName), error = function(e) NULL)
                     if (is.null(existing)) {
                         tryCatch(
-                            table$addColumn(name = colName, title = as.character(i), type = "text"),
+                            table$addColumn(name = colName, title = as.character(i), type = "number"),
                             error = function(e) NULL
                         )
                     }
@@ -370,11 +370,13 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 x_all <- suppressWarnings(as.numeric(dat[[v]]))
                 x_valid <- x_all[is.finite(x_all)]
 
-                add_table_row(
-                    self$results$descriptiveSummary,
-                    paste0("desc_", make.names(v)),
-                    list(
-                        measure = v,
+                # One row per measurement is laid out from `rows: (measures)`
+                # in the .r.yaml; here it is only filled.
+                # ES: Las filas (una por medición) vienen de `rows:
+                # (measures)` en el .r.yaml; aquí solo se rellenan.
+                self$results$descriptiveSummary$setRow(
+                    rowKey = v,
+                    values = list(
                         n = as.integer(length(x_valid)),
                         mean = clean_num(if (length(x_valid) > 0) mean(x_valid) else NA_real_),
                         sd = clean_num(if (length(x_valid) > 1) stats::sd(x_valid) else NA_real_),
@@ -1218,6 +1220,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     for (i in seq_len(k)) {
                         rowVar <- matVars[i]
                         pearsonVals <- list(var = sprintf("%d. %s", i, rowVar))
+                        pearsonSyms <- list(); dcorSyms <- list()
                         dcorVals <- list(var = sprintf("%d. %s", i, rowVar))
                         for (j in seq_len(k)) {
                             colName <- paste0("c", j)
@@ -1229,12 +1232,16 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                                 dcorVals[[colName]] <- "\u2014"
                             } else {
                                 pr <- pairResults[[paste(rowVar, matVars[j], sep = "|")]]
-                                pearsonVals[[colName]] <- if (!is.null(pr)) apaCell(pr$pearsonR, pr$pearsonP) else ""
-                                dcorVals[[colName]] <- if (!is.null(pr)) apaCell(pr$dcor, pr$dcorP) else ""
+                                pearsonVals[[colName]] <- if (!is.null(pr) && !is.na(pr$pearsonR)) pr$pearsonR else ""
+                                pearsonSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$pearsonP) else ""
+                                dcorVals[[colName]] <- if (!is.null(pr) && !is.na(pr$dcor)) pr$dcor else ""
+                                dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                             }
                         }
                         pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                        for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
                         dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                        for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                     }
 
                     self$results$correlationMatrixNote$setContent(html_block(NULL,

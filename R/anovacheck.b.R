@@ -126,7 +126,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     existing <- tryCatch(table$getColumn(colName), error = function(e) NULL)
                     if (is.null(existing)) {
                         tryCatch(
-                            table$addColumn(name = colName, title = as.character(i), type = "text"),
+                            table$addColumn(name = colName, title = as.character(i), type = "number"),
                             error = function(e) NULL
                         )
                     }
@@ -1396,6 +1396,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     for (i in seq_len(k)) {
                         rowVar <- matVars[i]
                         pearsonVals <- list(var = sprintf("%d. %s", i, rowVar))
+                        pearsonSyms <- list(); dcorSyms <- list()
                         dcorVals <- list(var = sprintf("%d. %s", i, rowVar))
                         for (j in seq_len(k)) {
                             colName <- paste0("c", j)
@@ -1407,12 +1408,16 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                 dcorVals[[colName]] <- "\u2014"
                             } else {
                                 pr <- pairResults[[paste(rowVar, matVars[j], sep = "|")]]
-                                pearsonVals[[colName]] <- if (!is.null(pr)) apaCell(pr$pearsonR, pr$pearsonP) else ""
-                                dcorVals[[colName]] <- if (!is.null(pr)) apaCell(pr$dcor, pr$dcorP) else ""
+                                pearsonVals[[colName]] <- if (!is.null(pr) && !is.na(pr$pearsonR)) pr$pearsonR else ""
+                                pearsonSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$pearsonP) else ""
+                                dcorVals[[colName]] <- if (!is.null(pr) && !is.na(pr$dcor)) pr$dcor else ""
+                                dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                             }
                         }
                         pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                        for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
                         dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                        for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                     }
 
                     self$results$correlationMatrixNote$setContent(block96(

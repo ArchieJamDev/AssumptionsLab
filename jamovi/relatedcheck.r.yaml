@@ -50,10 +50,12 @@ items:
   - name: descriptiveSummary
     title: Descriptives by measurement
     type: Table
+    rows: (measures)
     columns:
       - name: measure
         title: Measurement
         type: text
+        content: ($key)
       - name: n
         title: n
         type: integer

@@ -613,25 +613,22 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             } else {
                 missing <- missing_pkgs(required_pkgs)
                 if (length(missing) > 0) {
-                    notice <- paste0(
-                        .("This model's diagnostics require the following R package(s), which are not installed: "),
-                        paste(missing, collapse = ", "),
-                        .(". Please install them from R before running this diagnostic battery.")
+                    notice <- sprintf(
+                        .("This model's diagnostics require the following R package(s), which are not installed: %s. Please install them from R before running this diagnostic battery."),
+                        paste(missing, collapse = ", ")
                     )
                 }
             }
 
             if (!is.null(notice)) {
-                set_html_safe("runNotice", html_block(NULL, notice, paragraphs = FALSE))
-                set_visible_safe("runNotice", TRUE)
-                set_visible_safe("diagnosticsResults", FALSE)
-                set_visible_safe("diagnosticsActions", FALSE)
+                # A native jamovi notice above the diagnostics, which stay
+                # in place (empty) instead of disappearing.
+                # ES: Un aviso nativo de jamovi sobre los diagnósticos, que
+                # quedan en su lugar (vacíos) en vez de ocultarse.
+                .al_notice(self, "diagnosticsResults", notice)
                 self$results$diagnosticsResults$deleteRows()
                 self$results$diagnosticsActions$deleteRows()
             } else {
-                set_visible_safe("runNotice", FALSE)
-                set_visible_safe("diagnosticsResults", TRUE)
-                set_visible_safe("diagnosticsActions", TRUE)
 
                 model_actions <- txt("time", "actions")[[model]]
 

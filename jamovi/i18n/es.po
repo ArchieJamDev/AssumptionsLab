@@ -647,10 +647,6 @@ msgstr ", OR = %s (p %s)."
 msgid ", with Cook's D = %s."
 msgstr ", con Cook's D = %s."
 
-#: R/timecheck.b.R
-msgid ". Please install them from R before running this diagnostic battery."
-msgstr ". Instálelos desde R antes de ejecutar esta batería de diagnóstico."
-
 #: R/regcheck.b.R
 msgid ". Values close to 2 are compatible with independent errors."
 msgstr ". Valores cercanos a 2 son compatibles con errores independientes."
@@ -4219,9 +4215,10 @@ msgid ""
 "dataset. Entries can be filtered by category (e.g. normality, "
 "homoscedasticity, linearity, independence, multicollinearity, "
 "outliers/influence, sphericity, proportional odds, robust alternatives) and "
-"are available in English or Spanish. Use it alongside any of the "
-"assumption-checking analyses to look up the theory behind a diagnostic, or "
-"as a stand-alone teaching aid for planning an analysis before running one."
+"are shown in jamovi's language (English or Spanish). Use it alongside any "
+"of the assumption-checking analyses to look up the theory behind a "
+"diagnostic, or as a stand-alone teaching aid for planning an analysis "
+"before running one."
 msgstr ""
 "Un glosario metodológico de referencia, no un análisis de datos: explica "
 "qué significa cada supuesto estadístico y prueba cubiertos por "
@@ -4229,10 +4226,11 @@ msgstr ""
 "del conjunto de datos del usuario. Las entradas pueden filtrarse por "
 "categoría (p. ej. normalidad, homoscedasticidad, linealidad, independencia, "
 "multicolinealidad, atípicos/influencia, esfericidad, momios proporcionales, "
-"alternativas robustas) y están disponibles en inglés o español. Úselo junto "
-"con cualquiera de los análisis de verificación de supuestos para consultar "
-"la teoría detrás de un diagnóstico, o como material didáctico independiente "
-"para planificar un análisis antes de ejecutarlo."
+"alternativas robustas) y se muestran en el idioma de jamovi (inglés o "
+"español). Úselo junto con cualquiera de los análisis de verificación de "
+"supuestos para consultar la teoría detrás de un diagnóstico, o como "
+"material didáctico independiente para planificar un análisis antes de "
+"ejecutarlo."
 
 #: R/texts.R
 msgid ""
@@ -10919,10 +10917,6 @@ msgstr "Notas"
 msgid "Notes and recommendation"
 msgstr "Notas y recomendación"
 
-#: timeCheck/results/runNotice.title
-msgid "Notice"
-msgstr "Aviso"
-
 #: logCheck/options/linBins.title
 #: multCheck/options/linBins.title
 #: ordCheck/options/linBins.title
@@ -15207,10 +15201,12 @@ msgstr ""
 #: R/timecheck.b.R
 msgid ""
 "This model's diagnostics require the following R package(s), which are not "
-"installed: "
+"installed: %s. Please install them from R before running this diagnostic "
+"battery."
 msgstr ""
 "Los diagnósticos de este modelo requieren el o los siguientes paquetes de "
-"R, que no están instalados: "
+"R, que no están instalados: %s. Instálelos desde R antes de ejecutar esta "
+"batería de diagnóstico."
 
 #: R/groupcheck.b.R
 msgid ""

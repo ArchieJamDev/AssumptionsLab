@@ -301,9 +301,6 @@
             ", with Cook's D = %s.": [
                 ", con Cook's D = %s."
             ],
-            ". Please install them from R before running this diagnostic battery.": [
-                ". Instálelos desde R antes de ejecutar esta batería de diagnóstico."
-            ],
             ". Values close to 2 are compatible with independent errors.": [
                 ". Valores cercanos a 2 son compatibles con errores independientes."
             ],
@@ -532,8 +529,8 @@
             "A methodological decision cannot be suggested because fewer than two groups were detected.": [
                 "No se puede sugerir una decisión metodológica porque se detectaron menos de dos grupos."
             ],
-            "A methodological reference glossary, not a data analysis: it explains what each statistical assumption and test covered by AssumptionsLab means, why it matters, and when it applies, without computing anything from the user's dataset. Entries can be filtered by category (e.g. normality, homoscedasticity, linearity, independence, multicollinearity, outliers/influence, sphericity, proportional odds, robust alternatives) and are available in English or Spanish. Use it alongside any of the assumption-checking analyses to look up the theory behind a diagnostic, or as a stand-alone teaching aid for planning an analysis before running one.": [
-                "Un glosario metodológico de referencia, no un análisis de datos: explica qué significa cada supuesto estadístico y prueba cubiertos por AssumptionsLab, por qué importa y cuándo aplica, sin calcular nada a partir del conjunto de datos del usuario. Las entradas pueden filtrarse por categoría (p. ej. normalidad, homoscedasticidad, linealidad, independencia, multicolinealidad, atípicos/influencia, esfericidad, momios proporcionales, alternativas robustas) y están disponibles en inglés o español. Úselo junto con cualquiera de los análisis de verificación de supuestos para consultar la teoría detrás de un diagnóstico, o como material didáctico independiente para planificar un análisis antes de ejecutarlo."
+            "A methodological reference glossary, not a data analysis: it explains what each statistical assumption and test covered by AssumptionsLab means, why it matters, and when it applies, without computing anything from the user's dataset. Entries can be filtered by category (e.g. normality, homoscedasticity, linearity, independence, multicollinearity, outliers/influence, sphericity, proportional odds, robust alternatives) and are shown in jamovi's language (English or Spanish). Use it alongside any of the assumption-checking analyses to look up the theory behind a diagnostic, or as a stand-alone teaching aid for planning an analysis before running one.": [
+                "Un glosario metodológico de referencia, no un análisis de datos: explica qué significa cada supuesto estadístico y prueba cubiertos por AssumptionsLab, por qué importa y cuándo aplica, sin calcular nada a partir del conjunto de datos del usuario. Las entradas pueden filtrarse por categoría (p. ej. normalidad, homoscedasticidad, linealidad, independencia, multicolinealidad, atípicos/influencia, esfericidad, momios proporcionales, alternativas robustas) y se muestran en el idioma de jamovi (inglés o español). Úselo junto con cualquiera de los análisis de verificación de supuestos para consultar la teoría detrás de un diagnóstico, o como material didáctico independiente para planificar un análisis antes de ejecutarlo."
             ],
             "A model can be computed even when assumptions are weak, but its conclusions may be less defensible if those problems are not documented.": [
                 "Un modelo puede calcularse aunque sus supuestos sean débiles, pero sus conclusiones pueden ser poco defendibles si no se documentan esos problemas."
@@ -3493,9 +3490,6 @@
             "Notes and recommendation": [
                 "Notas y recomendación"
             ],
-            "Notice": [
-                "Aviso"
-            ],
             "Number of Groups (bins) for the Empirical Logit": [
                 "Número de Grupos (bins) para el Logit Empírico"
             ],
@@ -5431,8 +5425,8 @@
             "This is a reasonable approximation, not a single canonical published statistic for this model family - for a fuller graphical treatment, see Liu et al. (2009; see references).": [
                 "Esta es una aproximación razonable, no un único estadístico canónico publicado para esta familia de modelos - para un tratamiento gráfico más completo, ver Liu et al. (2009; ver referencias)."
             ],
-            "This model's diagnostics require the following R package(s), which are not installed: ": [
-                "Los diagnósticos de este modelo requieren el o los siguientes paquetes de R, que no están instalados: "
+            "This model's diagnostics require the following R package(s), which are not installed: %s. Please install them from R before running this diagnostic battery.": [
+                "Los diagnósticos de este modelo requieren el o los siguientes paquetes de R, que no están instalados: %s. Instálelos desde R antes de ejecutar esta batería de diagnóstico."
             ],
             "This plot compares the observed standardized distribution with the theoretical normal curve.": [
                 "Este gráfico compara la distribución estandarizada observada con la curva normal teórica."
