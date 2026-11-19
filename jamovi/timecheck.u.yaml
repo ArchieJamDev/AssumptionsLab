@@ -68,7 +68,7 @@ children:
               - numeric
 
   - type: CollapseBox
-    label: Time series model
+    label: Time Series Model
     collapsed: false
     children:
       - type: ComboBox

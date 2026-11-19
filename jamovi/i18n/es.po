@@ -639,13 +639,6 @@ msgstr ""
 "%s: pruebas no calculadas; se requieren al menos 3 diferencias válidas y "
 "variabilidad mayor que cero."
 
-#: R/texts.R
-msgid ""
-"(ARIMAX/SARIMAX). Every result is classified as a graded evidence tier, "
-"never"
-msgstr ""
-"(ARIMAX/SARIMAX). Cada resultado se clasifica como un nivel de evidencia"
-
 #: R/logcheck.b.R
 msgid ", OR = %s (p %s)."
 msgstr ", OR = %s (p %s)."
@@ -4449,17 +4442,33 @@ msgid "ACF / PACF / time plots"
 msgstr "ACF / PACF / gráficos temporales"
 
 #: R/texts.R
-msgid "ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, and for VAR/VECM/GARCH also"
-msgstr ""
-"ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, y para VAR/VECM/GARCH también"
-
-#: R/texts.R
 msgid ""
 "ADF (Dickey & Fuller, 1979) and Phillips-Perron (Phillips & Perron, 1988) "
-"share the"
+"share the same null hypothesis — the series has a unit root, i.e. it is "
+"non-stationary — but correct for possible residual autocorrelation and "
+"heteroscedasticity differently: ADF adds lagged differences as regressors; "
+"Phillips-Perron adjusts the statistic with a nonparametric, Newey-West-type "
+"correction. KPSS (Kwiatkowski et al., 1992) reverses the logic: its null "
+"hypothesis is that the series IS stationary. This is why the three tests "
+"are reported together: if ADF and Phillips-Perron reject the unit root "
+"(small p) and KPSS fails to reject stationarity (large p), the evidence "
+"converges clearly. When the two families of tests disagree, it usually "
+"points to a series with weak long-run components or an insufficient sample "
+"to distinguish between the two hypotheses, not a computational error."
 msgstr ""
 "ADF (Dickey y Fuller, 1979) y Phillips-Perron (Phillips y Perron, 1988) "
-"comparten la"
+"comparten la misma hipótesis nula — la serie tiene raíz unitaria, es decir, "
+"es no estacionaria —, pero corrigen de forma distinta la posible "
+"autocorrelación y heterocedasticidad de los errores: ADF agrega rezagos de "
+"la diferencia como regresores; Phillips-Perron ajusta el estadístico con "
+"una corrección no paramétrica tipo Newey-West. KPSS (Kwiatkowski et al., "
+"1992) invierte la lógica: su hipótesis nula es que la serie SÍ es "
+"estacionaria. Por eso las tres pruebas se reportan juntas: si ADF y "
+"Phillips-Perron rechazan la raíz unitaria (p pequeño) y KPSS no rechaza la "
+"estacionariedad (p grande), la evidencia converge con claridad. Cuando las "
+"conclusiones de ambos tipos de prueba difieren, suele indicar una serie con "
+"componentes de largo plazo débiles o una muestra insuficiente para "
+"distinguir entre ambas hipótesis, no un error de cómputo."
 
 #: R/timecheck.b.R
 msgid "ADF (unit root)"
@@ -4559,7 +4568,9 @@ msgid ""
 "you have a single series without marked seasonality, or when you want to "
 "model an already deseasonalized series. It offers short- to medium-term "
 "forecasts with confidence intervals, and is the conceptual foundation for "
-"SARIMA, ARIMAX, and"
+"SARIMA, ARIMAX, and GARCH. On its own it does not capture relationships "
+"with other series (that is what VAR/VECM are for) or changes in variance "
+"over time (that is what GARCH is for)."
 msgstr ""
 "ARIMA (AutoRegressive Integrated Moving Average) modela una única serie "
 "temporal a partir de su propio pasado: sus valores rezagados (componente "
@@ -4568,13 +4579,9 @@ msgstr ""
 "de media móvil, q). Úselo cuando tenga una sola serie sin estacionalidad "
 "marcada, o cuando quiera modelar una serie ya desestacionalizada. Ofrece "
 "pronósticos de corto y mediano plazo con intervalos de confianza, y es la "
-"base conceptual de"
-
-#: R/texts.R
-msgid "ARIMA/SARIMA, it does not rely on unit-root tests or differencing: it"
-msgstr ""
-"amortiguamiento). A diferencia de ARIMA/SARIMA, no se apoya en pruebas de "
-"raíz"
+"base conceptual de SARIMA, ARIMAX y GARCH. No captura por sí solo "
+"relaciones con otras series (para eso están VAR/VECM) ni cambios en la "
+"varianza a lo largo del tiempo (para eso está GARCH)."
 
 #: R/logcheck.b.R
 msgid ""
@@ -5169,18 +5176,6 @@ msgstr "Evitar especificaciones incompatibles con el orden de integración."
 
 #: R/texts.R
 msgid ""
-"BIC penalizes complexity more severely and tends to suggest more "
-"parsimonious specifications; when both agree, the chosen order is more "
-"trustworthy."
-msgstr ""
-"VARselect() compiten entre sí en un mismo sentido: AIC tiende a favorecer "
-"modelos más parametrizados (más rezagos), mientras que BIC penaliza la "
-"complejidad con más severidad y suele sugerir especificaciones más "
-"parsimoniosas; cuando ambos coinciden, la elección del orden es más "
-"confiable."
-
-#: R/texts.R
-msgid ""
 "Baron and Kenny (1986) popularized the classical framework for "
 "distinguishing full from partial mediation in the social sciences and "
 "psychology."
@@ -5502,8 +5497,22 @@ msgstr "Guía breve"
 
 #: R/texts.R
 msgid ""
-"Brown et al., (1975) proposed the CUSUM of recursive residuals to detect"
-msgstr "Brown et al., (1975) propusieron el CUSUM de residuos recursivos para"
+"Brown et al., (1975) proposed the CUSUM of recursive residuals to detect "
+"whether a regression's coefficients remain constant across the sample or "
+"whether a structural change occurs at some point not specified in advance. "
+"Nyblom (1989) generalized the idea to a framework where parameters can vary "
+"gradually as a martingale process, rather than only at a single discrete "
+"break point, which makes it especially suited for evaluating the joint "
+"stability of an already-fitted GARCH model's parameters."
+msgstr ""
+"Brown et al., (1975) propusieron el CUSUM de residuos recursivos para "
+"detectar si los coeficientes de una regresión permanecen constantes a lo "
+"largo de la muestra o si existe un cambio estructural en algún punto no "
+"especificado de antemano. Nyblom (1989) generalizó la idea a un marco donde "
+"los parámetros pueden variar gradualmente como un proceso martingala, en "
+"vez de solo en un punto de quiebre discreto, lo que lo hace especialmente "
+"adecuado para evaluar la estabilidad conjunta de los parámetros de un "
+"modelo GARCH ya ajustado."
 
 #: R/regcheck.b.R
 msgid "Brown-Forsythe by fitted values"
@@ -6398,11 +6407,6 @@ msgid "Conditional variance persistence could not be computed for this run."
 msgstr ""
 "La persistencia de la varianza condicional no pudo calcularse para esta "
 "corrida."
-
-#: R/texts.R
-msgid "Conditions → Diagnostic → Methodological Role → Decision), the minimum"
-msgstr ""
-"condiciones → Diagnóstico → Función metodológica → Decisión), la batería"
 
 #: groupCheck/options/qqShowBand.title
 msgid "Confidence band"
@@ -7372,9 +7376,27 @@ msgstr ""
 #: R/texts.R
 msgid ""
 "ETS (Error, Trend, Seasonal) is a family of exponential-smoothing models "
-"that"
+"that decomposes the series into level, trend, and seasonality, each with "
+"its own form (none, additive, or multiplicative, with or without damping). "
+"Unlike ARIMA/SARIMA, it does not rely on unit-root tests or differencing: "
+"it explicitly weights recent observations more heavily than older ones. It "
+"is a strong alternative when the series has a relatively simple and stable "
+"trend and/or seasonality, and tends to be easier to interpret and "
+"communicate than an equivalent SARIMA. It is less suited when the dynamics "
+"depend on other variables (use VAR/VECM/ARIMAX) or when volatility itself "
+"is the object of study (use GARCH)."
 msgstr ""
-"ETS (Error, Trend, Seasonal) es una familia de modelos de suavizamiento"
+"ETS (Error, Trend, Seasonal) es una familia de modelos de suavizamiento "
+"exponencial que descompone la serie en nivel, tendencia y estacionalidad, "
+"cada uno con su propia forma (nula, aditiva o multiplicativa, con o sin "
+"amortiguamiento). A diferencia de ARIMA/SARIMA, no se apoya en pruebas de "
+"raíz unitaria ni en diferenciación: pondera las observaciones recientes más "
+"que las antiguas de forma explícita. Es una alternativa fuerte cuando la "
+"serie tiene tendencia y/o estacionalidad relativamente simples y estables, "
+"y suele ser más fácil de interpretar y comunicar que un SARIMA equivalente. "
+"Es menos adecuado cuando la dinámica depende de otras variables (use "
+"VAR/VECM/ARIMAX) o cuando la volatilidad misma es el objeto de estudio (use "
+"GARCH)."
 
 #: R/texts.R
 #: timeCheck/options/model/ets.title
@@ -8105,9 +8127,29 @@ msgstr "GARCH"
 
 #: R/texts.R
 msgid ""
-"GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) does not"
+"GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) does not "
+"model the level of the series but its conditional variance: it allows "
+"volatility to change over time and cluster into calm and turbulent periods, "
+"instead of assuming it is constant. Use it with high-frequency financial or "
+"economic series (asset returns, exchange rates, interest rates) where the "
+"magnitude of fluctuations varies systematically over time. It offers "
+"risk/volatility estimates that feed more realistic prediction intervals "
+"than an ARIMA with constant variance. It assumes the input series is "
+"already approximately mean-stationary (typically returns, not price "
+"levels); if there is asymmetry between positive and negative shocks, it is "
+"worth considering GJR-GARCH or EGARCH as alternatives."
 msgstr ""
-"GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) no modela"
+"GARCH (Generalized AutoRegressive Conditional Heteroskedasticity) no modela "
+"el nivel de la serie sino su varianza condicional: permite que la "
+"volatilidad cambie en el tiempo y se agrupe en períodos de calma y de "
+"turbulencia, en vez de asumirla constante. Úselo con series financieras o "
+"económicas de alta frecuencia (retornos de activos, tipos de cambio, tasas) "
+"donde la magnitud de las fluctuaciones varía sistemáticamente en el tiempo. "
+"Ofrece estimaciones de riesgo/volatilidad que alimentan intervalos de "
+"predicción más realistas que un ARIMA con varianza constante. Asume que la "
+"serie de entrada ya es aproximadamente estacionaria en media (típicamente "
+"retornos, no niveles de precio); si hay asimetría entre choques positivos y "
+"negativos, valga revisar GJR-GARCH o EGARCH como alternativas."
 
 #: R/timecheck.b.R
 msgid ""
@@ -8116,24 +8158,6 @@ msgid ""
 msgstr ""
 "GARCH asume que la serie seleccionada ya representa retornos (u otra serie "
 "aproximadamente estacionaria en media), no niveles de precio en bruto."
-
-#: R/texts.R
-msgid "GARCH model's parameters."
-msgstr "conjunta de los parámetros de un modelo GARCH ya ajustado."
-
-#: R/texts.R
-msgid ""
-"GARCH. On its own it does not capture relationships with other series (that "
-"is what VAR/VECM are for) or changes in variance over time (that is what "
-"GARCH is for)."
-msgstr ""
-"SARIMA, ARIMAX y GARCH. No captura por sí solo relaciones con otras series "
-"(para eso están VAR/VECM) ni cambios en la varianza a lo largo del tiempo "
-"(para eso está GARCH)."
-
-#: R/texts.R
-msgid "GJR-GARCH or EGARCH as alternatives."
-msgstr "GJR-GARCH o EGARCH como alternativas."
 
 #: anovaCheck/results/correlationComparisonTable.columns.title
 #: logCheck/results/correlationComparisonTable.columns.title
@@ -9171,12 +9195,6 @@ msgid "Johansen trace test (suggested rank)"
 msgstr "Prueba de traza de Johansen (rango sugerido)"
 
 #: R/texts.R
-msgid ""
-"Johansen, Portmanteau, CUSUM/Nyblom, and sign bias, depending on the "
-"selected"
-msgstr "Johansen, Portmanteau, CUSUM/Nyblom y sesgo de signo, según el modelo"
-
-#: R/texts.R
 msgid "Justifies considering a volatility model."
 msgstr "Justificar la consideración de un modelo de volatilidad."
 
@@ -9430,9 +9448,20 @@ msgstr "Lipsitz (no calculable para este modelo)"
 #: R/texts.R
 msgid ""
 "Ljung and Box (1978) improved on the original Box-Pierce test by correcting "
-"its"
+"its asymptotic approximation, especially relevant in small or moderate "
+"samples. The test jointly evaluates several lags of residual "
+"autocorrelation at once, not just one; this is why the chosen number of "
+"lags matters: too few may miss real dependence, and too many dilute the "
+"test's power by mixing lags with no genuine autocorrelation alongside those "
+"that do have it."
 msgstr ""
-"Ljung y Box (1978) mejoraron la prueba de Box-Pierce original corrigiendo su"
+"Ljung y Box (1978) mejoraron la prueba de Box-Pierce original corrigiendo "
+"su aproximación asintótica, especialmente relevante en muestras pequeñas o "
+"moderadas. La prueba evalúa conjuntamente varios rezagos de autocorrelación "
+"residual a la vez, no uno solo; por eso el número de rezagos elegido "
+"importa: muy pocos pueden no detectar dependencia real, y demasiados "
+"diluyen el poder de la prueba al incluir rezagos sin autocorrelación "
+"genuina junto a los que sí la tienen."
 
 #: R/texts.R
 msgid "Ljung-Box"
@@ -9824,10 +9853,6 @@ msgstr "Conclusión Metodológica"
 #: package/analyses/assumptionLibrary.menuSubgroup
 msgid "Methodological Guide"
 msgstr "Guía Metodológica"
-
-#: R/texts.R
-msgid "Methodological Role → Decision."
-msgstr "Supuestos/condiciones → Diagnóstico → Función metodológica → Decisión."
 
 #: anovaCheck/results/alternatives.title
 #: anovaCheck/results/alternativesGuide.title
@@ -11706,12 +11731,6 @@ msgstr "Permutaciones (dCor / Entropía Copular)"
 #: R/timecheck.b.R
 msgid "Phillips-Perron (unit root)"
 msgstr "Phillips-Perron (raíz unitaria)"
-
-#: R/texts.R
-msgid ""
-"Phillips-Perron reject the unit root (small p) and KPSS fails to reject"
-msgstr ""
-"Phillips-Perron rechazan la raíz unitaria (p pequeño) y KPSS no rechaza la"
 
 #: anovaCheck/ui[2].label
 #: groupCheck/ui[4].label
@@ -14618,13 +14637,19 @@ msgid ""
 "follows the framework laid out by Lütkepohl (2005), the standard text on "
 "multivariate time-series models. The information criteria (AIC, BIC, HQ) "
 "used by VARselect() compete in a consistent direction: AIC tends to favor "
-"more heavily parameterized models (more lags), while"
+"more heavily parameterized models (more lags), while BIC penalizes "
+"complexity more severely and tends to suggest more parsimonious "
+"specifications; when both agree, the chosen order is more trustworthy."
 msgstr ""
 "El tratamiento de referencia para la selección de rezagos, el diagnóstico "
 "residual multivariante y la conversión entre representaciones VAR y VECM "
 "sigue el marco expuesto por Lütkepohl (2005), el texto estándar sobre "
 "modelos de series temporales multivariadas. Los criterios de información "
-"(AIC, BIC, HQ) usados por"
+"(AIC, BIC, HQ) usados por VARselect() compiten entre sí en un mismo "
+"sentido: AIC tiende a favorecer modelos más parametrizados (más rezagos), "
+"mientras que BIC penaliza la complejidad con más severidad y suele sugerir "
+"especificaciones más parsimoniosas; cuando ambos coinciden, la elección del "
+"orden es más confiable."
 
 #: R/groupcheck.b.R
 msgid ""
@@ -15300,8 +15325,26 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
-"This version implements the methodological matrix (Model → Assumptions/"
-msgstr "Esta versión implementa la matriz metodológica (Modelo → Supuestos/"
+"This version implements the methodological matrix (Model → "
+"Assumptions/Conditions → Diagnostic → Methodological Role → Decision), the "
+"minimum recommended battery of statistical diagnostics per model (unit-root "
+"tests, ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, and for VAR/VECM/GARCH "
+"also Johansen, Portmanteau, CUSUM/Nyblom, and sign bias, depending on the "
+"selected model), diagnostic plots (series, ACF/PACF, residuals, and, for "
+"GARCH, conditional volatility), and optional external regressors for "
+"ARIMA/SARIMA (ARIMAX/SARIMAX). Every result is classified as a graded "
+"evidence tier, never as an absolute \"assumption met/not met\" verdict."
+msgstr ""
+"Esta versión implementa la matriz metodológica (Modelo → "
+"Supuestos/condiciones → Diagnóstico → Función metodológica → Decisión), la "
+"batería mínima de diagnósticos estadísticos por modelo (pruebas de raíz "
+"unitaria, ACF/PACF, Ljung-Box, ARCH-LM, Jarque-Bera, y para VAR/VECM/GARCH "
+"también Johansen, Portmanteau, CUSUM/Nyblom y sesgo de signo, según el "
+"modelo seleccionado), gráficos diagnósticos (serie, ACF/PACF, residuos y, "
+"en GARCH, volatilidad condicional), y regresores externos opcionales en "
+"ARIMA/SARIMA (ARIMAX/SARIMAX). Cada resultado se clasifica como un nivel de "
+"evidencia gradual, nunca como un veredicto absoluto de \"supuesto "
+"cumplido/no cumplido\"."
 
 #: R/relatedcheck.b.R
 msgid "Three or more measurements"
@@ -15346,7 +15389,7 @@ msgid ""
 "conditions — stationarity, lag structure, specification, and residual "
 "behavior — whose exact relevance depends on the model chosen. Select a "
 "model to see its methodological matrix: Model → Assumptions/Conditions → "
-"Diagnostic →"
+"Diagnostic → Methodological Role → Decision."
 msgstr ""
 "Series Temporales relaciona los supuestos estadísticos y las condiciones "
 "metodológicas que deben evaluarse antes y después de ajustar un modelo de "
@@ -15354,7 +15397,8 @@ msgstr ""
 "exige revisar varias condiciones — de estacionariedad, de estructura de "
 "rezagos, de especificación y de residuos — cuya relevancia exacta depende "
 "del modelo elegido. Seleccione un modelo para ver su matriz metodológica: "
-"Modelo →"
+"Modelo → Supuestos/condiciones → Diagnóstico → Función metodológica → "
+"Decisión."
 
 #: R/texts.R
 #: timeCheck/options/series.title
@@ -15364,8 +15408,11 @@ msgid "Time series"
 msgstr "Serie(s) temporal(es)"
 
 #: timeCheck/options/model.title
-#: timeCheck/ui[1].label
 msgid "Time series model"
+msgstr "Modelo de series temporales"
+
+#: timeCheck/ui[1].label
+msgid "Time Series Model"
 msgstr "Modelo de series temporales"
 
 #: R/groupcheck.b.R
@@ -15808,9 +15855,29 @@ msgstr "VAR"
 
 #: R/texts.R
 msgid ""
-"VAR (Vector AutoRegressive) models several series simultaneously, where each"
+"VAR (Vector AutoRegressive) models several series simultaneously, where "
+"each one is explained by its own lags and by the lags of every other series "
+"in the system, without imposing in advance which variable causes which. Use "
+"it when you are interested in the joint dynamics between two or more "
+"stationary series — for example, interest rate and inflation, or sales of "
+"complementary products — and want to study how a shock in one series "
+"propagates to the others (impulse-response functions) without specifying "
+"rigid causal relationships. It requires all series to be stationary (or "
+"treated to become so); if the series share a long-run equilibrium "
+"relationship while each is individually non-stationary, VECM is usually the "
+"more appropriate choice instead."
 msgstr ""
-"VAR (Vector AutoRegressive) modela varias series simultáneamente, donde cada"
+"VAR (Vector AutoRegressive) modela varias series simultáneamente, donde "
+"cada una se explica por sus propios rezagos y por los rezagos de todas las "
+"demás series del sistema, sin imponer de antemano cuál variable causa cuál. "
+"Úselo cuando le interese la dinámica conjunta entre dos o más series "
+"estacionarias —por ejemplo, tasa de interés e inflación, o ventas de "
+"productos complementarios— y quiera estudiar cómo un choque en una serie se "
+"propaga a las demás (funciones de impulso-respuesta) sin especificar "
+"relaciones causales rígidas. Requiere que todas las series sean "
+"estacionarias (o tratadas para serlo); si las series comparten una relación "
+"de equilibrio de largo plazo mientras cada una es no estacionaria "
+"individualmente, VECM suele ser la opción más apropiada en su lugar."
 
 #: R/timecheck.b.R
 msgid ""
@@ -16602,19 +16669,6 @@ msgstr ""
 "incorporar un componente de error, tendencia o estacionalidad adicional en "
 "la especificación ETS"
 
-#: R/texts.R
-msgid ""
-"adds lagged differences as regressors; Phillips-Perron adjusts the "
-"statistic with a"
-msgstr ""
-"errores: ADF agrega rezagos de la diferencia como regresores; "
-"Phillips-Perron ajusta"
-
-#: R/texts.R
-msgid ""
-"an ARIMA with constant variance. It assumes the input series is already"
-msgstr "ARIMA con varianza constante. Asume que la serie de entrada ya es"
-
 #: R/anovacheck.b.R
 #: R/regcheck.b.R
 msgid "an approximately symmetric distribution centered near zero."
@@ -16634,14 +16688,6 @@ msgstr ""
 #: R/regcheck.b.R
 msgid "an increasing trend, decreasing trend, or funnel shape."
 msgstr "tendencia ascendente, descendente o forma de embudo."
-
-#: R/texts.R
-msgid ""
-"and/or seasonality, and tends to be easier to interpret and communicate "
-"than an"
-msgstr ""
-"tendencia y/o estacionalidad relativamente simples y estables, y suele ser "
-"más"
 
 #: R/texts.R
 msgid "apply a seasonal difference (D) as suggested before proceeding"
@@ -16674,34 +16720,9 @@ msgstr ""
 "modelo, o dejar que auto.arima lo determine automáticamente; "
 "alternativamente, usar una transformación estabilizadora de varianza"
 
-#: R/texts.R
-msgid ""
-"approximately mean-stationary (typically returns, not price levels); if "
-"there"
-msgstr ""
-"aproximadamente estacionaria en media (típicamente retornos, no niveles de"
-
 #: R/regcheck.b.R
 msgid "approximately straight lines with slopes consistent with the model."
 msgstr "líneas aproximadamente rectas y pendientes coherentes con el modelo."
-
-#: R/texts.R
-msgid "as an absolute \"assumption met/not met\" verdict."
-msgstr ""
-"gradual, nunca como un veredicto absoluto de \"supuesto cumplido/no "
-"cumplido\"."
-
-#: R/texts.R
-msgid ""
-"asymptotic approximation, especially relevant in small or moderate samples. "
-"The"
-msgstr ""
-"aproximación asintótica, especialmente relevante en muestras pequeñas o "
-"moderadas."
-
-#: R/texts.R
-msgid "autocorrelation alongside those that do have it."
-msgstr "rezagos sin autocorrelación genuina junto a los que sí la tienen."
 
 #: R/anovacheck.b.R
 msgid "boxes of similar size and reasonable whiskers across groups."
@@ -16803,12 +16824,6 @@ msgstr "complementar las pruebas de normalidad y revisar casos extremos."
 
 #: R/texts.R
 msgid ""
-"conditional volatility), and optional external regressors for ARIMA/SARIMA"
-msgstr ""
-"volatilidad condicional), y regresores externos opcionales en ARIMA/SARIMA"
-
-#: R/texts.R
-msgid ""
 "confirm the series are integrated of order 1 before proceeding with VECM; "
 "if any turns out stationary in levels, reconsider its inclusion"
 msgstr ""
@@ -16860,14 +16875,6 @@ msgstr "considerar errores robustos, transformación o modelo alternativo."
 msgid "copula entropy independence"
 msgstr "independencia por entropía copular"
 
-#: R/texts.R
-msgid ""
-"correct for possible residual autocorrelation and heteroscedasticity "
-"differently: ADF"
-msgstr ""
-"pero corrigen de forma distinta la posible autocorrelación y "
-"heterocedasticidad de los"
-
 #: R/anovacheck.b.R
 msgid "count of cases."
 msgstr "frecuencia o número de casos."
@@ -16891,12 +16898,6 @@ msgstr "curvatura, bandas, forma de embudo o grupos separados."
 msgid "dCor"
 msgstr "dCor"
 
-#: R/texts.R
-msgid ""
-"decomposes the series into level, trend, and seasonality, each with its own"
-msgstr ""
-"exponencial que descompone la serie en nivel, tendencia y estacionalidad,"
-
 #: R/anovacheck.b.R
 msgid "density, i.e. the relative concentration of cases."
 msgstr "densidad, es decir, la concentración relativa de casos."
@@ -16904,14 +16905,6 @@ msgstr "densidad, es decir, la concentración relativa de casos."
 #: R/regcheck.b.R
 msgid "density, that is, the relative concentration of cases."
 msgstr "densidad, es decir, concentración relativa de casos."
-
-#: R/texts.R
-msgid ""
-"dependence, and too many dilute the test's power by mixing lags with no "
-"genuine"
-msgstr ""
-"detectar dependencia real, y demasiados diluyen el poder de la prueba al "
-"incluir"
 
 #: R/anovacheck.b.R
 msgid "design balance"
@@ -16965,23 +16958,6 @@ msgid "does"
 msgstr "señala"
 
 #: R/texts.R
-msgid ""
-"economic series (asset returns, exchange rates, interest rates) where the"
-msgstr ""
-"frecuencia (retornos de activos, tipos de cambio, tasas) donde la magnitud "
-"de"
-
-#: R/texts.R
-msgid "equivalent SARIMA. It is less suited when the dynamics depend on other"
-msgstr ""
-"fácil de interpretar y comunicar que un SARIMA equivalente. Es menos "
-"adecuado"
-
-#: R/texts.R
-msgid "error."
-msgstr "ambas hipótesis, no un error de cómputo."
-
-#: R/texts.R
 msgid "evaluate GJR-GARCH or EGARCH instead of a symmetric GARCH"
 msgstr "evaluar GJR-GARCH o EGARCH en vez de un GARCH simétrico"
 
@@ -17022,13 +16998,6 @@ msgid ""
 msgstr ""
 "examinar forma, simetría y concentración de los residuos estandarizados."
 
-#: R/texts.R
-msgid ""
-"explicitly weights recent observations more heavily than older ones. It is a"
-msgstr ""
-"unitaria ni en diferenciación: pondera las observaciones recientes más que "
-"las"
-
 #: R/groupcheck.b.R
 msgid "extreme values"
 msgstr "valores extremos"
@@ -17048,22 +17017,9 @@ msgstr ""
 "valores ajustados (medias de grupo/celda, ajustadas por covariables) para "
 "cada caso."
 
-#: R/texts.R
-msgid ""
-"form (none, additive, or multiplicative, with or without damping). Unlike"
-msgstr ""
-"cada uno con su propia forma (nula, aditiva o multiplicativa, con o sin"
-
 #: R/regcheck.b.R
 msgid "frequency or number of cases."
 msgstr "frecuencia o número de casos."
-
-#: R/texts.R
-msgid ""
-"generalized the idea to a framework where parameters can vary gradually as a"
-msgstr ""
-"antemano. Nyblom (1989) generalizó la idea a un marco donde los parámetros "
-"pueden"
 
 #: R/anovacheck.b.R
 msgid "groups / cells defined by the selected factor(s)."
@@ -17114,32 +17070,9 @@ msgstr ""
 msgid "increase the number of VAR lags"
 msgstr "aumentar el número de rezagos del VAR"
 
-#: R/texts.R
-msgid ""
-"individually non-stationary, VECM is usually the more appropriate choice"
-msgstr ""
-"largo plazo mientras cada una es no estacionaria individualmente, VECM suele"
-
 #: R/anovacheck.b.R
 msgid "influential cases"
 msgstr "casos influyentes"
-
-#: R/texts.R
-msgid ""
-"instead of assuming it is constant. Use it with high-frequency financial or"
-msgstr "asumirla constante. Úselo con series financieras o económicas de alta"
-
-#: R/texts.R
-msgid "instead."
-msgstr "ser la opción más apropiada en su lugar."
-
-#: R/texts.R
-msgid ""
-"insufficient sample to distinguish between the two hypotheses, not a "
-"computational"
-msgstr ""
-"componentes de largo plazo débiles o una muestra insuficiente para "
-"distinguir entre"
 
 #: R/anovacheck.b.R
 msgid ""
@@ -17156,19 +17089,6 @@ msgid ""
 msgstr ""
 "interpretar inferencias clásicas con cautela y revisar atípicos o "
 "transformaciones."
-
-#: R/texts.R
-msgid ""
-"is asymmetry between positive and negative shocks, it is worth considering"
-msgstr ""
-"precio); si hay asimetría entre choques positivos y negativos, valga revisar"
-
-#: R/texts.R
-msgid ""
-"it especially suited for evaluating the joint stability of an already-fitted"
-msgstr ""
-"quiebre discreto, lo que lo hace especialmente adecuado para evaluar la "
-"estabilidad"
 
 #: R/anovacheck.b.R
 msgid ""
@@ -17188,12 +17108,6 @@ msgstr ""
 msgid "log(Y)"
 msgstr "log(Y)"
 
-#: R/texts.R
-msgid "magnitude of fluctuations varies systematically over time. It offers"
-msgstr ""
-"las fluctuaciones varía sistemáticamente en el tiempo. Ofrece estimaciones "
-"de"
-
 #: R/regcheck.b.R
 msgid ""
 "many points outside the whiskers, strong skewness, or very distant values."
@@ -17208,14 +17122,6 @@ msgstr "asimetría marcada, múltiples picos o colas muy largas."
 msgid "marked skewness, multiple peaks, or very long tails."
 msgstr "asimetría marcada, múltiples picos o colas muy largas."
 
-#: R/texts.R
-msgid ""
-"martingale process, rather than only at a single discrete break point, "
-"which makes"
-msgstr ""
-"variar gradualmente como un proceso martingala, en vez de solo en un punto "
-"de"
-
 #: R/anovacheck.b.R
 #: R/regcheck.b.R
 msgid "maximum |r|"
@@ -17229,12 +17135,6 @@ msgid "minimum λ"
 msgstr "λ mínimo"
 
 #: R/texts.R
-msgid "model the level of the series but its conditional variance: it allows"
-msgstr ""
-"el nivel de la serie sino su varianza condicional: permite que la "
-"volatilidad"
-
-#: R/texts.R
 msgid "model the variance (ARIMA-GARCH) or use robust errors for inference"
 msgstr ""
 "modelar la varianza (ARIMA-GARCH) o usar errores robustos para la inferencia"
@@ -17244,11 +17144,6 @@ msgid "model the variance (SARIMA-GARCH) or use robust errors for inference"
 msgstr ""
 "modelar la varianza (SARIMA-GARCH) o usar errores robustos para la "
 "inferencia"
-
-#: R/texts.R
-msgid "model), diagnostic plots (series, ACF/PACF, residuals, and, for GARCH,"
-msgstr ""
-"seleccionado), gráficos diagnósticos (serie, ACF/PACF, residuos y, en GARCH,"
 
 #: R/anovacheck.b.R
 #: R/regcheck.b.R
@@ -17304,13 +17199,6 @@ msgstr "ninguna multicolinealidad relevante"
 msgid "non-linear covariate dependence"
 msgstr "dependencia no lineal en covariables"
 
-#: R/texts.R
-msgid ""
-"nonparametric, Newey-West-type correction. KPSS (Kwiatkowski et al., 1992)"
-msgstr ""
-"el estadístico con una corrección no paramétrica tipo Newey-West. KPSS "
-"(Kwiatkowski"
-
 #: R/groupcheck.b.R
 msgid "normality diagnostics"
 msgstr "diagnósticos de normalidad"
@@ -17345,24 +17233,6 @@ msgstr "valores observados de cada variable en su escala original."
 #: R/regcheck.b.R
 msgid "observed values of the dependent variable."
 msgstr "valores observados de la variable dependiente."
-
-#: R/texts.R
-msgid ""
-"one is explained by its own lags and by the lags of every other series in "
-"the"
-msgstr ""
-"una se explica por sus propios rezagos y por los rezagos de todas las demás"
-
-#: R/texts.R
-msgid ""
-"one; this is why the chosen number of lags matters: too few may miss real"
-msgstr ""
-"no uno solo; por eso el número de rezagos elegido importa: muy pocos pueden "
-"no"
-
-#: R/texts.R
-msgid "others (impulse-response functions) without specifying rigid causal"
-msgstr "las demás (funciones de impulso-respuesta) sin especificar relaciones"
 
 #: R/texts.R
 #: anovaCheck/results/covariateLinearity.columns.title
@@ -17513,12 +17383,6 @@ msgstr ""
 "valor predicho de la variable dependiente manteniendo constantes los demás "
 "predictores."
 
-#: R/texts.R
-msgid ""
-"products — and want to study how a shock in one series propagates to the"
-msgstr ""
-"complementarios— y quiera estudiar cómo un choque en una serie se propaga a"
-
 #: R/regcheck.b.R
 msgid "rank"
 msgstr "rango"
@@ -17547,21 +17411,10 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
-"recommended battery of statistical diagnostics per model (unit-root tests,"
-msgstr ""
-"mínima de diagnósticos estadísticos por modelo (pruebas de raíz unitaria,"
-
-#: R/texts.R
-msgid ""
 "reduce the lag order, review the specification, or difference the series"
 msgstr ""
 "reducir el orden de rezago, revisar la especificación, o diferenciar las "
 "series"
-
-#: R/texts.R
-msgid ""
-"relationships. It requires all series to be stationary (or treated to become"
-msgstr "causales rígidas. Requiere que todas las series sean estacionarias (o"
 
 #: R/anovacheck.b.R
 #: R/pathcheck.b.R
@@ -17576,10 +17429,6 @@ msgstr "residuos, es decir, diferencia entre valor observado y valor predicho."
 #: R/anovacheck.b.R
 msgid "residuals, the difference between the observed and fitted value."
 msgstr "residuos, la diferencia entre el valor observado y el ajustado."
-
-#: R/texts.R
-msgid "reverses the logic: its null hypothesis is that the series IS"
-msgstr "et al., 1992) invierte la lógica: su hipótesis nula es que la serie"
 
 #: R/regcheck.b.R
 msgid ""
@@ -17661,21 +17510,6 @@ msgstr ""
 "revisar si conviene un término no lineal, una transformación, o simplemente "
 "confirmar que la relación es lineal."
 
-#: R/texts.R
-msgid ""
-"risk/volatility estimates that feed more realistic prediction intervals than"
-msgstr ""
-"riesgo/volatilidad que alimentan intervalos de predicción más realistas que "
-"un"
-
-#: R/texts.R
-msgid ""
-"same null hypothesis — the series has a unit root, i.e. it is "
-"non-stationary — but"
-msgstr ""
-"misma hipótesis nula — la serie tiene raíz unitaria, es decir, es no "
-"estacionaria —,"
-
 #: R/pathcheck.b.R
 msgid "sample size"
 msgstr "tamaño de muestra"
@@ -17699,12 +17533,6 @@ msgstr "barras pequeñas y por debajo de la línea de referencia."
 #: R/anovacheck.b.R
 msgid "small bars, below the reference line."
 msgstr "barras pequeñas y por debajo de la línea de referencia."
-
-#: R/texts.R
-msgid ""
-"so); if the series share a long-run equilibrium relationship while each is"
-msgstr ""
-"tratadas para serlo); si las series comparten una relación de equilibrio de"
 
 #: regCheck/results/transformationFit.columns.title
 #: regCheck/results/transformationNormality.columns.title
@@ -17732,19 +17560,6 @@ msgstr "residuos estandarizados."
 msgid "standardized value of the evaluated predictor, from low to high."
 msgstr "valor estandarizado del predictor evaluado, de bajo a alto."
 
-#: R/texts.R
-msgid ""
-"stationarity (large p), the evidence converges clearly. When the two "
-"families of"
-msgstr ""
-"estacionariedad (p grande), la evidencia converge con claridad. Cuando las"
-
-#: R/texts.R
-msgid ""
-"stationary. This is why the three tests are reported together: if ADF and"
-msgstr ""
-"SÍ es estacionaria. Por eso las tres pruebas se reportan juntas: si ADF y"
-
 #: R/pathcheck.b.R
 msgid "statistically significant"
 msgstr "estadísticamente significativo"
@@ -17754,24 +17569,10 @@ msgid "statistically significant departure from multivariate normality"
 msgstr ""
 "desviación estadísticamente significativa de la normalidad multivariada"
 
-#: R/texts.R
-msgid ""
-"strong alternative when the series has a relatively simple and stable trend"
-msgstr ""
-"antiguas de forma explícita. Es una alternativa fuerte cuando la serie tiene"
-
 #: R/anovacheck.b.R
 #: R/regcheck.b.R
 msgid "strong deviations at the extremes, S-shape, or heavy tails."
 msgstr "desviaciones fuertes en los extremos, forma de S o colas pesadas."
-
-#: R/texts.R
-msgid ""
-"structural change occurs at some point not specified in advance. Nyblom "
-"(1989)"
-msgstr ""
-"la muestra o si existe un cambio estructural en algún punto no especificado "
-"de"
 
 #: R/anovacheck.b.R
 msgid "studentized residual, how extreme the case's error is."
@@ -17782,34 +17583,9 @@ msgid "studentized residual, which indicates how extreme the case error is."
 msgstr ""
 "residuo studentizado, que expresa qué tan extremo es el error del caso."
 
-#: R/texts.R
-msgid "study (use GARCH)."
-msgstr "la volatilidad misma es el objeto de estudio (use GARCH)."
-
-#: R/texts.R
-msgid ""
-"system, without imposing in advance which variable causes which. Use it when"
-msgstr ""
-"series del sistema, sin imponer de antemano cuál variable causa cuál. Úselo"
-
 #: pathCheck/results/pathCoefficients.columns.title
 msgid "t"
 msgstr "t"
-
-#: R/texts.R
-msgid ""
-"test jointly evaluates several lags of residual autocorrelation at once, "
-"not just"
-msgstr ""
-"La prueba evalúa conjuntamente varios rezagos de autocorrelación residual a "
-"la vez,"
-
-#: R/texts.R
-msgid ""
-"tests disagree, it usually points to a series with weak long-run components "
-"or an"
-msgstr ""
-"conclusiones de ambos tipos de prueba difieren, suele indicar una serie con"
 
 #: R/pathcheck.b.R
 msgid ""
@@ -17958,12 +17734,6 @@ msgstr "valores de la segunda variable del par."
 msgid "values predicted by the model."
 msgstr "valores predichos por el modelo."
 
-#: R/texts.R
-msgid ""
-"variables (use VAR/VECM/ARIMAX) or when volatility itself is the object of"
-msgstr ""
-"cuando la dinámica depende de otras variables (use VAR/VECM/ARIMAX) o cuando"
-
 #: R/groupcheck.b.R
 msgid "variance homogeneity diagnostics"
 msgstr "diagnósticos de homogeneidad de varianzas"
@@ -17997,21 +17767,6 @@ msgstr ""
 "comparar visualmente lo que Pearson r y dCor detectan en la relación entre "
 "dos variables."
 
-#: R/texts.R
-msgid ""
-"volatility to change over time and cluster into calm and turbulent periods,"
-msgstr ""
-"cambie en el tiempo y se agrupe en períodos de calma y de turbulencia, en "
-"vez de"
-
-#: R/texts.R
-msgid ""
-"whether a regression's coefficients remain constant across the sample or "
-"whether a"
-msgstr ""
-"detectar si los coeficientes de una regresión permanecen constantes a lo "
-"largo de"
-
 #: R/regcheck.b.R
 msgid "wide dispersion, curved patterns, or systematic bias."
 msgstr "dispersión amplia, patrones curvos o sesgo sistemático."
@@ -18033,14 +17788,3 @@ msgstr ""
 #: R/pathcheck.b.R
 msgid "without statistical significance"
 msgstr "sin significancia estadística"
-
-#: R/texts.R
-msgid ""
-"you are interested in the joint dynamics between two or more stationary "
-"series"
-msgstr ""
-"cuando le interese la dinámica conjunta entre dos o más series estacionarias"
-
-#: R/texts.R
-msgid "— for example, interest rate and inflation, or sales of complementary"
-msgstr "—por ejemplo, tasa de interés e inflación, o ventas de productos"

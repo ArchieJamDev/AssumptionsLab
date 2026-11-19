@@ -22,6 +22,21 @@
 - New tests run analyses in Spanish, English and Spanish again and check
   that every text resolves and nothing is cached between runs.
 
+## Lessons from the jamovi audits of MokkenLab and EGAnetLab
+
+- **Permutation tests can be interrupted.** The dCor and copula entropy
+  permutation tests call jamovi's checkpoint before each variable pair (in
+  every analysis that runs them), so changing an option stops a long run
+  instead of waiting for every remaining pair.
+- **Whole paragraphs for translators.** Ten Time Series paragraphs (the
+  introduction, the scope note, four model descriptions and four
+  methodological foundations) were split into line-length fragments in
+  `R/texts.R`; each is now a single `.()` entry. The report reads the same
+  ("Assumptions/Conditions" loses a stray space). `catalog.pot`, `es.po`
+  and `inst/i18n/es.json` updated (72 fragments replaced by 10 entries).
+- The Time Series options box is titled "Time Series Model" (title case,
+  like every other box).
+
 ---
 
 # Validation scripts (unreleased, 2026-09-05)

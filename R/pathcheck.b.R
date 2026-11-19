@@ -1316,6 +1316,9 @@ pathCheckClass <- R6::R6Class(
             for (i in seq_len(k)) {
                 for (j in seq_len(k)) {
                     if (j >= i) next()
+                    # Let jamovi stop the permutation tests when an option changes.
+                    # ES: Permite que jamovi detenga las permutaciones si cambia una opción.
+                    private$.checkpoint(flush = FALSE)
                     v1 <- vars[i]; v2 <- vars[j]
                     x <- covData[[v1]]; y <- covData[[v2]]
                     ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)

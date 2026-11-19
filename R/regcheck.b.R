@@ -645,6 +645,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             for (xname in covs) {
+                # Let jamovi stop the permutation tests when an option changes.
+                # ES: Permite que jamovi detenga las permutaciones si cambia una opción.
+                private$.checkpoint(flush = FALSE)
 
                 x <- dat2[[xname]]
                 y <- dat2[[dep]]
@@ -904,6 +907,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 for (i in seq_len(k)) {
                     for (j in seq_len(k)) {
                         if (j >= i) next()
+                        # Let jamovi stop the permutation tests when an option changes.
+                        # ES: Permite que jamovi detenga las permutaciones si cambia una opción.
+                        private$.checkpoint(flush = FALSE)
                         v1 <- matVars[i]; v2 <- matVars[j]
                         x <- dat2[[v1]]; y <- dat2[[v2]]
                         ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)
