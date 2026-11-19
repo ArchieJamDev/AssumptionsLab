@@ -350,13 +350,11 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sphericityGuide",
-                title="Sphericity",
-                visible=FALSE))
+                title="Sphericity"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="sphericity",
                 title="Sphericity and corrections",
-                visible=FALSE,
                 refs=list(
                     "mauchly_1940",
                     "greenhouse_1959",
@@ -390,18 +388,15 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sphericityInterpretation",
-                title="Applied interpretation",
-                visible=FALSE))
+                title="Applied interpretation"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationMatrixGuide",
-                title="Correlation matrix",
-                visible=FALSE))
+                title="Correlation matrix"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="pearsonMatrixTable",
                 title="Pearson correlation matrix (APA 7 format)",
-                visible=FALSE,
                 rows=0,
                 columns=list(
                     list(
@@ -412,7 +407,6 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="dcorMatrixTable",
                 title="Distance correlation matrix (dCor, APA 7 format)",
-                visible=FALSE,
                 refs=list(
                     "sz_kely_2007"),
                 rows=0,
@@ -424,18 +418,15 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationMatrixNote",
-                title=" ",
-                visible=FALSE))
+                title=" "))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonGuide",
-                title="Pearson / dCor / copula entropy discordance analysis",
-                visible=FALSE))
+                title="Pearson / dCor / copula entropy discordance analysis"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="correlationComparisonTable",
                 title="Pairs with a notable gap between Pearson and dCor",
-                visible=FALSE,
                 refs=list(
                     "sz_kely_2007",
                     "ma_2011"),
@@ -489,8 +480,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Html$new(
                 options=options,
                 name="correlationComparisonInterpretation",
-                title="Applied interpretation",
-                visible=FALSE))
+                title="Applied interpretation"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="outliersGuide",

@@ -81,6 +81,7 @@ items:
   - name: distributionPlot
     title: Distribution of the analyzed variable by group
     type: Image
+    visible: (showDistributionPlot)
     width: 620
     height: 520
     renderFun: .plotGroupDistribution
@@ -88,6 +89,7 @@ items:
   - name: distributionPlotGuide
     title: Distribution plot guide
     type: Html
+    visible: (showDistributionPlot)
 
   - name: outliers
     title: Outlier screening by group
@@ -220,6 +222,7 @@ items:
   - name: qqNormalityPlot
     title: 'Normality Q-Q plots: global and by group'
     type: Image
+    visible: (showQQPlots)
     width: 620
     height: 720
     renderFun: .plotGroupQQNormality
@@ -227,10 +230,12 @@ items:
   - name: qqNormalityGuide
     title: Visual normality guide
     type: Html
+    visible: (showQQPlots)
 
   - name: normalCurvePlot
     title: 'Observed distribution vs theoretical normal: global and by group'
     type: Image
+    visible: (showNormalCurvePlots)
     width: 620
     height: 720
     renderFun: .plotGroupNormalCurve
@@ -238,6 +243,7 @@ items:
   - name: normalCurveGuide
     title: Visual distribution guide
     type: Html
+    visible: (showNormalCurvePlots)
   - name: normalitySummary
     title: Normality decision summary
     type: Table

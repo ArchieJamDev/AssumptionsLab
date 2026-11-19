@@ -195,12 +195,10 @@ items:
   - name: multicollinearityGuide
     title: Multicollinearity
     type: Html
-    visible: false
 
   - name: multicollinearity
     title: Multicollinearity
     type: Table
-    visible: false
     refs:
       - marquardt_1970
       - belsley_1980
@@ -221,18 +219,17 @@ items:
   - name: multicollinearityInterpretation
     title: Applied interpretation
     type: Html
-    visible: false
 
   - name: correlationMatrixGuide
     title: Correlation matrix
     type: Html
-    visible: false
+    visible: (covs)
 
   - name: pearsonMatrixTable
     title: Pearson correlation matrix (APA 7 format)
     type: Table
     rows: 0
-    visible: false
+    visible: (covs)
     columns:
       - name: var
         title: Variable
@@ -242,7 +239,7 @@ items:
     title: Distance correlation matrix (dCor, APA 7 format)
     type: Table
     rows: 0
-    visible: false
+    visible: (covs)
     refs:
       - sz_kely_2007
     columns:
@@ -253,18 +250,18 @@ items:
   - name: correlationMatrixNote
     title: ' '
     type: Html
-    visible: false
+    visible: (covs)
 
   - name: correlationComparisonGuide
     title: Pearson / dCor / copula entropy discordance analysis
     type: Html
-    visible: false
+    visible: (covs)
 
   - name: correlationComparisonTable
     title: Pairs with a notable gap between Pearson and dCor
     type: Table
     rows: 0
-    visible: false
+    visible: (covs)
     refs:
       - sz_kely_2007
       - ma_2011
@@ -307,7 +304,7 @@ items:
   - name: correlationComparisonInterpretation
     title: Applied interpretation
     type: Html
-    visible: false
+    visible: (covs)
 
   - name: influenceGuide
     title: Influential cases

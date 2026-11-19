@@ -63,10 +63,13 @@ children:
     children:
       - type: CheckBox
         name: linShowPlots
+        enable: (showPlots)
       - type: ComboBox
         name: linSmoother
+        enable: (showPlots && linShowPlots)
       - type: TextBox
         name: linBins
+        enable: (showPlots && linShowPlots)
         format: number
   - type: CollapseBox
     label: 'Plots: Goodness of Fit / Calibration'
@@ -74,28 +77,37 @@ children:
     children:
       - type: CheckBox
         name: caliShowPlots
+        enable: (showPlots)
       - type: TextBox
         name: caliBins
+        enable: (showPlots && caliShowPlots)
         format: number
       - type: CheckBox
         name: caliRefLine
+        enable: (showPlots && caliShowPlots)
   - type: CollapseBox
     label: 'Plots: Discrimination'
     collapsed: true
     children:
       - type: CheckBox
         name: rocShowPlots
+        enable: (showPlots)
       - type: CheckBox
         name: rocRefLine
+        enable: (showPlots && rocShowPlots)
       - type: CheckBox
         name: rocShowAUCLabel
+        enable: (showPlots && rocShowPlots)
   - type: CollapseBox
     label: 'Plots: Influence'
     collapsed: true
     children:
       - type: CheckBox
         name: influenceShowPlots
+        enable: (showPlots)
       - type: ComboBox
         name: influenceLabelMode
+        enable: (showPlots && influenceShowPlots)
       - type: CheckBox
         name: influenceShowThreshold
+        enable: (showPlots && influenceShowPlots)

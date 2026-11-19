@@ -1058,9 +1058,6 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$multicollinearityGuide$setContent(html_guide(.("Multicollinearity"), c(.("Multicollinearity evaluates whether predictors carry very redundant information."), .("VIF values close to 1 suggest low collinearity; high values indicate a predictor is too well explained by other predictors."), .("If meaningful collinearity is present, consider combining variables, removing redundant predictors, centering variables, or changing the analytic question."))))
 
             mc_visible <- length(predictors) >= 2
-            self$results$multicollinearityGuide$setVisible(mc_visible)
-            self$results$multicollinearity$setVisible(mc_visible)
-            self$results$multicollinearityInterpretation$setVisible(mc_visible)
 
             max_vif <- NA_real_
             max_vif_name <- NA_character_
@@ -1148,13 +1145,6 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             self$results$correlationMatrixGuide$setContent(html_guide(.("Correlation Matrix (numeric predictors)"), c(.("These two tables complement the multicollinearity checks with an overview of the association among the numeric predictors, each in APA 7 format (lower triangle, numbered variables)."), .("The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (Székely et al., 2007), which detects linear and non-linear association alike."), .("The dependent variable is deliberately excluded from this matrix: unlike ordCheck's ordinal outcome, this variable's categories are unordered, so there is no defensible way to integer-code it for a correlation coefficient - its relationship to the predictors is instead reported through the coefficients/odds-ratios table."))))
 
-            self$results$correlationMatrixGuide$setVisible(k >= 2)
-            self$results$pearsonMatrixTable$setVisible(k >= 2)
-            self$results$dcorMatrixTable$setVisible(k >= 2)
-            self$results$correlationMatrixNote$setVisible(k >= 2)
-            self$results$correlationComparisonGuide$setVisible(k >= 2)
-            self$results$correlationComparisonTable$setVisible(k >= 2)
-            self$results$correlationComparisonInterpretation$setVisible(k >= 2)
 
             if (k >= 2) {
                 pairResults <- list()
@@ -1237,6 +1227,16 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     },
                     paragraphs = TRUE
                 ))
+            } else {
+                # One numeric predictor: the tables stay in place and say
+                # why they are empty, instead of disappearing.
+                # ES: Un solo predictor numérico: las tablas quedan en su
+                # lugar y explican por qué están vacías, en vez de ocultarse.
+                na_text <- .("Not applicable: fewer than two numeric model variables.")
+                for (tbl in c("pearsonMatrixTable", "dcorMatrixTable", "correlationComparisonTable"))
+                    self$results[[tbl]]$setNote("na", na_text)
+                self$results$correlationComparisonInterpretation$setContent(html_block(
+                    .("Applied Interpretation"), na_text, paragraphs = FALSE))
             }
 
             # -----------------------------------------------------------------------------

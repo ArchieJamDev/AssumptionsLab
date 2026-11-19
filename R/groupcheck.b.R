@@ -546,8 +546,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 stringsAsFactors = FALSE)
 
             show_distribution_plot <- isTRUE(self$options$showDistributionPlot)
-            self$results$distributionPlot$setVisible(show_distribution_plot)
-            self$results$distributionPlotGuide$setVisible(show_distribution_plot)
 
             if (show_distribution_plot) {
                 dist_y <- suppressWarnings(as.numeric(y2))
@@ -1380,8 +1378,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             show_qq_plots <- isTRUE(self$options$showQQPlots)
 
-            self$results$qqNormalityPlot$setVisible(show_qq_plots)
-            self$results$qqNormalityGuide$setVisible(show_qq_plots)
 
             if (show_qq_plots) {
 
@@ -1455,8 +1451,6 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             show_normal_curve_plots <- isTRUE(self$options$showNormalCurvePlots)
 
-            self$results$normalCurvePlot$setVisible(show_normal_curve_plots)
-            self$results$normalCurveGuide$setVisible(show_normal_curve_plots)
 
             if (show_normal_curve_plots) {
 

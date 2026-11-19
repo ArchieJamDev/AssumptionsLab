@@ -220,13 +220,15 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="distributionPlot",
                 title="Distribution of the analyzed variable by group",
+                visible="(showDistributionPlot)",
                 width=620,
                 height=520,
                 renderFun=".plotGroupDistribution"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="distributionPlotGuide",
-                title="Distribution plot guide"))
+                title="Distribution plot guide",
+                visible="(showDistributionPlot)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="outliers",
@@ -382,24 +384,28 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="qqNormalityPlot",
                 title="Normality Q-Q plots: global and by group",
+                visible="(showQQPlots)",
                 width=620,
                 height=720,
                 renderFun=".plotGroupQQNormality"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="qqNormalityGuide",
-                title="Visual normality guide"))
+                title="Visual normality guide",
+                visible="(showQQPlots)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="normalCurvePlot",
                 title="Observed distribution vs theoretical normal: global and by group",
+                visible="(showNormalCurvePlots)",
                 width=620,
                 height=720,
                 renderFun=".plotGroupNormalCurve"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normalCurveGuide",
-                title="Visual distribution guide"))
+                title="Visual distribution guide",
+                visible="(showNormalCurvePlots)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="normalitySummary",

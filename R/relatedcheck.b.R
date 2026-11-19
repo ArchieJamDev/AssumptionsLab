@@ -284,17 +284,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
         measures <- self$options$measures
             k <- length(measures)
 
-            self$results$sphericityGuide$setVisible(k >= 3)
-            self$results$sphericity$setVisible(k >= 3)
-            self$results$sphericityInterpretation$setVisible(k >= 3)
 
-            self$results$correlationMatrixGuide$setVisible(k >= 2)
-            self$results$pearsonMatrixTable$setVisible(k >= 2)
-            self$results$dcorMatrixTable$setVisible(k >= 2)
-            self$results$correlationMatrixNote$setVisible(k >= 2)
-            self$results$correlationComparisonGuide$setVisible(k >= 2)
-            self$results$correlationComparisonTable$setVisible(k >= 2)
-            self$results$correlationComparisonInterpretation$setVisible(k >= 2)
 
             if (length(measures) < 2) {
                 jmvcore::reject(.("Select at least two related numeric variables."))

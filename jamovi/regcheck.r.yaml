@@ -143,7 +143,7 @@ items:
   - name: correlationMatrixGuide
     title: Correlation matrix
     type: Html
-    visible: false
+    visible: (covs)
 
   - name: pearsonMatrixTable
     title: Pearson correlation matrix (APA 7 format)
@@ -153,7 +153,7 @@ items:
       - covs
       - factors
     rows: 0
-    visible: false
+    visible: (covs)
     columns:
       - name: var
         title: Variable
@@ -169,7 +169,7 @@ items:
       - covs
       - factors
     rows: 0
-    visible: false
+    visible: (covs)
     columns:
       - name: var
         title: Variable
@@ -178,12 +178,12 @@ items:
   - name: correlationMatrixNote
     title: ' '
     type: Html
-    visible: false
+    visible: (covs)
 
   - name: correlationComparisonGuide
     title: Pearson / dCor / copula entropy discordance analysis
     type: Html
-    visible: false
+    visible: (covs)
 
   - name: correlationComparisonTable
     title: Pairs with a notable gap between Pearson and dCor
@@ -196,7 +196,7 @@ items:
       - covs
       - factors
     rows: 0
-    visible: false
+    visible: (covs)
     columns:
       - name: var1
         title: Variable 1
@@ -236,7 +236,7 @@ items:
   - name: correlationComparisonInterpretation
     title: Applied interpretation
     type: Html
-    visible: false
+    visible: (covs)
 
   - name: correlationIndividualPlot
     title: Pairwise relationship (Pearson / dCor)
@@ -468,7 +468,6 @@ items:
   - name: multicollinearityGuide
     title: Multicollinearity
     type: Html
-    visible: false
 
   - name: multicollinearity
     title: Multicollinearity
@@ -480,7 +479,6 @@ items:
       - dep
       - covs
       - factors
-    visible: false
     columns:
       - name: diagnostic
         title: Diagnostic
@@ -498,7 +496,6 @@ items:
   - name: multicollinearityInterpretation
     title: Applied interpretation
     type: Html
-    visible: false
 
   - name: influenceGuide
     title: Outlying and influential cases

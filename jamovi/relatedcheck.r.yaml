@@ -246,12 +246,10 @@ items:
   - name: sphericityGuide
     title: Sphericity
     type: Html
-    visible: false
 
   - name: sphericity
     title: Sphericity and corrections
     type: Table
-    visible: false
     refs:
       - mauchly_1940
       - greenhouse_1959
@@ -280,17 +278,14 @@ items:
   - name: sphericityInterpretation
     title: Applied interpretation
     type: Html
-    visible: false
 
   - name: correlationMatrixGuide
     title: Correlation matrix
     type: Html
-    visible: false
 
   - name: pearsonMatrixTable
     title: Pearson correlation matrix (APA 7 format)
     type: Table
-    visible: false
     rows: 0
     columns:
       - name: var
@@ -300,7 +295,6 @@ items:
   - name: dcorMatrixTable
     title: Distance correlation matrix (dCor, APA 7 format)
     type: Table
-    visible: false
     refs:
       - sz_kely_2007
     rows: 0
@@ -312,17 +306,14 @@ items:
   - name: correlationMatrixNote
     title: ' '
     type: Html
-    visible: false
 
   - name: correlationComparisonGuide
     title: Pearson / dCor / copula entropy discordance analysis
     type: Html
-    visible: false
 
   - name: correlationComparisonTable
     title: Pairs with a notable gap between Pearson and dCor
     type: Table
-    visible: false
     refs:
       - sz_kely_2007
       - ma_2011
@@ -366,7 +357,6 @@ items:
   - name: correlationComparisonInterpretation
     title: Applied interpretation
     type: Html
-    visible: false
 
   - name: outliersGuide
     title: Outliers in differences

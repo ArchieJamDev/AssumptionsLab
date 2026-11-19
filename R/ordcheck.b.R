@@ -683,9 +683,6 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$multicollinearityGuide$setContent(html_guide(.("Multicollinearity"), c(.("Multicollinearity evaluates whether predictors carry very redundant information."), .("VIF values close to 1 suggest low collinearity; high values indicate a predictor is too well explained by other predictors."), .("If meaningful collinearity is present, consider combining variables, removing redundant predictors, centering variables, or changing the analytic question."))))
 
             mc_visible <- length(predictors) >= 2
-            self$results$multicollinearityGuide$setVisible(mc_visible)
-            self$results$multicollinearity$setVisible(mc_visible)
-            self$results$multicollinearityInterpretation$setVisible(mc_visible)
 
             max_vif <- NA_real_
             max_vif_name <- NA_character_
@@ -777,13 +774,6 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             self$results$correlationMatrixGuide$setContent(html_guide(.("Correlation Matrix"), c(.("These two tables complement the multicollinearity checks with an overview of the association between the dependent variable and all numeric predictors, each in APA 7 format (lower triangle, numbered variables)."), .("The first reports conventional Pearson correlation (linear association only); the second reports distance correlation (Székely et al., 2007), which detects linear and non-linear association alike."), .("The dependent variable enters this matrix as its integer category code (1, 2, 3, ...), a rough interval approximation - not a formal rank or polyserial correlation - so read its row/column as an approximate signal, not a precise effect size."))))
 
-            self$results$correlationMatrixGuide$setVisible(k >= 2)
-            self$results$pearsonMatrixTable$setVisible(k >= 2)
-            self$results$dcorMatrixTable$setVisible(k >= 2)
-            self$results$correlationMatrixNote$setVisible(k >= 2)
-            self$results$correlationComparisonGuide$setVisible(k >= 2)
-            self$results$correlationComparisonTable$setVisible(k >= 2)
-            self$results$correlationComparisonInterpretation$setVisible(k >= 2)
 
             if (k >= 2) {
                 pairResults <- list()

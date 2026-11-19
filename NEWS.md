@@ -57,6 +57,25 @@
   significance stars in new *Sig. (r)* and *Sig. (dCor)* columns, like
   *Sig. (CE)*. A value that cannot be computed leaves an empty cell instead
   of "Not calc.", and its footnote explains why.
+- **Results keep their place.** The following sections no longer appear
+  or disappear when the analysis runs. Their visibility is now declared in
+  the `.r.yaml` files, so jamovi lays them out before the results arrive:
+  - the correlation sections (shown whenever there are numeric
+    predictors);
+  - multicollinearity;
+  - sphericity in Related Groups;
+  - the distribution, Q-Q and normal-curve plots of Independent Groups.
+
+  When a section does not apply, it stays in place with its "Not
+  applicable" row or note, for example sphericity with two measurements, a
+  single predictor column, or a single numeric predictor in Multinomial
+  Logistic Regression.
+- **Greyed-out options.** Plot options are disabled until the plot they
+  belong to is ticked, in ANOVA/ANCOVA, Logistic, Multinomial, Ordinal and
+  Linear Regression, and Path Analysis, as Independent Groups already did.
+- **Fix:** two cells of Linear Regression ("No aplicable" in the linearity
+  table and "VIF / tolerancia" in multicollinearity) were hard-coded in
+  Spanish and now go through the translation catalog.
 
 ---
 

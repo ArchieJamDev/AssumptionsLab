@@ -627,9 +627,6 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             X_no_intercept <- if (!is.null(X)) X[, colnames(X) != "(Intercept)", drop = FALSE] else NULL
 
             mc_visible <- !is.null(X_no_intercept) && ncol(X_no_intercept) > 1
-            self$results$multicollinearityGuide$setVisible(mc_visible)
-            self$results$multicollinearity$setVisible(mc_visible)
-            self$results$multicollinearityInterpretation$setVisible(mc_visible)
 
             if (!is.null(X_no_intercept) && ncol(X_no_intercept) > 1) {
                 for (j in seq_len(ncol(X_no_intercept))) {
@@ -749,13 +746,6 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             k <- length(matVars)
             pairResults <- list()
 
-            self$results$correlationMatrixGuide$setVisible(k >= 2)
-            self$results$pearsonMatrixTable$setVisible(k >= 2)
-            self$results$dcorMatrixTable$setVisible(k >= 2)
-            self$results$correlationMatrixNote$setVisible(k >= 2)
-            self$results$correlationComparisonGuide$setVisible(k >= 2)
-            self$results$correlationComparisonTable$setVisible(k >= 2)
-            self$results$correlationComparisonInterpretation$setVisible(k >= 2)
 
             if (k >= 2) {
                 for (i in seq_len(k)) {
