@@ -11,8 +11,7 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             exogenous = NULL,
             model = "sarima",
             frequency = 12,
-            showPlots = TRUE,
-            plotPalette = "jamovi", ...) {
+            showPlots = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -65,14 +64,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "showPlots",
                 showPlots,
                 default=TRUE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
 
             self$.addOption(private$..series)
             self$.addOption(private$..dateVar)
@@ -80,7 +71,6 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..model)
             self$.addOption(private$..frequency)
             self$.addOption(private$..showPlots)
-            self$.addOption(private$..plotPalette)
         }),
     active = list(
         series = function() private$..series$value,
@@ -88,16 +78,14 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         exogenous = function() private$..exogenous$value,
         model = function() private$..model$value,
         frequency = function() private$..frequency$value,
-        showPlots = function() private$..showPlots$value,
-        plotPalette = function() private$..plotPalette$value),
+        showPlots = function() private$..showPlots$value),
     private = list(
         ..series = NA,
         ..dateVar = NA,
         ..exogenous = NA,
         ..model = NA,
         ..frequency = NA,
-        ..showPlots = NA,
-        ..plotPalette = NA)
+        ..showPlots = NA)
 )
 
 timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -368,10 +356,6 @@ timeCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   = quarterly, 7 = daily with a weekly cycle, 1 = no seasonality). Used for
 #'   seasonal tests and differencing in SARIMA and ETS.
 #' @param showPlots Uncheck for a text-only report.
-#' @param plotPalette Palette used to distinguish several series in the same
-#'   plot (for example, the variables of a VAR/VECM). Follows jamovi's own theme
-#'   by default; the colorblind-safe and viridis options are additive choices
-#'   jamovi does not otherwise offer.
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -406,8 +390,7 @@ timeCheck <- function(
     exogenous = NULL,
     model = "sarima",
     frequency = 12,
-    showPlots = TRUE,
-    plotPalette = "jamovi") {
+    showPlots = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("timeCheck requires jmvcore to be installed (restart may be required)")
@@ -429,8 +412,7 @@ timeCheck <- function(
         exogenous = exogenous,
         model = model,
         frequency = frequency,
-        showPlots = showPlots,
-        plotPalette = plotPalette)
+        showPlots = showPlots)
 
     analysis <- timeCheckClass$new(
         options = options,

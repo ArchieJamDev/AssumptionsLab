@@ -568,9 +568,9 @@ reimplementation. Every render function signature is
 follows the user's own jamovi Theme/Palette settings. Derive fixed colors
 (point, line, alert, ref) from `theme$color`/`theme$fill` via a small
 `.plotColors(theme)` helper — see `logcheck.b.R` for the reference pattern.
-Offer a module-level `plotPalette` option only for choices jamovi does not
-itself provide (colorblind-safe, viridis) — never a `plotStyle` option,
-which only duplicates jamovi's own Theme control. When a manual N-category
+Do not offer a module-level palette or style option (`plotPalette`,
+`plotStyle`): jamovi asked MokkenLab and EGAnetLab to remove theirs, and
+AssumptionsLab removed `plotPalette` in 1.7.0. When a manual N-category
 scale is needed, apply it via `scale_color_manual()`/`scale_fill_manual()`
 placed *after* `+ ggtheme` in the chain — ggtheme's own discrete scale
 otherwise silently wins.
@@ -590,10 +590,9 @@ a nivel de módulo. Toda función de render tiene la firma
 tiene configurados en jamovi. Derivar los colores fijos (punto, línea,
 alerta, referencia) desde `theme$color`/`theme$fill` mediante un pequeño
 ayudante `.plotColors(theme)` — ver `logcheck.b.R` como patrón de
-referencia. Ofrecer una opción `plotPalette` a nivel de módulo solo para
-opciones que jamovi mismo no ofrece (apta para daltonismo, viridis) —
-nunca una opción `plotStyle`, que solo duplica el propio control de Tema
-de jamovi. Cuando se necesite una escala manual de N categorías, aplicarla
+referencia. No ofrecer opciones propias de paleta o estilo (`plotPalette`,
+`plotStyle`): jamovi pidió quitarlas en MokkenLab y EGAnetLab, y
+AssumptionsLab quitó `plotPalette` en la 1.7.0. Cuando se necesite una escala manual de N categorías, aplicarla
 vía `scale_color_manual()`/`scale_fill_manual()` colocada *después* de
 `+ ggtheme` en la cadena — de lo contrario, la escala discreta propia de
 ggtheme gana en silencio.

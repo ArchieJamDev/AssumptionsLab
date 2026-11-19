@@ -3730,44 +3730,8 @@ msgstr ""
 msgid "Cointegration (Johansen, Engle-Granger)"
 msgstr ""
 
-#: pathCheck/options/plotPalette.title
-msgid "Color Palette by Equation"
-msgstr ""
-
-#: anovaCheck/options/plotPalette.title
-#: groupCheck/options/plotPalette.title
-msgid "Color Palette by Group"
-msgstr ""
-
-#: relatedCheck/options/plotPalette.title
-msgid "Color Palette by Measurement"
-msgstr ""
-
-#: logCheck/options/plotPalette.title
-#: multCheck/options/plotPalette.title
-#: ordCheck/options/plotPalette.title
-#: regCheck/options/plotPalette.title
-msgid "Color Palette for Categories/Groups"
-msgstr ""
-
-#: timeCheck/options/plotPalette.title
-msgid "Color Palette for Series/Groups"
-msgstr ""
-
 #: groupCheck/options/distColorByGroup.title
 msgid "Color by group"
-msgstr ""
-
-#: anovaCheck/options/plotPalette/colorblind.title
-#: groupCheck/options/plotPalette/colorblind.title
-#: logCheck/options/plotPalette/colorblind.title
-#: multCheck/options/plotPalette/colorblind.title
-#: ordCheck/options/plotPalette/colorblind.title
-#: pathCheck/options/plotPalette/colorblind.title
-#: regCheck/options/plotPalette/colorblind.title
-#: relatedCheck/options/plotPalette/colorblind.title
-#: timeCheck/options/plotPalette/colorblind.title
-msgid "Colorblind-safe (Okabe-Ito)"
 msgstr ""
 
 #: R/regcheck.b.R
@@ -5508,18 +5472,6 @@ msgstr ""
 
 #: R/regcheck.b.R
 msgid "Fligner-Killeen by fitted values"
-msgstr ""
-
-#: anovaCheck/options/plotPalette/jamovi.title
-#: groupCheck/options/plotPalette/jamovi.title
-#: logCheck/options/plotPalette/jamovi.title
-#: multCheck/options/plotPalette/jamovi.title
-#: ordCheck/options/plotPalette/jamovi.title
-#: pathCheck/options/plotPalette/jamovi.title
-#: regCheck/options/plotPalette/jamovi.title
-#: relatedCheck/options/plotPalette/jamovi.title
-#: timeCheck/options/plotPalette/jamovi.title
-msgid "Follow jamovi theme (default)"
 msgstr ""
 
 #: R/groupcheck.b.R
@@ -8544,14 +8496,6 @@ msgstr ""
 msgid "Pairwise relationship (Pearson / dCor)"
 msgstr ""
 
-#: timeCheck/options/plotPalette.description
-msgid ""
-"Palette used to distinguish several series in the same plot (for example, "
-"the variables of a VAR/VECM). Follows jamovi's own theme by default; the "
-"colorblind-safe and viridis options are additive choices jamovi does not "
-"otherwise offer."
-msgstr ""
-
 #: R/texts.R
 msgid "Parameter diagnostic / persistence"
 msgstr ""
@@ -8722,18 +8666,6 @@ msgstr ""
 
 #: R/timecheck.b.R
 msgid "Phillips-Perron (unit root)"
-msgstr ""
-
-#: anovaCheck/ui[2].label
-#: groupCheck/ui[4].label
-#: logCheck/ui[6].label
-#: multCheck/ui[4].label
-#: ordCheck/ui[4].label
-#: pathCheck/ui[4].label
-#: regCheck/ui[7].label
-#: relatedCheck/ui[2].label
-#: timeCheck/ui[3].label
-msgid "Plot Color Palette"
 msgstr ""
 
 #: anovaCheck/options/plotSet.title
@@ -12309,18 +12241,6 @@ msgstr ""
 
 #: R/groupcheck.b.R
 msgid "Violin: approximate shape"
-msgstr ""
-
-#: anovaCheck/options/plotPalette/viridis.title
-#: groupCheck/options/plotPalette/viridis.title
-#: logCheck/options/plotPalette/viridis.title
-#: multCheck/options/plotPalette/viridis.title
-#: ordCheck/options/plotPalette/viridis.title
-#: pathCheck/options/plotPalette/viridis.title
-#: regCheck/options/plotPalette/viridis.title
-#: relatedCheck/options/plotPalette/viridis.title
-#: timeCheck/options/plotPalette/viridis.title
-msgid "Viridis"
 msgstr ""
 
 #: R/relatedcheck.b.R

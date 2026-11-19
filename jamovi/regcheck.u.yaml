@@ -117,9 +117,3 @@ children:
         name: influenceLabelMode
       - type: CheckBox
         name: influenceShowThreshold
-  - type: CollapseBox
-    label: Plot Color Palette
-    collapsed: true
-    children:
-      - type: ComboBox
-        name: plotPalette

@@ -1171,26 +1171,8 @@
             "Cointegration (Johansen, Engle-Granger)": [
                 "Cointegración (Johansen, Engle-Granger)"
             ],
-            "Color Palette by Equation": [
-                "Paleta de Color por Ecuación"
-            ],
-            "Color Palette by Group": [
-                "Paleta de Color por Grupo"
-            ],
-            "Color Palette by Measurement": [
-                "Paleta de Color por Medición"
-            ],
-            "Color Palette for Categories/Groups": [
-                "Paleta de Color para Categorías/Grupos"
-            ],
-            "Color Palette for Series/Groups": [
-                "Paleta de Color para Series/Grupos"
-            ],
             "Color by group": [
                 "Colorear por grupo"
-            ],
-            "Colorblind-safe (Okabe-Ito)": [
-                "Apta para daltonismo (Okabe-Ito)"
             ],
             "Common Y scale for direct comparison across variables.": [
                 "Escala Y común para comparación directa entre variables."
@@ -2094,9 +2076,6 @@
             ],
             "Fligner-Killeen by fitted values": [
                 "Fligner-Killeen por valores ajustados"
-            ],
-            "Follow jamovi theme (default)": [
-                "Seguir el tema de jamovi (por defecto)"
             ],
             "For %s, only a single test out of the battery was significant, which is more consistent with an isolated, possibly spurious result than with a real departure from normality.": [
                 "Para %s, solo una prueba de la batería resultó significativa, lo cual es más compatible con un resultado aislado, posiblemente espurio, que con una desviación real de normalidad."
@@ -3799,9 +3778,6 @@
             "Pairwise relationship (Pearson / dCor)": [
                 "Relación por par (Pearson / dCor)"
             ],
-            "Palette used to distinguish several series in the same plot (for example, the variables of a VAR/VECM). Follows jamovi's own theme by default; the colorblind-safe and viridis options are additive choices jamovi does not otherwise offer.": [
-                "Paleta usada para distinguir varias series en un mismo gráfico (por ejemplo, las variables de un VAR/VECM). Sigue el propio tema de jamovi por defecto; las opciones apta para daltonismo y viridis son opciones aditivas que jamovi no ofrece de otro modo."
-            ],
             "Parameter diagnostic / persistence": [
                 "Diagnóstico de parámetros / persistencia"
             ],
@@ -3897,9 +3873,6 @@
             ],
             "Phillips-Perron (unit root)": [
                 "Phillips-Perron (raíz unitaria)"
-            ],
-            "Plot Color Palette": [
-                "Paleta de Color del Gráfico"
             ],
             "Plot Set": [
                 "Conjunto de Gráficos"
@@ -5778,9 +5751,6 @@
             ],
             "Violin: approximate shape": [
                 "Violin: forma aproximada"
-            ],
-            "Viridis": [
-                "Viridis"
             ],
             "Visual diagnostic of change within the same units": [
                 "Diagnóstico visual del cambio dentro de las mismas unidades"

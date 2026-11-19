@@ -102,12 +102,6 @@ children:
       - type: CheckBox
         name: residFlagOutliers
 
-  - type: CollapseBox
-    label: Plot Color Palette
-    collapsed: true
-    children:
-      - type: ComboBox
-        name: plotPalette
 
   - type: CollapseBox
     label: Options

@@ -9,8 +9,7 @@ relatedCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             measures = NULL,
             showProfilePlot = FALSE,
             showDifferencePlots = FALSE,
-            showNormalityPlots = FALSE,
-            plotPalette = "jamovi", ...) {
+            showNormalityPlots = FALSE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -38,33 +37,22 @@ relatedCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 "showNormalityPlots",
                 showNormalityPlots,
                 default=FALSE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
 
             self$.addOption(private$..measures)
             self$.addOption(private$..showProfilePlot)
             self$.addOption(private$..showDifferencePlots)
             self$.addOption(private$..showNormalityPlots)
-            self$.addOption(private$..plotPalette)
         }),
     active = list(
         measures = function() private$..measures$value,
         showProfilePlot = function() private$..showProfilePlot$value,
         showDifferencePlots = function() private$..showDifferencePlots$value,
-        showNormalityPlots = function() private$..showNormalityPlots$value,
-        plotPalette = function() private$..plotPalette$value),
+        showNormalityPlots = function() private$..showNormalityPlots$value),
     private = list(
         ..measures = NA,
         ..showProfilePlot = NA,
         ..showDifferencePlots = NA,
-        ..showNormalityPlots = NA,
-        ..plotPalette = NA)
+        ..showNormalityPlots = NA)
 )
 
 relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -182,8 +170,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 clearWith=list(
                     "measures",
                     "showProfilePlot",
-                    "plotStyle",
-                    "plotPalette")))
+                    "plotStyle")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="differencePlot",
@@ -195,8 +182,7 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 clearWith=list(
                     "measures",
                     "showDifferencePlots",
-                    "plotStyle",
-                    "plotPalette")))
+                    "plotStyle")))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="normalityPlot",
@@ -584,7 +570,6 @@ relatedCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param showProfilePlot .
 #' @param showDifferencePlots .
 #' @param showNormalityPlots .
-#' @param plotPalette .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -636,8 +621,7 @@ relatedCheck <- function(
     measures = NULL,
     showProfilePlot = FALSE,
     showDifferencePlots = FALSE,
-    showNormalityPlots = FALSE,
-    plotPalette = "jamovi") {
+    showNormalityPlots = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("relatedCheck requires jmvcore to be installed (restart may be required)")
@@ -653,8 +637,7 @@ relatedCheck <- function(
         measures = measures,
         showProfilePlot = showProfilePlot,
         showDifferencePlots = showDifferencePlots,
-        showNormalityPlots = showNormalityPlots,
-        plotPalette = plotPalette)
+        showNormalityPlots = showNormalityPlots)
 
     analysis <- relatedCheckClass$new(
         options = options,

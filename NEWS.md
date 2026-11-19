@@ -36,6 +36,14 @@
   and `inst/i18n/es.json` updated (72 fragments replaced by 10 entries).
 - The Time Series options box is titled "Time Series Model" (title case,
   like every other box).
+- **Plot colours follow jamovi.** The module's own palette option
+  (`plotPalette`: Okabe-Ito, viridis) is removed from all nine analyses;
+  every plot uses the palette chosen in jamovi's settings, as jamovi asked
+  of MokkenLab and EGAnetLab. Saved analyses that still carry the option
+  open normally. `.al_plot_series_palette()` is gone with it.
+- **Fix:** in ANOVA/ANCOVA, the residuals-vs-fitted plot failed when a
+  LOESS or linear smoother was chosen (it called a palette helper that no
+  longer existed); the smoother now takes the theme's accent colour.
 
 ---
 

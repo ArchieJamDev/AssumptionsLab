@@ -15,8 +15,7 @@ ordCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             linBins = 8,
             influenceShowPlots = TRUE,
             influenceLabelMode = "top5",
-            influenceShowThreshold = TRUE,
-            plotPalette = "jamovi", ...) {
+            influenceShowThreshold = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -86,14 +85,6 @@ ordCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "influenceShowThreshold",
                 influenceShowThreshold,
                 default=TRUE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
 
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
@@ -105,7 +96,6 @@ ordCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..influenceShowPlots)
             self$.addOption(private$..influenceLabelMode)
             self$.addOption(private$..influenceShowThreshold)
-            self$.addOption(private$..plotPalette)
         }),
     active = list(
         dep = function() private$..dep$value,
@@ -117,8 +107,7 @@ ordCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         linBins = function() private$..linBins$value,
         influenceShowPlots = function() private$..influenceShowPlots$value,
         influenceLabelMode = function() private$..influenceLabelMode$value,
-        influenceShowThreshold = function() private$..influenceShowThreshold$value,
-        plotPalette = function() private$..plotPalette$value),
+        influenceShowThreshold = function() private$..influenceShowThreshold$value),
     private = list(
         ..dep = NA,
         ..covs = NA,
@@ -129,8 +118,7 @@ ordCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..linBins = NA,
         ..influenceShowPlots = NA,
         ..influenceLabelMode = NA,
-        ..influenceShowThreshold = NA,
-        ..plotPalette = NA)
+        ..influenceShowThreshold = NA)
 )
 
 ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -294,7 +282,6 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors",
                     "plotStyle",
-                    "plotPalette",
                     "linSmoother",
                     "linBins")))
             self$add(jmvcore::Html$new(
@@ -566,7 +553,6 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "covs",
                     "factors",
                     "plotStyle",
-                    "plotPalette",
                     "influenceLabelMode",
                     "influenceShowThreshold")))
             self$add(jmvcore::Html$new(
@@ -670,7 +656,6 @@ ordCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param influenceShowPlots .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
-#' @param plotPalette .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -732,8 +717,7 @@ ordCheck <- function(
     linBins = 8,
     influenceShowPlots = TRUE,
     influenceLabelMode = "top5",
-    influenceShowThreshold = TRUE,
-    plotPalette = "jamovi") {
+    influenceShowThreshold = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("ordCheck requires jmvcore to be installed (restart may be required)")
@@ -761,8 +745,7 @@ ordCheck <- function(
         linBins = linBins,
         influenceShowPlots = influenceShowPlots,
         influenceLabelMode = influenceLabelMode,
-        influenceShowThreshold = influenceShowThreshold,
-        plotPalette = plotPalette)
+        influenceShowThreshold = influenceShowThreshold)
 
     analysis <- ordCheckClass$new(
         options = options,

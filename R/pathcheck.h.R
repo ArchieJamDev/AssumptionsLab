@@ -21,7 +21,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             residBinMethod = "sturges",
             residShowNormalCurve = TRUE,
             residFlagOutliers = TRUE,
-            plotPalette = "jamovi",
             showDiagram = TRUE,
             diagramEdgeLabel = "coef",
             diagramShowErrors = FALSE,
@@ -110,14 +109,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "residFlagOutliers",
                 residFlagOutliers,
                 default=TRUE)
-            private$..plotPalette <- jmvcore::OptionList$new(
-                "plotPalette",
-                plotPalette,
-                options=list(
-                    "jamovi",
-                    "colorblind",
-                    "viridis"),
-                default="jamovi")
             private$..showDiagram <- jmvcore::OptionBool$new(
                 "showDiagram",
                 showDiagram,
@@ -196,7 +187,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..residBinMethod)
             self$.addOption(private$..residShowNormalCurve)
             self$.addOption(private$..residFlagOutliers)
-            self$.addOption(private$..plotPalette)
             self$.addOption(private$..showDiagram)
             self$.addOption(private$..diagramEdgeLabel)
             self$.addOption(private$..diagramShowErrors)
@@ -223,7 +213,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         residBinMethod = function() private$..residBinMethod$value,
         residShowNormalCurve = function() private$..residShowNormalCurve$value,
         residFlagOutliers = function() private$..residFlagOutliers$value,
-        plotPalette = function() private$..plotPalette$value,
         showDiagram = function() private$..showDiagram$value,
         diagramEdgeLabel = function() private$..diagramEdgeLabel$value,
         diagramShowErrors = function() private$..diagramShowErrors$value,
@@ -249,7 +238,6 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..residBinMethod = NA,
         ..residShowNormalCurve = NA,
         ..residFlagOutliers = NA,
-        ..plotPalette = NA,
         ..showDiagram = NA,
         ..diagramEdgeLabel = NA,
         ..diagramShowErrors = NA,
@@ -1179,7 +1167,6 @@ pathCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param residBinMethod .
 #' @param residShowNormalCurve .
 #' @param residFlagOutliers .
-#' @param plotPalette .
 #' @param showDiagram .
 #' @param diagramEdgeLabel .
 #' @param diagramShowErrors Shows, for each endogenous variable, a small error
@@ -1269,7 +1256,6 @@ pathCheck <- function(
     residBinMethod = "sturges",
     residShowNormalCurve = TRUE,
     residFlagOutliers = TRUE,
-    plotPalette = "jamovi",
     showDiagram = TRUE,
     diagramEdgeLabel = "coef",
     diagramShowErrors = FALSE,
@@ -1306,7 +1292,6 @@ pathCheck <- function(
         residBinMethod = residBinMethod,
         residShowNormalCurve = residShowNormalCurve,
         residFlagOutliers = residFlagOutliers,
-        plotPalette = plotPalette,
         showDiagram = showDiagram,
         diagramEdgeLabel = diagramEdgeLabel,
         diagramShowErrors = diagramShowErrors,

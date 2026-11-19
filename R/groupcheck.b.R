@@ -1854,23 +1854,17 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
         .plotSeriesColors = function(n) {
             n <- max(1, as.integer(n))
-            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi")) {
-                # Default: replicate jamovi's own N-color scheme (the same
-                # function ggtheme's embedded discrete scale calls
-                # internally for ggplot2 plots) instead of a fixed hard-
-                # coded blue/orange set.
-                # ES: por defecto, replica el esquema de N colores propio
-                # de jamovi (la misma función que llama internamente la
-                # escala discreta embebida en ggtheme para gráficos
-                # ggplot2) en vez de un conjunto azul/naranja fijo.
-                jmv_pal <- tryCatch(self$options$palette, error = function(e) "jmv")
-                if (is.null(jmv_pal) || length(jmv_pal) == 0 || !nzchar(jmv_pal)) jmv_pal <- "jmv"
-                return(tryCatch(jmvcore::colorPalette(n, jmv_pal, "fill"), error = function(e) NULL))
-            }
-            cols <- .al_plot_series_palette(choice)
-            if (is.null(cols)) return(NULL)
-            rep(cols, length.out = n)
+            # Always replicate jamovi's own N-color scheme (the same
+            # function ggtheme's embedded discrete scale calls
+            # internally for ggplot2 plots) instead of a fixed hard-
+            # coded blue/orange set.
+            # ES: replica siempre el esquema de N colores propio
+            # de jamovi (la misma función que llama internamente la
+            # escala discreta embebida en ggtheme para gráficos
+            # ggplot2) en vez de un conjunto azul/naranja fijo.
+            jmv_pal <- tryCatch(self$options$palette, error = function(e) "jmv")
+            if (is.null(jmv_pal) || length(jmv_pal) == 0 || !nzchar(jmv_pal)) jmv_pal <- "jmv"
+            return(tryCatch(jmvcore::colorPalette(n, jmv_pal, "fill"), error = function(e) NULL))
         },
 
         # -----------------------------------------------------------------------------

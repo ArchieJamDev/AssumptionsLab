@@ -1832,13 +1832,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # llamada existente) ya que la cantidad de colores deja de ser
         # relevante al delegar en ggtheme.
         .categoricalPalette = function(n) {
-            key <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(key) || length(key) == 0 || !nzchar(key) || identical(key, "jamovi"))
-                return(NULL)
-            rep_len(.al_plot_series_palette(key), n)
+            NULL
         },
 
-        .addSmoother = function(plot, x, y) {
+        .addSmoother = function(plot, x, y, smooth_color) {
             smoother <- tryCatch(self$options$residSmoother, error = function(e) "none")
             if (is.null(smoother) || length(smoother) == 0 || !nzchar(smoother))
                 smoother <- "none"
@@ -1849,15 +1846,15 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 plot + ggplot2::geom_smooth(
                     ggplot2::aes(x = .data[[x]], y = .data[[y]]),
                     method = "loess", se = show_band, linewidth = 0.6,
-                    color = private$.plotPalette()$smooth,
-                    fill = private$.plotPalette()$smooth
+                    color = smooth_color,
+                    fill = smooth_color
                 )
             } else if (identical(smoother, "linear")) {
                 plot + ggplot2::geom_smooth(
                     ggplot2::aes(x = .data[[x]], y = .data[[y]]),
                     method = "lm", se = show_band, linewidth = 0.6,
-                    color = private$.plotPalette()$smooth,
-                    fill = private$.plotPalette()$smooth
+                    color = smooth_color,
+                    fill = smooth_color
                 )
             } else {
                 plot
@@ -1973,7 +1970,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ggplot2::geom_point(alpha = 0.75, size = 1.6, color = pal$point)
 
             if (length(unique(d$fitted)) >= 5) {
-                plot <- private$.addSmoother(plot, "fitted", "residual")
+                plot <- private$.addSmoother(plot, "fitted", "residual", pal$smooth)
             }
 
             plot <- plot +

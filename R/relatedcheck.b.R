@@ -1637,11 +1637,16 @@ self$results$notes$setContent(html_block(
             )
         },
 
+        # Plot colors always follow the palette chosen in jamovi's settings:
+        # NULL lets ggtheme's own discrete scale color each series. The
+        # module's own palette option (Okabe-Ito, viridis) was removed, as
+        # jamovi asked in the MokkenLab and EGAnetLab audits.
+        # ES: Los colores siguen siempre la paleta elegida en jamovi: NULL
+        # deja que la escala discreta de ggtheme coloree cada serie. Se quitó
+        # la opción de paleta propia del módulo (Okabe-Ito, viridis), como
+        # pidió jamovi en las auditorías de MokkenLab y EGAnetLab.
         .plotSeriesColors = function() {
-            choice <- tryCatch(self$options$plotPalette, error = function(e) "jamovi")
-            if (is.null(choice) || length(choice) == 0 || !nzchar(choice) || identical(choice, "jamovi"))
-                return(NULL)
-            .al_plot_series_palette(choice)
+            NULL
         },
 
         .plotProfile = function(image, ggtheme, theme, ...) {

@@ -110,7 +110,6 @@ items:
       - covs
       - factors
       - plotStyle
-      - plotPalette
       - linSmoother
       - linBins
 
@@ -154,7 +153,6 @@ items:
       - covs
       - factors
       - plotStyle
-      - plotPalette
       - caliBins
       - caliRefLine
 
@@ -191,7 +189,6 @@ items:
       - covs
       - factors
       - plotStyle
-      - plotPalette
       - rocRefLine
       - rocShowAUCLabel
 
@@ -344,7 +341,6 @@ items:
       - covs
       - factors
       - plotStyle
-      - plotPalette
       - influenceLabelMode
       - influenceShowThreshold
 

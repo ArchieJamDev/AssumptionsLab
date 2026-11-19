@@ -5831,45 +5831,9 @@ msgstr "Cointegración"
 msgid "Cointegration (Johansen, Engle-Granger)"
 msgstr "Cointegración (Johansen, Engle-Granger)"
 
-#: pathCheck/options/plotPalette.title
-msgid "Color Palette by Equation"
-msgstr "Paleta de Color por Ecuación"
-
-#: anovaCheck/options/plotPalette.title
-#: groupCheck/options/plotPalette.title
-msgid "Color Palette by Group"
-msgstr "Paleta de Color por Grupo"
-
-#: relatedCheck/options/plotPalette.title
-msgid "Color Palette by Measurement"
-msgstr "Paleta de Color por Medición"
-
-#: logCheck/options/plotPalette.title
-#: multCheck/options/plotPalette.title
-#: ordCheck/options/plotPalette.title
-#: regCheck/options/plotPalette.title
-msgid "Color Palette for Categories/Groups"
-msgstr "Paleta de Color para Categorías/Grupos"
-
-#: timeCheck/options/plotPalette.title
-msgid "Color Palette for Series/Groups"
-msgstr "Paleta de Color para Series/Grupos"
-
 #: groupCheck/options/distColorByGroup.title
 msgid "Color by group"
 msgstr "Colorear por grupo"
-
-#: anovaCheck/options/plotPalette/colorblind.title
-#: groupCheck/options/plotPalette/colorblind.title
-#: logCheck/options/plotPalette/colorblind.title
-#: multCheck/options/plotPalette/colorblind.title
-#: ordCheck/options/plotPalette/colorblind.title
-#: pathCheck/options/plotPalette/colorblind.title
-#: regCheck/options/plotPalette/colorblind.title
-#: relatedCheck/options/plotPalette/colorblind.title
-#: timeCheck/options/plotPalette/colorblind.title
-msgid "Colorblind-safe (Okabe-Ito)"
-msgstr "Apta para daltonismo (Okabe-Ito)"
 
 #: R/regcheck.b.R
 msgid "Common Y scale for direct comparison across variables."
@@ -8025,18 +7989,6 @@ msgstr "Valores ajustados"
 #: R/regcheck.b.R
 msgid "Fligner-Killeen by fitted values"
 msgstr "Fligner-Killeen por valores ajustados"
-
-#: anovaCheck/options/plotPalette/jamovi.title
-#: groupCheck/options/plotPalette/jamovi.title
-#: logCheck/options/plotPalette/jamovi.title
-#: multCheck/options/plotPalette/jamovi.title
-#: ordCheck/options/plotPalette/jamovi.title
-#: pathCheck/options/plotPalette/jamovi.title
-#: regCheck/options/plotPalette/jamovi.title
-#: relatedCheck/options/plotPalette/jamovi.title
-#: timeCheck/options/plotPalette/jamovi.title
-msgid "Follow jamovi theme (default)"
-msgstr "Seguir el tema de jamovi (por defecto)"
 
 #: R/groupcheck.b.R
 msgid ""
@@ -11543,18 +11495,6 @@ msgstr "Gráfico de comparación por pares"
 msgid "Pairwise relationship (Pearson / dCor)"
 msgstr "Relación por par (Pearson / dCor)"
 
-#: timeCheck/options/plotPalette.description
-msgid ""
-"Palette used to distinguish several series in the same plot (for example, "
-"the variables of a VAR/VECM). Follows jamovi's own theme by default; the "
-"colorblind-safe and viridis options are additive choices jamovi does not "
-"otherwise offer."
-msgstr ""
-"Paleta usada para distinguir varias series en un mismo gráfico (por "
-"ejemplo, las variables de un VAR/VECM). Sigue el propio tema de jamovi por "
-"defecto; las opciones apta para daltonismo y viridis son opciones aditivas "
-"que jamovi no ofrece de otro modo."
-
 #: R/texts.R
 msgid "Parameter diagnostic / persistence"
 msgstr "Diagnóstico de parámetros / persistencia"
@@ -11731,18 +11671,6 @@ msgstr "Permutaciones (dCor / Entropía Copular)"
 #: R/timecheck.b.R
 msgid "Phillips-Perron (unit root)"
 msgstr "Phillips-Perron (raíz unitaria)"
-
-#: anovaCheck/ui[2].label
-#: groupCheck/ui[4].label
-#: logCheck/ui[6].label
-#: multCheck/ui[4].label
-#: ordCheck/ui[4].label
-#: pathCheck/ui[4].label
-#: regCheck/ui[7].label
-#: relatedCheck/ui[2].label
-#: timeCheck/ui[3].label
-msgid "Plot Color Palette"
-msgstr "Paleta de Color del Gráfico"
 
 #: anovaCheck/options/plotSet.title
 msgid "Plot Set"
@@ -16119,18 +16047,6 @@ msgstr "Gráfico de violín"
 #: R/groupcheck.b.R
 msgid "Violin: approximate shape"
 msgstr "Violin: forma aproximada"
-
-#: anovaCheck/options/plotPalette/viridis.title
-#: groupCheck/options/plotPalette/viridis.title
-#: logCheck/options/plotPalette/viridis.title
-#: multCheck/options/plotPalette/viridis.title
-#: ordCheck/options/plotPalette/viridis.title
-#: pathCheck/options/plotPalette/viridis.title
-#: regCheck/options/plotPalette/viridis.title
-#: relatedCheck/options/plotPalette/viridis.title
-#: timeCheck/options/plotPalette/viridis.title
-msgid "Viridis"
-msgstr "Viridis"
 
 #: R/relatedcheck.b.R
 msgid "Visual diagnostic of change within the same units"
