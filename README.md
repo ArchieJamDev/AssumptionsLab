@@ -263,7 +263,7 @@ testthat::test_dir("tests/testthat")  # run the edge-case suite
 | 2 | Path Analysis and Time Series | ✅ Done |
 | 3 | Test suite and CI, native jamovi citations and bibliography | ✅ Done |
 | 4 | Monte Carlo validation and public-data case study | ✅ Done |
-| 5 | Reports in jamovi's own language through its translation catalog (version 1.7.0) | 🔄 In progress |
+| 5 | Reports in jamovi's own language through its translation catalog (version 1.7.0) | ✅ Done |
 | 6 | Submission to the jamovi Library | 🔄 In progress |
 | Next | SEM and PLS-SEM, Bayesian methods, multilevel models, survival analysis, meta-analysis | 🗓 Planned |
 
@@ -289,7 +289,7 @@ all versions and always resolves to the latest one; each version also has
 its own DOI, listed on the Zenodo page.
 
 > Chacón Chacón, A. D. L. (2026). *AssumptionsLab: A jamovi module for
-> statistical assumptions* (Version 1.6.0) [Computer software]. Zenodo.
+> statistical assumptions* (Version 1.7.0) [Computer software]. Zenodo.
 > https://doi.org/10.5281/zenodo.22209135
 
 The methods behind each analysis are listed in
