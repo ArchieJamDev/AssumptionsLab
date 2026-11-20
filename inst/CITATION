@@ -3,8 +3,8 @@ bibentry(
     title = "AssumptionsLab",
     author = person("A.", "Chacon"),
     year = "2026",
-    note = "Version 1.5.1 [jamovi module]",
+    note = "Version 1.7.0 [jamovi module]",
     doi = "10.5281/zenodo.22209135",
     url = "https://github.com/ArchieJamDev/AssumptionsLab",
-    textVersion = "Chacon, A. (2026). AssumptionsLab (Version 1.5.1) [jamovi module]. https://doi.org/10.5281/zenodo.22209135"
+    textVersion = "Chacon, A. (2026). AssumptionsLab (Version 1.7.0) [jamovi module]. https://doi.org/10.5281/zenodo.22209135"
 )

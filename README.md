@@ -35,6 +35,7 @@ the evidence behind it and the next step to take.
 - [Why AssumptionsLab?](#why-assumptionslab)
 - [Screenshots](#screenshots)
 - [Analyses](#analyses)
+- [Tables and Graphics](#tables-and-graphics)
 - [Methodological Philosophy](#methodological-philosophy)
 - [Installation](#installation)
 - [Example Dataset](#example-dataset)
@@ -71,6 +72,10 @@ workflow in jamovi's point-and-click interface:
 - **Beyond linear association.** Pearson correlations sit next to distance
   correlation and copula entropy, so non-linear relationships are not
   missed.
+- **Tables and plots that behave like jamovi's own.** p values,
+  statistics and correlations sit in numeric columns that follow jamovi's
+  decimal and p-value settings, and every plot uses the colour palette
+  chosen in jamovi's settings.
 - **A built-in Assumption Library.** A glossary of every assumption and test
   the module uses, filterable by category.
 - **Native citations.** Every method-backed table cites its own source in
@@ -163,6 +168,34 @@ inside it carries its own explanation.
 
 ---
 
+## Tables and Graphics
+
+- **Numeric columns.** p values, test statistics and correlations are
+  numbers, not text: they follow jamovi's decimal and p-value settings and
+  paste into a spreadsheet as numbers. A value that cannot be computed
+  leaves an empty cell, and a footnote explains why.
+- **APA correlation matrices.** The Pearson and distance correlation
+  matrices keep the APA layout (numbered variables, lower triangle), with
+  significance stars attached through jamovi's own table symbols, as in
+  jamovi's Correlation Matrix.
+- **Results keep their place.** Sections are laid out before the results
+  arrive. A section that does not apply (sphericity with two measurements,
+  correlations with a single predictor) stays in place with a "Not
+  applicable" row or note instead of appearing and disappearing.
+- **Native notices.** When a diagnostic cannot run (for example a Time
+  Series model with too few series, or a missing R package), a jamovi
+  notice says why, above the tables it affects.
+- **Plots follow jamovi.** Every plot uses the theme and palette chosen in
+  jamovi's settings, so AssumptionsLab's plots match those of jamovi and of
+  every other module. Plot options stay greyed out until the plot they
+  belong to is ticked.
+- **Long runs can be interrupted.** The permutation tests for distance
+  correlation and copula entropy check in with jamovi before each pair of
+  variables, so changing an option stops a long run instead of waiting for
+  it to finish.
+
+---
+
 ## Methodological Philosophy
 
 1. **Support decisions, do not replace them.** The software informs the
@@ -220,9 +253,12 @@ what each analysis currently finds on it.
 - [`tests/testthat/`](tests/testthat) exercises every analysis on
   pathological input: accented and symbol column names, a single-row data
   set, an entirely missing column, a zero-variance column, constant
-  predictors and factors with the minimum number of levels. Each case must either finish or stop with an
-  AssumptionsLab message that explains what to change, never with a raw R
-  error.
+  predictors and factors with the minimum number of levels. Each case must
+  either finish or stop with an AssumptionsLab message that explains what
+  to change, never with a raw R error.
+- Language tests run analyses in Spanish, then English, then Spanish
+  again, and check that every text is translated and that nothing from one
+  run leaks into the next.
 - Every push and pull request runs the GitHub Actions workflow
   [`jamovi-check.yml`](.github/workflows/jamovi-check.yml):
   `jmvtools::check()`, a plain `R CMD INSTALL` and the full test suite.
@@ -264,7 +300,9 @@ testthat::test_dir("tests/testthat")  # run the edge-case suite
 | 3 | Test suite and CI, native jamovi citations and bibliography | ✅ Done |
 | 4 | Monte Carlo validation and public-data case study | ✅ Done |
 | 5 | Reports in jamovi's own language through its translation catalog (version 1.7.0) | ✅ Done |
-| 6 | Submission to the jamovi Library | 🔄 In progress |
+| 6 | Lessons from the jamovi audits of MokkenLab and EGAnetLab: numeric columns, jamovi's palette, native notices, interruptible permutation tests | ✅ Done |
+| 7 | Release 1.7.0 with its Zenodo DOI | 🔄 In progress |
+| 8 | Submission to the jamovi Library | 🔄 In progress |
 | Next | SEM and PLS-SEM, Bayesian methods, multilevel models, survival analysis, meta-analysis | 🗓 Planned |
 
 See [ARCHITECTURE.md](ARCHITECTURE.md#14-future-expansion) for the design
@@ -328,7 +366,9 @@ no pasar por alto relaciones no lineales.
 Cada opción del menú incluye un párrafo que explica qué hace y cuándo
 conviene elegirla, y los resultados se acompañan de guías e
 interpretaciones en español o inglés, según el idioma configurado en
-jamovi. Incluye una Biblioteca de Supuestos, un glosario de cada supuesto y
+jamovi. Los valores *p*, estadísticos y correlaciones van en columnas
+numéricas que siguen la configuración de decimales de jamovi, y los
+gráficos usan la paleta de colores elegida en jamovi. Incluye una Biblioteca de Supuestos, un glosario de cada supuesto y
 prueba filtrable por categoría, y cada tabla cita sus fuentes con el formato
 de referencias de jamovi.
 
