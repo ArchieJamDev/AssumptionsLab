@@ -144,6 +144,8 @@ investigación.
 - Sobel, M. E. (1982). Asymptotic confidence intervals for indirect effects in structural equation models. *Sociological Methodology, 13*(), 290-312. https://doi.org/10.2307/270723
 - Székely, G. J., Rizzo, M. L., & Bakirov, N. K. (2007). Measuring and testing dependence by correlation of distances. *The Annals of Statistics, 35*(6), 2769-2794. https://doi.org/10.1214/009053607000000505
 - Tukey, J. W. (1977). *Exploratory Data Analysis*. Addison-Wesley.
+- Utts, J. M. (1982). The rainbow test for lack of fit in regression. *Communications in Statistics - Theory and Methods, 11*(24), 2801-2815. https://doi.org/10.1080/03610928208828423
+- Wald, A., & Wolfowitz, J. (1940). On a test whether two samples are from the same population. *The Annals of Mathematical Statistics, 11*(2), 147-162. https://doi.org/10.1214/aoms/1177731909
 - Welch, B. L. (1947). The generalization of 'Student's' problem when several different population variances are involved. *Biometrika, 34*(1-2), 28-35. https://doi.org/10.1093/biomet/34.1-2.28
 - White, H. (1980). A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity. *Econometrica, 48*(4), 817-838. https://doi.org/10.2307/1912934
 - Wilcoxon, F. (1945). Individual comparisons by ranking methods. *Biometrics Bulletin, 1*(6), 80-83. https://doi.org/10.2307/3001968

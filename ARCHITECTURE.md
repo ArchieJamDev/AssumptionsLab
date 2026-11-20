@@ -645,11 +645,16 @@ reading its Electron client source directly); an `Html`-type result's
 renderer never touches it, even though the `refs:` data itself reaches
 the client correctly. Since every one of Library's category sections is
 `Html` (narrative guide text, not tabular), the native mechanism has
-nowhere to render there, so Library keeps a plain-text pointer to
-`docs/Bibliography.md` instead. See `docs/Bibliography.md` itself for
-why, and CODE_STYLE.md §21 for the citation-style consequence of this
-split (jamovi's own numbered format in-app, APA 7th in
-`docs/Bibliography.md`).
+nowhere to render there. Since 1.7.1 each category therefore ends with a
+small native `Table`, "Sources" (`<category>Sources`, filled in `.init()`
+by `.al_library_sources()`), that names each method with its author and
+year and carries the category's `refs:`. jamovi then numbers those
+sources and lists them in its References section, exactly as it does for
+the other analyses, and the category filter hides a category's sources
+together with its guide. The plain-text pointer to `docs/Bibliography.md`
+was removed from the library's introduction; that page stays the APA 7th
+edition home of the full list (CODE_STYLE.md §21: jamovi's own numbered
+format in-app, APA 7th in `docs/Bibliography.md`).
 
 **Library's entire content moved to jamovi's native i18n catalog,
 `reportLang` and all.** A separate part of the same review asked Library
@@ -725,12 +730,17 @@ fuente de su cliente Electron); el renderizador de un resultado tipo
 `Html` nunca la usa, aunque los datos de `refs:` sí llegan
 correctamente al cliente. Como cada sección de categoría de Library es
 `Html` (texto narrativo de guía, no tabular), el mecanismo nativo no
-tiene dónde renderizarse ahí, así que Library conserva en cambio un
-simple puntero de texto a `docs/Bibliography.md`. Ver el propio
-`docs/Bibliography.md` para el porqué, y CODE_STYLE.md §21 para la
-consecuencia de estilo de citación de esta división (el propio formato
-numerado de jamovi dentro de la app, APA 7.ª edición en
-`docs/Bibliography.md`).
+tiene dónde renderizarse ahí. Desde 1.7.1 cada categoría termina por eso
+con una `Table` nativa pequeña, "Fuentes" (`<categoría>Sources`, llenada
+en `.init()` por `.al_library_sources()`), que nombra cada método con su
+autor y año y lleva los `refs:` de la categoría. jamovi numera esas
+fuentes y las muestra en su sección de Referencias, igual que en los
+demás análisis, y el filtro de categoría oculta las fuentes de una
+categoría junto con su guía. Se quitó de la introducción de la
+biblioteca el puntero de texto a `docs/Bibliography.md`; esa página
+sigue siendo la sede en APA 7.ª edición de la lista completa
+(CODE_STYLE.md §21: formato numerado de jamovi dentro de la app, APA 7.ª
+edición en `docs/Bibliography.md`).
 
 **Todo el contenido de Library se mudó al catálogo i18n nativo de jamovi,
 incluida la opción `reportLang` misma.** Otra parte de la misma revisión
