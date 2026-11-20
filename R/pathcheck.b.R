@@ -346,6 +346,21 @@ pathCheckClass <- R6::R6Class(
                 invisible(TRUE)
             }
 
+            # Delegates to the shared .al_p_sig() (shared-helpers.R) instead
+            # of reimplementing the same threshold logic locally. The local
+            # version also lacked an NA guard before the comparisons.
+            # ES: Delega en la función compartida .al_p_sig()
+            # (shared-helpers.R) en vez de reimplementar localmente la
+            # misma lógica de umbrales. La versión local tampoco protegía
+            # contra NA antes de las comparaciones.
+            p_sig_stars <- .al_p_sig
+
+            format_p <- function(p) {
+                if (is.na(p)) return("NA")
+                if (p < .001) return("< .001")
+                sprintf("= %.3f", p)
+            }
+
             # -----------------------------------------------------------------------------
             # Report introduction.
             # ES: Introducción del informe.
@@ -413,6 +428,49 @@ pathCheckClass <- R6::R6Class(
                 casesPerRelation = casesPerRelation
             ))
 
+            private$.fillStructure(., html_block, set_html_safe, edges, exogenous, endogenous)
+
+            private$.fillSpecifiedModel(., edges, deps)
+
+            step <- private$.validateModel(., html_guide, set_html_safe, vars, isFinalized, edges, deps, isolated)
+            data <- step$data
+            fits <- step$fits
+            edgeStats <- step$edgeStats
+
+            private$.fillResidualCovariances(., html_block, set_html_safe, fits)
+
+            private$.interpretCoefficients(., html_block, set_html_safe, format_p, fits, edgeStats)
+
+            step <- private$.checkOutliers(., html_block, html_guide, set_html_safe, data, fits)
+            covData <- step$covData
+            mahaResult <- step$mahaResult
+
+            step <- private$.checkNormality(., html_block, html_guide, set_html_safe, p_sig_stars, data, fits)
+            nNormalityFail <- step$nNormalityFail
+            nNormalityTotal <- step$nNormalityTotal
+
+            step <- private$.checkHomoscedasticity(., html_block, html_guide, set_html_safe, p_sig_stars, fits)
+            nHomoFail <- step$nHomoFail
+            nHomoTotal <- step$nHomoTotal
+
+            step <- private$.checkMulticollinearity(., html_block, html_guide, set_html_safe, fits)
+            maxVif <- step$maxVif
+            maxVifLabel <- step$maxVifLabel
+
+            private$.checkMardia(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, covData)
+
+            private$.fillCorrelations(lang, ., html_block, html_guide, set_html_safe, p_sig_stars, vars, edges, covData)
+
+            mediationRows <- private$.fillEffects(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, edges, edgeStats)
+
+            step <- private$.checkSampleSize(., html_block, set_html_safe, edges, fits, covData)
+            sizeCriteria <- step$sizeCriteria
+            nMet <- step$nMet
+
+            private$.fillConclusion(., html_block, set_html_safe, mahaResult, nNormalityFail, nNormalityTotal, nHomoFail, nHomoTotal, maxVif, maxVifLabel, mediationRows, sizeCriteria, nMet)
+        },
+
+        .fillStructure = function(., html_block, set_html_safe, edges, exogenous, endogenous) {
             # -----------------------------------------------------------------------------
             # Model structure: exogenous / endogenous (showExogenous/showEndogenous).
             # ES: Estructura del modelo: exógenas / endógenas (showExogenous/showEndogenous).
@@ -437,6 +495,10 @@ pathCheckClass <- R6::R6Class(
                 endogTable$addRow(rowKey = v, values = list(variable = v, incomingPaths = nIn))
             }
 
+            invisible(NULL)
+        },
+
+        .fillSpecifiedModel = function(., edges, deps) {
             # -----------------------------------------------------------------------------
             # "Specified model" (grouped by dependent).
             # ES: "Modelo especificado" (agrupado por dependiente).
@@ -459,6 +521,10 @@ pathCheckClass <- R6::R6Class(
                 }
             }
 
+            invisible(NULL)
+        },
+
+        .validateModel = function(., html_guide, set_html_safe, vars, isFinalized, edges, deps, isolated) {
             # -----------------------------------------------------------------------------
             # Methodological validation (always live).
             # ES: Validación metodológica (siempre en vivo).
@@ -657,6 +723,10 @@ pathCheckClass <- R6::R6Class(
 
             if (length(fits) == 0) return()
 
+            list(data = data, fits = fits, edgeStats = edgeStats)
+        },
+
+        .fillResidualCovariances = function(., html_block, set_html_safe, fits) {
             # -----------------------------------------------------------------------------
             # Residual covariances between endogenous variables (showCovs).
             # ES: Covarianzas residuales entre endógenas (showCovs).
@@ -692,24 +762,14 @@ pathCheckClass <- R6::R6Class(
                 }
             }
 
-            # Delegates to the shared .al_p_sig() (shared-helpers.R) instead
-            # of reimplementing the same threshold logic locally. The local
-            # version also lacked an NA guard before the comparisons.
-            # ES: Delega en la función compartida .al_p_sig()
-            # (shared-helpers.R) en vez de reimplementar localmente la
-            # misma lógica de umbrales. La versión local tampoco protegía
-            # contra NA antes de las comparaciones.
-            p_sig_stars <- .al_p_sig
+            invisible(NULL)
+        },
 
+        .interpretCoefficients = function(., html_block, set_html_safe, format_p, fits, edgeStats) {
             # -----------------------------------------------------------------------------
             # Applied interpretation of coefficients (per-equation narrative).
             # ES: Interpretación aplicada de los coeficientes (narrativa por ecuación).
             # -----------------------------------------------------------------------------
-            format_p <- function(p) {
-                if (is.na(p)) return("NA")
-                if (p < .001) return("< .001")
-                sprintf("= %.3f", p)
-            }
             nSig <- sum(vapply(fits, function(f) {
                 co <- summary(f$fit)$coefficients
                 co_rns_bare <- gsub("^`|`$", "", rownames(co))
@@ -775,6 +835,10 @@ pathCheckClass <- R6::R6Class(
                   .("Common error: interpreting a path coefficient as if it were the total effect; it only reflects the direct effect within its own equation. If a predictor also reaches the outcome through a mediator, see the \"Direct, Indirect and Total Effects\" section for the full decomposition."))
             ))
 
+            invisible(NULL)
+        },
+
+        .checkOutliers = function(., html_block, html_guide, set_html_safe, data, fits) {
             # -----------------------------------------------------------------------------
             # Multivariate outliers.
             # ES: Valores atípicos multivariados.
@@ -862,6 +926,10 @@ pathCheckClass <- R6::R6Class(
                 ))
             }
 
+            list(covData = covData, mahaResult = mahaResult)
+        },
+
+        .checkNormality = function(., html_block, html_guide, set_html_safe, p_sig_stars, data, fits) {
             # -----------------------------------------------------------------------------
             # Residual normality per equation.
             # ES: Normalidad de residuos por ecuación.
@@ -982,6 +1050,10 @@ pathCheckClass <- R6::R6Class(
                   depNormLines)
             ))
 
+            list(nNormalityFail = nNormalityFail, nNormalityTotal = nNormalityTotal)
+        },
+
+        .checkHomoscedasticity = function(., html_block, html_guide, set_html_safe, p_sig_stars, fits) {
             # -----------------------------------------------------------------------------
             # Homoscedasticity per equation.
             # ES: Homoscedasticidad por ecuación.
@@ -1087,6 +1159,10 @@ pathCheckClass <- R6::R6Class(
                   depHomoLines)
             ))
 
+            list(nHomoFail = nHomoFail, nHomoTotal = nHomoTotal)
+        },
+
+        .checkMulticollinearity = function(., html_block, html_guide, set_html_safe, fits) {
             # -----------------------------------------------------------------------------
             # Multicollinearity (VIF, tolerance, eigenvalue, condition index, det(R)).
             # ES: Multicolinealidad (VIF, tolerancia, eigenvalue, índice de condición, det(R)).
@@ -1214,6 +1290,10 @@ pathCheckClass <- R6::R6Class(
                       depVifLines)
             ))
 
+            list(maxVif = maxVif, maxVifLabel = maxVifLabel)
+        },
+
+        .checkMardia = function(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, covData) {
             # -----------------------------------------------------------------------------
             # Mardia multivariate normality.
             # ES: Normalidad multivariada de Mardia.
@@ -1281,6 +1361,10 @@ pathCheckClass <- R6::R6Class(
                     paragraphs = FALSE))
             }
 
+            invisible(NULL)
+        },
+
+        .fillCorrelations = function(lang, ., html_block, html_guide, set_html_safe, p_sig_stars, vars, edges, covData) {
             # -----------------------------------------------------------------------------
             # Correlation matrices (Pearson and dCor, separate, APA 7 format).
             # ES: Matrices de correlaciones (Pearson y dCor, separadas, formato APA 7).
@@ -1475,6 +1559,10 @@ pathCheckClass <- R6::R6Class(
                 ))
             }
 
+            invisible(NULL)
+        },
+
+        .fillEffects = function(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, edges, edgeStats) {
             # -----------------------------------------------------------------------------
             # Direct, indirect, and total effects (simple mediation).
             # ES: Efectos directos, indirectos y totales (mediación simple).
@@ -1553,6 +1641,10 @@ pathCheckClass <- R6::R6Class(
                 ))
             }
 
+            mediationRows
+        },
+
+        .checkSampleSize = function(., html_block, set_html_safe, edges, fits, covData) {
             # -----------------------------------------------------------------------------
             # Sample-size assessment by model complexity.
             # ES: Valoración del tamaño de muestra según la complejidad del modelo.
@@ -1612,6 +1704,10 @@ pathCheckClass <- R6::R6Class(
                 paragraphs = FALSE
             ))
 
+            list(sizeCriteria = sizeCriteria, nMet = nMet)
+        },
+
+        .fillConclusion = function(., html_block, set_html_safe, mahaResult, nNormalityFail, nNormalityTotal, nHomoFail, nHomoTotal, maxVif, maxVifLabel, mediationRows, sizeCriteria, nMet) {
             # -----------------------------------------------------------------------------
             # Model diagnostic conclusion.
             # ES: Conclusión diagnóstica del modelo.
@@ -1735,6 +1831,8 @@ pathCheckClass <- R6::R6Class(
                 overallVerdict,
                 paragraphs = FALSE
             ))
+
+            invisible(NULL)
         },
 
         # Calcula posiciones (x,y) en [0,1] para cada variable según el diseño elegido.
