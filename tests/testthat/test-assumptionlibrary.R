@@ -12,7 +12,11 @@
 # biblioteca exista en jamovi/00refs.yaml.
 # -----------------------------------------------------------------------------
 
-library_data <- data.frame(x = 1:3)
+# The library uses no variables, so jmvcore::select() keeps no columns; a
+# data frame with rows would then fail on its row names. An empty data
+# frame is what the library actually needs.
+# ES: La biblioteca no usa variables; un data frame vacío basta.
+library_data <- data.frame()
 
 library_sources <- c(
     "normalitySources", "homoscedasticitySources", "linearitySources",
