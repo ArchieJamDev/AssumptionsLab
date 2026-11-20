@@ -301,7 +301,7 @@ testthat::test_dir("tests/testthat")  # run the edge-case suite
 | 4 | Monte Carlo validation and public-data case study | ✅ Done |
 | 5 | Reports in jamovi's own language through its translation catalog (version 1.7.0) | ✅ Done |
 | 6 | Lessons from the jamovi audits of MokkenLab and EGAnetLab: numeric columns, jamovi's palette, native notices, interruptible permutation tests | ✅ Done |
-| 7 | Release 1.7.0 with its Zenodo DOI | 🔄 In progress |
+| 7 | Release 1.7.0, with Zenodo DOI [10.5281/zenodo.24390225](https://doi.org/10.5281/zenodo.24390225) | ✅ Done |
 | 8 | Submission to the jamovi Library | 🔄 In progress |
 | Next | SEM and PLS-SEM, Bayesian methods, multilevel models, survival analysis, meta-analysis | 🗓 Planned |
 
@@ -324,7 +324,8 @@ Citation metadata is in [CITATION.cff](CITATION.cff) (GitHub's **Cite this
 repository** button uses it). Every release is archived in Zenodo. The DOI
 [10.5281/zenodo.22209135](https://doi.org/10.5281/zenodo.22209135) covers
 all versions and always resolves to the latest one; each version also has
-its own DOI, listed on the Zenodo page.
+its own DOI, listed on the Zenodo page. Version 1.7.0 is
+[10.5281/zenodo.24390225](https://doi.org/10.5281/zenodo.24390225).
 
 > Chacón Chacón, A. D. L. (2026). *AssumptionsLab: A jamovi module for
 > statistical assumptions* (Version 1.7.0) [Computer software]. Zenodo.
