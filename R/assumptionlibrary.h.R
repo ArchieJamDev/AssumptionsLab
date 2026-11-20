@@ -47,35 +47,45 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
         normality = function() private$.items[["normality"]],
         normalityTable = function() private$.items[["normalityTable"]],
         normalityGuide2 = function() private$.items[["normalityGuide2"]],
+        normalitySources = function() private$.items[["normalitySources"]],
         homoscedasticity = function() private$.items[["homoscedasticity"]],
         homoscedasticityGroupTable = function() private$.items[["homoscedasticityGroupTable"]],
         homoscedasticityGuide2 = function() private$.items[["homoscedasticityGuide2"]],
         homoscedasticityRegTable = function() private$.items[["homoscedasticityRegTable"]],
         homoscedasticityGuide3 = function() private$.items[["homoscedasticityGuide3"]],
+        homoscedasticitySources = function() private$.items[["homoscedasticitySources"]],
         linearity = function() private$.items[["linearity"]],
         linearityTable = function() private$.items[["linearityTable"]],
         linearityGuide2 = function() private$.items[["linearityGuide2"]],
+        linearitySources = function() private$.items[["linearitySources"]],
         independence = function() private$.items[["independence"]],
         independenceTable = function() private$.items[["independenceTable"]],
         independenceGuide2 = function() private$.items[["independenceGuide2"]],
+        independenceSources = function() private$.items[["independenceSources"]],
         multicollinearity = function() private$.items[["multicollinearity"]],
         multicollinearityTable = function() private$.items[["multicollinearityTable"]],
         multicollinearityGuide2 = function() private$.items[["multicollinearityGuide2"]],
+        multicollinearitySources = function() private$.items[["multicollinearitySources"]],
         influence = function() private$.items[["influence"]],
         influenceTable = function() private$.items[["influenceTable"]],
         influenceGuide2 = function() private$.items[["influenceGuide2"]],
+        influenceSources = function() private$.items[["influenceSources"]],
         sphericity = function() private$.items[["sphericity"]],
         sphericityTable = function() private$.items[["sphericityTable"]],
         sphericityGuide2 = function() private$.items[["sphericityGuide2"]],
+        sphericitySources = function() private$.items[["sphericitySources"]],
         proportionalOdds = function() private$.items[["proportionalOdds"]],
         proportionalOddsTable = function() private$.items[["proportionalOddsTable"]],
         proportionalOddsGuide2 = function() private$.items[["proportionalOddsGuide2"]],
+        proportionalOddsSources = function() private$.items[["proportionalOddsSources"]],
         independenceIrrelevantAlternatives = function() private$.items[["independenceIrrelevantAlternatives"]],
         independenceIrrelevantAlternativesTable = function() private$.items[["independenceIrrelevantAlternativesTable"]],
         independenceIrrelevantAlternativesGuide2 = function() private$.items[["independenceIrrelevantAlternativesGuide2"]],
+        independenceIrrelevantAlternativesSources = function() private$.items[["independenceIrrelevantAlternativesSources"]],
         robust = function() private$.items[["robust"]],
         robustTable = function() private$.items[["robustTable"]],
         robustGuide2 = function() private$.items[["robustGuide2"]],
+        robustSources = function() private$.items[["robustSources"]],
         notes = function() private$.items[["notes"]]),
     private = list(),
     public=list(
@@ -88,7 +98,7 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 options=options,
                 name="intro",
                 title="Assumption Library",
-                content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">This library summarizes the assumptions and tests used across AssumptionsLab. Its purpose is not to analyze data directly, but to serve as a methodological guide for interpreting the tests within each analysis.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Core principle:</p><p style=\"margin: 0 0 0.6em 0;\">The library explains what each assumption means and when it is used. Each analysis then interprets its own results using the user's actual data.</p><p style=\"margin: 0 0 0.6em 0;\">Bibliography: the complete reference list in APA 7th edition, with each source's bibliometric profile, is available in <a href=\"https://github.com/ArchieJamDev/AssumptionsLab/blob/main/docs/Bibliography.md\">docs/Bibliography.md</a>.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">General rule for p-values:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indicates a statistically significant deviation from the assumption being evaluated. p &gt;= .05 indicates that the result is compatible with the assumption being approximately met.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Important:</p><p style=\"margin: 0 0 0.6em 0;\">Compatible does not mean proven. It means that, with this data and this test, no statistically significant deviation is observed.</p><p style=\"margin: 0 0 0.6em 0;\">Avoid interpreting assumption tests mechanically. The decision should combine p-values, sample size, plots, design, and substantive judgment.</p></div>"))
+                content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">This library summarizes the assumptions and tests used across AssumptionsLab. Its purpose is not to analyze data directly, but to serve as a methodological guide for interpreting the tests within each analysis.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Core principle:</p><p style=\"margin: 0 0 0.6em 0;\">The library explains what each assumption means and when it is used. Each analysis then interprets its own results using the user's actual data.</p><p style=\"margin: 0 0 0.6em 0;\">References: each section ends with a Sources table that names the original source of each test, and jamovi lists the full references for the sections shown at the end of these results.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">General rule for p-values:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indicates a statistically significant deviation from the assumption being evaluated. p &gt;= .05 indicates that the result is compatible with the assumption being approximately met.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Important:</p><p style=\"margin: 0 0 0.6em 0;\">Compatible does not mean proven. It means that, with this data and this test, no statistically significant deviation is observed.</p><p style=\"margin: 0 0 0.6em 0;\">Avoid interpreting assumption tests mechanically. The decision should combine p-values, sample size, plots, design, and substantive judgment.</p></div>"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normality",
@@ -104,6 +114,27 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="normalityGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Shapiro-Wilk:</p><p style=\"margin: 0 0 0.6em 0;\">A classic and widely used normality test (Shapiro &amp; Wilk, 1965). Requires at least 3 valid cases. In R it is computed for up to 5000 observations. It is especially powerful in small to moderate samples relative to the other tests in this battery (Razali &amp; Wah, 2011).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Lilliefors (corrected Kolmogorov-Smirnov):</p><p style=\"margin: 0 0 0.6em 0;\">Compares the observed distribution against a theoretical one, but corrects the critical values because the mean and standard deviation are estimated from the same data (Lilliefors, 1967). The classic Kolmogorov-Smirnov test (without this correction) assumes parameters known in advance and is not valid in this context; this is why this module always uses the corrected Lilliefors version, not the classic K-S test.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Anderson-Darling:</p><p style=\"margin: 0 0 0.6em 0;\">Gives more weight to the tails (Anderson &amp; Darling, 1952). It is useful when heavy tails, extreme values, or deviations at the ends of the distribution are a concern.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Cram\u00E9r-von Mises:</p><p style=\"margin: 0 0 0.6em 0;\">Compares the entire observed cumulative distribution against the theoretical one (Anderson &amp; Darling, 1952). It is more sensitive than Kolmogorov-Smirnov to deviations spread across the central body of the distribution, not just at one point.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Shapiro-Francia:</p><p style=\"margin: 0 0 0.6em 0;\">A variant of Shapiro-Wilk based on the same principles, with a different calculation that can perform better in some moderate or large samples (Shapiro &amp; Francia, 1972).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Pearson chi-square:</p><p style=\"margin: 0 0 0.6em 0;\">Compares observed and expected frequencies by interval. It depends on how the data are grouped into intervals, so it tends to be less powerful than tests based on the full distribution.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Jarque-Bera:</p><p style=\"margin: 0 0 0.6em 0;\">Jointly evaluates skewness and kurtosis (Jarque &amp; Bera, 1987). It is more informative in moderate or large samples, and less stable in very small samples.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Skewness test:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates skewness. Positive skewness suggests a long right tail; negative skewness suggests a long left tail.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Kurtosis test:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates peakedness and tail weight. It can indicate heavy tails, light tails, or a concentration different from what is expected under normality.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Sample-size criteria:</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &lt; 10:</b> interpretation is very unstable.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>10 &lt;= n &lt; 30:</b> small sample; low power to detect deviations.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>30 &lt;= n &lt;= 200:</b> moderate sample; the tests are useful diagnostics.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &gt; 200:</b> small deviations can produce significant p-values.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &gt; 5000:</b> Shapiro-Wilk is not computed in R.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 suggests a statistically significant deviation from a normal distribution. p &gt;= .05 indicates that the result is compatible with an approximately normal distribution.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">Combine tests, plots, skewness, kurtosis, sample size, and outliers. If several tests suggest non-normality, consider transformation, bootstrap, robust methods, or nonparametric alternatives.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="normalitySources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "shapiro_1965",
+                    "razali_2011",
+                    "lilliefors_1967",
+                    "anderson_1952",
+                    "shapiro_1972",
+                    "jarque_1987"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homoscedasticity",
@@ -129,6 +160,31 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="homoscedasticityGuide3",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Breusch-Pagan \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Regresses the squared residuals on the original model's predictors and tests whether that auxiliary regression explains a significantly larger share of variance than zero (Breusch &amp; Pagan, 1979). H0: residual variance is constant (homoscedasticity). H1: residual variance depends on the predictors. It is the default check for linear regression when an approximately linear relationship between variance and predictors is suspected.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">White \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Generalizes Breusch-Pagan by adding squares and cross-products of the predictors to the auxiliary regression, without assuming a specific functional form for the heteroscedasticity (White, 1980). It is more general and more suitable when residual variance is suspected to depend on the predictors non-linearly or through interactions, but it loses some power relative to Breusch-Pagan when the real heteroscedasticity is simply linear.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Goldfeld-Quandt \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Orders observations by a variable (typically a predictor or the fitted values), omits a central band, and compares the residual sum of squares between the low-value and high-value subgroups using an F test (Goldfeld &amp; Quandt, 1965). It is especially useful when variance is suspected to change in a stepped or marked way around an identifiable point of the ordering variable, rather than smoothly and continuously.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Spearman |residuals| vs fitted \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Computes the Spearman rank correlation between the absolute value of the residuals and the fitted values. It is exploratory and nonparametric: it does not assume a specific functional form, only detecting whether error magnitude grows or shrinks monotonically with the predicted value. It is a good visual/numeric complement to Breusch-Pagan and White, not a formal substitute.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation (regression tests):</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 suggests that residual variance is not constant (heteroscedasticity). p &gt;= .05 indicates that the result is compatible with approximately constant residual variance.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">In group comparisons, if there is evidence of heterogeneity of variance, consider the Welch correction (Welch, 1947) for the t or F statistic, the Brown-Forsythe test itself as an alternative to classic ANOVA, or robust methods. In regression, consider heteroscedasticity-robust HC3 standard errors (MacKinnon &amp; White, 1985), a transformation of the dependent variable, or a model that explicitly models the variance.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="homoscedasticitySources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "levene_1960",
+                    "brown_1974",
+                    "bartlett_1937",
+                    "fligner_1976",
+                    "hartley_1950",
+                    "breusch_1979",
+                    "white_1980",
+                    "goldfeld_1965",
+                    "welch_1947",
+                    "mackinnon_1985"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="linearity",
@@ -144,6 +200,26 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="linearityGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Bivariate correlation:</p><p style=\"margin: 0 0 0.6em 0;\">Describes simple linear association between two variables. It is exploratory and does not replace diagnosing the full model.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Distance correlation (dCor) and copula entropy:</p><p style=\"margin: 0 0 0.6em 0;\">Pearson's r only detects linear association. dCor (Sz\u00E9kely et al., 2007) detects linear and non-linear association equally, without assuming a functional form. Copula entropy (Ma &amp; Sun, 2011) is an additional dependence measure, free of distributional assumptions, based on the copula of the variables. A pair with dCor notably higher than its Pearson |r| (gap &gt; .10) is a signal, not proof, of a non-linear relationship that a linear model might be missing; it is worth confirming with a scatterplot before concluding non-linearity. The p-value for dCor and for copula entropy is computed by permutation, so its resolution depends on the number of permutations used.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Exploratory quadratic term:</p><p style=\"margin: 0 0 0.6em 0;\">Adds x\u00B2 to the model as an additional predictor and compares it against the original model. p &lt; .05 on the x\u00B2 coefficient suggests possible curvature not captured by the linear relationship. It is a quick, one-predictor-at-a-time check; it does not replace RESET, which evaluates the full model.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Box-Tidwell \u2014 what it assesses:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates whether a specific numeric predictor would need a power transformation (a form of type X\u1D4F) to relate linearly to the dependent variable or, in logistic regression, to the logit. The mechanism: an x \u00D7 ln(x) interaction term is added to the model alongside x itself, and the significance of that term's coefficient is tested. H0: x does not need to be transformed (the relationship is already approximately linear on the current scale). H1: the relationship would improve with a power transformation of x. Requires x &gt; 0, because the term uses ln(x); it cannot be applied to predictors with negative or zero values without shifting them first.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Box-Tidwell \u2014 when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">It is the reference test for evaluating logit-linearity of a continuous numeric predictor in logistic regression \u2014 unlike the quadratic term or a scatterplot, it directly evaluates the correct scale of the predictor (log, root, linear) instead of only detecting curvature. It is also useful in linear regression when a specific predictor, not the full model, is suspected to be the source of the non-linearity.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Box-Tidwell \u2014 limitations:</p><p style=\"margin: 0 0 0.6em 0;\">It evaluates one predictor at a time, so it says nothing about joint curvature across several predictors or about general model misspecification (that is what Ramsey RESET is for). With 0 of several predictors significant, the correct conclusion is \"no statistical evidence of a deviation from linearity was detected\", not \"linearity is confirmed\" \u2014 the test may simply lack power in the available sample.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Ramsey RESET \u2014 what it assesses:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates whether the model, as a whole, is functionally misspecified \u2014 that is, whether it fails to capture some systematic form (curvature, interactions, omitted terms) that a model strictly linear in the current predictors cannot represent. The mechanism: powers of the fitted values (typically the square and the cube) are added to the model, and an F-test contrasts whether those powers significantly improve the fit relative to the original model. H0: the original model is correctly specified (the powers add no additional explanation). H1: the model omits some relevant functional form.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Ramsey RESET \u2014 when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">As a global check after reviewing the individual predictors: if Box-Tidwell or the quadratic term do not flag any particular predictor but the overall fit looks poor, RESET can detect non-linearity that only appears in combination across predictors, or in a form (for example, an interaction) that no single per-predictor check captures on its own. It is the most general of the three tests.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Ramsey RESET \u2014 limitations:</p><p style=\"margin: 0 0 0.6em 0;\">A significant RESET indicates something about the functional form is wrong, but not what: it does not distinguish between genuine curvature, an omitted interaction, an omitted variable correlated with the predictors, or an influential outlier. It is worth reviewing the residual plots and the other linearity tests before deciding which correction to apply.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Rainbow test \u2014 what it assesses:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates whether the linear fit is stable across the range of fitted values, rather than concentrating the evidence on one specific form of non-linearity. The mechanism: cases are ordered by their fitted value, the central band is taken (by default, around 50% of the cases with intermediate fitted values), and the model is refit using only that central subset. An F-test compares the residual sum of squares of the full model against that of the model fit only to the central band. H0: the linear fit is equally adequate in the central band as in the full set. H1: the fit deteriorates when the extremes are included, suggesting the relationship is not uniformly linear across the full range of the predictors.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Rainbow test \u2014 when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">It is useful as a complement to RESET when the non-linearity is suspected not to be smooth, global curvature, but rather a relationship that behaves differently at the extremes of the predictor range versus the center \u2014 for example, effects that flatten out or accelerate only at extreme values. It requires a reasonable sample (in this module, at least 20 cases) so the central sub-model has enough degrees of freedom.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Common to RESET and Rainbow \u2014 a frequent error:</p><p style=\"margin: 0 0 0.6em 0;\">Interpreting a non-significant RESET or Rainbow result as proof of perfect linearity. Both tests have limited power in small samples (they may miss real curvature) and can flag trivial, practically irrelevant curvature as significant in very large samples. Always read them together with the residuals-vs-fitted plot, not in isolation.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Sample-size criteria:</p><p style=\"margin: 0 0 0.6em 0;\">With small samples it can be difficult to detect curvature. With large samples, small curvatures can become significant.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 on curvature or specification tests suggests a possible deviation from linearity. p &gt;= .05 indicates that the result is compatible with an approximately linear relationship.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">Consider polynomial terms, splines, transformations, or non-linear models if there is evidence of substantive curvature.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="linearitySources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "sz_kely_2007",
+                    "ma_2011",
+                    "box_1962",
+                    "ramsey_1969",
+                    "utts_1982"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independence",
@@ -159,6 +235,26 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="independenceGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Durbin-Watson \u2014 what it assesses:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates whether the residuals of a regression show first-order autocorrelation. H0: no first-order autocorrelation. H1: there is first-order autocorrelation, positive or negative. Its statistic ranges roughly from 0 to 4: near 2 indicates no first-order autocorrelation; below 2 suggests positive autocorrelation; above 2 suggests negative autocorrelation. There is an approximate relationship DW \u2248 2 \u00D7 (1 \u2212 r1), where r1 is the estimated residual autocorrelation at lag 1.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Durbin-Watson \u2014 when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">As a simple diagnostic when there is a linear least-squares regression, temporally ordered data, specific interest in the dependence between a residual and the immediately preceding one, and a model without the lagged dependent variable as a regressor.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Durbin-Watson \u2014 when not to choose it:</p><p style=\"margin: 0 0 0.6em 0;\">When the model includes the lagged dependent variable (a dynamic model), when autocorrelation of order 2, 3, 12, etc. is suspected, when there is a more complex temporal structure such as seasonality, or when a formal test with an easily generalizable p-value is needed. In modern applied practice, Durbin-Watson is usually reported as a quick descriptive indicator, while Breusch-Godfrey is generally preferred for the formal test.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Breusch-Godfrey \u2014 what it assesses:</p><p style=\"margin: 0 0 0.6em 0;\">Also called the LM test for serial correlation, it tests whether the residuals of a regression show autocorrelation up to an order p chosen by the analyst. H0: no residual autocorrelation up to order p. H1: autocorrelation exists in at least one of the lags from 1 to p. The test is based on an auxiliary regression that incorporates the lagged residuals; under H0, the LM statistic approximately follows a chi-square distribution with p degrees of freedom.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Breusch-Godfrey \u2014 when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">It is the most general option for regressions. It is worth using with econometric regressions, when more than one lag needs to be tested, when the model includes lagged explanatory variables or the lagged dependent variable itself, and when a formal test with a p-value is needed to decide between modeling AR errors, using GLS, applying HAC/Newey-West errors, or rethinking the model's dynamic specification.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Breusch-Godfrey \u2014 how to choose the order p:</p><p style=\"margin: 0 0 0.6em 0;\">It should not be chosen mechanically or overstated. With annual data it usually makes sense to start with 1 or 2 lags; with quarterly data, try 1 to 4; with monthly data, testing up to 12 can be reasonable if there is a possible annual pattern; with higher frequencies it is worth relying on process knowledge and reviewing the residuals' autocorrelation function (ACF) and partial autocorrelation function (PACF). Practical rule: when in doubt between Durbin-Watson and Breusch-Godfrey for a regression, Breusch-Godfrey is preferred.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Ljung-Box \u2014 what it assesses:</p><p style=\"margin: 0 0 0.6em 0;\">This is a joint (portmanteau) test that assesses whether the autocorrelations up to a horizon h are jointly zero. H0: no autocorrelation up to lag h. H1: autocorrelation exists in at least one of those lags. Its Q statistic combines, weighted by sample size and each lag, the squares of the estimated residual autocorrelations up to lag h; so it does not ask whether there is autocorrelation only at lag 1, but whether the residuals, taken together, look like white noise up to that horizon.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Ljung-Box \u2014 when to use it and which horizon h to choose:</p><p style=\"margin: 0 0 0.6em 0;\">It is especially useful for diagnosing the residuals of an ARIMA, SARIMA, ETS, or other time-series forecasting model, and for checking whether temporal structure remains unexplained after fitting the model. It is typically applied to the residuals of an already-fitted model, not to the raw series. The horizon h depends on frequency and objective: with quarterly data h=4 or 8 is usually reviewed; with monthly data, h=12 is a natural starting point; with daily data, a horizon consistent with weekly, monthly, or business cycles is worth using. When applying it to the residuals of an ARIMA, the degrees of freedom must also be adjusted for the AR and MA parameters already estimated.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Ljung-Box \u2014 difference from Breusch-Godfrey:</p><p style=\"margin: 0 0 0.6em 0;\">Both can review several lags at once, but their natural context differs: Breusch-Godfrey is used in a regression with covariates and asks whether that regression's errors are serially correlated; Ljung-Box is a global diagnostic of the residuals of a time-series model and asks whether those residuals look like white noise.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Runs test \u2014 what it actually assesses:</p><p style=\"margin: 0 0 0.6em 0;\">Unlike the three previous tests, it is not primarily a test of linear autocorrelation. It evaluates whether the order of a sequence looks random. A run is a consecutive sequence of observations of the same class \u2014 for example, consecutive positive residuals versus negative ones, or values above versus below the median. H0: the sequence was generated randomly. H1: the sequence does not look random. The test compares the observed number of runs with the number expected under randomness: too few runs suggest clustering or persistence; too many can suggest excessive alternation.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Runs test \u2014 when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">When a nonparametric diagnostic is needed, when the residuals are not normal or contain outliers, when the interest is in detecting sign clustering, regime changes, or a general lack of randomness, when working with a binary sequence (signs, pass/fail, defective/non-defective), or as a nonparametric complement to the autocorrelation tests above.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Runs test \u2014 what it does not conclude:</p><p style=\"margin: 0 0 0.6em 0;\">A significant result only supports that the order of the series does not look random; it does not necessarily imply AR(1)-type linear autocorrelation. It can detect non-randomness arising from trends, structural changes, persistence of signs, or non-linear patterns. Conversely, a series may not show strong linear autocorrelation and still not be completely random.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Practical decision tree:</p><p style=\"margin: 0 0 0.6em 0;\">Linear regression with temporal data, no lagged dependent variable: start with a plot of residuals over time, the residuals' ACF/PACF, and Breusch-Godfrey; use Durbin-Watson only as a quick lag-1 check. Regression with the lagged dependent variable or other dynamic components: use Breusch-Godfrey and the residuals' ACF/PACF; avoid relying on Durbin-Watson. Already-fitted ARIMA or SARIMA model: use the residuals' ACF and Ljung-Box, to verify that the model has absorbed the temporal dependence. General randomness without assuming a specific linear relationship: use the Runs test, a sequence plot, and the ACF as a complement.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Final recommendation if a default test is needed:</p><p style=\"margin: 0 0 0.6em 0;\">General temporal or econometric regression: Breusch-Godfrey. ARIMA/SARIMA or forecasting model: Ljung-Box. Quick, basic AR(1) autocorrelation check in a static regression: Durbin-Watson. Nonparametric check of randomness or sign pattern: Runs test. In almost every case, it is worth accompanying the test with a residuals ACF: the p-value indicates whether there is overall evidence against the absence of dependence, and the ACF helps identify at which lags the problem lies.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Preconditions:</p><p style=\"margin: 0 0 0.6em 0;\">These tests make more sense when there is a temporal, spatial, or sequential order. In cross-sectional data with no natural order, they should be interpreted with caution.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 suggests a statistically significant deviation from independence or randomness of residuals. p &gt;= .05 indicates that the result is compatible with approximate independence or randomness of residuals.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">If dependence is present, consider mixed models, GLS, time-series models, or HAC/Newey-West robust errors, depending on the design.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="independenceSources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "durbin_1951",
+                    "breusch_1978",
+                    "godfrey_1978",
+                    "ljung_1978",
+                    "wald_1940"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearity",
@@ -174,6 +270,24 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="multicollinearityGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">VIF and tolerance \u2014 what they assess:</p><p style=\"margin: 0 0 0.6em 0;\">A predictor's VIF is obtained by regressing that predictor on all the other predictors in the model and using the resulting R\u00B2: VIF = 1/(1-R\u00B2). A high VIF means much of that predictor's variation can already be explained by the others, leaving little \"own\" information to estimate its coefficient precisely. Tolerance is simply 1/VIF, on the opposite scale.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">VIF and tolerance \u2014 when to use them and a caution about thresholds:</p><p style=\"margin: 0 0 0.6em 0;\">They are the most common and easiest-to-interpret per-variable diagnostic. The conventional thresholds (VIF &lt; 5 or &lt; 10) are widely used rules, not universal limits derived mathematically: the tolerable level of VIF depends on sample size, how much variance the model explains, and whether the interest is in individual coefficients or only in overall prediction (O'Brien, 2007). With large samples, moderate VIFs can be harmless; with small samples, even VIFs of 3-4 can already produce unstable coefficients.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Maximum correlation between predictors:</p><p style=\"margin: 0 0 0.6em 0;\">The simplest bivariate check: it identifies pairs of predictors that are highly correlated with each other. It is useful as a first glance, but it does not detect \"distributed\" collinearity, where no single pair is highly correlated but a linear combination of three or more predictors is \u2014 that kind of collinearity only shows up in VIF, eigenvalues, or the condition index.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Condition index and eigenvalues:</p><p style=\"margin: 0 0 0.6em 0;\">These come from the decomposition of the standardized predictor matrix. An eigenvalue near zero indicates a direction in predictor space with almost no independent variation \u2014 that is, a nearly redundant linear combination. The condition index summarizes this as the ratio between the largest and smallest eigenvalue; high values flag collinearity, but it is worth also reviewing the variance proportions by dimension to identify which specific predictors are involved (Belsley et al., 1980).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Determinant and model rank:</p><p style=\"margin: 0 0 0.6em 0;\">A near-zero determinant of the predictor correlation matrix is another aggregate signal of redundancy. Model rank is a different and stricter check: if the rank is less than the number of columns in the design matrix, an exact linear dependency exists (not just high correlation), and some model parameters are not estimable at all \u2014 R typically flags them as NA in the model output.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">If collinearity is high but the main goal is prediction, it may not require action. If the goal is interpreting individual coefficients, consider removing or combining redundant predictors, centering polynomial terms and interactions (which reduces structural collinearity without changing the substantive model), or using penalized methods (ridge, lasso) that stabilize estimates in exchange for controlled bias (Marquardt, 1970).</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="multicollinearitySources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "marquardt_1970",
+                    "o_brien_2007",
+                    "belsley_1980"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influence",
@@ -189,6 +303,25 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="influenceGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">IQR \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Flags values below Q1 - 1.5*IQR or above Q3 + 1.5*IQR of the variable being analyzed. In related groups this is applied to the paired differences, not the original measurements. It is the simplest check and does not depend on any fitted model \u2014 which makes it a natural starting point before fitting any analysis.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Studentized residual \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Identifies observations with a large discrepancy from what the model predicts, expressed in standard-error units. It is useful for detecting cases the model fits poorly, but a large residual does not automatically mean that case is moving the estimates \u2014 for that, Cook's D or DFFITS are needed.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Leverage \u2014 what it assesses and a caution about the threshold:</p><p style=\"margin: 0 0 0.6em 0;\">Identifies unusual combinations of predictor values, without yet looking at the dependent variable. Rule of thumb: leverage &gt; 2p/n, where p is the model's true number of estimated parameters (length(coef(fit)) in R) \u2014 not the number of selected variables. When a predictor is a factor with more than 2 levels, each additional level adds a parameter through dummy coding; using the variable count instead of the true parameter count understates the threshold and flags too many cases.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Cook's D \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Combines leverage and residual magnitude into a single measure of influence on the full set of estimated coefficients (Cook, 1977). Rule of thumb: Cook's D &gt; 4/n. Treat it as a screening threshold, not as confirmed influence: 4/n is numerically larger (more lenient) the smaller the sample, and smaller (stricter) as it grows; even so, small samples tend to keep flagging several cases because individual Cook's D values tend to inflate when n is small.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">DFFITS \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates how much a case's own fitted value changes when it is removed and the model is refit without it (Belsley et al., 1980). Rule of thumb: |DFFITS| &gt; 2*sqrt(p/n). It is conceptually very close to Cook's D \u2014 both capture influence on the fit \u2014 so it is best read as corroborating evidence, not as an independent second finding.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Mahalanobis D\u00B2 \u2014 what it assesses and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates a case's multivariate distance from the predictor centroid, accounting for correlations among predictors (Mahalanobis, 1936). It is the multivariate analogue of leverage: it detects unusual predictor combinations even when no single variable is an extreme value on its own. Like leverage, it says nothing by itself about whether that unusual combination actually affects the results.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">A flagged case should not be removed automatically. It may be a data-entry error, a valid extreme case, or important substantive evidence that the model is not capturing well.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">Review the original data point, run a sensitivity analysis (compare results with and without the case), and justify any exclusion with transparent criteria declared in advance \u2014 never chosen after seeing that the exclusion \"improves\" the result.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="influenceSources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "tukey_1977",
+                    "cook_1977",
+                    "belsley_1980",
+                    "mahalanobis_1936"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="sphericity",
@@ -204,6 +337,25 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="sphericityGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Mauchly \u2014 what it assesses and limitations:</p><p style=\"margin: 0 0 0.6em 0;\">Tests H0: the variances of the differences between all pairs of levels are equal (sphericity), against H1: at least one pair differs (Mauchly, 1940). It is the historical reference test, but its behavior is not uniform: with small samples it can lack power to detect real violations, and with large samples it can flag deviations from sphericity too small to have practical relevance for the F statistic.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Greenhouse-Geisser \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Rather than testing sphericity directly, it estimates how far the observed covariance pattern departs from it (epsilon, between 1/(k-1) and 1) and reduces the F test's degrees of freedom by multiplying them by that epsilon (Greenhouse &amp; Geisser, 1959). The F statistic itself does not change; only the degrees of freedom used to obtain the p-value change, making the test more conservative. It is the recommended default correction when the estimated epsilon is low (&lt; .75).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Huynh-Feldt \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">An alternative correction that adjusts the Greenhouse-Geisser epsilon to reduce its tendency to be overly conservative, especially when the sphericity violation is mild or moderate (Huynh &amp; Feldt, 1976). The usual convention is to prefer Huynh-Feldt when the Greenhouse-Geisser-estimated epsilon exceeds .75, and Greenhouse-Geisser when it is below that.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Lower-bound \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Applies the most extreme mathematically possible correction, assuming the worst-case violation of sphericity. It is useful as a safety bound \u2014 if the effect remains significant even under this severe correction, the conclusion is robust to any degree of sphericity violation \u2014 but it sacrifices considerable power and is rarely the final correction reported.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 on Mauchly's test suggests a statistically significant deviation from sphericity. p &gt;= .05 indicates that the result is compatible with approximate sphericity.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">If there is evidence against sphericity, use the Greenhouse-Geisser or Huynh-Feldt correction depending on the estimated epsilon, consider the nonparametric Friedman test (Friedman, 1937) as an alternative, or fit a mixed model that does not assume sphericity, depending on the study design.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="sphericitySources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "mauchly_1940",
+                    "greenhouse_1959",
+                    "huynh_1976",
+                    "friedman_1937"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="proportionalOdds",
@@ -219,6 +371,23 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="proportionalOddsGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Brant \u2014 what it evaluates and its limitations:</p><p style=\"margin: 0 0 0.6em 0;\">Tests H0: each predictor's coefficient is equal across every cutpoint (proportional odds), against H1: at least one cutpoint differs (Brant, 1990). It compares the coefficients from separate binary logits fit at each cutpoint against the single coefficient the proportional-odds model reports. It has limited power in small samples or with sparse categories.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Partial proportional-odds model \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Lets a specific predictor's coefficient vary across cutpoints while every other predictor keeps a single constant coefficient. It is the most surgical option when Brant flags one or two specific predictors rather than a widespread violation.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Multinomial model \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Treats every category of the outcome as nominal, with no assumed order or proportionality relationship between coefficients. It is the safer alternative when Brant's omnibus test is significant and affects several predictors at once, at the cost of not exploiting the categories' order.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Reporting cutpoint-specific effects \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Instead of forcing a single model, independent binary logits are fit at each cutpoint and a different odds ratio is reported for each. It is a transparent alternative when the goal is describing the pattern of the relationship rather than producing a single parsimonious model.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 on Brant's omnibus test suggests a statistically significant deviation from proportional odds. p &gt;= .05 indicates the result is compatible with approximate proportional odds.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">If there is evidence against proportional odds, first check which individual predictor(s) Brant's test flags (not just the omnibus). With one or two specific predictors, consider a partial-proportional-odds model; with a widespread violation, consider a multinomial model (multCheck) or report the cutpoint-specific effects separately.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="proportionalOddsSources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "mccullagh_1980",
+                    "brant_1990"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independenceIrrelevantAlternatives",
@@ -234,6 +403,23 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="independenceIrrelevantAlternativesGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Hausman-McFadden \u2014 what it evaluates and its limitations:</p><p style=\"margin: 0 0 0.6em 0;\">Tests H0: the coefficients shared between the full model and a model refit without one category do not change beyond sampling error (IIA holds), against H1: they do change (Hausman &amp; McFadden, 1984). It is computed once per omitted category. In finite samples, the statistic depends on the difference between two covariance matrices, which is not always invertible \u2014 a well-documented numerical degeneracy of this specific test, not evidence of a calculation error. When this happens, the result is reported as \"not computable\": this is not itself proof that IIA holds (Cheng &amp; Long, 2007, document that Hausman-type IIA tests behave erratically in practice).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Nested logit model \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Groups the outcome's categories into a hierarchical nest structure, allowing correlated unobserved factors within a nest while keeping independence across nests. It is the more principled alternative when the categories flagged by Hausman-McFadden share an identifiable substantive grouping.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Multinomial probit model \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Drops the logit's independent-errors assumption altogether in favor of correlated, multivariate-normal errors across alternatives. It is the more general - but computationally heavier - alternative when no natural nest structure exists.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Reporting coefficients with caution \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Rather than switching models, the categories flagged by the Hausman-McFadden test are documented explicitly and their odds ratios interpreted with added reservation. It is a transparent option when only one or two categories are flagged, not a widespread pattern.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 on the Hausman-McFadden test for an omitted category suggests a statistically significant deviation from IIA for that category. p &gt;= .05 indicates the result is compatible with IIA. A \"not computable\" result should not be read as evidence either for or against IIA: it is a known limitation of the test itself, not a substantive finding.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">If at least one omitted category produces a significant statistic, consider a nested-logit or multinomial-probit model (neither requires IIA) before relying on this model's odds ratios, or document the flagged categories with explicit caution. If no category is significant - or the result is mostly \"not computable\" - this is compatible with (but not definitive proof of) IIA holding for this model.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="independenceIrrelevantAlternativesSources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "hausman_1984",
+                    "cheng_2007"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="robust",
@@ -249,6 +435,26 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                 name="robustGuide2",
                 title="",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Transformations of the dependent variable:</p><p style=\"margin: 0 0 0.6em 0;\">log(Y): useful with marked positive skewness and values strictly greater than 0. sqrt(Y): useful with count data or mild-to-moderate positive skewness, and values &gt;= 0. 1/Y: useful only with caution for severe positive skewness and values not close to zero (the inverse transformation is highly sensitive near zero). Every transformation changes the scale on which results are interpreted, so this should be reported explicitly.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Welch \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Adjusts the degrees of freedom of the t or F statistic so that equal variances across groups are not required (Welch, 1947). It is especially recommended when group sizes are unequal, because in that scenario the classic t-test or ANOVA is more sensitive to unequal variances than when groups are similarly sized.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Brown-Forsythe (as a robust ANOVA alternative):</p><p style=\"margin: 0 0 0.6em 0;\">Applies the same logic as Welch but using location estimators more robust than the mean, which makes it preferable when, in addition to unequal variances, there is skewness or outliers in the groups (Brown &amp; Forsythe, 1974).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Wilcoxon signed-rank \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">A nonparametric alternative for two related measurements: instead of comparing the paired differences directly, it converts them to ranks and tests whether the sum of positively signed ranks differs from what is expected under H0 of symmetry around zero (Wilcoxon, 1945). It requires the differences to be approximately symmetric, though not normal; with strong asymmetry in the differences, this test also loses validity.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Friedman \u2014 what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Extends the same rank-based logic to three or more related measurements, converting each row (subject) into ranks across conditions and testing whether those ranks differ systematically across conditions (Friedman, 1937). It is the natural nonparametric alternative to repeated-measures ANOVA when normality of the differences is not defensible.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">HC3 robust errors \u2014 what they do and when to use them:</p><p style=\"margin: 0 0 0.6em 0;\">Recompute a regression's coefficient standard errors so they remain valid even under heteroscedasticity, without changing the coefficients' point estimates (MacKinnon &amp; White, 1985). HC3 is the recommended variant in small or moderate samples, because it corrects the bias in variance estimates better than other HC variants in that regime.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Mixed models:</p><p style=\"margin: 0 0 0.6em 0;\">Appropriate for nested, longitudinal, repeated, or otherwise dependence-structured data that a simple fixed-effects model cannot represent. Rather than correcting a violated assumption after the fact, they directly model the source of dependence (for example, variation across subjects or across groups) as part of the model structure.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">Do not switch methods based on a single isolated test. The alternative chosen should respond to the overall pattern of evidence, the study design, and the research question \u2014 not just the p-value of one diagnostic.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="robustSources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "welch_1947",
+                    "brown_1974",
+                    "wilcoxon_1945",
+                    "friedman_1937",
+                    "mackinnon_1985"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="notes",
@@ -287,37 +493,53 @@ assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cl
 #'   \code{results$normality} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$normalityTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$normalityGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$normalitySources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$homoscedasticity} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$homoscedasticityGroupTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$homoscedasticityGuide2} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$homoscedasticityRegTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$homoscedasticityGuide3} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$homoscedasticitySources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$linearity} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$linearityTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$linearityGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$linearitySources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$independence} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$independenceTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$independenceGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$independenceSources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$multicollinearity} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$multicollinearityTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$multicollinearityGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$multicollinearitySources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$influence} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$influenceTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$influenceGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$influenceSources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$sphericity} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$sphericityTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$sphericityGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$sphericitySources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$proportionalOdds} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$proportionalOddsTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$proportionalOddsGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$proportionalOddsSources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$independenceIrrelevantAlternatives} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$independenceIrrelevantAlternativesTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$independenceIrrelevantAlternativesGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$independenceIrrelevantAlternativesSources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$robust} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$robustTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$robustGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$robustSources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$notes} \tab \tab \tab \tab \tab a html \cr
 #' }
+#'
+#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+#'
+#' \code{results$normalitySources$asDF}
+#'
+#' \code{as.data.frame(results$normalitySources)}
 #'
 #' @export
 assumptionLibrary <- function(

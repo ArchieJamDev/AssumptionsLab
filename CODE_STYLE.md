@@ -594,8 +594,10 @@ data does reach the client correctly through `jmvcore`. Never add
 `refs:` to an `Html`/`Image` result expecting it to display — it will
 compile and install without error, but nothing will ever show. Assumption
 Library's category sections learned this the hard way: they are all
-`Html`, so they carry no `refs:` at all and instead point to
-`docs/Bibliography.md` as plain text.
+`Html`. Since 1.7.1 each category instead ends with a small native
+`Table` ("Sources", method and author-year per row) that carries the
+category's `refs:`, so the library cites through jamovi's own mechanism
+like every other analysis; the guide text stays `Html`.
 
 ---
 

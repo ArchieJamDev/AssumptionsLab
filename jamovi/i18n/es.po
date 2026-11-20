@@ -784,26 +784,26 @@ msgstr ""
 msgid ""
 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; "
 "text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">This library "
-"summarizes the assumptions and tests used across AssumptionsLab. Its "
-"purpose is not to analyze data directly, but to serve as a methodological "
-"guide for interpreting the tests within each analysis.</p><p style=\"margin: "
-"0.7em 0 0.15em 0; font-weight: 700;\">Core principle:</p><p style=\"margin: 0 "
-"0 0.6em 0;\">The library explains what each assumption means and when it is "
+"summarizes the assumptions and tests used across AssumptionsLab. Its purpose "
+"is not to analyze data directly, but to serve as a methodological guide for "
+"interpreting the tests within each analysis.</p><p style=\"margin: 0.7em 0 "
+"0.15em 0; font-weight: 700;\">Core principle:</p><p style=\"margin: 0 0 "
+"0.6em 0;\">The library explains what each assumption means and when it is "
 "used. Each analysis then interprets its own results using the user's actual "
-"data.</p><p style=\"margin: 0 0 0.6em 0;\">Bibliography: the complete "
-"reference list in APA 7th edition, with each source's bibliometric profile, "
-"is available in <a "
-"href=\"https://github.com/ArchieJamDev/AssumptionsLab/blob/main/docs/Bibliography.md\">docs/Bibliography.md</a>.</p><p "
-"style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">General rule for "
-"p-values:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indicates a "
-"statistically significant deviation from the assumption being evaluated. p "
+"data.</p><p style=\"margin: 0 0 0.6em 0;\">References: each section ends "
+"with a Sources table that names the original source of each test, and jamovi "
+"lists the full references for the sections shown at the end of these "
+"results.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">General "
+"rule for p-values:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indicates "
+"a statistically significant deviation from the assumption being evaluated. p "
 "&gt;= .05 indicates that the result is compatible with the assumption being "
 "approximately met.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
 "700;\">Important:</p><p style=\"margin: 0 0 0.6em 0;\">Compatible does not "
 "mean proven. It means that, with this data and this test, no statistically "
-"significant deviation is observed.</p><p style=\"margin: 0 0 0.6em 0;\">Avoid "
-"interpreting assumption tests mechanically. The decision should combine "
-"p-values, sample size, plots, design, and substantive judgment.</p></div>"
+"significant deviation is observed.</p><p style=\"margin: 0 0 0.6em "
+"0;\">Avoid interpreting assumption tests mechanically. The decision should "
+"combine p-values, sample size, plots, design, and substantive "
+"judgment.</p></div>"
 msgstr ""
 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; "
 "text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">Esta biblioteca "
@@ -813,21 +813,21 @@ msgstr ""
 "0 0.15em 0; font-weight: 700;\">Principio central:</p><p style=\"margin: 0 0 "
 "0.6em 0;\">La biblioteca explica qué significa cada supuesto y cuándo se "
 "usa. Cada análisis interpreta después los resultados con los datos reales "
-"del usuario.</p><p style=\"margin: 0 0 0.6em 0;\">Bibliografía: la lista "
-"completa de referencias en APA 7.ª edición, con el perfil bibliométrico de "
-"cada fuente, está disponible en <a "
-"href=\"https://github.com/ArchieJamDev/AssumptionsLab/blob/main/docs/Bibliography.md\">docs/Bibliography.md</a>.</p><p "
-"style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Regla general para "
-"p-valores:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indica una "
-"desviación estadísticamente significativa respecto al supuesto evaluado. p "
-"&gt;= .05 indica que el resultado es compatible con el supuesto evaluado de "
-"forma aproximada.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
-"700;\">Importante:</p><p style=\"margin: 0 0 0.6em 0;\">Compatible no "
-"significa demostrado. Significa que, con estos datos y esta prueba, no se "
-"observa una desviación estadísticamente significativa.</p><p style=\"margin: "
-"0 0 0.6em 0;\">Evite interpretar las pruebas de supuestos de forma mecánica. "
-"La decisión debe combinar p-valores, tamaño muestral, gráficos, diseño y "
-"criterio sustantivo.</p></div>"
+"del usuario.</p><p style=\"margin: 0 0 0.6em 0;\">Referencias: cada sección "
+"termina con una tabla de Fuentes que nombra la fuente original de cada "
+"prueba, y jamovi muestra las referencias completas de las secciones visibles "
+"al final de estos resultados.</p><p style=\"margin: 0.7em 0 0.15em 0; "
+"font-weight: 700;\">Regla general para p-valores:</p><p style=\"margin: 0 0 "
+"0.6em 0;\">p &lt; .05 indica una desviación estadísticamente significativa "
+"respecto al supuesto evaluado. p &gt;= .05 indica que el resultado es "
+"compatible con el supuesto evaluado de forma aproximada.</p><p "
+"style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Importante:</p><p "
+"style=\"margin: 0 0 0.6em 0;\">Compatible no significa demostrado. Significa "
+"que, con estos datos y esta prueba, no se observa una desviación "
+"estadísticamente significativa.</p><p style=\"margin: 0 0 0.6em 0;\">Evite "
+"interpretar las pruebas de supuestos de forma mecánica. La decisión debe "
+"combinar p-valores, tamaño muestral, gráficos, diseño y criterio "
+"sustantivo.</p></div>"
 
 #: assumptionLibrary/results/notes.content
 msgid ""
@@ -5362,6 +5362,10 @@ msgstr ""
 "razonable de casos y que el número de parámetros estimados sea pequeño "
 "frente a la categoría más pequeña."
 
+#: R/assumptionlibrary.b.R
+msgid "Behaviour of Hausman-type IIA tests"
+msgstr "Comportamiento de las pruebas de IIA tipo Hausman"
+
 #: R/pathcheck.b.R
 msgid "Bentler & Chou (1987) — minimum cases:parameters ratio"
 msgstr "Bentler & Chou (1987) — razón mínima casos:parámetros"
@@ -5413,6 +5417,10 @@ msgstr "Boxplots de la variable dependiente y predictores numéricos"
 
 #: ordCheck/results/proportionalOdds.title
 msgid "Brant Test"
+msgstr "Prueba de Brant"
+
+#: R/assumptionlibrary.b.R
+msgid "Brant test"
 msgstr "Prueba de Brant"
 
 #: R/ordcheck.b.R
@@ -6351,6 +6359,10 @@ msgstr ""
 "15 encienden una alerta moderada y por encima de 30 una severa, "
 "complementando al VIF al diagnosticar la colinealidad de toda la matriz a "
 "la vez."
+
+#: R/assumptionlibrary.b.R
+msgid "Condition index and variance proportions"
+msgstr "Índice de condición y proporciones de varianza"
 
 #: R/texts.R
 msgid "Conditional heteroscedasticity (ARCH-LM, GARCH)"
@@ -8060,6 +8072,10 @@ msgstr ""
 msgid "Freedman-Diaconis"
 msgstr "Freedman-Diaconis"
 
+#: R/assumptionlibrary.b.R
+msgid "Friedman test"
+msgstr "Prueba de Friedman"
+
 #: R/regcheck.b.R
 msgid "Full model"
 msgstr "Modelo completo"
@@ -8177,6 +8193,10 @@ msgstr "Green (1991) — prueba de coeficientes individuales"
 #: R/pathcheck.b.R
 msgid "Green (1991) — overall R² test"
 msgstr "Green (1991) — prueba de R² global"
+
+#: R/assumptionlibrary.b.R
+msgid "Greenhouse-Geisser and lower-bound"
+msgstr "Greenhouse-Geisser y límite inferior"
 
 #: R/texts.R
 #: groupCheck/results/caseDiagnostics.columns.title
@@ -8330,6 +8350,10 @@ msgstr "Orientar la especificación dinámica."
 msgid "Guides the specification of the ETS components."
 msgstr "Orientar la especificación de los componentes ETS."
 
+#: R/assumptionlibrary.b.R
+msgid "HC3 robust standard errors"
+msgstr "Errores estándar robustos HC3"
+
 #: R/anovacheck.b.R
 msgid ""
 "Hartley Fmax: descriptive variance ratio. High values suggest checking "
@@ -8338,9 +8362,17 @@ msgstr ""
 "Hartley Fmax: razón descriptiva de varianzas. Valores altos sugieren "
 "revisar heterogeneidad."
 
+#: R/assumptionlibrary.b.R
+msgid "Hartley's Fmax"
+msgstr "Fmax de Hartley"
+
 #: multCheck/results/iia.title
 msgid "Hausman-McFadden Test (IIA)"
 msgstr "Prueba de Hausman-McFadden (IIA)"
+
+#: R/assumptionlibrary.b.R
+msgid "Hausman-McFadden test"
+msgstr "Prueba de Hausman-McFadden"
 
 #: R/regcheck.b.R
 msgid "Heteroscedasticity"
@@ -8515,6 +8547,10 @@ msgstr ""
 #: groupCheck/results/outliers.columns.title
 msgid "IQR"
 msgstr "IQR"
+
+#: R/assumptionlibrary.b.R
+msgid "IQR rule"
+msgstr "Regla del IQR"
 
 #: R/groupcheck.b.R
 msgid "Identifies asymmetric departures from normality."
@@ -9293,6 +9329,10 @@ msgstr ""
 "predictores del modelo (la más completa), como referencia práctica más "
 "exigente de influencia dentro del sistema de ecuaciones."
 
+#: R/assumptionlibrary.b.R
+msgid "Leverage, studentized residuals and DFFITS"
+msgstr "Leverage, residuos estudentizados y DFFITS"
+
 #: R/texts.R
 msgid ""
 "Like all statistical tests, failure to reject independence does not prove "
@@ -9310,6 +9350,10 @@ msgstr ""
 #: R/relatedcheck.b.R
 msgid "Lilliefors (corrected K-S)"
 msgstr "Lilliefors (K-S corregido)"
+
+#: R/assumptionlibrary.b.R
+msgid "Lilliefors (corrected Kolmogorov-Smirnov)"
+msgstr "Lilliefors (Kolmogorov-Smirnov corregida)"
 
 #: anovaCheck/options/residSmoother/linear.title
 #: logCheck/options/linSmoother/linear.title
@@ -9767,6 +9811,19 @@ msgstr "Cumple"
 #: R/pathcheck.b.R
 msgid "Meets %d of %d criteria (see section above)."
 msgstr "Cumple %d de %d criterios (ver sección anterior)."
+
+#: assumptionLibrary/results/normalitySources.columns.title
+#: assumptionLibrary/results/homoscedasticitySources.columns.title
+#: assumptionLibrary/results/linearitySources.columns.title
+#: assumptionLibrary/results/independenceSources.columns.title
+#: assumptionLibrary/results/multicollinearitySources.columns.title
+#: assumptionLibrary/results/influenceSources.columns.title
+#: assumptionLibrary/results/sphericitySources.columns.title
+#: assumptionLibrary/results/proportionalOddsSources.columns.title
+#: assumptionLibrary/results/independenceIrrelevantAlternativesSources.columns.title
+#: assumptionLibrary/results/robustSources.columns.title
+msgid "Method"
+msgstr "Método"
 
 #: R/shared-helpers.R
 msgid ""
@@ -11786,6 +11843,10 @@ msgstr ""
 msgid "Potential influence"
 msgstr "Influencia potencial"
 
+#: R/assumptionlibrary.b.R
+msgid "Power of Shapiro-Wilk against other normality tests"
+msgstr "Potencia de Shapiro-Wilk frente a otras pruebas de normalidad"
+
 #: R/groupcheck.b.R
 msgid "Powerful when normality is plausible; sensitive to non-normality."
 msgstr ""
@@ -11890,6 +11951,10 @@ msgstr "Momios Proporcionales"
 #: ordCheck/results/proportionalOddsGuide.title
 msgid "Proportional odds (parallel lines)"
 msgstr "Momios proporcionales (líneas paralelas)"
+
+#: R/assumptionlibrary.b.R
+msgid "Proportional-odds model"
+msgstr "Modelo de momios proporcionales"
 
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
@@ -12396,10 +12461,18 @@ msgstr "Filas sin valor de grupo"
 msgid "Rule"
 msgstr "Regla"
 
+#: R/assumptionlibrary.b.R
+msgid "Rules of thumb for the VIF"
+msgstr "Reglas prácticas para el VIF"
+
 #: R/relatedcheck.b.R
 msgid "Run the analysis again or check the Image result definition."
 msgstr ""
 "Vuelva a ejecutar el análisis o revise la definición del resultado Image."
+
+#: R/assumptionlibrary.b.R
+msgid "Runs test"
+msgstr "Prueba de rachas"
 
 #: pathCheck/options/showR2.title
 #: pathCheck/results/rSquaredTable.columns.title
@@ -13072,6 +13145,32 @@ msgstr "Algún caso activó criterios numéricos."
 #: R/anovacheck.b.R
 msgid "Some factor × covariate interaction was relevant."
 msgstr "Alguna interacción factor × covariable fue relevante."
+
+#: assumptionLibrary/results/normalitySources.columns.title
+#: assumptionLibrary/results/homoscedasticitySources.columns.title
+#: assumptionLibrary/results/linearitySources.columns.title
+#: assumptionLibrary/results/independenceSources.columns.title
+#: assumptionLibrary/results/multicollinearitySources.columns.title
+#: assumptionLibrary/results/influenceSources.columns.title
+#: assumptionLibrary/results/sphericitySources.columns.title
+#: assumptionLibrary/results/proportionalOddsSources.columns.title
+#: assumptionLibrary/results/independenceIrrelevantAlternativesSources.columns.title
+#: assumptionLibrary/results/robustSources.columns.title
+msgid "Source"
+msgstr "Fuente"
+
+#: assumptionLibrary/results/normalitySources.title
+#: assumptionLibrary/results/homoscedasticitySources.title
+#: assumptionLibrary/results/linearitySources.title
+#: assumptionLibrary/results/independenceSources.title
+#: assumptionLibrary/results/multicollinearitySources.title
+#: assumptionLibrary/results/influenceSources.title
+#: assumptionLibrary/results/sphericitySources.title
+#: assumptionLibrary/results/proportionalOddsSources.title
+#: assumptionLibrary/results/independenceIrrelevantAlternativesSources.title
+#: assumptionLibrary/results/robustSources.title
+msgid "Sources"
+msgstr "Fuentes"
 
 #: R/pathcheck.b.R
 #: R/regcheck.b.R
@@ -15883,6 +15982,10 @@ msgstr "VIF / tolerancia"
 msgid "VIF >= 5 is a moderate concern; VIF >= 10 is a severe problem."
 msgstr "VIF >= 5 es una alerta moderada; VIF >= 10 es un problema severo."
 
+#: R/assumptionlibrary.b.R
+msgid "VIF and tolerance"
+msgstr "VIF y tolerancia"
+
 #: R/anovacheck.b.R
 msgid ""
 "VIF and tolerance describe how much each model term overlaps with the "
@@ -16129,6 +16232,14 @@ msgstr ""
 #: R/anovacheck.b.R
 msgid "Welch ANOVA, Brown-Forsythe ANOVA, or robust methods."
 msgstr "Welch ANOVA, Brown-Forsythe ANOVA o métodos robustos."
+
+#: R/assumptionlibrary.b.R
+msgid "Welch correction"
+msgstr "Corrección de Welch"
+
+#: R/assumptionlibrary.b.R
+msgid "Welch's t and F tests"
+msgstr "Pruebas t y F de Welch"
 
 #: R/groupcheck.b.R
 msgid ""
@@ -16427,6 +16538,10 @@ msgstr ""
 "prueba F clásica cuando además los tamaños de grupo son desiguales; con "
 "tamaños de grupo iguales, el ANOVA es bastante robusto a diferencias "
 "moderadas de varianza."
+
+#: R/assumptionlibrary.b.R
+msgid "Wilcoxon signed-rank test"
+msgstr "Prueba de rangos con signo de Wilcoxon"
 
 #: R/pathcheck.b.R
 msgid ""

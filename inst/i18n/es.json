@@ -373,8 +373,8 @@
             "<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">Assumption check for logistic regression</p><p style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">Use this analysis when you want to review whether a logistic regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.</p><p style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>": [
                 "<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">Revisión de supuestos para regresión logística</p><p style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">Use este análisis cuando quiera revisar si un modelo de regresión logística tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos.</p><p style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>"
             ],
-            "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">This library summarizes the assumptions and tests used across AssumptionsLab. Its purpose is not to analyze data directly, but to serve as a methodological guide for interpreting the tests within each analysis.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Core principle:</p><p style=\"margin: 0 0 0.6em 0;\">The library explains what each assumption means and when it is used. Each analysis then interprets its own results using the user's actual data.</p><p style=\"margin: 0 0 0.6em 0;\">Bibliography: the complete reference list in APA 7th edition, with each source's bibliometric profile, is available in <a href=\"https://github.com/ArchieJamDev/AssumptionsLab/blob/main/docs/Bibliography.md\">docs/Bibliography.md</a>.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">General rule for p-values:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indicates a statistically significant deviation from the assumption being evaluated. p &gt;= .05 indicates that the result is compatible with the assumption being approximately met.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Important:</p><p style=\"margin: 0 0 0.6em 0;\">Compatible does not mean proven. It means that, with this data and this test, no statistically significant deviation is observed.</p><p style=\"margin: 0 0 0.6em 0;\">Avoid interpreting assumption tests mechanically. The decision should combine p-values, sample size, plots, design, and substantive judgment.</p></div>": [
-                "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">Esta biblioteca resume los supuestos y pruebas usados en AssumptionsLab. Su propósito no es analizar datos directamente, sino servir como guía metodológica para interpretar las pruebas dentro de cada análisis.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Principio central:</p><p style=\"margin: 0 0 0.6em 0;\">La biblioteca explica qué significa cada supuesto y cuándo se usa. Cada análisis interpreta después los resultados con los datos reales del usuario.</p><p style=\"margin: 0 0 0.6em 0;\">Bibliografía: la lista completa de referencias en APA 7.ª edición, con el perfil bibliométrico de cada fuente, está disponible en <a href=\"https://github.com/ArchieJamDev/AssumptionsLab/blob/main/docs/Bibliography.md\">docs/Bibliography.md</a>.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Regla general para p-valores:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indica una desviación estadísticamente significativa respecto al supuesto evaluado. p &gt;= .05 indica que el resultado es compatible con el supuesto evaluado de forma aproximada.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Importante:</p><p style=\"margin: 0 0 0.6em 0;\">Compatible no significa demostrado. Significa que, con estos datos y esta prueba, no se observa una desviación estadísticamente significativa.</p><p style=\"margin: 0 0 0.6em 0;\">Evite interpretar las pruebas de supuestos de forma mecánica. La decisión debe combinar p-valores, tamaño muestral, gráficos, diseño y criterio sustantivo.</p></div>"
+            "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">This library summarizes the assumptions and tests used across AssumptionsLab. Its purpose is not to analyze data directly, but to serve as a methodological guide for interpreting the tests within each analysis.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Core principle:</p><p style=\"margin: 0 0 0.6em 0;\">The library explains what each assumption means and when it is used. Each analysis then interprets its own results using the user's actual data.</p><p style=\"margin: 0 0 0.6em 0;\">References: each section ends with a Sources table that names the original source of each test, and jamovi lists the full references for the sections shown at the end of these results.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">General rule for p-values:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indicates a statistically significant deviation from the assumption being evaluated. p &gt;= .05 indicates that the result is compatible with the assumption being approximately met.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Important:</p><p style=\"margin: 0 0 0.6em 0;\">Compatible does not mean proven. It means that, with this data and this test, no statistically significant deviation is observed.</p><p style=\"margin: 0 0 0.6em 0;\">Avoid interpreting assumption tests mechanically. The decision should combine p-values, sample size, plots, design, and substantive judgment.</p></div>": [
+                "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">Esta biblioteca resume los supuestos y pruebas usados en AssumptionsLab. Su propósito no es analizar datos directamente, sino servir como guía metodológica para interpretar las pruebas dentro de cada análisis.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Principio central:</p><p style=\"margin: 0 0 0.6em 0;\">La biblioteca explica qué significa cada supuesto y cuándo se usa. Cada análisis interpreta después los resultados con los datos reales del usuario.</p><p style=\"margin: 0 0 0.6em 0;\">Referencias: cada sección termina con una tabla de Fuentes que nombra la fuente original de cada prueba, y jamovi muestra las referencias completas de las secciones visibles al final de estos resultados.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Regla general para p-valores:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 indica una desviación estadísticamente significativa respecto al supuesto evaluado. p &gt;= .05 indica que el resultado es compatible con el supuesto evaluado de forma aproximada.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Importante:</p><p style=\"margin: 0 0 0.6em 0;\">Compatible no significa demostrado. Significa que, con estos datos y esta prueba, no se observa una desviación estadísticamente significativa.</p><p style=\"margin: 0 0 0.6em 0;\">Evite interpretar las pruebas de supuestos de forma mecánica. La decisión debe combinar p-valores, tamaño muestral, gráficos, diseño y criterio sustantivo.</p></div>"
             ],
             "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">Use this library as a general methodological reference. Use the specific analyses to interpret results with your own data.</p></div>": [
                 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0 0 0.6em 0;\">Use esta biblioteca como referencia metodológica general. Use los análisis específicos para interpretar resultados con sus propios datos.</p></div>"
@@ -961,6 +961,9 @@
             "Before interpreting the model, review that every category has a reasonable number of cases and that the number of estimated parameters is small relative to the smallest category.": [
                 "Antes de interpretar el modelo, revise que cada categoría tenga un número razonable de casos y que el número de parámetros estimados sea pequeño frente a la categoría más pequeña."
             ],
+            "Behaviour of Hausman-type IIA tests": [
+                "Comportamiento de las pruebas de IIA tipo Hausman"
+            ],
             "Bentler & Chou (1987) — minimum cases:parameters ratio": [
                 "Bentler & Chou (1987) — razón mínima casos:parámetros"
             ],
@@ -992,6 +995,9 @@
                 "Boxplots de la variable dependiente y predictores numéricos"
             ],
             "Brant Test": [
+                "Prueba de Brant"
+            ],
+            "Brant test": [
                 "Prueba de Brant"
             ],
             "Brant's (1990; see references) test compares the coefficients from separate binary logits fit at each cutpoint against the single, pooled coefficient the proportional-odds model reports; a significant term means that predictor's effect is not constant across cutpoints.": [
@@ -1338,6 +1344,9 @@
             ],
             "Condition index (whole design matrix): %s. Values above 15 raise a moderate concern and above 30 a severe one, complementing VIF by diagnosing collinearity across the whole matrix at once.": [
                 "Índice de condición (toda la matriz de diseño): %s. Valores por encima de 15 encienden una alerta moderada y por encima de 30 una severa, complementando al VIF al diagnosticar la colinealidad de toda la matriz a la vez."
+            ],
+            "Condition index and variance proportions": [
+                "Índice de condición y proporciones de varianza"
             ],
             "Conditional heteroscedasticity (ARCH-LM, GARCH)": [
                 "Heterocedasticidad condicional (ARCH-LM, GARCH)"
@@ -2098,6 +2107,9 @@
             "Freedman-Diaconis": [
                 "Freedman-Diaconis"
             ],
+            "Friedman test": [
+                "Prueba de Friedman"
+            ],
             "Full model": [
                 "Modelo completo"
             ],
@@ -2142,6 +2154,9 @@
             ],
             "Green (1991) — overall R² test": [
                 "Green (1991) — prueba de R² global"
+            ],
+            "Greenhouse-Geisser and lower-bound": [
+                "Greenhouse-Geisser y límite inferior"
             ],
             "Group": [
                 "Grupo"
@@ -2236,11 +2251,20 @@
             "Guides the specification of the ETS components.": [
                 "Orientar la especificación de los componentes ETS."
             ],
+            "HC3 robust standard errors": [
+                "Errores estándar robustos HC3"
+            ],
             "Hartley Fmax: descriptive variance ratio. High values suggest checking heterogeneity.": [
                 "Hartley Fmax: razón descriptiva de varianzas. Valores altos sugieren revisar heterogeneidad."
             ],
+            "Hartley's Fmax": [
+                "Fmax de Hartley"
+            ],
             "Hausman-McFadden Test (IIA)": [
                 "Prueba de Hausman-McFadden (IIA)"
+            ],
+            "Hausman-McFadden test": [
+                "Prueba de Hausman-McFadden"
             ],
             "Heteroscedasticity": [
                 "Heterocedasticidad"
@@ -2337,6 +2361,9 @@
             ],
             "IQR": [
                 "IQR"
+            ],
+            "IQR rule": [
+                "Regla del IQR"
             ],
             "Identifies asymmetric departures from normality.": [
                 "Identifica desviaciones asimétricas respecto a la normalidad."
@@ -2674,11 +2701,17 @@
             "Leverage and Cook's distance are computed on the equation with the most predictors in the model (the most complete one), as a practical, more demanding reference for influence within the equation system.": [
                 "El leverage y la distancia de Cook se calculan sobre la ecuación con más predictores del modelo (la más completa), como referencia práctica más exigente de influencia dentro del sistema de ecuaciones."
             ],
+            "Leverage, studentized residuals and DFFITS": [
+                "Leverage, residuos estudentizados y DFFITS"
+            ],
             "Like all statistical tests, failure to reject independence does not prove independence - it only means the data do not provide strong evidence against it.": [
                 "Como todas las pruebas estadísticas, no rechazar independencia no prueba independencia - solo significa que los datos no proporcionan evidencia fuerte en contra."
             ],
             "Lilliefors (corrected K-S)": [
                 "Lilliefors (K-S corregido)"
+            ],
+            "Lilliefors (corrected Kolmogorov-Smirnov)": [
+                "Lilliefors (Kolmogorov-Smirnov corregida)"
             ],
             "Linear Line": [
                 "Línea Lineal"
@@ -2901,6 +2934,9 @@
             ],
             "Meets %d of %d criteria (see section above).": [
                 "Cumple %d de %d criterios (ver sección anterior)."
+            ],
+            "Method": [
+                "Método"
             ],
             "Method: dCor and CE p-values are obtained by permutation (B = %d permutations, seed = %d). The minimum achievable p at this resolution is %s; a p equal to this value should be read as p ≤ %s (Monte Carlo), not as an exact value.": [
                 "Método: los valores p de dCor y CE se obtienen por permutación (B = %d permutaciones, semilla = %d). El p mínimo alcanzable con esta resolución es %s; un p igual a este valor debe leerse como p ≤ %s (Monte Carlo), no como un valor exacto."
@@ -3946,6 +3982,9 @@
             "Potential influence": [
                 "Influencia potencial"
             ],
+            "Power of Shapiro-Wilk against other normality tests": [
+                "Potencia de Shapiro-Wilk frente a otras pruebas de normalidad"
+            ],
             "Powerful when normality is plausible; sensitive to non-normality.": [
                 "Potente cuando la normalidad es plausible; sensible a la no normalidad."
             ],
@@ -4002,6 +4041,9 @@
             ],
             "Proportional odds (parallel lines)": [
                 "Momios proporcionales (líneas paralelas)"
+            ],
+            "Proportional-odds model": [
+                "Modelo de momios proporcionales"
             ],
             "Pseudo-R²": [
                 "Pseudo-R²"
@@ -4300,8 +4342,14 @@
             "Rule": [
                 "Regla"
             ],
+            "Rules of thumb for the VIF": [
+                "Reglas prácticas para el VIF"
+            ],
             "Run the analysis again or check the Image result definition.": [
                 "Vuelva a ejecutar el análisis o revise la definición del resultado Image."
+            ],
+            "Runs test": [
+                "Prueba de rachas"
             ],
             "R²": [
                 "R²"
@@ -4593,6 +4641,12 @@
             ],
             "Some factor × covariate interaction was relevant.": [
                 "Alguna interacción factor × covariable fue relevante."
+            ],
+            "Source": [
+                "Fuente"
+            ],
+            "Sources": [
+                "Fuentes"
             ],
             "Spearman |residuals| vs fitted": [
                 "Spearman |residuos| vs ajustados"
@@ -5680,6 +5734,9 @@
             "VIF >= 5 is a moderate concern; VIF >= 10 is a severe problem.": [
                 "VIF >= 5 es una alerta moderada; VIF >= 10 es un problema severo."
             ],
+            "VIF and tolerance": [
+                "VIF y tolerancia"
+            ],
             "VIF and tolerance describe how much each model term overlaps with the others; the eigenvalue/condition index diagnose collinearity across the whole design matrix at once.": [
                 "VIF y tolerancia describen cuánto se solapa cada término del modelo con los demás; el eigenvalue/índice de condición diagnostican la colinealidad en toda la matriz de diseño a la vez."
             ],
@@ -5791,6 +5848,12 @@
             "Welch ANOVA, Brown-Forsythe ANOVA, or robust methods.": [
                 "Welch ANOVA, Brown-Forsythe ANOVA o métodos robustos."
             ],
+            "Welch correction": [
+                "Corrección de Welch"
+            ],
+            "Welch's t and F tests": [
+                "Pruebas t y F de Welch"
+            ],
             "Welch's t-test is a useful robust parametric option. Mann-Whitney U is appropriate when the analyst prioritizes a non-parametric interpretation or when distributional concerns are considered substantively important.": [
                 "La t de Welch es una opción paramétrica robusta útil. La U de Mann-Whitney es apropiada cuando se prioriza una interpretación no paramétrica o cuando las preocupaciones distribucionales se consideran sustantivamente importantes."
             ],
@@ -5883,6 +5946,9 @@
             ],
             "Why it matters: unequal variances mainly threaten the classical F-test when group sizes are also unequal; with equal group sizes, ANOVA is fairly robust to moderate variance differences.": [
                 "Por qué importa: las varianzas desiguales amenazan principalmente a la prueba F clásica cuando además los tamaños de grupo son desiguales; con tamaños de grupo iguales, el ANOVA es bastante robusto a diferencias moderadas de varianza."
+            ],
+            "Wilcoxon signed-rank test": [
+                "Prueba de rangos con signo de Wilcoxon"
             ],
             "With N = %d complete cases, %d estimated path(s) across %d equation(s) (largest equation has %d predictor(s)), the model meets %d of %d sample-size criteria in the \"Sample-Size Assessment by Model Complexity\" table.": [
                 "Con N = %d casos completos, %d ruta(s) estimada(s) en %d ecuación(es) (la ecuación más grande tiene %d predictor(es)), el modelo cumple %d de %d criterios de la tabla \"Valoración del Tamaño de Muestra según la Complejidad del Modelo\"."

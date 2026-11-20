@@ -98,17 +98,122 @@
 # distinto).
 #
 # Responsibility
-# 1. Show only the items matching the user's selected category.
+# 1. Fill each category's Sources table, the native jamovi Table that
+#    carries the category's `refs:` (see .al_library_sources()).
+# 2. Show only the items matching the user's selected category.
 #
 # ES: Responsabilidad
-# 1. Mostrar solo los ítems que coinciden con la categoría seleccionada por
+# 1. Llenar la tabla Fuentes de cada categoría, la Table nativa de jamovi
+#    que lleva los `refs:` de la categoría (ver .al_library_sources()).
+# 2. Mostrar solo los ítems que coinciden con la categoría seleccionada por
 #    el usuario.
 # -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# .al_library_sources()
+#
+# Input: . - the translator of the run (`lang$tr`, see .al_lang()).
+# Output: a named list, one entry per Sources table of the library; each
+#   entry is a list of c(method, source) pairs, one per table row.
+#
+# Each category of the library ends with a native jamovi Table ("Sources")
+# whose `refs:` (jamovi/assumptionlibrary.r.yaml) point to jamovi/00refs.yaml.
+# jamovi's client draws the reference numbers and the References list only
+# for Table results, never for Html ones (ARCHITECTURE.md §11), so these
+# small tables are what lets the library cite the way every other analysis
+# of the module does. The rows name each method with its author and year,
+# so the reader can match a row to its entry in jamovi's References list.
+# Method names that are proper names are not translated; the rest go
+# through `.()` and jamovi/i18n/es.po.
+#
+# ES: Cada categoría de la biblioteca termina con una Table nativa de jamovi
+# ("Fuentes") cuyos `refs:` apuntan a jamovi/00refs.yaml. El cliente de
+# jamovi solo dibuja los números de referencia y la lista de Referencias
+# para resultados Table, nunca Html (ARCHITECTURE.md §11), así que estas
+# tablas pequeñas son las que permiten que la biblioteca cite igual que los
+# demás análisis del módulo. Cada fila nombra el método con su autor y año,
+# para que el lector la relacione con su entrada en la lista de
+# Referencias de jamovi. Los nombres propios no se traducen; el resto pasa
+# por `.()` y jamovi/i18n/es.po.
+# -----------------------------------------------------------------------------
+.al_library_sources <- function(.) {
+    list(
+        normalitySources = list(
+            c("Shapiro-Wilk", "Shapiro & Wilk (1965)"),
+            c(.("Power of Shapiro-Wilk against other normality tests"), "Razali & Wah (2011)"),
+            c(.("Lilliefors (corrected Kolmogorov-Smirnov)"), "Lilliefors (1967)"),
+            c("Anderson-Darling and Cram\u00e9r-von Mises", "Anderson & Darling (1952)"),
+            c("Shapiro-Francia", "Shapiro & Francia (1972)"),
+            c("Jarque-Bera", "Jarque & Bera (1987)")),
+        homoscedasticitySources = list(
+            c("Levene", "Levene (1960)"),
+            c("Brown-Forsythe", "Brown & Forsythe (1974)"),
+            c("Bartlett", "Bartlett (1937)"),
+            c("Fligner-Killeen", "Fligner & Killeen (1976)"),
+            c(.("Hartley's Fmax"), "Hartley (1950)"),
+            c("Breusch-Pagan", "Breusch & Pagan (1979)"),
+            c("White", "White (1980)"),
+            c("Goldfeld-Quandt", "Goldfeld & Quandt (1965)"),
+            c(.("Welch correction"), "Welch (1947)"),
+            c(.("HC3 robust standard errors"), "MacKinnon & White (1985)")),
+        linearitySources = list(
+            c(.("Distance correlation (dCor)"), "Sz\u00e9kely, Rizzo & Bakirov (2007)"),
+            c(.("Copula entropy"), "Ma & Sun (2011)"),
+            c("Box-Tidwell", "Box & Tidwell (1962)"),
+            c("Ramsey RESET", "Ramsey (1969)"),
+            c("Rainbow test", "Utts (1982)")),
+        independenceSources = list(
+            c("Durbin-Watson", "Durbin & Watson (1951)"),
+            c("Breusch-Godfrey", "Breusch (1978); Godfrey (1978)"),
+            c("Ljung-Box", "Ljung & Box (1978)"),
+            c(.("Runs test"), "Wald & Wolfowitz (1940)")),
+        multicollinearitySources = list(
+            c(.("VIF and tolerance"), "Marquardt (1970)"),
+            c(.("Rules of thumb for the VIF"), "O'Brien (2007)"),
+            c(.("Condition index and variance proportions"), "Belsley, Kuh & Welsch (1980)")),
+        influenceSources = list(
+            c(.("IQR rule"), "Tukey (1977)"),
+            c(.("Cook's D"), "Cook (1977)"),
+            c(.("Leverage, studentized residuals and DFFITS"), "Belsley, Kuh & Welsch (1980)"),
+            c("Mahalanobis D\u00b2", "Mahalanobis (1936)")),
+        sphericitySources = list(
+            c("Mauchly (W)", "Mauchly (1940)"),
+            c(.("Greenhouse-Geisser and lower-bound"), "Greenhouse & Geisser (1959)"),
+            c("Huynh-Feldt", "Huynh & Feldt (1976)"),
+            c(.("Friedman test"), "Friedman (1937)")),
+        proportionalOddsSources = list(
+            c(.("Proportional-odds model"), "McCullagh (1980)"),
+            c(.("Brant test"), "Brant (1990)")),
+        independenceIrrelevantAlternativesSources = list(
+            c(.("Hausman-McFadden test"), "Hausman & McFadden (1984)"),
+            c(.("Behaviour of Hausman-type IIA tests"), "Cheng & Long (2007)")),
+        robustSources = list(
+            c(.("Welch's t and F tests"), "Welch (1947)"),
+            c("Brown-Forsythe", "Brown & Forsythe (1974)"),
+            c(.("Wilcoxon signed-rank test"), "Wilcoxon (1945)"),
+            c(.("Friedman test"), "Friedman (1937)"),
+            c(.("HC3 robust standard errors"), "MacKinnon & White (1985)")))
+}
 
 assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
     "assumptionLibraryClass",
     inherit = assumptionLibraryBase,
     private = list(
+        .init = function() {
+
+            . <- .al_lang(self$options)$tr
+            sources <- .al_library_sources(.)
+
+            for (name in names(sources)) {
+                table <- self$results[[name]]
+                rows <- sources[[name]]
+                for (i in seq_along(rows))
+                    table$addRow(rowKey = i, values = list(
+                        method = rows[[i]][[1]],
+                        source = rows[[i]][[2]]))
+            }
+        },
+
         .run = function() {
 
             category <- self$options$category
@@ -125,35 +230,45 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
             hide_if_needed(self$results$normality, "normality")
             hide_if_needed(self$results$normalityTable, "normality")
             hide_if_needed(self$results$normalityGuide2, "normality")
+            hide_if_needed(self$results$normalitySources, "normality")
             hide_if_needed(self$results$homoscedasticity, "homoscedasticity")
             hide_if_needed(self$results$homoscedasticityGroupTable, "homoscedasticity")
             hide_if_needed(self$results$homoscedasticityGuide2, "homoscedasticity")
             hide_if_needed(self$results$homoscedasticityRegTable, "homoscedasticity")
             hide_if_needed(self$results$homoscedasticityGuide3, "homoscedasticity")
+            hide_if_needed(self$results$homoscedasticitySources, "homoscedasticity")
             hide_if_needed(self$results$linearity, "linearity")
             hide_if_needed(self$results$linearityTable, "linearity")
             hide_if_needed(self$results$linearityGuide2, "linearity")
+            hide_if_needed(self$results$linearitySources, "linearity")
             hide_if_needed(self$results$independence, "independence")
             hide_if_needed(self$results$independenceTable, "independence")
             hide_if_needed(self$results$independenceGuide2, "independence")
+            hide_if_needed(self$results$independenceSources, "independence")
             hide_if_needed(self$results$multicollinearity, "multicollinearity")
             hide_if_needed(self$results$multicollinearityTable, "multicollinearity")
             hide_if_needed(self$results$multicollinearityGuide2, "multicollinearity")
+            hide_if_needed(self$results$multicollinearitySources, "multicollinearity")
             hide_if_needed(self$results$influence, "influence")
             hide_if_needed(self$results$influenceTable, "influence")
             hide_if_needed(self$results$influenceGuide2, "influence")
+            hide_if_needed(self$results$influenceSources, "influence")
             hide_if_needed(self$results$sphericity, "sphericity")
             hide_if_needed(self$results$sphericityTable, "sphericity")
             hide_if_needed(self$results$sphericityGuide2, "sphericity")
+            hide_if_needed(self$results$sphericitySources, "sphericity")
             hide_if_needed(self$results$proportionalOdds, "proportionalOdds")
             hide_if_needed(self$results$proportionalOddsTable, "proportionalOdds")
             hide_if_needed(self$results$proportionalOddsGuide2, "proportionalOdds")
+            hide_if_needed(self$results$proportionalOddsSources, "proportionalOdds")
             hide_if_needed(self$results$independenceIrrelevantAlternatives, "independenceIrrelevantAlternatives")
             hide_if_needed(self$results$independenceIrrelevantAlternativesTable, "independenceIrrelevantAlternatives")
             hide_if_needed(self$results$independenceIrrelevantAlternativesGuide2, "independenceIrrelevantAlternatives")
+            hide_if_needed(self$results$independenceIrrelevantAlternativesSources, "independenceIrrelevantAlternatives")
             hide_if_needed(self$results$robust, "robust")
             hide_if_needed(self$results$robustTable, "robust")
             hide_if_needed(self$results$robustGuide2, "robust")
+            hide_if_needed(self$results$robustSources, "robust")
         }
     )
 )

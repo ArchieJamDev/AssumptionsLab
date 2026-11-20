@@ -1,3 +1,23 @@
+# AssumptionsLab 1.7.1 (unreleased)
+
+## The Assumption Library cites like the other analyses
+
+- Each category of the Assumption Library now ends with a native jamovi
+  table, "Sources", that names each method with its author and year and
+  carries the category's `refs:`. jamovi numbers these sources and lists
+  them in its References section, as it does for the other analyses, and
+  the category filter hides them with the rest of the category. jamovi
+  draws references only for tables, never for the library's HTML text,
+  which is why the library needed these tables.
+- The library's introduction no longer links to `docs/Bibliography.md`;
+  it explains where the references are shown instead.
+- Two sources the library and Regression discuss were missing from
+  `jamovi/00refs.yaml` and `docs/Bibliography.md`: Utts (1982), for the
+  Rainbow test, and Wald & Wolfowitz (1940), for the runs test.
+- New tests check that every Sources table is filled, follows the
+  category filter and the language, and that every `refs:` key of the
+  library exists in `jamovi/00refs.yaml`.
+
 # AssumptionsLab 1.7.0 (unreleased)
 
 ## Report language follows jamovi

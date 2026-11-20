@@ -819,3 +819,25 @@ refs:
         publisher: 'Springer'
         url: https://doi.org/10.1007/978-3-540-27752-1
 
+    utts_1982:
+        type: 'article'
+        author: 'Utts, J. M.'
+        year: 1982
+        title: 'The rainbow test for lack of fit in regression'
+        publisher: 'Communications in Statistics - Theory and Methods'
+        volume: '11'
+        issue: '24'
+        pages: '2801-2815'
+        url: https://doi.org/10.1080/03610928208828423
+
+    wald_1940:
+        type: 'article'
+        author: 'Wald, A., & Wolfowitz, J.'
+        year: 1940
+        title: 'On a test whether two samples are from the same population'
+        publisher: 'The Annals of Mathematical Statistics'
+        volume: '11'
+        issue: '2'
+        pages: '147-162'
+        url: https://doi.org/10.1214/aoms/1177731909
+
