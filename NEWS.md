@@ -91,6 +91,15 @@
   The missing-packages message is now one whole sentence for translators.
 - The description of Assumption Library says that entries follow jamovi's
   language, instead of "available in English or Spanish".
+- **Shorter `.run()` methods.** Each analysis's `.run()` (700 to 2,400
+  lines) now prepares the data and the model, then calls one private
+  method per report section (for example `.checkNormality()`,
+  `.checkMulticollinearity()`, `.fillCorrelations()`). Each step receives
+  what it reads as arguments and returns what later steps need; the code
+  inside each step did not change, so the reports are the same. The
+  longest `.run()` is now under 600 lines (Time Series keeps its
+  diagnostic battery in `.run()` because the row accumulators write to
+  variables that `.run()` reads afterwards).
 
 ---
 
