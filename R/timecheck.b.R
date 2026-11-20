@@ -506,38 +506,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
 
 
-            # -----------------------------------------------------------------------------
-            # Model profile: which series (if any) and which model are active.
-            # ES: Perfil del modelo: qué serie (si la hay) y qué modelo están activos.
-            # -----------------------------------------------------------------------------
-            model_labels <- txt("time", "modelLabels")
-            model_label <- model_labels[[model]]
-            if (is.null(model_label))
-                model_label <- model
-
-            series_value <- if (is.null(series) || length(series) == 0) {
-                txt("time", "noSeriesSelected")
-            } else {
-                paste(series, collapse = ", ")
-            }
-
-            profile_table <- self$results$modelProfile
-            profile_table$deleteRows()
-            profile_table$addRow(rowKey = "series", values = list(
-                element = txt("time", "seriesRowLabel"),
-                value = series_value
-            ))
-            profile_table$addRow(rowKey = "model", values = list(
-                element = txt("time", "modelRowLabel"),
-                value = model_label
-            ))
-
-            if (model %in% c("arima", "sarima") && !is.null(exogenous) && length(exogenous) > 0) {
-                profile_table$addRow(rowKey = "exogenous", values = list(
-                    element = .("External regressors (ARIMAX/SARIMAX)"),
-                    value = paste(exogenous, collapse = ", ")
-                ))
-            }
+            private$.fillModelProfile(series, exogenous, model, ., txt)
 
             # -----------------------------------------------------------------------------
             # Model description: what the selected model is, when to use it, what it
@@ -551,37 +520,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(model_description))
                 set_html_safe("modelDescription", html_block(NULL, model_description, paragraphs = FALSE))
 
-            # -----------------------------------------------------------------------------
-            # Static assumption/condition matrix for the selected model, split into two
-            # narrower tables so no row is cut off in the results panel.
-            # ES: Matriz estática de supuestos/condiciones para el modelo seleccionado,
-            # dividida en dos tablas más angostas para que ninguna fila quede cortada
-            # en el panel de resultados.
-            # -----------------------------------------------------------------------------
-            matrix_data <- txt("time", "matrix")
-            model_rows <- matrix_data[[model]]
-
-            conditions_table <- self$results$conditionsMatrix
-            decisions_table <- self$results$decisionsMatrix
-            conditions_table$deleteRows()
-            decisions_table$deleteRows()
-
-            if (!is.null(model_rows)) {
-                for (i in seq_along(model_rows)) {
-                    row <- model_rows[[i]]
-                    conditions_table$addRow(rowKey = i, values = list(
-                        area = row[1],
-                        condition = row[2],
-                        diagnostic = row[3]
-                    ))
-                    decisions_table$addRow(rowKey = i, values = list(
-                        area = row[1],
-                        condition = row[2],
-                        role = row[4],
-                        decision = row[5]
-                    ))
-                }
-            }
+            private$.fillConditions(model, txt)
 
             # -----------------------------------------------------------------------------
             # Guard: decide whether the diagnostic battery can run at all (enough
@@ -765,6 +704,91 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             set_visible_safe("residualsPlot", plots_on && !is.null(private$.plotResidualsData))
             set_visible_safe("volatilityPlot", plots_on && !is.null(private$.plotVolatilityData))
 
+            private$.fillFoundations(model, txt, html_block, set_html_safe)
+
+            # -----------------------------------------------------------------------------
+            # Guide / interpretation / scope panels.
+            # ES: Paneles de guía / interpretación / alcance.
+            # -----------------------------------------------------------------------------
+            set_html_safe("intro", html_block(NULL, txt("time", "intro"), paragraphs = FALSE))
+            set_html_safe("interpretation", html_block(NULL, build_methodological_reading(model), paragraphs = FALSE))
+            set_html_safe("implementationNotes", html_block(NULL, txt("time", "scopeNote"), paragraphs = FALSE))
+        },
+
+        .fillModelProfile = function(series, exogenous, model, ., txt) {
+            # -----------------------------------------------------------------------------
+            # Model profile: which series (if any) and which model are active.
+            # ES: Perfil del modelo: qué serie (si la hay) y qué modelo están activos.
+            # -----------------------------------------------------------------------------
+            model_labels <- txt("time", "modelLabels")
+            model_label <- model_labels[[model]]
+            if (is.null(model_label))
+                model_label <- model
+
+            series_value <- if (is.null(series) || length(series) == 0) {
+                txt("time", "noSeriesSelected")
+            } else {
+                paste(series, collapse = ", ")
+            }
+
+            profile_table <- self$results$modelProfile
+            profile_table$deleteRows()
+            profile_table$addRow(rowKey = "series", values = list(
+                element = txt("time", "seriesRowLabel"),
+                value = series_value
+            ))
+            profile_table$addRow(rowKey = "model", values = list(
+                element = txt("time", "modelRowLabel"),
+                value = model_label
+            ))
+
+            if (model %in% c("arima", "sarima") && !is.null(exogenous) && length(exogenous) > 0) {
+                profile_table$addRow(rowKey = "exogenous", values = list(
+                    element = .("External regressors (ARIMAX/SARIMAX)"),
+                    value = paste(exogenous, collapse = ", ")
+                ))
+            }
+
+            invisible(NULL)
+        },
+
+        .fillConditions = function(model, txt) {
+            # -----------------------------------------------------------------------------
+            # Static assumption/condition matrix for the selected model, split into two
+            # narrower tables so no row is cut off in the results panel.
+            # ES: Matriz estática de supuestos/condiciones para el modelo seleccionado,
+            # dividida en dos tablas más angostas para que ninguna fila quede cortada
+            # en el panel de resultados.
+            # -----------------------------------------------------------------------------
+            matrix_data <- txt("time", "matrix")
+            model_rows <- matrix_data[[model]]
+
+            conditions_table <- self$results$conditionsMatrix
+            decisions_table <- self$results$decisionsMatrix
+            conditions_table$deleteRows()
+            decisions_table$deleteRows()
+
+            if (!is.null(model_rows)) {
+                for (i in seq_along(model_rows)) {
+                    row <- model_rows[[i]]
+                    conditions_table$addRow(rowKey = i, values = list(
+                        area = row[1],
+                        condition = row[2],
+                        diagnostic = row[3]
+                    ))
+                    decisions_table$addRow(rowKey = i, values = list(
+                        area = row[1],
+                        condition = row[2],
+                        role = row[4],
+                        decision = row[5]
+                    ))
+                }
+            }
+
+            invisible(NULL)
+        },
+
+        .fillFoundations = function(model, txt, html_block, set_html_safe) {
             # -----------------------------------------------------------------------------
             # Methodological foundations: for the selected model, concatenate the
             # relevant cited foundation blocks (texts.R "time.foundations") so every
@@ -796,13 +820,7 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             foundations_parts <- foundations_parts[nzchar(foundations_parts)]
             set_html_safe("foundations", paste(foundations_parts, collapse = "\n"))
 
-            # -----------------------------------------------------------------------------
-            # Guide / interpretation / scope panels.
-            # ES: Paneles de guía / interpretación / alcance.
-            # -----------------------------------------------------------------------------
-            set_html_safe("intro", html_block(NULL, txt("time", "intro"), paragraphs = FALSE))
-            set_html_safe("interpretation", html_block(NULL, build_methodological_reading(model), paragraphs = FALSE))
-            set_html_safe("implementationNotes", html_block(NULL, txt("time", "scopeNote"), paragraphs = FALSE))
+            invisible(NULL)
         },
 
         # -----------------------------------------------------------------------------
