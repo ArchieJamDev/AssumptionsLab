@@ -188,10 +188,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             }
 
-
-
-
-
             clean_num <- function(x) {
                 if (length(x) == 0)
                     return(NA_real_)
@@ -472,6 +468,50 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             self$results$predictorEffectsPlot$setState(private$.predictorEffectsData)
 
+            private$.fillModelSummary(., html_escape, html_guide, clean_num, fmt_num, add_table_row, dep, covs, factors, n_total, n_used, n_excluded, formula_text, model_sum, p_model, predictor_count)
+
+            # ------------------------------------------------------------
+            # -----------------------------------------------------------------------------
+            # General flags for recommendations.
+            # ES: Banderas generales para recomendaciones
+            # -----------------------------------------------------------------------------
+            # ------------------------------------------------------------
+
+            linearity_problem <- FALSE
+            normality_problem <- FALSE
+            homo_problem <- FALSE
+            auto_problem <- FALSE
+            col_problem <- FALSE
+            severe_col_problem <- FALSE
+            influence_problem <- FALSE
+
+            step <- private$.checkLinearity(., html_block, html_guide, clean_num, p_sig, fmt_p, dcor_stat, dcor_pvalue, copentTest, qname, add_table_row, dep, covs, predictors, dat2, n_used, model_formula, fit, fitted_values, linearity_problem)
+            coherence_note <- step$coherence_note
+            coherence_sentence <- step$coherence_sentence
+            linearity_problem <- step$linearity_problem
+
+            private$.fillCorrelations(lang, ., html_block, html_guide, plot_guide, p_sig, dcor_stat, dcor_pvalue, copentTest, dep, covs, dat2, n_used)
+
+            step <- private$.checkNormality(., html_block, html_guide, clean_num, p_sig, fmt_p, safe_key, add_table_row, n_used, residuals_raw, coherence_note, coherence_sentence, normality_problem)
+            res <- step$res
+            normality_problem <- step$normality_problem
+
+            homo_problem <- private$.checkHomoscedasticity(., html_block, html_guide, clean_num, p_sig, fmt_p, safe_key, add_table_row, covs, predictors, dat2, n_used, fit, fitted_values, residuals_raw, coherence_note, coherence_sentence, res, homo_problem)
+
+            auto_problem <- private$.checkIndependence(., html_block, html_guide, clean_num, p_sig, fmt_p, fmt_num, add_table_row, n_used, fit, residuals_raw, p_model, coherence_note, coherence_sentence, auto_problem)
+
+            severe_col_problem <- private$.checkMulticollinearity(., html_block, html_guide, clean_num, fmt_num, add_table_row, covs, dat2, n_used, fit, severe_col_problem)
+
+            influence_problem <- private$.checkInfluence(., html_block, html_guide, clean_num, fmt_num, add_table_row, complete, n_used, fitted_values, residuals_raw, residuals_stud, leverage, cooks_d, dffits, p_model)
+
+            private$.setPlotVisibility(., html_block, plot_guide)
+
+            private$.fillTransformations(., html_guide, clean_num, qname, add_table_row, dep, predictors, dat2)
+
+            private$.fillRobustOptions(., html_block, html_guide, n_used, linearity_problem, normality_problem, homo_problem, auto_problem, severe_col_problem, influence_problem)
+        },
+
+        .fillModelSummary = function(., html_escape, html_guide, clean_num, fmt_num, add_table_row, dep, covs, factors, n_total, n_used, n_excluded, formula_text, model_sum, p_model, predictor_count) {
             r2 <- clean_num(model_sum$r.squared)
             adj_r2 <- clean_num(model_sum$adj.r.squared)
             sigma <- clean_num(model_sum$sigma)
@@ -556,22 +596,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             self$results$designGuide$setContent(html_guide(.("Regression model"), "regression", "designGuide"))
 
-            # ------------------------------------------------------------
-            # -----------------------------------------------------------------------------
-            # General flags for recommendations.
-            # ES: Banderas generales para recomendaciones
-            # -----------------------------------------------------------------------------
-            # ------------------------------------------------------------
+            invisible(NULL)
+        },
 
-            linearity_problem <- FALSE
-            normality_problem <- FALSE
-            homo_problem <- FALSE
-            auto_problem <- FALSE
-            col_problem <- FALSE
-            severe_col_problem <- FALSE
-            influence_problem <- FALSE
-
-            # ------------------------------------------------------------
+        .checkLinearity = function(., html_block, html_guide, clean_num, p_sig, fmt_p, dcor_stat, dcor_pvalue, copentTest, qname, add_table_row, dep, covs, predictors, dat2, n_used, model_formula, fit, fitted_values, linearity_problem) {
             # -----------------------------------------------------------------------------
             # Linearity per predictor and overall model linearity.
             # ES: Linealidad por predictor y linealidad global
@@ -857,6 +885,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            list(coherence_note = coherence_note, coherence_sentence = coherence_sentence, linearity_problem = linearity_problem)
+        },
+
+        .fillCorrelations = function(lang, ., html_block, html_guide, plot_guide, p_sig, dcor_stat, dcor_pvalue, copentTest, dep, covs, dat2, n_used) {
             # ------------------------------------------------------------
             # Correlation matrices (Pearson and dCor, APA 7 format).
             # ES: Matrices de correlaciones (Pearson y dCor, formato APA 7).
@@ -880,7 +912,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             k <- length(matVars)
             pairResults <- list()
-
 
             corr_show_individual <- tryCatch(isTRUE(self$options$corrShowIndividual), error = function(e) TRUE)
             corr_show_comparative <- tryCatch(isTRUE(self$options$corrShowComparative), error = function(e) TRUE)
@@ -1058,7 +1089,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             )
 
-            # ------------------------------------------------------------
+            invisible(NULL)
+        },
+
+        .checkNormality = function(., html_block, html_guide, clean_num, p_sig, fmt_p, safe_key, add_table_row, n_used, residuals_raw, coherence_note, coherence_sentence, normality_problem) {
             # -----------------------------------------------------------------------------
             # Residual normality.
             # ES: Normalidad de residuos
@@ -1193,7 +1227,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
-            # ------------------------------------------------------------
+            list(res = res, normality_problem = normality_problem)
+        },
+
+        .checkHomoscedasticity = function(., html_block, html_guide, clean_num, p_sig, fmt_p, safe_key, add_table_row, covs, predictors, dat2, n_used, fit, fitted_values, residuals_raw, coherence_note, coherence_sentence, res, homo_problem) {
             # -----------------------------------------------------------------------------
             # Homoscedasticity and heteroscedasticity.
             # ES: Homoscedasticidad y heterocedasticidad
@@ -1448,7 +1485,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
-            # ------------------------------------------------------------
+            homo_problem
+        },
+
+        .checkIndependence = function(., html_block, html_guide, clean_num, p_sig, fmt_p, fmt_num, add_table_row, n_used, fit, residuals_raw, p_model, coherence_note, coherence_sentence, auto_problem) {
             # -----------------------------------------------------------------------------
             # Error independence.
             # ES: Independencia de errores
@@ -1601,7 +1641,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
-            # ------------------------------------------------------------
+            auto_problem
+        },
+
+        .checkMulticollinearity = function(., html_block, html_guide, clean_num, fmt_num, add_table_row, covs, dat2, n_used, fit, severe_col_problem) {
             # -----------------------------------------------------------------------------
             # Multicollinearity.
             # ES: Multicolinealidad
@@ -1751,6 +1794,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            severe_col_problem
+        },
+
+        .checkInfluence = function(., html_block, html_guide, clean_num, fmt_num, add_table_row, complete, n_used, fitted_values, residuals_raw, residuals_stud, leverage, cooks_d, dffits, p_model) {
             # ------------------------------------------------------------
             # Outlying and influential cases.
             # ES: Casos atípicos e influyentes.
@@ -1815,19 +1862,13 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
-            # ------------------------------------------------------------
-            # -----------------------------------------------------------------------------
-            # Exploratory transformations of the dependent variable.
-            # ES: Transformaciones exploratorias de la variable dependiente
-            # -----------------------------------------------------------------------------
-            # ------------------------------------------------------------
+            influence_problem
+        },
 
+        .setPlotVisibility = function(., html_block, plot_guide) {
             # ------------------------------------------------------------
             # Plot visibility according to the selected plot set.
             # ES: Visibilidad de gráficos según el conjunto seleccionado.
-            # ------------------------------------------------------------
-
-            # ------------------------------------------------------------
             # Plot visibility per diagnostic area.
             # ES: Visibilidad de gráficos por área.
             # ------------------------------------------------------------
@@ -2011,6 +2052,16 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 self$results$cooksDGuide$setContent("")
                 self$results$observedPredictedGuide$setContent("")
             }
+
+            invisible(NULL)
+        },
+
+        .fillTransformations = function(., html_guide, clean_num, qname, add_table_row, dep, predictors, dat2) {
+            # -----------------------------------------------------------------------------
+            # Exploratory transformations of the dependent variable.
+            # ES: Transformaciones exploratorias de la variable dependiente
+            # -----------------------------------------------------------------------------
+            # ------------------------------------------------------------
 
             self$results$transformationsGuide$setContent(html_guide(.("Exploratory transformations"), "regression", "transformationsGuide"))
 
@@ -2414,7 +2465,10 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "fitEval"
             )
 
-            # ------------------------------------------------------------
+            invisible(NULL)
+        },
+
+        .fillRobustOptions = function(., html_block, html_guide, n_used, linearity_problem, normality_problem, homo_problem, auto_problem, severe_col_problem, influence_problem) {
             # -----------------------------------------------------------------------------
             # Robust and resampling options.
             # ES: Opciones robustas y de remuestreo
@@ -2511,6 +2565,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             )
 
+            invisible(NULL)
         },
 
         .requirePlotData = function(image) {
@@ -2553,7 +2608,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             TRUE
         },
-
 
         # Plot theme/palette migrated to jamovi's native ggtheme/theme
         # mechanism - see logcheck.b.R's .plotColors()/.plotSeriesColors()
