@@ -469,7 +469,7 @@ assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cl
             super$initialize(
                 package = "AssumptionsLab",
                 name = "assumptionLibrary",
-                version = c(1,0,0),
+                version = c(1,1,0),
                 options = options,
                 results = assumptionLibraryResults$new(options=options),
                 data = data,
