@@ -432,6 +432,85 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             self$results$intro$setContent(render_groupcheck_intro(show_vars = TRUE))
 
+            private$.fillDesign(., n_total, n_used, n_no_group, n_groups, n_missing_dep, missing_dep_pct)
+
+            private$.fillDescriptives(y2, g2, group_levels)
+
+            private$.setDistributionPlot(dep, group, y2, g2, group_levels)
+
+            outlier_table <- private$.screenOutliers(y2, g2, group_levels)
+
+            step <- private$.checkCaseDiagnostics(., p_sig, block96, html_block, y, g, valid_group, n_total, n_groups, outlier_table)
+            n_model <- step$n_model
+            n_any_flagged <- step$n_any_flagged
+
+            step <- private$.checkNormality(., clean_num, p_sig, p_decision, y2, g2, group_levels)
+            shapiro_p_by_group <- step$shapiro_p_by_group
+            normality_table <- step$normality_table
+            group_sig_counts <- step$group_sig_counts
+            group_valid_counts <- step$group_valid_counts
+
+            homogeneity_rows <- private$.checkHomogeneity(., clean_num, p_sig, variance_decision, block96, html_block, fmt_p, y2, g2, n_total, n_groups, shapiro_p_by_group, group_sig_counts, group_valid_counts)
+
+            # -----------------------------------------------------------------------------
+            # Diagnostic guide texts: distribution plot and case diagnostics.
+            # ES: Textos de guía diagnóstica: gráfico de distribución y diagnóstico de
+            # casos.
+            # -----------------------------------------------------------------------------
+            case_diagnostics_guide <- c(.("These diagnostics help identify cases that may have an unusual effect on the group comparison model."), .("Cook's D evaluates potential influence: a flagged case may affect model estimates or group differences."), .("Mahalanobis D² is a multivariate distance measure. In this module, with a single dependent variable, it reduces to an equivalent measure based on the standardized distance from the group mean (its degenerate one-dimensional case)."), .("A flagged case is not automatically an error and should not be removed only because it is statistically unusual."), .("Recommended practice: check the original data value, verify whether the case is plausible, compare results with and without the case, and report any exclusion decision transparently."))
+
+            self$results$distributionPlotGuide$setContent(html_block(
+                txt("common", "briefGuide"),
+                .al_html_list(c(
+                    .("Use this plot to compare the median, IQR, approximate shape, spread, sample size and extreme values across groups."),
+                    .("The boxplot keeps the median visible. Optional layers can add violin density, individual observations and the mean marker."),
+                    .("Interpret visual differences together with descriptive statistics, outlier screening and assumption tests.")
+                )),
+                raw = TRUE))
+
+            self$results$caseDiagnosticsGuide$setContent(html_block(
+                txt("common", "briefGuide"),
+                .al_html_list(case_diagnostics_guide),
+                raw = TRUE
+            ))
+
+            # -----------------------------------------------------------------------------
+            # Normality guide text.
+            # ES: Texto de guía de normalidad.
+            # -----------------------------------------------------------------------------
+            normality_guide_text <- c(.("Normality is evaluated within each independent group because parametric group comparisons assume approximately normal distributions at each level of the grouping factor."), .("A p value greater than or equal to .05 is compatible with approximate normality, but it does not prove that the distribution is perfectly normal."), .("A p value below .05 suggests a statistically significant deviation from normality. The practical importance of that deviation should be judged together with sample size, outliers, and graphical evidence."), .("With large samples, normality tests can detect small deviations that may not seriously affect the analysis. With small samples, tests may have low power, so visual inspection and substantive judgment are especially important."), .("When normality evidence is mixed, a parametric test can still be defensible if deviations are limited and sample sizes are adequate; robust or non-parametric alternatives can be reported as sensitivity analyses."))
+
+            self$results$normalityGuide$setContent(html_block(
+                txt("common", "briefGuide"),
+                .al_html_list(normality_guide_text),
+                raw = TRUE
+            ))
+
+            private$.qqPlotData <- NULL
+            private$.qqPlotSelected <- NULL
+
+            private$.setQQPlots(data, dep, group, ., txt, html_block)
+
+            homogeneity_table <- private$.fillHomogeneityTable(homogeneity_rows)
+
+            # -----------------------------------------------------------------------------
+            # Variance guide text.
+            # ES: Texto de guía de varianza.
+            # -----------------------------------------------------------------------------
+            variance_guide_text <- c(.("These tests evaluate whether the group variances are reasonably similar."), .("A p value greater than or equal to .05 is compatible with homogeneous variances, although it does not prove that variances are identical."), .("A p value below .05 suggests statistically significant variance heterogeneity. This matters because unequal variances can affect the standard error, confidence intervals, and p values of classic parametric comparisons."), .("When group sizes are unequal, heterogeneity of variances is more consequential. Welch procedures are usually preferable in that situation because they do not require equal variances."), .("Bartlett's test is sensitive to non-normality. Levene, Brown-Forsythe, and Fligner-Killeen are often more robust choices for applied data."))
+
+            self$results$homogeneityGuide$setContent(html_block(
+                txt("common", "briefGuide"),
+                .al_html_list(variance_guide_text),
+                raw = TRUE
+            ))
+
+            private$.fillSummary(., txt, html_escape, html_block, group_levels, n_total, n_groups, outlier_table, n_model, n_any_flagged, normality_table, homogeneity_table)
+
+
+        },
+
+        .fillDesign = function(., n_total, n_used, n_no_group, n_groups, n_missing_dep, missing_dep_pct) {
             # -----------------------------------------------------------------------------
             # Design summary table.
             # ES: Tabla de resumen del diseño.
@@ -484,6 +563,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 value = paste0(n_missing_dep, " (", missing_dep_pct, "%)")
             ))
 
+            invisible(NULL)
+        },
+
+        .fillDescriptives = function(y2, g2, group_levels) {
             # -----------------------------------------------------------------------------
             # Descriptive statistics by group.
             # ES: Estadísticos descriptivos por grupo.
@@ -524,6 +607,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            invisible(NULL)
+        },
+
+        .setDistributionPlot = function(dep, group, y2, g2, group_levels) {
             # -----------------------------------------------------------------------------
             # Distribution plot data (boxplot/violin state).
             # ES: Datos del gráfico de distribución (estado de boxplot/violin).
@@ -570,6 +657,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             self$results$distributionPlot$setState(distribution_plot_state)
 
+            invisible(NULL)
+        },
+
+        .screenOutliers = function(y2, g2, group_levels) {
             # -----------------------------------------------------------------------------
             # Outlier screening via the IQR rule.
             # ES: Cribado de valores atípicos mediante la regla IQR.
@@ -645,6 +736,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            outlier_table
+        },
+
+        .checkCaseDiagnostics = function(., p_sig, block96, html_block, y, g, valid_group, n_total, n_groups, outlier_table) {
             # -----------------------------------------------------------------------------
             # Case-level diagnostics: Cook's distance and Mahalanobis distance.
             # ES: Diagnósticos a nivel de caso: distancia de Cook y distancia de
@@ -775,6 +870,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 ))
             ))
 
+            list(n_model = n_model, n_any_flagged = n_any_flagged)
+        },
+
+        .checkNormality = function(., clean_num, p_sig, p_decision, y2, g2, group_levels) {
             # -----------------------------------------------------------------------------
             # Normality diagnostic battery per group.
             # ES: Batería diagnóstica de normalidad por grupo.
@@ -992,6 +1091,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
+            list(shapiro_p_by_group = shapiro_p_by_group, normality_table = normality_table, group_sig_counts = group_sig_counts, group_valid_counts = group_valid_counts)
+        },
+
+        .checkHomogeneity = function(., clean_num, p_sig, variance_decision, block96, html_block, fmt_p, y2, g2, n_total, n_groups, shapiro_p_by_group, group_sig_counts, group_valid_counts) {
             # -----------------------------------------------------------------------------
             # Homogeneity-of-variance diagnostic battery.
             # ES: Batería diagnóstica de homogeneidad de varianzas.
@@ -1317,43 +1420,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             }
 
-            # -----------------------------------------------------------------------------
-            # Diagnostic guide texts: distribution plot and case diagnostics.
-            # ES: Textos de guía diagnóstica: gráfico de distribución y diagnóstico de
-            # casos.
-            # -----------------------------------------------------------------------------
-            case_diagnostics_guide <- c(.("These diagnostics help identify cases that may have an unusual effect on the group comparison model."), .("Cook's D evaluates potential influence: a flagged case may affect model estimates or group differences."), .("Mahalanobis D² is a multivariate distance measure. In this module, with a single dependent variable, it reduces to an equivalent measure based on the standardized distance from the group mean (its degenerate one-dimensional case)."), .("A flagged case is not automatically an error and should not be removed only because it is statistically unusual."), .("Recommended practice: check the original data value, verify whether the case is plausible, compare results with and without the case, and report any exclusion decision transparently."))
+            homogeneity_rows
+        },
 
-            self$results$distributionPlotGuide$setContent(html_block(
-                txt("common", "briefGuide"),
-                .al_html_list(c(
-                    .("Use this plot to compare the median, IQR, approximate shape, spread, sample size and extreme values across groups."),
-                    .("The boxplot keeps the median visible. Optional layers can add violin density, individual observations and the mean marker."),
-                    .("Interpret visual differences together with descriptive statistics, outlier screening and assumption tests.")
-                )),
-                raw = TRUE))
-
-            self$results$caseDiagnosticsGuide$setContent(html_block(
-                txt("common", "briefGuide"),
-                .al_html_list(case_diagnostics_guide),
-                raw = TRUE
-            ))
-
-            # -----------------------------------------------------------------------------
-            # Normality guide text.
-            # ES: Texto de guía de normalidad.
-            # -----------------------------------------------------------------------------
-            normality_guide_text <- c(.("Normality is evaluated within each independent group because parametric group comparisons assume approximately normal distributions at each level of the grouping factor."), .("A p value greater than or equal to .05 is compatible with approximate normality, but it does not prove that the distribution is perfectly normal."), .("A p value below .05 suggests a statistically significant deviation from normality. The practical importance of that deviation should be judged together with sample size, outliers, and graphical evidence."), .("With large samples, normality tests can detect small deviations that may not seriously affect the analysis. With small samples, tests may have low power, so visual inspection and substantive judgment are especially important."), .("When normality evidence is mixed, a parametric test can still be defensible if deviations are limited and sample sizes are adequate; robust or non-parametric alternatives can be reported as sensitivity analyses."))
-
-            self$results$normalityGuide$setContent(html_block(
-                txt("common", "briefGuide"),
-                .al_html_list(normality_guide_text),
-                raw = TRUE
-            ))
-
-            private$.qqPlotData <- NULL
-            private$.qqPlotSelected <- NULL
-
+        .setQQPlots = function(data, dep, group, ., txt, html_block) {
             # -----------------------------------------------------------------------------
             # Q-Q plot state preparation.
             # ES: Preparación del estado del gráfico Q-Q.
@@ -1520,6 +1590,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .fillHomogeneityTable = function(homogeneity_rows) {
             # -----------------------------------------------------------------------------
             # Homogeneity results table population.
             # ES: Llenado de la tabla de resultados de homogeneidad.
@@ -1548,18 +1622,10 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     )
             }
 
-            # -----------------------------------------------------------------------------
-            # Variance guide text.
-            # ES: Texto de guía de varianza.
-            # -----------------------------------------------------------------------------
-            variance_guide_text <- c(.("These tests evaluate whether the group variances are reasonably similar."), .("A p value greater than or equal to .05 is compatible with homogeneous variances, although it does not prove that variances are identical."), .("A p value below .05 suggests statistically significant variance heterogeneity. This matters because unequal variances can affect the standard error, confidence intervals, and p values of classic parametric comparisons."), .("When group sizes are unequal, heterogeneity of variances is more consequential. Welch procedures are usually preferable in that situation because they do not require equal variances."), .("Bartlett's test is sensitive to non-normality. Levene, Brown-Forsythe, and Fligner-Killeen are often more robust choices for applied data."))
+            homogeneity_table
+        },
 
-            self$results$homogeneityGuide$setContent(html_block(
-                txt("common", "briefGuide"),
-                .al_html_list(variance_guide_text),
-                raw = TRUE
-            ))
-
+        .fillSummary = function(., txt, html_escape, html_block, group_levels, n_total, n_groups, outlier_table, n_model, n_any_flagged, normality_table, homogeneity_table) {
             # -----------------------------------------------------------------------------
             # Executive-summary evidence tally.
             # ES: Recuento de evidencia para el resumen ejecutivo.
@@ -1800,7 +1866,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 raw = TRUE
             ))
 
-
+            invisible(NULL)
         },
 
         # -----------------------------------------------------------------------------

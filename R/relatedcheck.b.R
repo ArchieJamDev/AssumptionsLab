@@ -318,6 +318,26 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             sphericity_text <- ""
             all_diffs <- list()
 
+            private$.fillDesign(., add_table_row, html_escape, html_block, measures, k, n_total, n_used, n_excluded)
+
+            step <- private$.fillDifferences(., clean_num, add_table_row, html_block, measures, dat, all_diffs)
+            all_diffs <- step$all_diffs
+            d <- step$d
+
+            normality_problem <- private$.checkNormality(., clean_num, sig_code, format_p, add_table_row, block96, html_block, all_diffs, normality_problem)
+
+            private$.checkSymmetry(., clean_num, p_sig, interpret_symmetry, add_table_row, block96, html_block, symmetry_texts, all_diffs, d, symmetry_problem)
+
+            sphericity_problem <- private$.checkSphericity(., clean_num, p_sig, interpret_sphericity, add_table_row, block96, html_block, measures, k, dat2, n_used, sphericity_problem)
+
+            private$.fillCorrelations(lang, ., p_sig, block96, html_block, measures, dat2, n_used)
+
+            outlier_problem <- private$.checkOutliers(., clean_num, add_table_row, block96, html_block, complete, all_diffs, outlier_problem)
+
+            private$.fillMethods(., add_table_row, block96, html_block, k, normality_problem, sphericity_problem, outlier_problem)
+        },
+
+        .fillDesign = function(., add_table_row, html_escape, html_block, measures, k, n_total, n_used, n_excluded) {
             self$results$intro$setContent(paste0(
             "<div style=\"line-height:1.25; margin:0.05em 0 0.35em 0;\">",
             "<p style=\"font-weight:700; margin:0 0 0.10em 0;\">AssumptionsLab</p>",
@@ -363,6 +383,12 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             )),
             raw = TRUE
         ))
+
+            invisible(NULL)
+        },
+
+        .fillDifferences = function(., clean_num, add_table_row, html_block, measures, dat, all_diffs) {
+            d <- NULL
 
             # Fill descriptive summary table.
             # ES: Llenar la tabla de resumen descriptivo.
@@ -590,6 +616,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             raw = TRUE
         ))
 
+            list(all_diffs = all_diffs, d = d)
+        },
+
+        .checkNormality = function(., clean_num, sig_code, format_p, add_table_row, block96, html_block, all_diffs, normality_problem) {
             # Fill normality table for paired differences.
             # ES: Llenar la tabla de normalidad de diferencias pareadas.
             if (isTRUE(self$options$showNormalityPlots)) {
@@ -939,6 +969,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             self$results$normalityRecommendation$setContent("")
         }
 
+            normality_problem
+        },
+
+        .checkSymmetry = function(., clean_num, p_sig, interpret_symmetry, add_table_row, block96, html_block, symmetry_texts, all_diffs, d, symmetry_problem) {
         sym_i <- 1
 
             add_sym <- function(comparison, statistic, value, p_value, reason = NULL) {
@@ -1028,6 +1062,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             ))
         ))
 
+            invisible(NULL)
+        },
+
+        .checkSphericity = function(., clean_num, p_sig, interpret_sphericity, add_table_row, block96, html_block, measures, k, dat2, n_used, sphericity_problem) {
             sp_i <- 1
             mauchly_p_value <- NA_real_
 
@@ -1134,6 +1172,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
             ))
         ))
 
+            sphericity_problem
+        },
+
+        .fillCorrelations = function(lang, ., p_sig, block96, html_block, measures, dat2, n_used) {
             # Correlation matrices (Pearson and dCor, APA 7 format) + copent discordance.
             # ES: Matrices de correlación (Pearson y dCor, formato APA 7) + discordancia con copent.
 
@@ -1307,6 +1349,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 }
             }
 
+            invisible(NULL)
+        },
+
+        .checkOutliers = function(., clean_num, add_table_row, block96, html_block, complete, all_diffs, outlier_problem) {
             out_i <- 1
             outlier_counts_by_comparison <- c()
 
@@ -1390,6 +1436,10 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                 ))
             ))
 
+            outlier_problem
+        },
+
+        .fillMethods = function(., add_table_row, block96, html_block, k, normality_problem, sphericity_problem, outlier_problem) {
             self$results$methodGuide$setContent(html_block(
             .("Brief guide"),
             .al_html_list(c(
@@ -1574,6 +1624,8 @@ self$results$notes$setContent(html_block(
                 .("Significance codes: * p < .05, ** p < .01, *** p < .001.")
             )
         ))
+
+            invisible(NULL)
         },
 
         .emptyRelatedPlot = function(message) {

@@ -343,6 +343,37 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             n_model_params <- length(coef(model)) + n_cut
 
+            private$.fillIntro(., html_escape, html_block, dep_levels, n_complete, min_cat_n, min_cat_name, n_model_params)
+
+            private$.fillDesign(., html_guide, add_row, n_levels, n_total, n_complete, cat_counts, min_cat_n, min_cat_name, n_model_params)
+
+            private$.checkSeparation(., html_block, html_guide, add_row, n_predictors, coef_table)
+
+            bt_significant <- private$.checkLinearity(., html_block, html_guide, p_sig, add_row, qname, covs, predictors, model_data_complete)
+
+            pom_omnibus_p <- private$.checkProportionalOdds(., html_block, html_guide, fmt_num, p_sig, add_row, model)
+
+            private$.checkGoodnessOfFit(., html_block, html_guide, p_sig, add_row, factors, model)
+
+            private$.fillPseudoR2(., html_block, html_guide, fmt_num, add_row, n_complete, model, null_model)
+
+            private$.checkMulticollinearity(., html_block, html_guide, fmt_num, add_row, qname, predictors, model_data_complete)
+
+            private$.fillCorrelations(lang, ., html_block, html_guide, p_sig, add_row, dcor_stat, dcor_pvalue, copentTest, dep_var, covs, model_data_complete, n_complete)
+
+            step <- private$.checkInfluence(., html_block, html_guide, fmt_num, add_row, model_data_complete, n_complete, model)
+            fitted_probs <- step$fitted_probs
+            n_influential <- step$n_influential
+            pearson_resid <- step$pearson_resid
+
+            private$.fillCoefficients(., html_block, html_guide, fmt_num, p_sig, add_row, model, n_cut, cut_table, slope_p)
+
+            private$.fillNotes(., html_block, n_complete, bt_significant, pom_omnibus_p, n_influential)
+
+            private$.setPlotStates(covs, n_levels, model_data_complete, n_complete, fitted_probs, pearson_resid)
+        },
+
+        .fillIntro = function(., html_escape, html_block, dep_levels, n_complete, min_cat_n, min_cat_name, n_model_params) {
             # -----------------------------------------------------------------------------
             # Report introduction.
             # ES: Introducción del informe.
@@ -371,6 +402,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "</div>"
             ))
 
+            invisible(NULL)
+        },
+
+        .fillDesign = function(., html_guide, add_row, n_levels, n_total, n_complete, cat_counts, min_cat_n, min_cat_name, n_model_params) {
             # -----------------------------------------------------------------------------
             # Model design.
             # ES: Diseño del modelo.
@@ -400,6 +435,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             }
 
+            invisible(NULL)
+        },
+
+        .checkSeparation = function(., html_block, html_guide, add_row, n_predictors, coef_table) {
             # -----------------------------------------------------------------------------
             # Complete / quasi-complete separation (same coefficient/SE
             # screen as logCheck, applied only to the slope rows - the
@@ -445,6 +484,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .checkLinearity = function(., html_block, html_guide, p_sig, add_row, qname, covs, predictors, model_data_complete) {
             # -----------------------------------------------------------------------------
             # Linearity in the cumulative logit (Box-Tidwell-style):
             # a numeric_predictor * log(numeric_predictor) interaction
@@ -504,6 +547,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            bt_significant
+        },
+
+        .checkProportionalOdds = function(., html_block, html_guide, fmt_num, p_sig, add_row, model) {
             # -----------------------------------------------------------------------------
             # Proportional odds (Brant test) - soft dependency on 'brant'.
             # ES: Momios proporcionales (prueba de Brant) - dependencia
@@ -560,6 +607,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            pom_omnibus_p
+        },
+
+        .checkGoodnessOfFit = function(., html_block, html_guide, p_sig, add_row, factors, model) {
             # -----------------------------------------------------------------------------
             # Goodness of fit - soft dependency on 'generalhoslem'.
             # ES: Bondad de ajuste - dependencia opcional del paquete
@@ -635,6 +686,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .fillPseudoR2 = function(., html_block, html_guide, fmt_num, add_row, n_complete, model, null_model) {
             # -----------------------------------------------------------------------------
             # Pseudo-R² (discrimination replacement, per Archie's decision:
             # no single ROC/AUC once the outcome has 3+ ordered levels).
@@ -667,6 +722,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .checkMulticollinearity = function(., html_block, html_guide, fmt_num, add_row, qname, predictors, model_data_complete) {
             # -----------------------------------------------------------------------------
             # Multicollinearity: manual VIF/tolerance from the predictors'
             # own design matrix - identical computation to logCheck's/
@@ -751,6 +810,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             }
 
+            invisible(NULL)
+        },
+
+        .fillCorrelations = function(lang, ., html_block, html_guide, p_sig, add_row, dcor_stat, dcor_pvalue, copentTest, dep_var, covs, model_data_complete, n_complete) {
             # -----------------------------------------------------------------------------
             # Correlation matrices (Pearson / dCor / copula entropy) -
             # identical machinery to logCheck's block; the dependent
@@ -863,6 +926,12 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             }
 
+            invisible(NULL)
+        },
+
+        .checkInfluence = function(., html_block, html_guide, fmt_num, add_row, model_data_complete, n_complete, model) {
+            pearson_resid <- NULL
+
             # -----------------------------------------------------------------------------
             # Influential cases: per-case Pearson-type residual on the
             # observed category's fitted probability (see file header for
@@ -914,6 +983,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            list(fitted_probs = fitted_probs, n_influential = n_influential, pearson_resid = pearson_resid)
+        },
+
+        .fillCoefficients = function(., html_block, html_guide, fmt_num, p_sig, add_row, model, n_cut, cut_table, slope_p) {
             # -----------------------------------------------------------------------------
             # Coefficients / odds ratios (single OR per predictor, since
             # under proportional odds the coefficient is constant across
@@ -964,6 +1037,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .fillNotes = function(., html_block, n_complete, bt_significant, pom_omnibus_p, n_influential) {
             # -----------------------------------------------------------------------------
             # Notes and recommendation.
             # ES: Notas y recomendación.
@@ -987,6 +1064,10 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 sprintf(.("Model fitted with %s cases."), n_complete)
             ), paragraphs = TRUE))
 
+            invisible(NULL)
+        },
+
+        .setPlotStates = function(covs, n_levels, model_data_complete, n_complete, fitted_probs, pearson_resid) {
             # -----------------------------------------------------------------------------
             # State for the plots. Each image gets only the fields its own render
             # function reads - not one shared list for both plots - since jamovi's review
@@ -1023,6 +1104,8 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             self$results$linearityPlot$setVisible(show_plots_master && lin_show && length(covs) > 0)
             self$results$influencePlot$setVisible(show_plots_master && infl_show)
+
+            invisible(NULL)
         },
 
         # -----------------------------------------------------------------------------
