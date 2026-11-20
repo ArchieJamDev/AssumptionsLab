@@ -1,4 +1,4 @@
-# AssumptionsLab 1.7.1 (unreleased)
+# AssumptionsLab 1.7.1 (2026-11-20)
 
 ## The Assumption Library cites like the other analyses
 
@@ -18,7 +18,7 @@
   category filter and the language, and that every `refs:` key of the
   library exists in `jamovi/00refs.yaml`.
 
-# AssumptionsLab 1.7.0 (unreleased)
+# AssumptionsLab 1.7.0 (2026-11-20)
 
 ## Report language follows jamovi
 
