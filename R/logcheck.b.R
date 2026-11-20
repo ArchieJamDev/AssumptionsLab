@@ -285,6 +285,35 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             add_row(self$results$design, "design_3", list(element = .("Events"), value = as.character(n_events)))
             add_row(self$results$design, "design_4", list(element = .("EPV (least-frequent category)"), value = fmt_num(epv, 2)))
 
+            private$.checkSeparation(., html_block, html_guide, add_row, strip_qname, n_events, n_non_events, n_predictors, coef_table)
+
+            bt_significant <- private$.checkLinearity(., html_block, html_guide, p_sig, qname, covs, predictors, model_data_complete, n_complete)
+
+            private$.checkGoodnessOfFit(., html_block, html_guide, fmt_num, p_sig, model_data_complete, model)
+
+            step <- private$.checkDiscrimination(., html_block, html_guide, fmt_num, model_data_complete, n_events, n_non_events, model)
+            auc_val <- step$auc_val
+            roc_obj <- step$roc_obj
+
+            max_vif <- private$.checkMulticollinearity(., html_block, html_guide, fmt_num, n_complete, n_predictors, model)
+
+            private$.fillCorrelations(lang, ., html_block, html_guide, p_sig, dep_var, covs, model_data_complete, n_complete)
+
+            step <- private$.checkInfluence(., html_block, html_guide, clean_num, fmt_num, n_complete, model)
+            cooks_d <- step$cooks_d
+            leverage_vals <- step$leverage_vals
+            n_influential <- step$n_influential
+            n_model_params <- step$n_model_params
+            pct_influential <- step$pct_influential
+
+            private$.fillOddsRatios(., html_block, html_guide, fmt_num, p_sig, strip_qname, n_complete, n_events, model, coef_table)
+
+            private$.fillNotes(., html_block, fmt_num, n_complete, epv, bt_significant, max_vif, n_influential, pct_influential)
+
+            private$.setPlotStates(covs, model_data_complete, n_complete, model, auc_val, roc_obj, cooks_d, leverage_vals, n_model_params)
+        },
+
+        .checkSeparation = function(., html_block, html_guide, add_row, strip_qname, n_events, n_non_events, n_predictors, coef_table) {
             # -----------------------------------------------------------------------------
             # Complete separation.
             # ES: Separación completa.
@@ -334,6 +363,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .checkLinearity = function(., html_block, html_guide, p_sig, qname, covs, predictors, model_data_complete, n_complete) {
             # -----------------------------------------------------------------------------
             # Linearity in the logit (Box-Tidwell).
             # ES: Linealidad en el logit (Box-Tidwell).
@@ -457,6 +490,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            bt_significant
+        },
+
+        .checkGoodnessOfFit = function(., html_block, html_guide, fmt_num, p_sig, model_data_complete, model) {
             # -----------------------------------------------------------------------------
             # Goodness of fit.
             # ES: Bondad de ajuste.
@@ -534,6 +571,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .checkDiscrimination = function(., html_block, html_guide, fmt_num, model_data_complete, n_events, n_non_events, model) {
             # -----------------------------------------------------------------------------
             # Discrimination.
             # ES: Discriminación.
@@ -598,6 +639,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            list(auc_val = auc_val, roc_obj = roc_obj)
+        },
+
+        .checkMulticollinearity = function(., html_block, html_guide, fmt_num, n_complete, n_predictors, model) {
             # -----------------------------------------------------------------------------
             # Multicollinearity.
             # ES: Multicolinealidad.
@@ -695,6 +740,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            max_vif
+        },
+
+        .fillCorrelations = function(lang, ., html_block, html_guide, p_sig, dep_var, covs, model_data_complete, n_complete) {
             # -----------------------------------------------------------------------------
             # Correlation matrices (Pearson and dCor, APA 7 format) + copent.
             # ES: Matrices de correlación (Pearson y dCor, formato APA 7) + copent.
@@ -857,6 +906,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             }
 
+            invisible(NULL)
+        },
+
+        .checkInfluence = function(., html_block, html_guide, clean_num, fmt_num, n_complete, model) {
             # -----------------------------------------------------------------------------
             # Influence.
             # ES: Influencia.
@@ -921,6 +974,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            list(cooks_d = cooks_d, leverage_vals = leverage_vals, n_influential = n_influential, n_model_params = n_model_params, pct_influential = pct_influential)
+        },
+
+        .fillOddsRatios = function(., html_block, html_guide, fmt_num, p_sig, strip_qname, n_complete, n_events, model, coef_table) {
             # -----------------------------------------------------------------------------
             # Odds ratios.
             # ES: Odds ratios.
@@ -1011,6 +1068,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .fillNotes = function(., html_block, fmt_num, n_complete, epv, bt_significant, max_vif, n_influential, pct_influential) {
             # -----------------------------------------------------------------------------
             # Notes and recommendation.
             # ES: Notas y recomendación.
@@ -1051,6 +1112,10 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .setPlotStates = function(covs, model_data_complete, n_complete, model, auc_val, roc_obj, cooks_d, leverage_vals, n_model_params) {
             # -----------------------------------------------------------------------------
             # State for the plots (defensive pattern: language and data persist with the
             # image, so they do not depend on .run() being re-triggered). Each image gets
@@ -1111,6 +1176,8 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     )
                 }
             }
+
+            invisible(NULL)
         },
 
         .emptyLogPlot = function(message) {
