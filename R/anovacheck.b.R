@@ -519,6 +519,71 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             p_model <- length(stats::coef(fit))
 
+            private$.setResidualPlots(., plot_guide, n_used, fit, residuals_raw, fitted_values, residuals_stud, leverage, cooks_d, dffits, p_model)
+
+            normality_problem <- FALSE
+            variance_problem <- FALSE
+            slopes_problem <- FALSE
+            linearity_problem <- FALSE
+            influence_problem <- FALSE
+            design_problem <- FALSE
+            dcor_problem <- FALSE
+
+            normality_texts <- character()
+            variance_texts <- character()
+            slope_texts <- character()
+            covlin_texts <- character()
+
+            norm_sig_count <- 0L
+            norm_total_count <- 0L
+
+            recommendation <- ""
+
+            cell_factor <- tryCatch({
+                interaction(dat2[, factors, drop = FALSE], drop = TRUE, sep = " | ")
+            }, error = function(e) NULL)
+
+            if (is.null(cell_factor)) {
+                self$results$intro$setContent(
+                    .("It was not possible to build the design cells.")
+                )
+                return()
+            }
+
+            cell_n <- table(cell_factor)
+            min_cell <- min(cell_n)
+            max_cell <- max(cell_n)
+            balance_ratio <- max_cell / max(1, min_cell)
+
+            if (min_cell < 5 || balance_ratio > 2)
+                design_problem <- TRUE
+
+            y <- private$.fillDesign(., clean_num, fmt_num, html_escape, block96, html_list_guide, plot_guide, add_table_row, dep, factors, covs, dat2, n_total, n_used, n_excluded, formula_text, design_problem, cell_factor, cell_n, min_cell, max_cell, balance_ratio)
+
+
+            normality_problem <- private$.checkNormality(., clean_num, p_sig, block96, html_list_guide, interpret_normality, add_table_row, residuals_raw, normality_texts, norm_sig_count, norm_total_count, normality_problem)
+
+            variance_problem <- private$.checkHomogeneity(., clean_num, p_sig, block96, html_list_guide, interpret_variance, add_table_row, n_used, variance_texts, cell_factor, cell_n, y, variance_problem)
+
+            slopes_problem <- private$.checkSlopes(., clean_num, p_sig, qname, block96, html_list_guide, interpret_slope, add_table_row, dep, factors, covs, dat2, n_used, rhs, fit, slope_texts, slopes_problem)
+
+            step <- private$.checkCovariateLinearity(., clean_num, p_sig, qname, block96, html_list_guide, dcor_stat, dcor_pvalue, copentTest, interpret_covariate_linearity, add_table_row, dep, covs, dat2, n_used, rhs, covlin_texts, y, linearity_problem, dcor_problem)
+            linearity_problem <- step$linearity_problem
+            dcor_problem <- step$dcor_problem
+
+            private$.checkMulticollinearity(., clean_num, block96, html_list_guide, add_table_row, covs, dat2, fit)
+
+            private$.fillCorrelations(lang, ., p_sig, block96, html_list_guide, dcor_stat, dcor_pvalue, copentTest, dep, covs, dat2, n_used)
+
+            influence_problem <- private$.checkInfluence(., clean_num, block96, html_list_guide, plot_guide, add_table_row, complete, n_used, residuals_raw, fitted_values, residuals_stud, leverage, cooks_d, dffits, p_model)
+
+
+            private$.fillAlternatives(., html_list_guide, add_table_row, normality_problem, variance_problem, slopes_problem, linearity_problem, influence_problem, design_problem, dcor_problem)
+
+            private$.setPlotVisibility(., block96, html_list_guide, normality_problem, variance_problem, slopes_problem, linearity_problem, influence_problem, design_problem, dcor_problem)
+        },
+
+        .setResidualPlots = function(., plot_guide, n_used, fit, residuals_raw, fitted_values, residuals_stud, leverage, cooks_d, dffits, p_model) {
             std_resid_anova <- tryCatch(
                 stats::rstandard(fit),
                 error = function(e) residuals_raw / stats::sd(residuals_raw, na.rm = TRUE)
@@ -594,43 +659,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 .("read classical tests with caution and review outliers, transformation, or specification.")
             ))
 
-            normality_problem <- FALSE
-            variance_problem <- FALSE
-            slopes_problem <- FALSE
-            linearity_problem <- FALSE
-            influence_problem <- FALSE
-            design_problem <- FALSE
-            dcor_problem <- FALSE
+            invisible(NULL)
+        },
 
-            normality_texts <- character()
-            variance_texts <- character()
-            slope_texts <- character()
-            covlin_texts <- character()
-
-            norm_sig_count <- 0L
-            norm_total_count <- 0L
-
-            recommendation <- ""
-
-            cell_factor <- tryCatch({
-                interaction(dat2[, factors, drop = FALSE], drop = TRUE, sep = " | ")
-            }, error = function(e) NULL)
-
-            if (is.null(cell_factor)) {
-                self$results$intro$setContent(
-                    .("It was not possible to build the design cells.")
-                )
-                return()
-            }
-
-            cell_n <- table(cell_factor)
-            min_cell <- min(cell_n)
-            max_cell <- max(cell_n)
-            balance_ratio <- max_cell / max(1, min_cell)
-
-            if (min_cell < 5 || balance_ratio > 2)
-                design_problem <- TRUE
-
+        .fillDesign = function(., clean_num, fmt_num, html_escape, block96, html_list_guide, plot_guide, add_table_row, dep, factors, covs, dat2, n_total, n_used, n_excluded, formula_text, design_problem, cell_factor, cell_n, min_cell, max_cell, balance_ratio) {
             self$results$intro$setContent(paste0(
                 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\">",
                 "<p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">",
@@ -753,7 +785,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             )
 
+            y
+        },
 
+        .checkNormality = function(., clean_num, p_sig, block96, html_list_guide, interpret_normality, add_table_row, residuals_raw, normality_texts, norm_sig_count, norm_total_count, normality_problem) {
             # -----------------------------------------------------------------------------
             # Residual normality.
             # ES: Normalidad de residuos.
@@ -898,6 +933,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             )
 
+            normality_problem
+        },
+
+        .checkHomogeneity = function(., clean_num, p_sig, block96, html_list_guide, interpret_variance, add_table_row, n_used, variance_texts, cell_factor, cell_n, y, variance_problem) {
             # -----------------------------------------------------------------------------
             # Homogeneity of variances.
             # ES: Homogeneidad de varianzas.
@@ -1017,6 +1056,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             )
 
+            variance_problem
+        },
+
+        .checkSlopes = function(., clean_num, p_sig, qname, block96, html_list_guide, interpret_slope, add_table_row, dep, factors, covs, dat2, n_used, rhs, fit, slope_texts, slopes_problem) {
             # -----------------------------------------------------------------------------
             # ANCOVA homogeneity of slopes.
             # ES: Homogeneidad de pendientes ANCOVA.
@@ -1090,6 +1133,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             )
 
+            slopes_problem
+        },
+
+        .checkCovariateLinearity = function(., clean_num, p_sig, qname, block96, html_list_guide, dcor_stat, dcor_pvalue, copentTest, interpret_covariate_linearity, add_table_row, dep, covs, dat2, n_used, rhs, covlin_texts, y, linearity_problem, dcor_problem) {
             # -----------------------------------------------------------------------------
             # Covariate linearity.
             # ES: Linealidad de covariables.
@@ -1217,6 +1264,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 )
             )
 
+            list(linearity_problem = linearity_problem, dcor_problem = dcor_problem)
+        },
+
+        .checkMulticollinearity = function(., clean_num, block96, html_list_guide, add_table_row, covs, dat2, fit) {
             # -----------------------------------------------------------------------------
             # Multicollinearity.
             # ES: Multicolinealidad.
@@ -1340,6 +1391,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (length(covs) > 0) .("If collinearity is a real concern with multiple covariates, consider combining the most redundant ones or centering variables involved in interactions, rather than discarding the full model.") else ""
             ))
 
+            invisible(NULL)
+        },
+
+        .fillCorrelations = function(lang, ., p_sig, block96, html_list_guide, dcor_stat, dcor_pvalue, copentTest, dep, covs, dat2, n_used) {
             # -----------------------------------------------------------------------------
             # Correlation matrices (Pearson and dCor, APA 7 format) + copent discordance.
             # ES: Matrices de correlación (Pearson y dCor, formato APA 7) + discordancia con copent.
@@ -1474,6 +1529,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }
             }
 
+            invisible(NULL)
+        },
+
+        .checkInfluence = function(., clean_num, block96, html_list_guide, plot_guide, add_table_row, complete, n_used, residuals_raw, fitted_values, residuals_stud, leverage, cooks_d, dffits, p_model) {
             # -----------------------------------------------------------------------------
             # Outlying and influential cases.
             # ES: Casos atípicos e influyentes.
@@ -1574,7 +1633,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 .("Common error: assuming independence is satisfied simply because no diagnostic flagged it. Independence is a property of how the data were collected, not something a single test can confirm after the fact.")
             ))
 
+            influence_problem
+        },
 
+        .fillAlternatives = function(., html_list_guide, add_table_row, normality_problem, variance_problem, slopes_problem, linearity_problem, influence_problem, design_problem, dcor_problem) {
             # -----------------------------------------------------------------------------
             # Methodological alternatives.
             # ES: Alternativas metodológicas.
@@ -1685,6 +1747,10 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 .("The decision should combine evidence, design, and research question.")
             ))
 
+            invisible(NULL)
+        },
+
+        .setPlotVisibility = function(., block96, html_list_guide, normality_problem, variance_problem, slopes_problem, linearity_problem, influence_problem, design_problem, dcor_problem) {
             # -----------------------------------------------------------------------------
             # Plot visibility by selected plot set.
             # ES: Visibilidad de gráficos según el conjunto seleccionado.
@@ -1769,6 +1835,8 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 sprintf(.("Suggested decision: %s"), recommendation),
                 .("Significance codes: * p < .05, ** p < .01, *** p < .001.")
             ))
+
+            invisible(NULL)
         },
 
         .requirePlotData = function(image) {
