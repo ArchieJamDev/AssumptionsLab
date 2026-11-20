@@ -11,8 +11,8 @@ authors:
     orcid: "https://orcid.org/0000-0002-7014-7513"
 repository-code: "https://github.com/ArchieJamDev/AssumptionsLab"
 license: "GPL-3.0-only"
-version: "1.6.0"
-date-released: "2026-09-17"
+version: "1.7.0"
+date-released: "2026-11-20"
 identifiers:
   - type: doi
     value: 10.5281/zenodo.22209135
@@ -40,5 +40,5 @@ preferred-citation:
     - family-names: "Chacón Chacón"
       given-names: "Arquímedes De León"
   title: "AssumptionsLab"
-  version: "1.5.1"
+  version: "1.7.0"
   year: 2026
