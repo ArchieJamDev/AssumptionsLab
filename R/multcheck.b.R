@@ -540,6 +540,41 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             n_model_params <- length(coef_matrix)
 
+            private$.fillIntro(., html_escape, html_block, dep_levels, n_levels, reference_label, n_complete, min_cat_n, min_cat_name, n_model_params)
+
+            private$.fillDesign(., html_guide, add_row, n_levels, reference_label, n_total, n_complete, cat_counts, min_cat_n, min_cat_name, n_model_params)
+
+            private$.checkSeparation(., html_block, html_guide, add_row, coef_matrix, se_matrix)
+
+            step <- private$.checkLinearity(., html_block, html_guide, p_sig, add_row, qname, covs, n_levels, predictors, model_data_complete, model)
+            bt_significant <- step$bt_significant
+            ll_full_model <- step$ll_full_model
+
+            iia_any_significant <- private$.checkIIA(., html_block, html_guide, p_sig, add_row, qname, dep_levels, predictors, model_data_complete, model, coef_matrix)
+
+            private$.checkGoodnessOfFit(., html_block, html_guide, p_sig, add_row, factors, model)
+
+            private$.fillPseudoR2(., html_block, html_guide, fmt_num, add_row, n_complete, null_model, ll_full_model)
+
+            private$.fillClassification(., html_block, html_guide, fmt_num, add_row, dep_levels, n_levels, model_data_complete, n_complete, model)
+
+            private$.checkMulticollinearity(., html_block, html_guide, fmt_num, add_row, qname, predictors, model_data_complete)
+
+            private$.fillCorrelations(lang, ., html_block, html_guide, p_sig, add_row, dcor_stat, dcor_pvalue, copentTest, covs, model_data_complete, n_complete)
+
+            step <- private$.checkInfluence(., html_block, html_guide, fmt_num, add_row, model_data_complete, n_complete, model)
+            fitted_probs <- step$fitted_probs
+            n_influential <- step$n_influential
+            pearson_resid <- step$pearson_resid
+
+            private$.fillCoefficients(., html_block, html_guide, fmt_num, p_sig, add_row, model, coef_matrix, p_matrix)
+
+            private$.fillNotes(., html_block, n_complete, bt_significant, iia_any_significant, n_influential)
+
+            private$.setPlotStates(covs, reference_label, non_ref_labels, model_data_complete, n_complete, fitted_probs, pearson_resid)
+        },
+
+        .fillIntro = function(., html_escape, html_block, dep_levels, n_levels, reference_label, n_complete, min_cat_n, min_cat_name, n_model_params) {
             # -----------------------------------------------------------------------------
             # Report introduction.
             # ES: Introducción del informe.
@@ -569,6 +604,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "</div>"
             ))
 
+            invisible(NULL)
+        },
+
+        .fillDesign = function(., html_guide, add_row, n_levels, reference_label, n_total, n_complete, cat_counts, min_cat_n, min_cat_name, n_model_params) {
             # -----------------------------------------------------------------------------
             # Model design.
             # ES: Diseño del modelo.
@@ -599,6 +638,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             }
 
+            invisible(NULL)
+        },
+
+        .checkSeparation = function(., html_block, html_guide, add_row, coef_matrix, se_matrix) {
             # -----------------------------------------------------------------------------
             # Complete / quasi-complete separation: same coefficient/SE
             # screen as ordCheck, adapted to loop over the coefficient
@@ -654,6 +697,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .checkLinearity = function(., html_block, html_guide, p_sig, add_row, qname, covs, n_levels, predictors, model_data_complete, model) {
             # -----------------------------------------------------------------------------
             # Linearity in the multinomial logit: for each numeric
             # predictor, an x*log(x) interaction term is added to EVERY
@@ -726,6 +773,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            list(bt_significant = bt_significant, ll_full_model = ll_full_model)
+        },
+
+        .checkIIA = function(., html_block, html_guide, p_sig, add_row, qname, dep_levels, predictors, model_data_complete, model, coef_matrix) {
             # -----------------------------------------------------------------------------
             # Independence of Irrelevant Alternatives (IIA) -
             # Hausman-McFadden test, implemented manually (see file header
@@ -862,6 +913,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            iia_any_significant
+        },
+
+        .checkGoodnessOfFit = function(., html_block, html_guide, p_sig, add_row, factors, model) {
             # -----------------------------------------------------------------------------
             # Goodness of fit - soft dependency on 'generalhoslem', same
             # guard pattern as ordCheck.
@@ -954,6 +1009,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .fillPseudoR2 = function(., html_block, html_guide, fmt_num, add_row, n_complete, null_model, ll_full_model) {
             # -----------------------------------------------------------------------------
             # Pseudo-R² (discrimination replacement, same rationale as
             # ordCheck: no single ROC/AUC once the outcome has 3+ unordered
@@ -987,6 +1046,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .fillClassification = function(., html_block, html_guide, fmt_num, add_row, dep_levels, n_levels, model_data_complete, n_complete, model) {
             # -----------------------------------------------------------------------------
             # Classification (confusion) table: observed vs. predicted
             # category (predicted = arg-max of the fitted probabilities,
@@ -1044,6 +1107,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .checkMulticollinearity = function(., html_block, html_guide, fmt_num, add_row, qname, predictors, model_data_complete) {
             # -----------------------------------------------------------------------------
             # Multicollinearity: manual VIF/tolerance from the predictors'
             # own design matrix - copied verbatim from ordCheck/logCheck/
@@ -1126,6 +1193,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ))
             }
 
+            invisible(NULL)
+        },
+
+        .fillCorrelations = function(lang, ., html_block, html_guide, p_sig, add_row, dcor_stat, dcor_pvalue, copentTest, covs, model_data_complete, n_complete) {
             # -----------------------------------------------------------------------------
             # Correlation matrices (Pearson / dCor / copula entropy) among
             # the NUMERIC PREDICTORS ONLY - see file header for why the
@@ -1244,6 +1315,12 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     .("Applied Interpretation"), na_text, paragraphs = FALSE))
             }
 
+            invisible(NULL)
+        },
+
+        .checkInfluence = function(., html_block, html_guide, fmt_num, add_row, model_data_complete, n_complete, model) {
+            pearson_resid <- NULL
+
             # -----------------------------------------------------------------------------
             # Influential cases: per-case Pearson-type residual on the
             # observed category's fitted probability - copied verbatim
@@ -1301,6 +1378,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            list(fitted_probs = fitted_probs, n_influential = n_influential, pearson_resid = pearson_resid)
+        },
+
+        .fillCoefficients = function(., html_block, html_guide, fmt_num, p_sig, add_row, model, coef_matrix, p_matrix) {
             # -----------------------------------------------------------------------------
             # Coefficients / odds ratios, one row per predictor TERM x
             # non-reference CATEGORY (including "(Intercept)" - see file
@@ -1369,6 +1450,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paragraphs = TRUE
             ))
 
+            invisible(NULL)
+        },
+
+        .fillNotes = function(., html_block, n_complete, bt_significant, iia_any_significant, n_influential) {
             # -----------------------------------------------------------------------------
             # Notes and recommendation.
             # ES: Notas y recomendación.
@@ -1392,6 +1477,10 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 sprintf(.("Model fitted with %s cases."), n_complete)
             ), paragraphs = TRUE))
 
+            invisible(NULL)
+        },
+
+        .setPlotStates = function(covs, reference_label, non_ref_labels, model_data_complete, n_complete, fitted_probs, pearson_resid) {
             # -----------------------------------------------------------------------------
             # State for the plots. Each image gets only the fields its own render
             # function reads - not one shared list for both plots - since jamovi's review
@@ -1427,6 +1516,8 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             self$results$linearityPlot$setVisible(show_plots_master && lin_show && length(covs) > 0)
             self$results$influencePlot$setVisible(show_plots_master && infl_show)
+
+            invisible(NULL)
         },
 
         # -----------------------------------------------------------------------------
