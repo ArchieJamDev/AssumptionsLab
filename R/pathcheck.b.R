@@ -432,7 +432,9 @@ pathCheckClass <- R6::R6Class(
 
             private$.fillSpecifiedModel(., edges, deps)
 
+            # NULL means the model is not finalized or not valid: stop here.
             step <- private$.validateModel(., html_guide, set_html_safe, vars, isFinalized, edges, deps, isolated)
+            if (is.null(step)) return()
             data <- step$data
             fits <- step$fits
             edgeStats <- step$edgeStats
@@ -444,6 +446,7 @@ pathCheckClass <- R6::R6Class(
             step <- private$.checkOutliers(., html_block, html_guide, set_html_safe, data, fits)
             covData <- step$covData
             mahaResult <- step$mahaResult
+            nFlaggedD2 <- step$nFlaggedD2
 
             step <- private$.checkNormality(., html_block, html_guide, set_html_safe, p_sig_stars, data, fits)
             nNormalityFail <- step$nNormalityFail
@@ -457,9 +460,14 @@ pathCheckClass <- R6::R6Class(
             maxVif <- step$maxVif
             maxVifLabel <- step$maxVifLabel
 
-            private$.checkMardia(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, covData)
+            mardiaFail <- private$.checkMardia(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, covData)
 
-            private$.fillCorrelations(lang, ., html_block, html_guide, set_html_safe, p_sig_stars, vars, edges, covData)
+            step <- private$.fillCorrelations(lang, ., html_block, html_guide, set_html_safe, p_sig_stars, vars, edges, covData)
+            nCeSig <- step$nCeSig
+            nCeTotal <- step$nCeTotal
+            connectedSigPairs <- step$connectedSigPairs
+            flaggedPairs <- step$flaggedPairs
+            flaggedCeSig <- step$flaggedCeSig
 
             mediationRows <- private$.fillEffects(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, edges, edgeStats)
 
@@ -467,7 +475,7 @@ pathCheckClass <- R6::R6Class(
             sizeCriteria <- step$sizeCriteria
             nMet <- step$nMet
 
-            private$.fillConclusion(., html_block, set_html_safe, mahaResult, nNormalityFail, nNormalityTotal, nHomoFail, nHomoTotal, maxVif, maxVifLabel, mediationRows, sizeCriteria, nMet)
+            private$.fillConclusion(., html_block, set_html_safe, mahaResult, nNormalityFail, nNormalityTotal, nHomoFail, nHomoTotal, maxVif, maxVifLabel, mediationRows, sizeCriteria, nMet, nFlaggedD2, mardiaFail, nCeSig, nCeTotal, connectedSigPairs, flaggedPairs, flaggedCeSig)
         },
 
         .fillStructure = function(., html_block, set_html_safe, edges, exogenous, endogenous) {
@@ -839,6 +847,8 @@ pathCheckClass <- R6::R6Class(
         },
 
         .checkOutliers = function(., html_block, html_guide, set_html_safe, data, fits) {
+            nFlaggedD2 <- NULL
+
             # -----------------------------------------------------------------------------
             # Multivariate outliers.
             # ES: Valores atípicos multivariados.
@@ -926,7 +936,7 @@ pathCheckClass <- R6::R6Class(
                 ))
             }
 
-            list(covData = covData, mahaResult = mahaResult)
+            list(covData = covData, mahaResult = mahaResult, nFlaggedD2 = nFlaggedD2)
         },
 
         .checkNormality = function(., html_block, html_guide, set_html_safe, p_sig_stars, data, fits) {
@@ -1294,6 +1304,8 @@ pathCheckClass <- R6::R6Class(
         },
 
         .checkMardia = function(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, covData) {
+            mardiaFail <- NULL
+
             # -----------------------------------------------------------------------------
             # Mardia multivariate normality.
             # ES: Normalidad multivariada de Mardia.
@@ -1361,10 +1373,16 @@ pathCheckClass <- R6::R6Class(
                     paragraphs = FALSE))
             }
 
-            invisible(NULL)
+            mardiaFail
         },
 
         .fillCorrelations = function(lang, ., html_block, html_guide, set_html_safe, p_sig_stars, vars, edges, covData) {
+            nCeSig <- NULL
+            nCeTotal <- NULL
+            connectedSigPairs <- NULL
+            flaggedPairs <- NULL
+            flaggedCeSig <- NULL
+
             # -----------------------------------------------------------------------------
             # Correlation matrices (Pearson and dCor, separate, APA 7 format).
             # ES: Matrices de correlaciones (Pearson y dCor, separadas, formato APA 7).
@@ -1559,7 +1577,8 @@ pathCheckClass <- R6::R6Class(
                 ))
             }
 
-            invisible(NULL)
+            list(nCeSig = nCeSig, nCeTotal = nCeTotal, connectedSigPairs = connectedSigPairs,
+                 flaggedPairs = flaggedPairs, flaggedCeSig = flaggedCeSig)
         },
 
         .fillEffects = function(., html_block, html_guide, set_html_safe, p_sig_stars, format_p, edges, edgeStats) {
@@ -1707,7 +1726,7 @@ pathCheckClass <- R6::R6Class(
             list(sizeCriteria = sizeCriteria, nMet = nMet)
         },
 
-        .fillConclusion = function(., html_block, set_html_safe, mahaResult, nNormalityFail, nNormalityTotal, nHomoFail, nHomoTotal, maxVif, maxVifLabel, mediationRows, sizeCriteria, nMet) {
+        .fillConclusion = function(., html_block, set_html_safe, mahaResult, nNormalityFail, nNormalityTotal, nHomoFail, nHomoTotal, maxVif, maxVifLabel, mediationRows, sizeCriteria, nMet, nFlaggedD2, mardiaFail, nCeSig, nCeTotal, connectedSigPairs, flaggedPairs, flaggedCeSig) {
             # -----------------------------------------------------------------------------
             # Model diagnostic conclusion.
             # ES: Conclusión diagnóstica del modelo.
