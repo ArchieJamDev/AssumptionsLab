@@ -7090,9 +7090,6 @@
             "studentized residual, which indicates how extreme the case error is.": [
                 "residuo studentizado, que expresa qué tan extremo es el error del caso."
             ],
-            "t": [
-                "t"
-            ],
             "the direct and indirect effects point in opposite directions (a suppression / inconsistent-mediation pattern), so the total effect of %1$s on %2$s is smaller than either path alone would suggest": [
                 "los efectos directo e indirecto apuntan en direcciones opuestas (un patrón de supresión / mediación inconsistente), por lo que el efecto total de %1$s sobre %2$s es menor de lo que cualquiera de las dos rutas por separado sugeriría"
             ],
@@ -7191,12 +7188,6 @@
             ],
             "α = 1/θ": [
                 "α = 1/θ"
-            ],
-            "θ": [
-                "θ"
-            ],
-            "χ²": [
-                "χ²"
             ]
         }
     }
