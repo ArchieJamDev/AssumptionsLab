@@ -319,7 +319,9 @@ de la revista. Los libros no tienen datos de indexación y no se listan.
 70 artículos de revista con datos de conteo de citas; 7 libros.*
 
 *Development version: 11 references added for Count and Rate Regression
-(6 articles, 5 books), pending primary-source verification and citation
-counts. / Versión en desarrollo: 11 referencias agregadas para la
-regresión de recuentos y tasas (6 artículos, 5 libros), pendientes de
-verificación contra la fuente primaria y de conteo de citas.*
+(6 articles, 5 books). Their DOIs, authors, years and titles were checked
+against Crossref on 2026-11-23; citation counts are pending. / Versión en
+desarrollo: 11 referencias agregadas para la regresión de recuentos y
+tasas (6 artículos, 5 libros). Sus DOI, autores, años y títulos se
+comprobaron contra Crossref el 2026-11-23; el conteo de citas queda
+pendiente.*
