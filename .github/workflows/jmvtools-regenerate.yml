@@ -9,6 +9,7 @@ name: Regenerar archivos de jamovi
 on:
   push:
     branches: [ 'claude/project-thread-igtwu6' ]
+    paths: [ '.github/**' ]
 
 permissions:
   contents: write
