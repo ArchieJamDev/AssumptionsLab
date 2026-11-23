@@ -152,6 +152,7 @@ inside it carries its own explanation.
 | **Logistic Regression** | Is each predictor linear in the logit (Box-Tidwell), is there multicollinearity, is the model calibrated and does it discriminate (ROC/AUC), and are there influential cases? | ✅ Done |
 | **Ordinal Logistic Regression** | Does the proportional-odds assumption hold (Brant test), is each predictor linear in the cumulative logit, and are there collinear predictors or influential cases? | ✅ Done |
 | **Multinomial Logistic Regression** | Does the independence of irrelevant alternatives hold (Hausman-McFadden), is each predictor linear for every category, how accurate is the classification, and are there collinear predictors or influential cases? | ✅ Done |
+| **Count and Rate Regression** | For Poisson and negative binomial models, with an optional exposure offset: are the counts overdispersed (Pearson ratio, Dean-Lawless, Cameron-Trivedi, likelihood ratio test), are there more zeros than expected, are the residuals well behaved (Pearson, deviance, randomized quantile), is each numeric predictor linear on the log scale, and are there collinear predictors or influential cases? | 🧪 In development |
 
 ### Structural models and time series
 
@@ -304,6 +305,7 @@ testthat::test_dir("tests/testthat")  # run the edge-case suite
 | 7 | Release 1.7.0, with Zenodo DOI [10.5281/zenodo.24390225](https://doi.org/10.5281/zenodo.24390225) | ✅ Done |
 | 7.1 | Release 1.7.1, with Zenodo DOI [10.5281/zenodo.24403336](https://doi.org/10.5281/zenodo.24403336): the Assumption Library cites through jamovi's own references | ✅ Done |
 | 8 | Submission to the jamovi Library | 🔄 In progress |
+| 9 | Count and rate regression (Poisson, negative binomial), then Cox regression | 🔄 In progress |
 | Next | SEM and PLS-SEM, Bayesian methods, multilevel models, survival analysis, meta-analysis | 🗓 Planned |
 
 See [ARCHITECTURE.md](ARCHITECTURE.md#14-future-expansion) for the design

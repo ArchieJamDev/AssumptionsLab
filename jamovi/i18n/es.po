@@ -91,6 +91,14 @@ msgstr ""
 "modelo en conjunto, pero sí hace que el intervalo de confianza de ese "
 "coeficiente en particular sea mucho menos preciso."
 
+#: countCheck/results/residuals.columns.title
+msgid "% |r| > 2"
+msgstr "% |r| > 2"
+
+#: countCheck/results/residuals.columns.title
+msgid "% |r| > 3"
+msgstr "% |r| > 3"
+
 #: R/anovacheck.b.R
 msgid ""
 "%d assumption(s) raised a concern (%s); review the suggested methodological "
@@ -256,6 +264,10 @@ msgid ""
 msgstr ""
 "%s Existen %s caso(s) potencialmente influyente(s) que conviene revisar."
 
+#: R/countcheck.b.R
+msgid "%s (already on the log scale)"
+msgstr "%s (ya en escala logarítmica)"
+
 #: R/anovacheck.b.R
 #: R/regcheck.b.R
 #: R/relatedcheck.b.R
@@ -418,6 +430,16 @@ msgstr ""
 "%s de %s predictor(es) numérico(s) mostraron una interacción estilo "
 "Box-Tidwell significativa, lo que sugiere que la relación con el logit "
 "acumulativo podría no ser lineal para esos predictores."
+
+#: R/countcheck.b.R
+msgid ""
+"%s of %s numeric predictor(s) showed a significant departure from linearity "
+"on the log scale (spline likelihood ratio test; Harrell, 2015; see "
+"references)%s"
+msgstr ""
+"%s de %s predictor(es) numérico(s) mostraron una desviación significativa de "
+"la linealidad en la escala logarítmica (prueba de razón de verosimilitudes "
+"con spline; Harrell, 2015; ver referencias)%s"
 
 #: R/multcheck.b.R
 msgid ""
@@ -672,6 +694,10 @@ msgstr "IC 95% inferior"
 msgid "95% CI upper"
 msgstr "IC 95% superior"
 
+#: R/countcheck.b.R
+msgid ": %s."
+msgstr ": %s."
+
 #: R/anovacheck.b.R
 msgid "<b>Analysis type:</b> "
 msgstr "<b>Tipo de análisis:</b> "
@@ -692,6 +718,14 @@ msgstr "<b>Categorías:</b> "
 msgid "<b>Complete cases:</b> %s | <b>Events:</b> %s | <b>Non-events:</b> %s"
 msgstr ""
 "<b>Casos completos:</b> %s | <b>Eventos:</b> %s | <b>No eventos:</b> %s"
+
+#: R/countcheck.b.R
+msgid ""
+"<b>Complete cases:</b> %s | <b>Mean count:</b> %s | <b>Variance:</b> %s | "
+"<b>Zeros:</b> %s"
+msgstr ""
+"<b>Casos completos:</b> %s | <b>Recuento medio:</b> %s | <b>Varianza:</b> %s "
+"| <b>Ceros:</b> %s"
 
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
@@ -741,6 +775,10 @@ msgstr "<b>Variable de grupo:</b> %s"
 msgid "<b>Measurements:</b> "
 msgstr "<b>Mediciones:</b> "
 
+#: R/countcheck.b.R
+msgid "<b>Model diagnosed:</b> %s | <b>Exposure (offset):</b> %s"
+msgstr "<b>Modelo diagnosticado:</b> %s | <b>Exposición (offset):</b> %s"
+
 #: R/regcheck.b.R
 msgid "<b>Numeric predictors:</b> "
 msgstr "<b>Predictores numéricos:</b> "
@@ -756,6 +794,30 @@ msgstr ""
 #: R/logcheck.b.R
 msgid "<b>Reference level (0):</b> %s | <b>Event (1):</b> %s"
 msgstr "<b>Nivel de referencia (0):</b> %s | <b>Evento (1):</b> %s"
+
+#: R/countcheck.b.R
+msgid ""
+"<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p "
+"style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: "
+"1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: "
+"1.25;\">Assumption check for count and rate regression</p><p style=\"margin: "
+"0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; line-height: "
+"1.35;\">Use this analysis when you want to review whether a Poisson or "
+"negative binomial regression model has defensible methodological "
+"assumptions. The goal is not only to compute tests, but to help justify the "
+"statistical decision with evidence obtained from your own data.</p><p "
+"style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>"
+msgstr ""
+"<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p "
+"style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: "
+"1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: "
+"1.25;\">Revisión de supuestos para regresión de recuentos y tasas</p><p "
+"style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; "
+"line-height: 1.35;\">Use este análisis cuando quiera revisar si un modelo de "
+"regresión de Poisson o binomial negativa tiene supuestos metodológicos "
+"defendibles. El objetivo no es solo calcular pruebas, sino ayudar a "
+"justificar la decisión estadística con evidencia obtenida de sus propios "
+"datos.</p><p style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>"
 
 #: R/logcheck.b.R
 msgid ""
@@ -1894,6 +1956,78 @@ msgstr ""
 "1937) como alternativa, o ajuste un modelo mixto que no asuma esfericidad, "
 "según el diseño del estudio.</p></div>"
 
+#: assumptionLibrary/results/countModelsGuide2.content
+msgid ""
+"<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; "
+"text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
+"700;\">Overdispersion tests - what they evaluate and their "
+"limitations:</p><p style=\"margin: 0 0 0.6em 0;\">The Dean-Lawless score "
+"test (Dean &amp; Lawless, 1989) and the Cameron-Trivedi auxiliary regression "
+"(Cameron &amp; Trivedi, 1990) both test H0: equidispersion against H1: "
+"overdispersion of the negative binomial form. They only need the Poisson "
+"fit. Like any test, they become very sensitive in large samples, so the "
+"dispersion ratio and the mean-variance plot should be read alongside "
+"them.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Likelihood "
+"ratio test - what it does and when to use it:</p><p style=\"margin: 0 0 "
+"0.6em 0;\">Compares the Poisson and negative binomial log-likelihoods. "
+"Because the Poisson model is the negative binomial with alpha = 0, a value "
+"on the boundary of the parameter space, the statistic follows a 50:50 "
+"mixture of 0 and chi-square(1), so the usual p-value is halved (Self &amp; "
+"Liang, 1987).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
+"700;\">Excess zeros - what it evaluates and its limitations:</p><p "
+"style=\"margin: 0 0 0.6em 0;\">The observed number of zeros is compared with "
+"the sum of each case's fitted probability of a zero under each model. van "
+"den Broek's (1995) score test compares a zero-inflated Poisson model with "
+"the Poisson model; overdispersion alone also produces extra zeros, so a "
+"significant result does not by itself justify a zero-inflated model.</p><p "
+"style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p "
+"style=\"margin: 0 0 0.6em 0;\">A Pearson ratio close to 1 and "
+"non-significant tests are compatible with equidispersion. A ratio clearly "
+"above 1 with significant tests indicates overdispersion; a ratio clearly "
+"below 1 indicates underdispersion.</p><p style=\"margin: 0.7em 0 0.15em 0; "
+"font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em "
+"0;\">With overdispersion, prefer the negative binomial model (or at least "
+"robust standard errors). If the negative binomial still under-predicts the "
+"zeros, consider a zero-inflated or hurdle model and justify the extra "
+"process substantively. With underdispersion, consider a generalized Poisson "
+"or Conway-Maxwell-Poisson model.</p></div>"
+msgstr ""
+"<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; "
+"text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
+"700;\">Pruebas de sobredispersión - qué evalúan y sus limitaciones:</p><p "
+"style=\"margin: 0 0 0.6em 0;\">La prueba de puntuación de Dean-Lawless (Dean "
+"&amp; Lawless, 1989) y la regresión auxiliar de Cameron-Trivedi (Cameron "
+"&amp; Trivedi, 1990) contrastan H0: equidispersión frente a H1: "
+"sobredispersión de la forma binomial negativa. Solo necesitan el ajuste de "
+"Poisson. Como cualquier prueba, se vuelven muy sensibles en muestras "
+"grandes, así que el cociente de dispersión y el gráfico media-varianza deben "
+"leerse junto con ellas.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
+"700;\">Prueba de razón de verosimilitudes - qué hace y cuándo usarla:</p><p "
+"style=\"margin: 0 0 0.6em 0;\">Compara las log-verosimilitudes de Poisson y "
+"binomial negativa. Como el modelo de Poisson es la binomial negativa con "
+"alfa = 0, un valor en la frontera del espacio de parámetros, el estadístico "
+"sigue una mezcla 50:50 de 0 y chi-cuadrado(1), así que el valor p habitual "
+"se divide a la mitad (Self &amp; Liang, 1987).</p><p style=\"margin: 0.7em 0 "
+"0.15em 0; font-weight: 700;\">Exceso de ceros - qué evalúa y sus "
+"limitaciones:</p><p style=\"margin: 0 0 0.6em 0;\">El número observado de "
+"ceros se compara con la suma de la probabilidad ajustada de un cero en cada "
+"caso bajo cada modelo. La prueba de puntuación de van den Broek (1995) "
+"compara un modelo de Poisson inflado en ceros con el modelo de Poisson; la "
+"sobredispersión por sí sola también produce ceros de más, así que un "
+"resultado significativo no justifica por sí mismo un modelo inflado en "
+"ceros.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
+"700;\">Interpretación:</p><p style=\"margin: 0 0 0.6em 0;\">Un cociente de "
+"Pearson cercano a 1 y pruebas no significativas son compatibles con la "
+"equidispersión. Un cociente claramente mayor que 1 con pruebas "
+"significativas indica sobredispersión; un cociente claramente menor que 1 "
+"indica infradispersión.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
+"700;\">Decisión metodológica:</p><p style=\"margin: 0 0 0.6em 0;\">Con "
+"sobredispersión, prefiera el modelo binomial negativo (o al menos errores "
+"estándar robustos). Si la binomial negativa sigue prediciendo menos ceros de "
+"los observados, considere un modelo inflado en ceros o hurdle y justifique "
+"sustantivamente el proceso adicional. Con infradispersión, considere un "
+"modelo de Poisson generalizado o de Conway-Maxwell-Poisson.</p></div>"
+
 #: assumptionLibrary/results/normalityGuide2.content
 msgid ""
 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; "
@@ -2534,6 +2668,51 @@ msgstr ""
 "precisamente para compensar esa inflación sin cambiar el estadístico F en "
 "sí.</p></div>"
 
+#: assumptionLibrary/results/countModels.content
+msgid ""
+"<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; "
+"text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
+"700;\">What it evaluates:</p><p style=\"margin: 0 0 0.6em 0;\">The Poisson "
+"model assumes the variance of the count equals its mean (equidispersion), "
+"and both the Poisson and the negative binomial models assume their own "
+"distribution produces the zeros in the data. Overdispersion (variance above "
+"the mean) and excess zeros (more zeros than the model expects) are the two "
+"most common departures in applied count data (Cameron &amp; Trivedi, "
+"2013).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Where it "
+"is used in AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">countCheck "
+"(Poisson and negative binomial regression, with an optional exposure "
+"offset).</p><p style=\"margin: 0 0 0.6em 0;\">It does not apply to linear, "
+"logistic, ordinal or multinomial regression, whose outcomes are not "
+"counts.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Why it "
+"matters:</p><p style=\"margin: 0 0 0.6em 0;\">Under overdispersion, a "
+"Poisson model keeps roughly correct rate ratios but understates their "
+"standard errors, so confidence intervals are too narrow and p-values too "
+"small. Excess zeros that neither model reproduces usually signal a separate "
+"process, such as a group of cases that cannot experience the event at "
+"all.</p></div>"
+msgstr ""
+"<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; "
+"text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: "
+"700;\">Qué evalúa:</p><p style=\"margin: 0 0 0.6em 0;\">El modelo de Poisson "
+"supone que la varianza del recuento es igual a su media (equidispersión), y "
+"tanto el modelo de Poisson como el binomial negativo suponen que su propia "
+"distribución produce los ceros de los datos. La sobredispersión (varianza "
+"mayor que la media) y el exceso de ceros (más ceros de los que espera el "
+"modelo) son las dos desviaciones más frecuentes en datos de recuento "
+"aplicados (Cameron &amp; Trivedi, 2013).</p><p style=\"margin: 0.7em 0 "
+"0.15em 0; font-weight: 700;\">Dónde se usa en AssumptionsLab:</p><p "
+"style=\"margin: 0 0 0.6em 0;\">countCheck (regresión de Poisson y binomial "
+"negativa, con un offset de exposición opcional).</p><p style=\"margin: 0 0 "
+"0.6em 0;\">No aplica a la regresión lineal, logística, ordinal ni "
+"multinomial, cuyos desenlaces no son recuentos.</p><p style=\"margin: 0.7em "
+"0 0.15em 0; font-weight: 700;\">Por qué importa:</p><p style=\"margin: 0 0 "
+"0.6em 0;\">Con sobredispersión, un modelo de Poisson mantiene razones de "
+"tasas aproximadamente correctas pero subestima sus errores estándar, así que "
+"los intervalos de confianza son demasiado estrechos y los valores p "
+"demasiado pequeños. Un exceso de ceros que ninguno de los dos modelos "
+"reproduce suele indicar un proceso distinto, como un grupo de casos que no "
+"puede experimentar el evento en absoluto.</p></div>"
+
 #: assumptionLibrary/results/independenceIrrelevantAlternatives.content
 msgid ""
 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; "
@@ -2896,6 +3075,129 @@ msgstr ""
 "border-bottom: 1px solid #ddd; vertical-align: top;\">No corrige el problema "
 "subyacente, solo lo documenta, dejando la cautela interpretativa a cargo "
 "del lector</td></tr></tbody></table></div>"
+
+#: assumptionLibrary/results/countModelsTable.content
+msgid ""
+"<div style=\"max-width: 7.25in; width: 100%; box-sizing: "
+"border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: "
+"0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: "
+"700;\">Diagnostic / alternative</th><th style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">What it "
+"does</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px "
+"solid #999; font-weight: 700;\">When to use it</th><th style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: "
+"700;\">Main limitation</th></tr></thead><tbody><tr><td style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: "
+"top;\">Pearson dispersion ratio</td><td style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Divides the "
+"Pearson chi-square by its degrees of freedom; about 1 under the Poisson "
+"model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px "
+"solid #ddd; vertical-align: top;\">As the first, descriptive check of any "
+"Poisson fit</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">A ratio, not a test; "
+"with small means it can be unreliable</td></tr><tr><td style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: "
+"top;\">Dean-Lawless and Cameron-Trivedi tests</td><td style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: "
+"top;\">Test the Poisson model against negative binomial overdispersion, var "
+"= mu + alpha mu^2</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">To confirm formally "
+"what the ratio suggests</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Very sensitive in "
+"large samples, where a trivial excess of variance becomes "
+"significant</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Likelihood ratio test, "
+"Poisson vs negative binomial</td><td style=\"text-align: left; padding: 4px "
+"8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Compares the two "
+"fits; the p-value is halved because alpha = 0 lies on the boundary</td><td "
+"style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; "
+"vertical-align: top;\">To decide between the two models</td><td "
+"style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; "
+"vertical-align: top;\">Needs the negative binomial fit to converge; glm.nb() "
+"warns when there is no overdispersion</td></tr><tr><td style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: "
+"top;\">Observed vs expected zeros and van den Broek score test</td><td "
+"style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; "
+"vertical-align: top;\">Compares the observed zeros with the zeros each model "
+"predicts; the score test checks a zero-inflated Poisson against the Poisson "
+"model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px "
+"solid #ddd; vertical-align: top;\">When the outcome has many zeros</td><td "
+"style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; "
+"vertical-align: top;\">The score test is confounded by overdispersion; read "
+"it with the negative binomial expected zeros</td></tr><tr><td "
+"style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; "
+"vertical-align: top;\">Negative binomial, zero-inflated and hurdle "
+"models</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: "
+"1px solid #ddd; vertical-align: top;\">Model the extra variance, or a "
+"separate process for the zeros</td><td style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">When "
+"overdispersion or excess zeros are confirmed</td><td style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: "
+"top;\">Zero-inflated and hurdle models need a substantive justification for "
+"the extra process</td></tr></tbody></table></div>"
+msgstr ""
+"<div style=\"max-width: 7.25in; width: 100%; box-sizing: "
+"border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: "
+"0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: "
+"700;\">Diagnóstico / alternativa</th><th style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Qué hace</th><th "
+"style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; "
+"font-weight: 700;\">Cuándo usarlo</th><th style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Limitación "
+"principal</th></tr></thead><tbody><tr><td style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Cociente de "
+"dispersión de Pearson</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Divide el chi-cuadrado "
+"de Pearson por sus grados de libertad; cercano a 1 bajo el modelo de "
+"Poisson</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: "
+"1px solid #ddd; vertical-align: top;\">Como primera comprobación descriptiva "
+"de cualquier ajuste de Poisson</td><td style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Es un "
+"cociente, no una prueba; con medias pequeñas puede ser poco "
+"fiable</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Pruebas de "
+"Dean-Lawless y Cameron-Trivedi</td><td style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Contrastan el "
+"modelo de Poisson frente a la sobredispersión binomial negativa, var = mu + "
+"alfa mu^2</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: "
+"1px solid #ddd; vertical-align: top;\">Para confirmar formalmente lo que "
+"sugiere el cociente</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Muy sensibles en "
+"muestras grandes, donde un exceso trivial de varianza se vuelve "
+"significativo</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Prueba de razón de "
+"verosimilitudes, Poisson vs binomial negativa</td><td style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: "
+"top;\">Compara ambos ajustes; el valor p se divide a la mitad porque alfa = "
+"0 está en la frontera</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Para decidir entre los "
+"dos modelos</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Necesita que el ajuste "
+"binomial negativo converja; glm.nb() advierte cuando no hay "
+"sobredispersión</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Ceros observados vs "
+"esperados y prueba de puntuación de van den Broek</td><td "
+"style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; "
+"vertical-align: top;\">Compara los ceros observados con los que predice cada "
+"modelo; la prueba de puntuación contrasta un Poisson inflado en ceros frente "
+"al modelo de Poisson</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Cuando el desenlace "
+"tiene muchos ceros</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">La prueba de "
+"puntuación se confunde con la sobredispersión; léala junto con los ceros "
+"esperados por la binomial negativa</td></tr><tr><td style=\"text-align: "
+"left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: "
+"top;\">Modelos binomial negativo, inflados en ceros y hurdle</td><td "
+"style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; "
+"vertical-align: top;\">Modelan la varianza adicional, o un proceso distinto "
+"para los ceros</td><td style=\"text-align: left; padding: 4px 8px; "
+"border-bottom: 1px solid #ddd; vertical-align: top;\">Cuando se confirma "
+"sobredispersión o exceso de ceros</td><td style=\"text-align: left; padding: "
+"4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Los modelos "
+"inflados en ceros y hurdle necesitan una justificación sustantiva del "
+"proceso adicional</td></tr></tbody></table></div>"
 
 #: assumptionLibrary/results/sphericityTable.content
 msgid ""
@@ -4111,6 +4413,14 @@ msgstr ""
 "incluyendo el intercepto; n = casos), y la distancia de Cook cuando supera "
 "4/n."
 
+#: R/texts.R
+msgid ""
+"A count model assumes each numeric predictor acts linearly on the log of the "
+"expected count, not on the count itself."
+msgstr ""
+"Un modelo de recuento supone que cada predictor numérico actúa de forma "
+"lineal sobre el logaritmo del recuento esperado, no sobre el recuento mismo."
+
 #: R/anovacheck.b.R
 msgid "A covariate shows possible curvature."
 msgstr "Una covariable muestra posible curvatura."
@@ -4176,6 +4486,16 @@ msgstr ""
 "suelen seguir marcando varios casos porque los valores individuales de "
 "Cook's D tienden a inflarse cuando n es pequeño. Trátelo como un umbral de "
 "cribado, no como influencia confirmada."
+
+#: R/texts.R
+msgid ""
+"A funnel shape in the residuals suggests the variance function is wrong (for "
+"example, Poisson when the data are overdispersed); a curve suggests a "
+"misspecified predictor or a missing term."
+msgstr ""
+"Una forma de embudo en los residuos sugiere que la función de varianza es "
+"incorrecta (por ejemplo, Poisson con datos sobredispersos); una curva "
+"sugiere un predictor mal especificado o un término omitido."
 
 #: R/texts.R
 msgid ""
@@ -4476,6 +4796,10 @@ msgstr "ADF (raíz unitaria)"
 msgid "ADF / KPSS / PP"
 msgstr "ADF / KPSS / PP"
 
+#: countCheck/results/modelComparison.columns.title
+msgid "AIC"
+msgstr "AIC"
+
 #: R/texts.R
 msgid "AIC / BIC / HQ"
 msgstr "AIC / BIC / HQ"
@@ -4724,6 +5048,10 @@ msgstr "Todas las Categorías"
 msgid "All dependent variables have predictors"
 msgstr "Todas las dependientes poseen predictores"
 
+#: R/countcheck.b.R
+msgid "All predictors"
+msgstr "Todos los predictores"
+
 #: R/groupcheck.b.R
 msgid "All valid cases"
 msgstr "Todos los casos válidos"
@@ -4731,6 +5059,10 @@ msgstr "Todos los casos válidos"
 #: R/pathcheck.b.R
 msgid "All variables form a single connected model."
 msgstr "Todas las variables forman un único modelo conectado."
+
+#: countCheck/options/exposureScale/log.title
+msgid "Already on the log scale"
+msgstr "Ya en escala logarítmica"
 
 #: R/groupcheck.b.R
 msgid ""
@@ -4757,6 +5089,14 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
+"An IRR of 1 indicates no effect; above 1, a higher rate; below 1, a lower "
+"rate."
+msgstr ""
+"Una IRR de 1 indica ausencia de efecto; por encima de 1, una tasa mayor; por "
+"debajo de 1, una tasa menor."
+
+#: R/texts.R
+msgid ""
 "An OR of 1 indicates no effect, values above 1 indicate higher probability "
 "of the event, and values below 1 indicate lower probability."
 msgstr ""
@@ -4766,6 +5106,16 @@ msgstr ""
 #: R/texts.R
 msgid "An influential case should not be removed automatically."
 msgstr "Un caso influyente no debe eliminarse automáticamente."
+
+#: R/texts.R
+msgid ""
+"An influential case should not be removed automatically. Check whether it is "
+"a recording error, a valid but extreme case, or a sign that the model does "
+"not represent all subgroups well."
+msgstr ""
+"Un caso influyente no debe eliminarse automáticamente. Revise si es un error "
+"de registro, un caso válido pero extremo, o una señal de que el modelo no "
+"representa bien a todos los subgrupos."
 
 #: R/logcheck.b.R
 msgid ""
@@ -5055,23 +5405,23 @@ msgid ""
 "methodological guidance, interpretation, and educational support, rather "
 "than reporting isolated test statistics. It covers group comparisons "
 "(independent and related samples, ANOVA/ANCOVA), regression (linear, "
-"logistic, ordinal logistic, multinomial logistic), path analysis and "
-"structural validation, and time series, alongside a built-in methodological "
-"library. Every method-backed result cites its own source in jamovi's native "
-"numbered format, and the complete APA 7th edition bibliography lives in the "
-"module's documentation."
+"logistic, ordinal logistic, multinomial logistic, Poisson and negative "
+"binomial), path analysis and structural validation, and time series, "
+"alongside a built-in methodological library. Every method-backed result "
+"cites its own source in jamovi's native numbered format, and the complete "
+"APA 7th edition bibliography lives in the module's documentation."
 msgstr ""
-"AssumptionsLab evalúa los supuestos estadísticos requeridos por las "
-"técnicas analíticas más comunes y empareja cada diagnóstico con orientación "
+"AssumptionsLab evalúa los supuestos estadísticos requeridos por las técnicas "
+"analíticas más comunes y empareja cada diagnóstico con orientación "
 "metodológica basada en evidencia, interpretación y apoyo educativo, en vez "
 "de solo reportar estadísticos de prueba aislados. Cubre comparaciones de "
 "grupos (muestras independientes y relacionadas, ANOVA/ANCOVA), regresión "
-"(lineal, logística, logística ordinal, logística multinomial), análisis de "
-"rutas y validación estructural, y series temporales, junto con una "
-"biblioteca metodológica incorporada. Cada resultado basado en un método "
-"cita su propia fuente en el formato numerado nativo de jamovi, y la "
-"bibliografía completa en APA 7.ª edición está en la documentación del "
-"módulo."
+"(lineal, logística, logística ordinal, logística multinomial, Poisson y "
+"binomial negativa), análisis de rutas y validación estructural, y series "
+"temporales, junto con una biblioteca metodológica incorporada. Cada "
+"resultado basado en un método cita su propia fuente en el formato numerado "
+"nativo de jamovi, y la bibliografía completa en APA 7.ª edición está en la "
+"documentación del módulo."
 
 #: R/relatedcheck.b.R
 msgid ""
@@ -5096,6 +5446,14 @@ msgstr ""
 "alguna región del espacio de predictores. Considere predictores "
 "adicionales, interacciones, o revisar la codificación de categorías antes "
 "de confiar en predicciones basadas en el modelo."
+
+#: R/countcheck.b.R
+msgid ""
+"At least one numeric predictor is not linear on the log scale (%s); consider "
+"a spline, a polynomial or a transformation."
+msgstr ""
+"Al menos un predictor numérico no es lineal en la escala logarítmica (%s); "
+"considere un spline, un polinomio o una transformación."
 
 #: R/ordcheck.b.R
 msgid ""
@@ -5172,6 +5530,10 @@ msgstr "Selección automática de orden (Hyndman-Khandakar)"
 msgid "Avoids specifications incompatible with the order of integration."
 msgstr "Evitar especificaciones incompatibles con el orden de integración."
 
+#: countCheck/results/modelComparison.columns.title
+msgid "BIC"
+msgstr "BIC"
+
 #: R/texts.R
 msgid ""
 "Baron and Kenny (1986) popularized the classical framework for "
@@ -5193,6 +5555,14 @@ msgstr ""
 #: anovaCheck/options/plotSet/basic.title
 msgid "Basic"
 msgstr "Básico"
+
+#: R/countcheck.b.R
+msgid ""
+"Because %s enters as an offset, each IRR compares rates per unit of "
+"exposure, not raw counts."
+msgstr ""
+"Como %s entra como offset, cada IRR compara tasas por unidad de exposición, "
+"no recuentos brutos."
 
 #: R/pathcheck.b.R
 msgid ""
@@ -5318,6 +5688,16 @@ msgstr ""
 "Antes de interpretar coeficientes, revise si la variable dependiente es "
 "cuantitativa, si los predictores están correctamente definidos y si el "
 "tamaño muestral es razonable para el número de parámetros estimados."
+
+#: R/texts.R
+msgid ""
+"Before interpreting rate ratios, check that the outcome is a non-negative "
+"whole number, how many zeros it has, and how its variance compares with its "
+"mean."
+msgstr ""
+"Antes de interpretar las razones de tasas, compruebe que el desenlace es un "
+"número entero no negativo, cuántos ceros tiene y cómo se compara su varianza "
+"con su media."
 
 #: R/texts.R
 msgid ""
@@ -5556,6 +5936,14 @@ msgstr "Calibración por deciles de probabilidad"
 msgid "Calibration plots"
 msgstr "Gráficos de calibración"
 
+#: R/assumptionlibrary.b.R
+msgid "Cameron-Trivedi auxiliary regression"
+msgstr "Regresión auxiliar de Cameron-Trivedi"
+
+#: R/countcheck.b.R
+msgid "Cameron-Trivedi auxiliary regression (z)"
+msgstr "Regresión auxiliar de Cameron-Trivedi (z)"
+
 #: R/texts.R
 msgid ""
 "Canova and Hansen (1995) test whether the seasonal pattern is stable over "
@@ -5625,6 +6013,15 @@ msgstr "Casos excluidos por datos faltantes"
 msgid "Cases excluded for missing data"
 msgstr "Casos excluidos por datos faltantes"
 
+#: R/countcheck.b.R
+msgid ""
+"Cases flagged by Cook's D > 4/n = %s or leverage > 2p/n = %s; at most 30 are "
+"listed, ordered by Cook's D. Case numbers refer to the complete cases."
+msgstr ""
+"Casos señalados por Cook's D > 4/n = %s o leverage > 2p/n = %s; se listan "
+"como máximo 30, ordenados por Cook's D. Los números de caso se refieren a "
+"los casos completos."
+
 #: pathCheck/results/modelSummary.columns.title
 msgid "Cases per relationship"
 msgstr "Casos por relación"
@@ -5657,6 +6054,16 @@ msgid ""
 "Caution is suggested because the following source(s) require review: %s."
 msgstr ""
 "Se sugiere cautela porque las siguientes fuentes requieren revisión: %s."
+
+#: R/countcheck.b.R
+msgid ""
+"Caution: the data are overdispersed and these intervals come from the "
+"Poisson model, so they are too narrow and the p-values too small. Prefer the "
+"negative binomial model before reporting them."
+msgstr ""
+"Precaución: los datos están sobredispersos y estos intervalos provienen del "
+"modelo de Poisson, así que son demasiado estrechos y los valores p demasiado "
+"pequeños. Prefiera el modelo binomial negativo antes de informarlos."
 
 #: R/logcheck.b.R
 msgid ""
@@ -5837,6 +6244,14 @@ msgstr "Cointegración"
 msgid "Cointegration (Johansen, Engle-Granger)"
 msgstr "Cointegración (Johansen, Engle-Granger)"
 
+#: R/countcheck.b.R
+msgid ""
+"Collinearity is low; it does not compromise the interpretation of individual "
+"rate ratios."
+msgstr ""
+"La colinealidad es baja; no compromete la interpretación de las razones de "
+"tasas individuales."
+
 #: groupCheck/options/distColorByGroup.title
 msgid "Color by group"
 msgstr "Colorear por grupo"
@@ -5961,6 +6376,28 @@ msgstr ""
 "sustantivamente relevante para esa persona, o ruido de medición, y compare "
 "la conclusión con y sin el o los casos marcados antes de decidir."
 
+#: R/countcheck.b.R
+msgid ""
+"Common error: checking linearity on the raw count scale. The model is linear "
+"in log(μ), so a curved scatterplot of the count against the predictor is "
+"expected even when the assumption holds; the partial residual plot is the "
+"right view."
+msgstr ""
+"Error frecuente: comprobar la linealidad en la escala bruta del recuento. El "
+"modelo es lineal en log(μ), así que un diagrama de dispersión curvo del "
+"recuento frente al predictor es esperable aunque el supuesto se cumpla; el "
+"gráfico de residuos parciales es la vista adecuada."
+
+#: R/countcheck.b.R
+msgid ""
+"Common error: choosing a zero-inflated model only because the outcome has "
+"many zeros. Many zeros are expected when the mean is small; what matters is "
+"whether there are more zeros than the model predicts."
+msgstr ""
+"Error frecuente: elegir un modelo inflado en ceros solo porque el desenlace "
+"tiene muchos ceros. Se esperan muchos ceros cuando la media es pequeña; lo "
+"que importa es si hay más ceros de los que predice el modelo."
+
 #: R/regcheck.b.R
 msgid ""
 "Common error: concluding that a significant heteroscedasticity test means "
@@ -6033,6 +6470,42 @@ msgstr ""
 msgid "Common error: interpreting the OR as if it were a relative risk."
 msgstr "Error común: interpretar el OR como si fuera un riesgo relativo."
 
+#: R/countcheck.b.R
+msgid ""
+"Common error: judging a count model with the Q-Q plot of its Pearson or "
+"deviance residuals. Those residuals are not normal for counts even when the "
+"model is right; use the quantile residuals for that purpose, and the Pearson "
+"and deviance residuals to look for patterns against the fitted values."
+msgstr ""
+"Error frecuente: juzgar un modelo de recuento con el gráfico Q-Q de sus "
+"residuos de Pearson o de devianza. Esos residuos no son normales con "
+"recuentos aunque el modelo sea correcto; use los residuos cuantílicos para "
+"ese fin, y los de Pearson y de devianza para buscar patrones frente a los "
+"valores ajustados."
+
+#: R/countcheck.b.R
+msgid ""
+"Common error: judging overdispersion from the raw variance and mean of the "
+"outcome. What matters is the variance conditional on the predictors, which "
+"is what the Pearson ratio and the tests measure; predictors can explain part "
+"of the raw extra variance."
+msgstr ""
+"Error frecuente: juzgar la sobredispersión a partir de la varianza y la "
+"media brutas del desenlace. Lo que importa es la varianza condicional a los "
+"predictores, que es lo que miden el cociente de Pearson y las pruebas; los "
+"predictores pueden explicar parte de la varianza adicional bruta."
+
+#: R/countcheck.b.R
+msgid ""
+"Common error: reading an IRR as a difference in counts. An IRR of 1.5 means "
+"a 50% higher rate, whatever the baseline; report the baseline rate too, so "
+"the reader can judge the absolute size of the effect."
+msgstr ""
+"Error frecuente: leer una IRR como una diferencia de recuentos. Una IRR de "
+"1.5 significa una tasa un 50% mayor, sea cual sea la tasa de base; informe "
+"también la tasa de base, para que el lector pueda juzgar el tamaño absoluto "
+"del efecto."
+
 #: R/logcheck.b.R
 msgid ""
 "Common error: removing every flagged case automatically to 'clean' the "
@@ -6044,6 +6517,17 @@ msgstr ""
 "'limpiar' el modelo. Con umbrales tan permisivos, es esperable marcar "
 "algunos casos incluso en datos bien comportados; trate esto como una lista "
 "corta para inspeccionar, no una lista para eliminar."
+
+#: R/countcheck.b.R
+msgid ""
+"Common error: removing every flagged case automatically. With cutoffs this "
+"permissive some flags are expected even in well-behaved data; treat them as "
+"a shortlist to inspect, and if you refit without a case, report both models."
+msgstr ""
+"Error frecuente: eliminar automáticamente todos los casos señalados. Con "
+"umbrales tan permisivos se esperan algunas señales incluso en datos bien "
+"comportados; trátelos como una lista breve para revisar, y si reajusta sin "
+"un caso, informe ambos modelos."
 
 #: R/logcheck.b.R
 msgid ""
@@ -6267,6 +6751,10 @@ msgstr "Compatible con varianza constante"
 #: R/texts.R
 msgid "Compatible with homogeneous variances"
 msgstr "Compatible con varianzas homogéneas"
+
+#: R/countcheck.b.R
+msgid "Compatible with the distribution the model assumes."
+msgstr "Compatible con la distribución que supone el modelo."
 
 #: anovaCheck/options/plotSet/complete.title
 msgid "Complete"
@@ -6838,6 +7326,26 @@ msgstr "No pudo calcularse."
 msgid "Count"
 msgstr "Frecuencia"
 
+#: R/texts.R
+#: countCheck.title
+#: countCheck/results.title
+msgid "Count and Rate Regression"
+msgstr "Regresión de Recuentos y Tasas"
+
+#: R/texts.R
+msgid ""
+"Count data often contain more zeros than a Poisson or negative binomial "
+"model expects, for example when part of the population cannot experience the "
+"event at all (structural zeros)."
+msgstr ""
+"Los datos de recuento suelen contener más ceros de los que espera un modelo "
+"de Poisson o binomial negativo, por ejemplo cuando parte de la población no "
+"puede experimentar el evento en absoluto (ceros estructurales)."
+
+#: R/countcheck.b.R
+msgid "Count value"
+msgstr "Valor del recuento"
+
 #: pathCheck/results/residualCovarianceTable.columns.title
 msgid "Covariance"
 msgstr "Covarianza"
@@ -6911,6 +7419,14 @@ msgstr "Fecha (opcional)"
 msgid "Date Variable"
 msgstr "Variable de Fecha"
 
+#: R/assumptionlibrary.b.R
+msgid "Dean-Lawless score test"
+msgstr "Prueba de puntuación de Dean-Lawless"
+
+#: R/countcheck.b.R
+msgid "Dean-Lawless score test (z)"
+msgstr "Prueba de puntuación de Dean-Lawless (z)"
+
 #: R/anovacheck.b.R
 #: R/groupcheck.b.R
 #: R/pathcheck.b.R
@@ -6939,6 +7455,11 @@ msgstr "Variable Dependiente (Y)"
 #: logCheck/ui[0][0].label
 msgid "Dependent Variable (binary)"
 msgstr "Variable Dependiente (binaria)"
+
+#: countCheck/options/dep.title
+#: countCheck/ui[0][0].label
+msgid "Dependent Variable (count)"
+msgstr "Variable Dependiente (recuento)"
 
 #: multCheck/options/dep.title
 #: multCheck/ui[0][0].label
@@ -7087,6 +7608,14 @@ msgstr ""
 #: R/texts.R
 msgid "Determines whether the variance depends on past information."
 msgstr "Determinar si la varianza depende de información pasada."
+
+#: R/countcheck.b.R
+msgid "Deviance"
+msgstr "Devianza"
+
+#: R/countcheck.b.R
+msgid "Deviance / df (Poisson)"
+msgstr "Devianza / gl (Poisson)"
 
 #: R/logcheck.b.R
 msgid ""
@@ -7507,9 +8036,18 @@ msgstr "Igualdad de varianzas"
 msgid "Equation for %s (R² = %.3f, adjusted R² = %.3f): %s."
 msgstr "Ecuación de %s (R² = %.3f, R² ajustado = %.3f): %s."
 
+#: assumptionLibrary/options/category/countModels.title
+#: assumptionLibrary/results/countModels.title
+msgid "Equidispersion and Excess Zeros"
+msgstr "Equidispersión y Exceso de Ceros"
+
 #: R/texts.R
 msgid "Error distribution and variance (diagnostic)"
 msgstr "Distribución y varianza de los errores (diagnóstico)"
+
+#: R/countcheck.b.R
+msgid "Error fitting the Poisson model: %s"
+msgstr "Error al ajustar el modelo de Poisson: %s"
 
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
@@ -7675,6 +8213,34 @@ msgstr ""
 "paramétrica estándar o una alternativa no paramétrica es apropiada antes de "
 "interpretar la comparación."
 
+#: package/analyses/countCheck.description
+msgid ""
+"Evaluates the assumptions of Poisson and negative binomial regression "
+"(MASS::glm.nb) for a count outcome predicted by numeric and/or categorical "
+"predictors, with an optional exposure entered as an offset so the model "
+"describes rates. It checks overdispersion (Pearson dispersion ratio, "
+"Dean-Lawless and Cameron-Trivedi tests, and the "
+"Poisson-versus-negative-binomial likelihood ratio test), excess zeros "
+"against both models, Pearson, deviance and randomized quantile residuals, "
+"linearity of numeric predictors on the log scale, collinearity and case "
+"influence, and reports incidence rate ratios. Use it before trusting the "
+"rate ratios of a count model, to decide between Poisson and negative "
+"binomial and to detect when neither is adequate."
+msgstr ""
+"Evalúa los supuestos de la regresión de Poisson y binomial negativa "
+"(MASS::glm.nb) para un desenlace de recuento predicho por predictores "
+"numéricos y/o categóricos, con una exposición opcional introducida como "
+"offset para que el modelo describa tasas. Comprueba la sobredispersión "
+"(cociente de dispersión de Pearson, pruebas de Dean-Lawless y "
+"Cameron-Trivedi, y la prueba de razón de verosimilitudes Poisson frente a "
+"binomial negativa), el exceso de ceros frente a ambos modelos, los residuos "
+"de Pearson, de devianza y cuantílicos aleatorizados, la linealidad de los "
+"predictores numéricos en la escala logarítmica, la colinealidad y la "
+"influencia de los casos, e informa las razones de tasas de incidencia. Úselo "
+"antes de confiar en las razones de tasas de un modelo de recuento, para "
+"decidir entre Poisson y binomial negativa y para detectar cuándo ninguno es "
+"adecuado."
+
 #: package/analyses/multCheck.description
 msgid ""
 "Evaluates the assumptions of a multinomial logit model (nnet::multinom) for "
@@ -7790,6 +8356,18 @@ msgstr ""
 msgid "Evaluation"
 msgstr "Evaluación"
 
+#: R/countcheck.b.R
+msgid ""
+"Even the negative binomial model under-predicts the zeros (observed / "
+"expected = %s). Consider a zero-inflated or hurdle model, and justify it "
+"substantively: is there a group of cases that cannot experience the event at "
+"all?"
+msgstr ""
+"Incluso el modelo binomial negativo predice menos ceros de los observados "
+"(observados / esperados = %s). Considere un modelo inflado en ceros o un "
+"modelo hurdle, y justifíquelo sustantivamente: ¿hay un grupo de casos que no "
+"puede experimentar el evento en absoluto?"
+
 #: R/logcheck.b.R
 msgid "Events"
 msgstr "Eventos"
@@ -7814,6 +8392,13 @@ msgstr ""
 "de no linealidad o de ruta omitida. Este es un modelo de ruta basado en OLS "
 "bien comportado, dadas las verificaciones implementadas hasta ahora."
 
+#: R/countcheck.b.R
+msgid ""
+"Every value of the dependent variable is 0, so there is nothing to model."
+msgstr ""
+"Todos los valores de la variable dependiente son 0, así que no hay nada que "
+"modelar."
+
 #: anovaCheck/results/alternatives.columns.title
 #: relatedCheck/results/methodOptions.columns.title
 #: timeCheck/results/diagnosticsResults.columns.title
@@ -7823,6 +8408,12 @@ msgstr "Evidencia"
 #: R/groupcheck.b.R
 msgid "Evidence considered:"
 msgstr "Evidencia considerada:"
+
+#: R/countcheck.b.R
+#: countCheck/results/zeros.title
+#: countCheck/results/zerosGuide.title
+msgid "Excess zeros"
+msgstr "Exceso de ceros"
 
 #: R/regcheck.b.R
 msgid "Excluded percentage"
@@ -7866,10 +8457,18 @@ msgstr ""
 "el modelo refleja la estructura que usted pretendía, antes de leer el resto "
 "del informe."
 
+#: R/countcheck.b.R
+msgid "Expected by"
+msgstr "Esperado por"
+
 #: R/anovacheck.b.R
 #: R/regcheck.b.R
 msgid "Expected pattern: %s"
 msgstr "Patrón esperado: %s"
+
+#: countCheck/results/zeros.columns.title
+msgid "Expected zeros"
+msgstr "Ceros esperados"
 
 #: pathCheck/results/rSquaredTable.title
 msgid "Explained Variance (R²)"
@@ -7889,6 +8488,20 @@ msgstr "Término cuadrático exploratorio"
 #: regCheck/results/transformationsGuide.title
 msgid "Exploratory transformations"
 msgstr "Transformaciones exploratorias"
+
+#: countCheck/options/exposureScale/raw.title
+msgid "Exposure (log taken automatically)"
+msgstr "Exposición (se toma el logaritmo automáticamente)"
+
+#: R/countcheck.b.R
+#: countCheck/options/exposure.title
+#: countCheck/ui[0][3].label
+msgid "Exposure (offset)"
+msgstr "Exposición (offset)"
+
+#: countCheck/options/exposureScale.title
+msgid "Exposure scale"
+msgstr "Escala de la exposición"
 
 #: timeCheck/options/exogenous.title
 #: timeCheck/ui[0][1].label
@@ -8125,6 +8738,22 @@ msgstr ""
 "GARCH asume que la serie seleccionada ya representa retornos (u otra serie "
 "aproximadamente estacionaria en media), no niveles de precio en bruto."
 
+#: countCheck/results/multicollinearity.columns.title
+msgid "GVIF"
+msgstr "GVIF"
+
+#: countCheck/results/multicollinearity.columns.title
+msgid "GVIF^(1/(2·df))"
+msgstr "GVIF^(1/(2·gl))"
+
+#: R/countcheck.b.R
+msgid ""
+"GVIF^(1/(2·df)) above √5 ≈ 2.24 (VIF above 5) is a common warning threshold; "
+"above √10 ≈ 3.16, a strong one."
+msgstr ""
+"Un GVIF^(1/(2·gl)) por encima de √5 ≈ 2.24 (VIF mayor que 5) es un umbral de "
+"advertencia habitual; por encima de √10 ≈ 3.16, uno fuerte."
+
 #: anovaCheck/results/correlationComparisonTable.columns.title
 #: logCheck/results/correlationComparisonTable.columns.title
 #: multCheck/results/correlationComparisonTable.columns.title
@@ -8354,6 +8983,14 @@ msgstr "Orientar la especificación de los componentes ETS."
 msgid "HC3 robust standard errors"
 msgstr "Errores estándar robustos HC3"
 
+#: R/countcheck.b.R
+msgid ""
+"Half the χ²(1) tail, because the Poisson model lies on the boundary of the "
+"negative binomial (α = 0)."
+msgstr ""
+"Mitad de la cola de χ²(1), porque el modelo de Poisson está en la frontera "
+"de la binomial negativa (α = 0)."
+
 #: R/anovacheck.b.R
 msgid ""
 "Hartley Fmax: descriptive variance ratio. High values suggest checking "
@@ -8552,6 +9189,10 @@ msgstr "IQR"
 msgid "IQR rule"
 msgstr "Regla del IQR"
 
+#: countCheck/results/rateRatios.columns.title
+msgid "IRR"
+msgstr "IRR"
+
 #: R/groupcheck.b.R
 msgid "Identifies asymmetric departures from normality."
 msgstr "Identifica desviaciones asimétricas respecto a la normalidad."
@@ -8660,6 +9301,16 @@ msgstr ""
 "Si se confirma la no linealidad, considere agregar un término cuadrático o "
 "spline para ese predictor, o categorizarlo en grupos con sentido."
 
+#: R/countcheck.b.R
+msgid ""
+"If non-linearity is confirmed, keep the predictor as a spline or a "
+"polynomial term, or transform it (for example, its logarithm), and report "
+"the choice."
+msgstr ""
+"Si se confirma la no linealidad, mantenga el predictor como spline o término "
+"polinómico, o transfórmelo (por ejemplo, su logaritmo), e informe la "
+"elección."
+
 #: R/texts.R
 msgid ""
 "If observations are clustered, repeated or nested, consider mixed, "
@@ -8704,6 +9355,16 @@ msgstr ""
 "Si el paquete 'copent' no está instalado, esta sección no puede calcularse. "
 "Instálelo con install.packages('copent') para habilitar este diagnóstico "
 "avanzado."
+
+#: R/texts.R
+msgid ""
+"If the negative binomial model reproduces the zeros well, a zero-inflated "
+"model is usually unnecessary; if it does not, consider a zero-inflated or "
+"hurdle model and justify it substantively."
+msgstr ""
+"Si el modelo binomial negativo reproduce bien los ceros, un modelo inflado "
+"en ceros suele ser innecesario; si no, considere un modelo inflado en ceros "
+"o un modelo hurdle y justifíquelo sustantivamente."
 
 #: R/ordcheck.b.R
 msgid ""
@@ -8853,6 +9514,12 @@ msgstr ""
 "En esta situación, la t de Welch suele ser preferible a la t clásica con "
 "varianzas iguales porque ajusta la inferencia ante varianzas desiguales."
 
+#: R/countcheck.b.R
+#: countCheck/results/rateRatios.title
+#: countCheck/results/rateRatiosGuide.title
+msgid "Incidence rate ratios"
+msgstr "Razones de tasas de incidencia"
+
 #: assumptionLibrary/options/category/independence.title
 #: assumptionLibrary/results/independence.title
 msgid "Independence"
@@ -8956,6 +9623,18 @@ msgid ""
 msgstr ""
 "Los diagnósticos de influencia identifican casos que pueden modificar de "
 "forma importante los coeficientes, el ajuste o las conclusiones del modelo."
+
+#: R/texts.R
+msgid ""
+"Influence diagnostics identify cases that may substantially change the "
+"coefficients. In generalized linear models, Cook's distance and leverage "
+"come from the weighted hat matrix of the fitted model (Pregibon, 1981; "
+"McCullagh & Nelder, 1989)."
+msgstr ""
+"Los diagnósticos de influencia identifican casos que pueden cambiar "
+"sustancialmente los coeficientes. En los modelos lineales generalizados, la "
+"distancia de Cook y el leverage provienen de la matriz sombrero ponderada "
+"del modelo ajustado (Pregibon, 1981; McCullagh & Nelder, 1989)."
 
 #: logCheck/options/influenceShowPlots.title
 #: multCheck/options/influenceShowPlots.title
@@ -9120,6 +9799,17 @@ msgstr "No fue posible ajustar el modelo de regresión lineal: %s"
 msgid "Item"
 msgstr "Elemento"
 
+#: R/texts.R
+msgid ""
+"Its consequence is serious: coefficients stay roughly unbiased, but standard "
+"errors are too small, so confidence intervals are too narrow and p-values "
+"too optimistic."
+msgstr ""
+"Su consecuencia es seria: los coeficientes siguen siendo aproximadamente "
+"insesgados, pero los errores estándar son demasiado pequeños, así que los "
+"intervalos de confianza son demasiado estrechos y los valores p demasiado "
+"optimistas."
+
 #: R/pathcheck.b.R
 msgid "Jackson (2003) — recommended N:q ratio"
 msgstr "Jackson (2003) — razón N:q recomendada"
@@ -9232,6 +9922,10 @@ msgstr "LM / Portmanteau / Ljung-Box multivariado"
 msgid "LOESS"
 msgstr "LOESS"
 
+#: countCheck/options/residSmoother.title
+msgid "LOESS curve"
+msgstr "Curva LOESS"
+
 #: anovaCheck/options/influenceLabelMode.title
 #: logCheck/options/influenceLabelMode.title
 #: multCheck/options/influenceLabelMode.title
@@ -9259,6 +9953,14 @@ msgstr "Grande"
 #: R/relatedcheck.b.R
 msgid "Large points = mean; bars = 95% CI; diamond = median."
 msgstr "Puntos grandes = media; barras = IC 95%; rombo = mediana."
+
+#: R/countcheck.b.R
+msgid ""
+"Largest adjusted GVIF: %s (%s), equivalent to a VIF of %s (Fox & Monette, "
+"1992; see references)."
+msgstr ""
+"Mayor GVIF ajustado: %s (%s), equivalente a un VIF de %s (Fox & Monette, "
+"1992; ver referencias)."
 
 #: pathCheck/ui[2][6].label
 msgid "Layout"
@@ -9343,6 +10045,14 @@ msgstr ""
 "independencia - solo significa que los datos no proporcionan evidencia "
 "fuerte en contra."
 
+#: R/assumptionlibrary.b.R
+msgid "Likelihood ratio test on the boundary"
+msgstr "Prueba de razón de verosimilitudes en la frontera"
+
+#: R/countcheck.b.R
+msgid "Likelihood ratio, Poisson vs negative binomial (χ²)"
+msgstr "Razón de verosimilitudes, Poisson vs binomial negativa (χ²)"
+
 #: R/anovacheck.b.R
 #: R/groupcheck.b.R
 #: R/pathcheck.b.R
@@ -9367,6 +10077,10 @@ msgstr "Línea Lineal"
 #: regCheck/options/corrIndividualFit.title
 msgid "Linear fit and smoothing (individual plot)"
 msgstr "Ajuste lineal y suavizado (gráfico individual)"
+
+#: R/countcheck.b.R
+msgid "Linear predictor (log of the fitted count)"
+msgstr "Predictor lineal (log del recuento ajustado)"
 
 #: R/texts.R
 msgid ""
@@ -9427,6 +10141,15 @@ msgstr "Linealidad en el logit multinomial"
 #: multCheck/results/linearity.title
 msgid "Linearity in the multinomial logit (LR test)"
 msgstr "Linealidad en el logit multinomial (prueba LR)"
+
+#: R/countcheck.b.R
+#: countCheck/results/linearityGuide.title
+msgid "Linearity on the log scale"
+msgstr "Linealidad en la escala logarítmica"
+
+#: countCheck/results/linearity.title
+msgid "Linearity on the log scale (spline LR test)"
+msgstr "Linealidad en la escala logarítmica (prueba LR con spline)"
 
 #: logCheck/options/linShowPlots.title
 #: multCheck/options/linShowPlots.title
@@ -9496,6 +10219,10 @@ msgid ""
 msgstr ""
 "Bloquea la especificación y habilita la validación de supuestos y la "
 "estimación. Mientras esté desmarcado, el modelo permanece en construcción."
+
+#: countCheck/results/modelComparison.columns.title
+msgid "Log-likelihood"
+msgstr "Log-verosimilitud"
 
 #: R/texts.R
 #: logCheck.menuTitle
@@ -9741,6 +10468,10 @@ msgstr ""
 msgid "Maximum correlation"
 msgstr "Correlación máxima"
 
+#: R/countcheck.b.R
+msgid "Maximum count"
+msgstr "Recuento máximo"
+
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
 msgid "McFadden R² = %s; Nagelkerke R² = %s."
@@ -9769,6 +10500,18 @@ msgstr "Mdn"
 msgid "Mdn difference"
 msgstr "Mdn diferencia"
 
+#: countCheck/results/residuals.columns.title
+msgid "Mean"
+msgstr "Media"
+
+#: R/countcheck.b.R
+msgid "Mean count"
+msgstr "Recuento medio"
+
+#: R/countcheck.b.R
+msgid "Mean count in the group"
+msgstr "Recuento medio del grupo"
+
 #: groupCheck/options/showMeanMarker.title
 msgid "Mean marker"
 msgstr "Marca de la media"
@@ -9776,6 +10519,14 @@ msgstr "Marca de la media"
 #: R/logcheck.b.R
 msgid "Mean predicted probability (decile)"
 msgstr "Probabilidad predicha media (decil)"
+
+#: countCheck/options/dispShowPlots.title
+msgid "Mean-variance plot"
+msgstr "Gráfico media-varianza"
+
+#: countCheck/results/meanVariancePlot.title
+msgid "Mean-variance relationship"
+msgstr "Relación media-varianza"
 
 #: pathCheck/results/mardiaTable.columns.title
 msgid "Measure"
@@ -10008,6 +10759,10 @@ msgstr "Variables del Modelo"
 msgid "Model design"
 msgstr "Diseño del modelo"
 
+#: R/countcheck.b.R
+msgid "Model diagnosed"
+msgstr "Modelo diagnosticado"
+
 #: R/logcheck.b.R
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
@@ -10037,6 +10792,10 @@ msgstr "Resumen del modelo"
 #: R/anovacheck.b.R
 msgid "Model the interaction or use a regression approach with interaction."
 msgstr "Modelar la interacción o usar un enfoque de regresión con interacción."
+
+#: countCheck/options/family.title
+msgid "Model to diagnose"
+msgstr "Modelo a diagnosticar"
 
 #: R/timecheck.b.R
 msgid "Moderate evidence"
@@ -10085,6 +10844,16 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
+"Multicollinearity evaluates whether predictors carry very redundant "
+"information. It does not bias the predicted counts, but it makes "
+"coefficients unstable and widens their standard errors."
+msgstr ""
+"La multicolinealidad evalúa si los predictores aportan información muy "
+"redundante. No sesga los recuentos predichos, pero vuelve inestables los "
+"coeficientes y amplía sus errores estándar."
+
+#: R/texts.R
+msgid ""
 "Multicollinearity evaluates whether predictors contain highly redundant "
 "information."
 msgstr ""
@@ -10098,6 +10867,14 @@ msgid ""
 msgstr ""
 "La multicolinealidad evalúa si los predictores de una misma ecuación "
 "contienen información muy redundante entre sí."
+
+#: R/countcheck.b.R
+msgid ""
+"Multicollinearity needs at least two predictors, so it does not apply to "
+"this model."
+msgstr ""
+"La multicolinealidad necesita al menos dos predictores, así que no aplica a "
+"este modelo."
 
 #: R/logcheck.b.R
 msgid ""
@@ -10192,6 +10969,15 @@ msgstr ""
 "está en la misma escala numérica que un R² de regresión lineal y no debería "
 "interpretarse como \"porcentaje de varianza explicada\" en ese sentido."
 
+#: R/countcheck.b.R
+#: countCheck/options/family/negbin.title
+msgid "Negative binomial"
+msgstr "Binomial negativa"
+
+#: R/countcheck.b.R
+msgid "Negative binomial: var = μ + μ²/θ"
+msgstr "Binomial negativa: var = μ + μ²/θ"
+
 #: R/pathcheck.b.R
 msgid "No"
 msgstr "No"
@@ -10217,6 +11003,10 @@ msgid ""
 "No boxplot was generated. At least one group with 3 valid cases is required."
 msgstr ""
 "No se generó el boxplot. Se requiere al menos un grupo con 3 casos válidos."
+
+#: R/countcheck.b.R
+msgid "No case exceeds the Cook's D or leverage cutoffs."
+msgstr "Ningún caso supera los umbrales de Cook's D o de leverage."
 
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
@@ -10294,6 +11084,14 @@ msgstr "No hay datos disponibles."
 #: R/regcheck.b.R
 msgid "No diagnostic plot data are available."
 msgstr "No hay datos disponibles para este gráfico diagnóstico."
+
+#: R/countcheck.b.R
+msgid ""
+"No diagnostic points to a serious problem; the model can be interpreted, "
+"reporting the diagnostics."
+msgstr ""
+"Ningún diagnóstico apunta a un problema serio; el modelo puede "
+"interpretarse, informando los diagnósticos."
 
 #: R/anovacheck.b.R
 msgid ""
@@ -10429,6 +11227,14 @@ msgid ""
 msgstr ""
 "No se incluyeron predictores numéricos, por lo que la prueba de linealidad "
 "en el logit (Box-Tidwell) no aplica."
+
+#: R/countcheck.b.R
+msgid ""
+"No numeric predictors were included, so the linearity check on the log scale "
+"does not apply."
+msgstr ""
+"No se incluyeron predictores numéricos, así que la comprobación de "
+"linealidad en la escala logarítmica no aplica."
 
 #: R/regcheck.b.R
 msgid "No numeric variables are available for boxplots."
@@ -10876,6 +11682,35 @@ msgstr ""
 "No calculable (la diferencia de matrices de covarianza no es invertible - a "
 "menudo, en sí misma, evidencia en contra de una violación genuina de la IIA)"
 
+#: R/countcheck.b.R
+msgid "Not computable: %s"
+msgstr "No computable: %s"
+
+#: R/countcheck.b.R
+msgid ""
+"Not computable: the auxiliary regression has no residual variation (too few "
+"cases or identical fitted values)."
+msgstr ""
+"No computable: la regresión auxiliar no tiene variación residual (muy pocos "
+"casos o valores ajustados idénticos)."
+
+#: R/countcheck.b.R
+msgid "Not computable: the model with the spline term could not be fitted."
+msgstr "No computable: no se pudo ajustar el modelo con el término spline."
+
+#: R/countcheck.b.R
+msgid "Not computable: the negative binomial model could not be fitted (%s)."
+msgstr "No computable: no se pudo ajustar el modelo binomial negativo (%s)."
+
+#: R/countcheck.b.R
+msgid ""
+"Not computable: the score test's variance is not positive for these fitted "
+"values (usually very few zeros are expected and observed)."
+msgstr ""
+"No computable: la varianza de la prueba de puntuación no es positiva para "
+"estos valores ajustados (normalmente se esperan y se observan muy pocos "
+"ceros)."
+
 #: R/anovacheck.b.R
 #: R/logcheck.b.R
 #: R/multcheck.b.R
@@ -10907,6 +11742,11 @@ msgstr "No hay suficientes variables numéricas para este gráfico."
 msgid "Not enough valid cases"
 msgstr "Casos válidos insuficientes"
 
+#: R/countcheck.b.R
+msgid "Not enough variation in fitted values to group the cases."
+msgstr ""
+"No hay suficiente variación en los valores ajustados para agrupar los casos."
+
 #: R/logcheck.b.R
 msgid "Not enough variation in predicted probabilities to plot calibration."
 msgstr ""
@@ -10932,6 +11772,14 @@ msgstr ""
 #: R/logcheck.b.R
 msgid "Not tested (non-positive or non-numeric values): "
 msgstr "No evaluado (valores no positivos o no numéricos): "
+
+#: R/countcheck.b.R
+msgid ""
+"Not tested: the predictor has fewer than 5 distinct values, too few for a "
+"3-df spline."
+msgstr ""
+"No probado: el predictor tiene menos de 5 valores distintos, demasiado pocos "
+"para un spline de 3 gl."
 
 #: R/pathcheck.b.R
 msgid "Notable"
@@ -10983,6 +11831,10 @@ msgstr "Número de Grupos (bins) para el Logit Empírico"
 #: logCheck/options/caliBins.title
 msgid "Number of Groups (deciles) for Calibration"
 msgstr "Número de Grupos (deciles) para la Calibración"
+
+#: R/countcheck.b.R
+msgid "Number of cases"
+msgstr "Número de casos"
 
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
@@ -11073,6 +11925,10 @@ msgstr "Observación"
 msgid "Observed"
 msgstr "Observado"
 
+#: countCheck/results/zeros.columns.title
+msgid "Observed / expected"
+msgstr "Observados / esperados"
+
 #: multCheck/results/influence.columns.title
 #: ordCheck/results/influence.columns.title
 msgid "Observed category"
@@ -11122,6 +11978,11 @@ msgstr "Valores observados"
 msgid "Observed values in original scale"
 msgstr "Valores observados en escala original"
 
+#: countCheck/options/zeroShowPlots.title
+#: countCheck/results/frequencyPlot.title
+msgid "Observed vs expected frequencies"
+msgstr "Frecuencias observadas vs esperadas"
+
 #: multCheck/results/classification.title
 msgid "Observed vs predicted"
 msgstr "Observado vs. predicho"
@@ -11133,6 +11994,18 @@ msgstr "Valores observados vs predichos"
 #: groupCheck/options/showNormalCurvePlots.title
 msgid "Observed vs. theoretical normal curve"
 msgstr "Curva normal observada vs. teórica"
+
+#: countCheck/results/zeros.columns.title
+msgid "Observed zeros"
+msgstr "Ceros observados"
+
+#: R/countcheck.b.R
+msgid ""
+"Observed zeros: %s. The Poisson model expects %s and the negative binomial "
+"model expects %s."
+msgstr ""
+"Ceros observados: %s. El modelo de Poisson espera %s y el modelo binomial "
+"negativo espera %s."
 
 #: logCheck/results/oddsRatios.title
 #: logCheck/results/oddsRatiosGuide.title
@@ -11272,6 +12145,14 @@ msgid ""
 msgstr ""
 "ANOVA de un factor, ANOVA de Welch o Kruskal-Wallis según la prioridad "
 "analítica"
+
+#: R/countcheck.b.R
+msgid ""
+"Only %s complete case(s) are available; a count model needs more cases than "
+"parameters."
+msgstr ""
+"Solo hay %s caso(s) completo(s); un modelo de recuento necesita más casos "
+"que parámetros."
 
 #: R/anovacheck.b.R
 msgid ""
@@ -11452,6 +12333,36 @@ msgstr ""
 msgid "Overall model linearity"
 msgstr "Linealidad global del modelo"
 
+#: R/countcheck.b.R
+#: countCheck/results/dispersion.title
+#: countCheck/results/dispersionGuide.title
+msgid "Overdispersion"
+msgstr "Sobredispersión"
+
+#: R/assumptionlibrary.b.R
+msgid "Overdispersion and count regression"
+msgstr "Sobredispersión y regresión de recuentos"
+
+#: R/texts.R
+msgid ""
+"Overdispersion means the counts vary more than the Poisson model allows. It "
+"is the most common problem with Poisson regression in applied data, and it "
+"is caused by unmeasured heterogeneity between cases, clustering or contagion "
+"between events."
+msgstr ""
+"La sobredispersión significa que los recuentos varían más de lo que permite "
+"el modelo de Poisson. Es el problema más frecuente de la regresión de "
+"Poisson con datos aplicados, y se debe a heterogeneidad no medida entre "
+"casos, agrupamiento o contagio entre eventos."
+
+#: R/countcheck.b.R
+msgid ""
+"Overdispersion remains in the negative binomial model; review omitted "
+"predictors, clustering of cases, or excess zeros."
+msgstr ""
+"Queda sobredispersión en el modelo binomial negativo; revise predictores "
+"omitidos, agrupamiento de casos o exceso de ceros."
+
 #: R/ordcheck.b.R
 msgid "Package 'brant' not installed"
 msgstr "Paquete 'brant' no instalado"
@@ -11554,6 +12465,10 @@ msgstr "Diagnóstico de parámetros / persistencia"
 msgid "Parameter stability (CUSUM, Nyblom)"
 msgstr "Estabilidad paramétrica (CUSUM, Nyblom)"
 
+#: countCheck/results/modelComparison.columns.title
+msgid "Parameters"
+msgstr "Parámetros"
+
 #: R/texts.R
 msgid "Parameters are not stable over time."
 msgstr "Los parámetros no resultan estables en el tiempo."
@@ -11561,6 +12476,18 @@ msgstr "Los parámetros no resultan estables en el tiempo."
 #: timeCheck/results/pacfPlot.title
 msgid "Partial autocorrelation (PACF)"
 msgstr "Autocorrelación parcial (PACF)"
+
+#: R/countcheck.b.R
+msgid "Partial residual (log scale)"
+msgstr "Residuo parcial (escala logarítmica)"
+
+#: countCheck/options/linShowPlots.title
+msgid "Partial residual plots"
+msgstr "Gráficos de residuos parciales"
+
+#: countCheck/results/linearityPlot.title
+msgid "Partial residuals vs predictor"
+msgstr "Residuos parciales vs predictor"
 
 #: R/texts.R
 #: package/analyses/pathCheck.menuSubgroup
@@ -11602,6 +12529,10 @@ msgstr "Diagrama de ruta"
 #: pathCheck/ui[2][1].label
 msgid "Paths"
 msgstr "Rutas"
+
+#: R/countcheck.b.R
+msgid "Pearson"
+msgstr "Pearson"
 
 #: R/anovacheck.b.R
 #: R/logcheck.b.R
@@ -11648,6 +12579,15 @@ msgstr "Pearson chi-cuadrado"
 msgid "Pearson correlation matrix (APA 7 format)"
 msgstr "Matriz de correlaciones de Pearson (formato APA 7)"
 
+#: R/countcheck.b.R
+msgid ""
+"Pearson dispersion ratio under the Poisson model: %s (Cameron & Trivedi, "
+"2013; see references). Under the Poisson model it should be close to 1."
+msgstr ""
+"Cociente de dispersión de Pearson bajo el modelo de Poisson: %s (Cameron & "
+"Trivedi, 2013; ver referencias). Bajo el modelo de Poisson debería estar "
+"cerca de 1."
+
 #: anovaCheck/results/correlationComparisonTable.columns.title
 #: logCheck/results/correlationComparisonTable.columns.title
 #: multCheck/results/correlationComparisonTable.columns.title
@@ -11658,15 +12598,46 @@ msgstr "Matriz de correlaciones de Pearson (formato APA 7)"
 msgid "Pearson r"
 msgstr "Pearson r"
 
+#: R/countcheck.b.R
+msgid ""
+"Pearson ratio of the negative binomial model: %s. A value close to 1 means "
+"its variance function, μ + μ²/θ, describes the data; a value well above 1 "
+"means overdispersion remains even after allowing for it."
+msgstr ""
+"Cociente de Pearson del modelo binomial negativo: %s. Un valor cercano a 1 "
+"significa que su función de varianza, μ + μ²/θ, describe los datos; un valor "
+"muy por encima de 1 significa que queda sobredispersión incluso después de "
+"tenerla en cuenta."
+
 #: multCheck/results/influencePlot.title
 #: ordCheck/results/influencePlot.title
 msgid "Pearson residual by case"
 msgstr "Residuo de Pearson por caso"
 
+#: R/texts.R
+msgid ""
+"Pearson residuals divide the raw residual by the standard deviation the "
+"model predicts; deviance residuals measure each case's contribution to the "
+"deviance. Both should scatter around 0 with no pattern against the fitted "
+"values."
+msgstr ""
+"Los residuos de Pearson dividen el residuo bruto por la desviación estándar "
+"que predice el modelo; los residuos de devianza miden la contribución de "
+"cada caso a la devianza. Ambos deberían dispersarse alrededor de 0 sin "
+"patrón frente a los valores ajustados."
+
 #: multCheck/results/influence.columns.title
 #: ordCheck/results/influence.columns.title
 msgid "Pearson statistic"
 msgstr "Estadístico de Pearson"
+
+#: R/countcheck.b.R
+msgid "Pearson χ² / df (Poisson)"
+msgstr "χ² de Pearson / gl (Poisson)"
+
+#: R/countcheck.b.R
+msgid "Pearson χ² / df (negative binomial)"
+msgstr "χ² de Pearson / gl (binomial negativa)"
 
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
@@ -11774,6 +12745,10 @@ msgstr "Gráficos: Linealidad en el Logit"
 msgid "Plots: Linearity in the Multinomial Logit"
 msgstr "Gráficos: Linealidad en el Logit Multinomial"
 
+#: countCheck/ui[5].label
+msgid "Plots: Linearity on the Log Scale"
+msgstr "Gráficos: Linealidad en la Escala Logarítmica"
+
 #: groupCheck/ui[3].label
 msgid "Plots: Normal Curve"
 msgstr "Gráficos: Curva Normal"
@@ -11785,6 +12760,10 @@ msgstr "Gráficos: Normalidad"
 #: groupCheck/ui[2].label
 msgid "Plots: Normality (Q-Q)"
 msgstr "Gráficos: Normalidad (Q-Q)"
+
+#: countCheck/ui[3].label
+msgid "Plots: Overdispersion and Zeros"
+msgstr "Gráficos: Sobredispersión y Ceros"
 
 #: pathCheck/ui[2].label
 msgid "Plots: Path Diagram"
@@ -11809,6 +12788,36 @@ msgstr ""
 #: R/groupcheck.b.R
 msgid "Points: observed cases"
 msgstr "Puntos: casos observados"
+
+#: R/countcheck.b.R
+#: countCheck/options/family/poisson.title
+msgid "Poisson"
+msgstr "Poisson"
+
+#: countCheck.menuTitle
+msgid "Poisson / Negative Binomial"
+msgstr "Poisson / Binomial Negativa"
+
+#: R/texts.R
+msgid ""
+"Poisson and negative binomial regression model a count (number of events, "
+"visits, admissions, errors) as a function of one or more predictors, on the "
+"log scale: each coefficient is a log rate ratio."
+msgstr ""
+"La regresión de Poisson y la binomial negativa modelan un recuento (número "
+"de eventos, visitas, ingresos, errores) en función de uno o más predictores, "
+"en escala logarítmica: cada coeficiente es el logaritmo de una razón de "
+"tasas."
+
+#: R/countcheck.b.R
+#: countCheck/results/modelComparison.title
+#: countCheck/results/modelComparisonGuide.title
+msgid "Poisson vs negative binomial"
+msgstr "Poisson vs binomial negativa"
+
+#: R/countcheck.b.R
+msgid "Poisson: var = μ"
+msgstr "Poisson: var = μ"
 
 #: R/anovacheck.b.R
 msgid "Polynomial terms, splines, or covariate transformation."
@@ -12004,6 +13013,10 @@ msgstr "Q-Q / Shapiro-Wilk"
 msgid "Q-Q plot confidence band"
 msgstr "Banda de confianza del Q-Q plot"
 
+#: countCheck/results/quantileResidualPlot.title
+msgid "Q-Q plot of randomized quantile residuals"
+msgstr "Gráfico Q-Q de residuos cuantílicos aleatorizados"
+
 #: groupCheck/options/showQQPlots.title
 msgid "Q-Q plots"
 msgstr "Q-Q plots"
@@ -12051,6 +13064,39 @@ msgstr "Curva ROC no disponible (se requiere el paquete 'pROC')."
 #: R/regcheck.b.R
 msgid "Ramsey RESET: p = %s. Rainbow test: p = %s%s"
 msgstr "Ramsey RESET: p = %s. Rainbow test: p = %s%s"
+
+#: R/countcheck.b.R
+msgid "Randomized quantile"
+msgstr "Cuantílico aleatorizado"
+
+#: R/countcheck.b.R
+msgid "Randomized quantile residuals"
+msgstr "Residuos cuantílicos aleatorizados"
+
+#: R/countcheck.b.R
+msgid ""
+"Randomized quantile residuals (Dunn & Smyth, 1996; see references): SD = %s "
+"and %s%% of cases beyond ±2, against 1 and about 4.6%% expected under a "
+"correct model."
+msgstr ""
+"Residuos cuantílicos aleatorizados (Dunn & Smyth, 1996; ver referencias): DE "
+"= %s y %s%% de los casos más allá de ±2, frente a 1 y alrededor de 4.6%% "
+"esperados bajo un modelo correcto."
+
+#: R/countcheck.b.R
+msgid ""
+"Randomized quantile residuals use a fixed seed (20260704), so the same data "
+"always give the same values. Under a correct model they are standard normal: "
+"mean 0, SD 1, about 4.6% beyond ±2 and 0.3% beyond ±3."
+msgstr ""
+"Los residuos cuantílicos aleatorizados usan una semilla fija (20260704), así "
+"que los mismos datos dan siempre los mismos valores. Bajo un modelo correcto "
+"son normales estándar: media 0, DE 1, alrededor de 4.6% más allá de ±2 y "
+"0.3% más allá de ±3."
+
+#: countCheck/results/dispersion.columns.title
+msgid "Ratio"
+msgstr "Cociente"
 
 #: R/logcheck.b.R
 #: R/multcheck.b.R
@@ -12280,6 +13326,10 @@ msgstr "Normalidad de los residuos (Jarque-Bera)"
 msgid "Residual normality by transformation"
 msgstr "Normalidad de residuos por transformación"
 
+#: countCheck/options/residShowPlots.title
+msgid "Residual plots"
+msgstr "Gráficos de residuos"
+
 #: R/texts.R
 msgid ""
 "Residual serial correlation suggests the current order is insufficient."
@@ -12293,6 +13343,10 @@ msgstr "La correlación serial residual sugiere estructura no capturada."
 #: R/regcheck.b.R
 msgid "Residual standard error"
 msgstr "Error estándar residual"
+
+#: countCheck/results/residuals.title
+msgid "Residual summary"
+msgstr "Resumen de residuos"
 
 #: R/anovacheck.b.R
 #: R/regcheck.b.R
@@ -12319,6 +13373,10 @@ msgstr "Los residuos muestran heterocedasticidad condicional."
 #: regCheck/results/residualsFittedPlot.title
 msgid "Residuals vs fitted values"
 msgstr "Residuos vs valores ajustados"
+
+#: countCheck/results/residualPlot.title
+msgid "Residuals vs linear predictor"
+msgstr "Residuos vs predictor lineal"
 
 #: R/pathcheck.b.R
 msgid "Resolve the alerts above before finalizing the model."
@@ -12617,6 +13675,17 @@ msgstr ""
 "colinealidad moderada puede volver los coeficientes bastante inestables; "
 "con muestras grandes, un VIF similar suele ser más tolerable."
 
+#: R/countcheck.b.R
+msgid ""
+"Sample-size caveat: with %s cases, the tests can flag a trivial excess of "
+"variance in large samples and miss a relevant one in small samples; read the "
+"ratio and the mean-variance plot, not only the p-values."
+msgstr ""
+"Advertencia sobre el tamaño muestral: con %s casos, las pruebas pueden "
+"señalar un exceso trivial de varianza en muestras grandes y pasar por alto "
+"uno relevante en muestras pequeñas; lea el cociente y el gráfico "
+"media-varianza, no solo los valores p."
+
 #: R/logcheck.b.R
 msgid ""
 "Sample-size caveat: with %s complete cases, the Box-Tidwell interaction "
@@ -12733,6 +13802,21 @@ msgstr "Alcance"
 #: timeCheck/results/implementationNotes.title
 msgid "Scope of this version"
 msgstr "Alcance de esta versión"
+
+#: countCheck/results/zeros.columns.title
+msgid "Score test"
+msgstr "Prueba de puntuación"
+
+#: R/assumptionlibrary.b.R
+msgid "Score test for zero inflation"
+msgstr "Prueba de puntuación para inflación de ceros"
+
+#: R/countcheck.b.R
+msgid ""
+"Score test: van den Broek (1995), zero-inflated Poisson vs Poisson, χ²(1)."
+msgstr ""
+"Prueba de puntuación: van den Broek (1995), Poisson inflado en ceros vs "
+"Poisson, χ²(1)."
 
 #: pathCheck/options/residBinMethod/scott.title
 #: regCheck/options/normHistBins/scott.title
@@ -12938,6 +14022,10 @@ msgstr ""
 "de preferir Kolmogorov-Smirnov cuando n crece es un remanente de "
 "limitaciones de software antiguo, no una razón estadística."
 
+#: R/countcheck.b.R
+msgid "Shapiro-Wilk test on these residuals: p %s. %s"
+msgstr "Prueba de Shapiro-Wilk sobre estos residuos: p %s. %s"
+
 #: pathCheck/ui[2][3].label
 msgid "Show"
 msgstr "Mostrar"
@@ -13122,6 +14210,10 @@ msgstr "Pequeño"
 msgid "Smallest category"
 msgstr "Categoría más pequeña"
 
+#: countCheck/options/linSmoother.title
+msgid "Smoother"
+msgstr "Suavizador"
+
 #: anovaCheck/options/residSmoother.title
 #: regCheck/options/homoSmoother.title
 #: regCheck/options/linSmoother.title
@@ -13304,9 +14396,17 @@ msgstr ""
 msgid "Status"
 msgstr "Estado"
 
+#: countCheck/results/influence.columns.title
+msgid "Std. deviance residual"
+msgstr "Residuo de devianza estand."
+
 #: R/logcheck.b.R
 msgid "Strongest association: "
 msgstr "Asociación más fuerte: "
+
+#: R/countcheck.b.R
+msgid "Strongest association: %s, IRR = %s (p %s)."
+msgstr "Asociación más fuerte: %s, IRR = %s (p %s)."
 
 #: R/ordcheck.b.R
 msgid "Strongest association: %s, OR = %s."
@@ -13894,6 +14994,14 @@ msgstr ""
 "No fue posible calcular la prueba de Box-Tidwell para los predictores "
 "numéricos (requiere valores estrictamente positivos)."
 
+#: R/countcheck.b.R
+msgid ""
+"The Dean-Lawless and Cameron-Trivedi tests are one-sided (H1: overdispersion "
+"of the negative binomial form, var = μ + α·μ²)."
+msgstr ""
+"Las pruebas de Dean-Lawless y Cameron-Trivedi son unilaterales (H1: "
+"sobredispersión de la forma binomial negativa, var = μ + α·μ²)."
+
 #: R/texts.R
 msgid ""
 "The Durbin-Watson test helps review first-order autocorrelation when data "
@@ -14021,6 +15129,61 @@ msgstr ""
 "si incluye 1, el efecto no es estadísticamente distinguible de la ausencia "
 "de asociación."
 
+#: R/texts.R
+msgid ""
+"The Pearson dispersion ratio (Pearson chi-square divided by its degrees of "
+"freedom) should be close to 1 under the Poisson model; values clearly above "
+"1 indicate overdispersion and values clearly below 1 indicate "
+"underdispersion (Cameron & Trivedi, 2013)."
+msgstr ""
+"El cociente de dispersión de Pearson (chi-cuadrado de Pearson dividido por "
+"sus grados de libertad) debería estar cerca de 1 bajo el modelo de Poisson; "
+"valores claramente mayores que 1 indican sobredispersión y valores "
+"claramente menores que 1 indican infradispersión (Cameron & Trivedi, 2013)."
+
+#: R/countcheck.b.R
+msgid ""
+"The Pearson ratio is clearly below 1, which suggests underdispersion: the "
+"counts vary less than the Poisson model expects. Poisson standard errors are "
+"then conservative (too wide); the negative binomial model does not help, "
+"because it only allows more variance, not less."
+msgstr ""
+"El cociente de Pearson está claramente por debajo de 1, lo que sugiere "
+"infradispersión: los recuentos varían menos de lo que espera el modelo de "
+"Poisson. Los errores estándar de Poisson son entonces conservadores "
+"(demasiado amplios); el modelo binomial negativo no ayuda, porque solo "
+"admite más varianza, no menos."
+
+#: R/texts.R
+msgid ""
+"The Poisson model assumes the variance of the count equals its mean "
+"(equidispersion); the negative binomial model relaxes this by adding a "
+"dispersion parameter, var = mu + mu^2/theta (Hilbe, 2011)."
+msgstr ""
+"El modelo de Poisson supone que la varianza del recuento es igual a su media "
+"(equidispersión); el modelo binomial negativo relaja este supuesto añadiendo "
+"un parámetro de dispersión, var = mu + mu^2/theta (Hilbe, 2011)."
+
+#: R/countcheck.b.R
+msgid ""
+"The Poisson model under-predicts the zeros, but the negative binomial model "
+"reproduces them: the extra zeros are explained by overdispersion, and a "
+"zero-inflated model is usually unnecessary."
+msgstr ""
+"El modelo de Poisson predice menos ceros de los observados, pero el modelo "
+"binomial negativo los reproduce: los ceros de más se explican por la "
+"sobredispersión, y un modelo inflado en ceros suele ser innecesario."
+
+#: R/countcheck.b.R
+msgid ""
+"The Poisson model under-predicts the zeros. The negative binomial model "
+"could not be fitted, so it is not possible to tell whether the extra zeros "
+"come from overdispersion or from a separate process."
+msgstr ""
+"El modelo de Poisson predice menos ceros de los observados. No se pudo "
+"ajustar el modelo binomial negativo, así que no es posible saber si los "
+"ceros de más provienen de la sobredispersión o de un proceso distinto."
+
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
 msgid ""
@@ -14046,6 +15209,14 @@ msgstr "El estado interno del Q-Q plot no contiene las columnas esperadas."
 #: R/timecheck.b.R
 msgid "The SARIMA model could not be fitted (auto.arima)."
 msgstr "No fue posible ajustar el modelo SARIMA (auto.arima)."
+
+#: R/countcheck.b.R
+msgid ""
+"The Shapiro-Wilk test is not computed on these residuals (it needs between 3 "
+"and 5000 cases); use the Q-Q plot."
+msgstr ""
+"La prueba de Shapiro-Wilk no se calcula sobre estos residuos (necesita entre "
+"3 y 5000 casos); use el gráfico Q-Q."
 
 #: R/texts.R
 msgid ""
@@ -14137,6 +15308,28 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
+"The check compares the observed number of zeros with the number each model "
+"expects, the sum of each case's fitted probability of a zero."
+msgstr ""
+"La comprobación compara el número observado de ceros con el número que "
+"espera cada modelo, la suma de la probabilidad ajustada de un cero en cada "
+"caso."
+
+#: R/texts.R
+msgid ""
+"The check replaces each numeric predictor's linear term with a natural cubic "
+"spline of 3 degrees of freedom and compares the two fits with a likelihood "
+"ratio test on 2 degrees of freedom (Harrell, 2015). A significant result "
+"suggests the relationship on the log scale is curved."
+msgstr ""
+"La comprobación reemplaza el término lineal de cada predictor numérico por "
+"un spline cúbico natural de 3 grados de libertad y compara ambos ajustes con "
+"una prueba de razón de verosimilitudes de 2 grados de libertad (Harrell, "
+"2015). Un resultado significativo sugiere que la relación en la escala "
+"logarítmica es curva."
+
+#: R/texts.R
+msgid ""
 "The choice should combine statistical evidence, study design and the "
 "research question."
 msgstr ""
@@ -14155,6 +15348,16 @@ msgstr ""
 "No fue posible convertir el VECM cointegrado a su representación VAR "
 "(vec2var)."
 
+#: R/countcheck.b.R
+msgid ""
+"The comparison of the negative binomial's expected zeros uses a heuristic "
+"(observed at least 15% above expected and at least 5 zeros more), not a "
+"formal test."
+msgstr ""
+"La comparación con los ceros esperados por la binomial negativa usa una "
+"heurística (observados al menos un 15% por encima de los esperados y al "
+"menos 5 ceros más), no una prueba formal."
+
 #: R/groupcheck.b.R
 msgid "The comparison using %s is methodologically defensible."
 msgstr "La comparación mediante %s es metodológicamente defendible."
@@ -14162,6 +15365,16 @@ msgstr "La comparación mediante %s es metodológicamente defendible."
 #: R/texts.R
 msgid "The conditional mean dynamics may not be well captured."
 msgstr "La dinámica de la media condicional puede no estar bien capturada."
+
+#: R/texts.R
+msgid ""
+"The confidence intervals shown are Wald intervals from the model being "
+"diagnosed. If the data are overdispersed and the Poisson model is used, "
+"these intervals are too narrow."
+msgstr ""
+"Los intervalos de confianza mostrados son intervalos de Wald del modelo "
+"diagnosticado. Si los datos están sobredispersos y se usa el modelo de "
+"Poisson, estos intervalos son demasiado estrechos."
 
 #: R/texts.R
 msgid ""
@@ -14242,6 +15455,25 @@ msgstr ""
 "para una variable dependiente binaria (2 categorías) - da diagnósticos "
 "binarios más ricos (ROC/AUC, Hosmer-Lemeshow, odds ratios)."
 
+#: R/countcheck.b.R
+msgid ""
+"The dependent variable has negative values, and a count cannot be negative. "
+"Check how the variable is coded."
+msgstr ""
+"La variable dependiente tiene valores negativos, y un recuento no puede ser "
+"negativo. Revise cómo está codificada la variable."
+
+#: R/countcheck.b.R
+msgid ""
+"The dependent variable has non-integer values, and Poisson and negative "
+"binomial models need whole-number counts. If it is a rate, enter the count "
+"as the dependent variable and the time or population at risk as the exposure."
+msgstr ""
+"La variable dependiente tiene valores no enteros, y los modelos de Poisson y "
+"binomial negativo necesitan recuentos enteros. Si se trata de una tasa, "
+"introduzca el recuento como variable dependiente y el tiempo o la población "
+"en riesgo como exposición."
+
 #: R/multcheck.b.R
 msgid ""
 "The dependent variable is deliberately excluded from this matrix: unlike "
@@ -14269,6 +15501,17 @@ msgstr ""
 #: R/groupcheck.b.R
 msgid "The dependent variable must be numeric."
 msgstr "La variable dependiente debe ser numérica."
+
+#: R/countcheck.b.R
+msgid "The dependent variable must be numeric: a count of events per case."
+msgstr ""
+"La variable dependiente debe ser numérica: un recuento de eventos por caso."
+
+#: R/countcheck.b.R
+msgid ""
+"The dependent variable takes a single value, so there is nothing to model."
+msgstr ""
+"La variable dependiente toma un único valor, así que no hay nada que modelar."
 
 #: R/timecheck.b.R
 msgid "The diagnostic battery could not complete: %s"
@@ -14299,6 +15542,16 @@ msgid ""
 msgstr ""
 "La evidencia sugiere que el supuesto de igualdad de varianzas puede no ser "
 "completamente defendible."
+
+#: R/countcheck.b.R
+msgid ""
+"The exposure variable has zero or negative values in %s case(s), and its "
+"logarithm is not defined. Correct those values, or choose 'Already on the "
+"log scale' if the variable is already a logarithm."
+msgstr ""
+"La variable de exposición tiene valores cero o negativos en %s caso(s), y su "
+"logaritmo no está definido. Corrija esos valores, o elija 'Ya en escala "
+"logarítmica' si la variable ya es un logaritmo."
 
 #: R/groupcheck.b.R
 msgid ""
@@ -14398,6 +15651,17 @@ msgstr ""
 msgid "The full explanation of these criteria is in Assumption Library."
 msgstr "La explicación completa de estos criterios está en Assumption Library."
 
+#: R/texts.R
+msgid ""
+"The generalized variance inflation factor (GVIF) is reported, adjusted as "
+"GVIF^(1/(2 df)) so that categorical predictors with several levels are "
+"comparable with numeric ones; its square is on the usual VIF scale."
+msgstr ""
+"Se informa el factor de inflación de la varianza generalizado (GVIF), "
+"ajustado como GVIF^(1/(2 gl)) para que los predictores categóricos con "
+"varios niveles sean comparables con los numéricos; su cuadrado está en la "
+"escala habitual del VIF."
+
 #: R/anovacheck.b.R
 #: R/pathcheck.b.R
 #: R/regcheck.b.R
@@ -14448,6 +15712,18 @@ msgstr "La prueba de bondad de ajuste no pudo calcularse para esta corrida."
 msgid "The horizontal line at 0 indicates no change."
 msgstr "La línea horizontal en 0 indica ausencia de cambio."
 
+#: R/texts.R
+msgid ""
+"The incidence rate ratio (IRR) is the exponentiated coefficient: it is the "
+"factor by which the expected count (or rate, when there is an offset) is "
+"multiplied for each one-unit increase in the predictor, or for a category "
+"compared with the reference category."
+msgstr ""
+"La razón de tasas de incidencia (IRR) es el coeficiente exponenciado: es el "
+"factor por el que se multiplica el recuento esperado (o la tasa, cuando hay "
+"offset) por cada aumento de una unidad en el predictor, o para una categoría "
+"frente a la categoría de referencia."
+
 #: R/groupcheck.b.R
 msgid ""
 "The independent-samples t-test is defensible for this comparison given the "
@@ -14469,6 +15745,18 @@ msgid ""
 msgstr ""
 "El estado interno del gráfico de diferencias no contiene las columnas "
 "esperadas."
+
+#: R/texts.R
+msgid ""
+"The likelihood ratio test compares the Poisson and negative binomial fits "
+"directly; because the Poisson model sits on the boundary of the negative "
+"binomial (alpha = 0), its p-value is half the usual chi-square tail (Self & "
+"Liang, 1987)."
+msgstr ""
+"La prueba de razón de verosimilitudes compara directamente los ajustes de "
+"Poisson y binomial negativo; como el modelo de Poisson está en la frontera "
+"de la binomial negativa (alfa = 0), su valor p es la mitad de la cola "
+"chi-cuadrado habitual (Self & Liang, 1987)."
 
 #: R/regcheck.b.R
 msgid ""
@@ -14509,6 +15797,11 @@ msgstr ""
 "ARIMA es un diagnóstico útil, no un requisito matemático estricto para la "
 "estimación."
 
+#: R/countcheck.b.R
+msgid "The model has no predictors, so only the baseline count is estimated."
+msgstr ""
+"El modelo no tiene predictores, así que solo se estima el recuento de base."
+
 #: R/pathcheck.b.R
 msgid "The model has subgroups of variables with no relation between them."
 msgstr "El modelo tiene subgrupos de variables sin relación entre sí."
@@ -14520,6 +15813,14 @@ msgstr "El modelo es recursivo (sin retroalimentación)."
 #: R/pathcheck.b.R
 msgid "The model satisfies all validations and can be finalized."
 msgstr "El modelo cumple todas las validaciones y puede finalizarse."
+
+#: R/countcheck.b.R
+msgid ""
+"The most influential case is case %s, with Cook's D = %s and an observed "
+"count of %s against a fitted %s."
+msgstr ""
+"El caso más influyente es el caso %s, con Cook's D = %s y un recuento "
+"observado de %s frente a un ajustado de %s."
 
 #: R/multcheck.b.R
 msgid ""
@@ -14554,6 +15855,42 @@ msgstr ""
 "no-referencia frente a la categoría de referencia, todas estimadas "
 "conjuntamente."
 
+#: R/texts.R
+msgid ""
+"The negative binomial dispersion parameter is shown as theta and as alpha = "
+"1/theta: alpha close to 0 (theta very large) means the negative binomial "
+"reduces to the Poisson model."
+msgstr ""
+"El parámetro de dispersión de la binomial negativa se muestra como theta y "
+"como alfa = 1/theta: un alfa cercano a 0 (theta muy grande) significa que la "
+"binomial negativa se reduce al modelo de Poisson."
+
+#: R/countcheck.b.R
+msgid ""
+"The negative binomial model could not be fitted (%s). Choose the Poisson "
+"model to see the overdispersion checks."
+msgstr ""
+"No se pudo ajustar el modelo binomial negativo (%s). Elija el modelo de "
+"Poisson para ver las comprobaciones de sobredispersión."
+
+#: R/countcheck.b.R
+msgid ""
+"The negative binomial model does not improve clearly on the Poisson model "
+"(likelihood ratio test not significant); the simpler Poisson model may be "
+"enough."
+msgstr ""
+"El modelo binomial negativo no mejora claramente al de Poisson (prueba de "
+"razón de verosimilitudes no significativa); el modelo de Poisson, más "
+"simple, puede ser suficiente."
+
+#: R/countcheck.b.R
+msgid ""
+"The negative binomial model estimates θ = %s (α = 1/θ = %s); AIC is %s for "
+"Poisson and %s for the negative binomial."
+msgstr ""
+"El modelo binomial negativo estima θ = %s (α = 1/θ = %s); el AIC es %s para "
+"Poisson y %s para la binomial negativa."
+
 #: R/relatedcheck.b.R
 msgid ""
 "The normal-curve plot internal state does not contain the expected columns."
@@ -14568,6 +15905,14 @@ msgid ""
 msgstr ""
 "La normalidad de las diferencias mostró al menos una señal significativa; "
 "revise Q-Q plot y distribución observada antes de decidir."
+
+#: R/countcheck.b.R
+msgid ""
+"The number of zeros is compatible with the model; there is no sign of zero "
+"inflation."
+msgstr ""
+"El número de ceros es compatible con el modelo; no hay señales de inflación "
+"de ceros."
 
 #: R/texts.R
 msgid ""
@@ -14616,6 +15961,17 @@ msgstr ""
 "El análisis paramétrico puede ser defendible con cautela si el diseño "
 "realmente es independiente, las varianzas son compatibles con homogeneidad "
 "y la normalidad no muestra desviaciones graves."
+
+#: R/texts.R
+msgid ""
+"The partial residual plot shows the same thing graphically: the working "
+"residuals plus the predictor's linear contribution, against the predictor. A "
+"smooth curve that departs from the straight line points to non-linearity."
+msgstr ""
+"El gráfico de residuos parciales muestra lo mismo de forma gráfica: los "
+"residuos de trabajo más la contribución lineal del predictor, frente al "
+"predictor. Una curva suavizada que se aparta de la recta apunta a no "
+"linealidad."
 
 #: R/relatedcheck.b.R
 msgid "The plot internal state does not contain the expected columns."
@@ -14739,6 +16095,14 @@ msgstr ""
 "La prueba de esfericidad fue significativa; no se recomienda interpretar un "
 "ANOVA de medidas repetidas sin corrección."
 
+#: R/countcheck.b.R
+msgid ""
+"The spline test could not be computed for any numeric predictor; use the "
+"partial residual plot."
+msgstr ""
+"La prueba con spline no pudo calcularse para ningún predictor numérico; use "
+"el gráfico de residuos parciales."
+
 #: R/relatedcheck.b.R
 msgid ""
 "The suggested test depends on the number of measurements and assumptions."
@@ -14751,6 +16115,17 @@ msgstr "El sistema convertido a VAR resulta inestable."
 #: R/texts.R
 msgid "The system is unstable."
 msgstr "El sistema resulta inestable."
+
+#: R/countcheck.b.R
+msgid ""
+"The tests indicate overdispersion: the counts vary more than the Poisson "
+"model allows (Dean-Lawless p %s; likelihood ratio p %s). With a Poisson "
+"model, standard errors would be about %s times too small."
+msgstr ""
+"Las pruebas indican sobredispersión: los recuentos varían más de lo que "
+"permite el modelo de Poisson (Dean-Lawless p %s; razón de verosimilitudes p "
+"%s). Con un modelo de Poisson, los errores estándar serían unas %s veces "
+"demasiado pequeños."
 
 #: R/texts.R
 msgid ""
@@ -14792,6 +16167,15 @@ msgstr ""
 "por encima de 5 encienden una alerta moderada y por encima de 10 se "
 "consideran un problema severo (Marquardt, 1970)."
 
+#: R/countcheck.b.R
+msgid ""
+"The variance inflation factors could not be computed; this usually means an "
+"exact linear dependency among predictors (an aliased coefficient)."
+msgstr ""
+"No se pudieron calcular los factores de inflación de la varianza; esto suele "
+"indicar una dependencia lineal exacta entre predictores (un coeficiente "
+"confundido)."
+
 #: R/groupcheck.b.R
 #: R/relatedcheck.b.R
 msgid "Theoretical normal"
@@ -14817,6 +16201,10 @@ msgstr "Cuantiles teóricos normales"
 msgid "Theoretical quantiles"
 msgstr "Cuantiles teóricos"
 
+#: R/countcheck.b.R
+msgid "Theoretical quantiles (standard normal)"
+msgstr "Cuantiles teóricos (normal estándar)"
+
 #: R/multcheck.b.R
 #: R/ordcheck.b.R
 msgid ""
@@ -14825,6 +16213,22 @@ msgid ""
 msgstr ""
 "Hay casos con un residuo tipo Pearson grande; inspecciónelos antes de "
 "confiar en las predicciones del modelo."
+
+#: R/countcheck.b.R
+msgid ""
+"There are many outlying or influential cases; inspect them before making "
+"decisions about the model."
+msgstr ""
+"Hay muchos casos atípicos o influyentes; revíselos antes de tomar decisiones "
+"sobre el modelo."
+
+#: R/countcheck.b.R
+msgid ""
+"There are more zeros than the negative binomial model expects; consider a "
+"zero-inflated or hurdle model, with a substantive justification."
+msgstr ""
+"Hay más ceros de los que espera el modelo binomial negativo; considere un "
+"modelo inflado en ceros o un modelo hurdle, con una justificación sustantiva."
 
 #: R/relatedcheck.b.R
 msgid "There are not enough complete cases to evaluate related groups."
@@ -14889,6 +16293,14 @@ msgstr ""
 "Hay evidencia de varianza residual no constante; considerar errores "
 "estándar robustos, transformación de la dependiente o modelo alternativo."
 
+#: R/countcheck.b.R
+msgid ""
+"There is no clear evidence of overdispersion: the variance of the counts is "
+"compatible with the Poisson model."
+msgstr ""
+"No hay evidencia clara de sobredispersión: la varianza de los recuentos es "
+"compatible con el modelo de Poisson."
+
 #: R/ordcheck.b.R
 msgid ""
 "There is no single ROC curve or AUC once the outcome has more than two "
@@ -14920,6 +16332,26 @@ msgstr ""
 "muestra de un modelo de ruta; la literatura ofrece varias heurísticas "
 "complementarias que ponderan la complejidad del modelo de forma distinta."
 
+#: R/countcheck.b.R
+msgid ""
+"There is overdispersion: the Poisson standard errors are too small. Prefer "
+"the negative binomial model (choose it under 'Model to diagnose'), or at "
+"least use robust standard errors."
+msgstr ""
+"Hay sobredispersión: los errores estándar de Poisson son demasiado pequeños. "
+"Prefiera el modelo binomial negativo (elíjalo en 'Modelo a diagnosticar'), o "
+"al menos use errores estándar robustos."
+
+#: R/countcheck.b.R
+msgid ""
+"There is relevant collinearity: the rate ratios of the predictors involved "
+"are unstable and their intervals wide. Consider combining or removing "
+"redundant predictors."
+msgstr ""
+"Hay colinealidad relevante: las razones de tasas de los predictores "
+"implicados son inestables y sus intervalos amplios. Considere combinar o "
+"eliminar predictores redundantes."
+
 #: R/logcheck.b.R
 msgid ""
 "There is relevant multicollinearity among predictors; review redundant "
@@ -14928,6 +16360,14 @@ msgstr ""
 "Hay multicolinealidad relevante entre predictores; revisar predictores "
 "redundantes antes de interpretar los odds ratios individuales."
 
+#: R/countcheck.b.R
+msgid ""
+"There is relevant multicollinearity; review redundant predictors before "
+"interpreting individual rate ratios."
+msgstr ""
+"Hay multicolinealidad relevante; revise los predictores redundantes antes de "
+"interpretar las razones de tasas individuales."
+
 #: R/regcheck.b.R
 msgid ""
 "There is severe multicollinearity; review redundant predictors before "
@@ -14935,6 +16375,15 @@ msgid ""
 msgstr ""
 "Hay multicolinealidad severa; revisar predictores redundantes antes de "
 "interpretar coeficientes."
+
+#: R/countcheck.b.R
+msgid ""
+"There is underdispersion: Poisson standard errors are conservative. Consider "
+"a generalized Poisson or Conway-Maxwell-Poisson model if precision matters."
+msgstr ""
+"Hay infradispersión: los errores estándar de Poisson son conservadores. "
+"Considere un modelo de Poisson generalizado o de Conway-Maxwell-Poisson si "
+"la precisión importa."
 
 #: R/regcheck.b.R
 msgid ""
@@ -15088,6 +16537,16 @@ msgstr ""
 "numeradas). Esto es directamente relevante para un diseño de muestras "
 "relacionadas: correlaciones fuertes o débiles entre las mediciones afectan "
 "la potencia y la interpretación de las comparaciones intrasujeto."
+
+#: R/countcheck.b.R
+msgid ""
+"They depart from the standard normal distribution, which points to a "
+"misspecified distribution (for example, overdispersion or excess zeros) or a "
+"misspecified mean."
+msgstr ""
+"Se apartan de la distribución normal estándar, lo que apunta a una "
+"distribución mal especificada (por ejemplo, sobredispersión o exceso de "
+"ceros) o a una media mal especificada."
 
 #: R/texts.R
 msgid ""
@@ -15327,6 +16786,14 @@ msgstr ""
 "arriba marca un predictor, su odds ratio aquí no debería leerse como "
 "constante entre puntos de corte."
 
+#: R/texts.R
+msgid ""
+"This table compares the two candidate models fitted to the same cases. A "
+"lower AIC or BIC indicates a better balance between fit and complexity."
+msgstr ""
+"Esta tabla compara los dos modelos candidatos ajustados a los mismos casos. "
+"Un AIC o BIC menor indica un mejor equilibrio entre ajuste y complejidad."
+
 #: R/anovacheck.b.R
 msgid ""
 "This table translates the diagnostics into possible methodological options."
@@ -15565,6 +17032,16 @@ msgstr ""
 "generalmente la más potente en muestras pequeñas a moderadas, y "
 "Anderson-Darling (Anderson & Darling, 1952), que pondera más las colas de "
 "la distribución (Razali & Wah, 2011)."
+
+#: R/texts.R
+msgid ""
+"Two formal tests are reported against the negative binomial alternative: the "
+"Dean-Lawless score test (Dean & Lawless, 1989) and the Cameron-Trivedi "
+"auxiliary regression (Cameron & Trivedi, 1990)."
+msgstr ""
+"Se informan dos pruebas formales frente a la alternativa binomial negativa: "
+"la prueba de puntuación de Dean-Lawless (Dean & Lawless, 1989) y la "
+"regresión auxiliar de Cameron-Trivedi (Cameron & Trivedi, 1990)."
 
 #: R/relatedcheck.b.R
 msgid "Two measurements"
@@ -16113,6 +17590,10 @@ msgstr "Variables"
 msgid "Variance"
 msgstr "Varianza"
 
+#: R/countcheck.b.R
+msgid "Variance / mean (raw data)"
+msgstr "Varianza / media (datos brutos)"
+
 #: R/regcheck.b.R
 msgid "Variance equality"
 msgstr "Igualdad de varianzas"
@@ -16121,9 +17602,17 @@ msgstr "Igualdad de varianzas"
 msgid "Variance homogeneity"
 msgstr "Homogeneidad de varianzas"
 
+#: R/countcheck.b.R
+msgid "Variance in the group"
+msgstr "Varianza del grupo"
+
 #: groupCheck/results/homogeneityGuide.title
 msgid "Variance interpretation guide"
 msgstr "Guía de interpretación de la varianza"
+
+#: R/countcheck.b.R
+msgid "Variance of the count"
+msgstr "Varianza del recuento"
 
 #: R/timecheck.b.R
 msgid "Variance persistence (alpha1 + beta1)"
@@ -16190,6 +17679,16 @@ msgstr "Guía visual de normalidad"
 #: R/texts.R
 msgid "Volatility asymmetry (sign bias, GJR, EGARCH)"
 msgstr "Asimetría en la volatilidad (sesgo de signo, GJR, EGARCH)"
+
+#: R/countcheck.b.R
+msgid ""
+"Wald 95% confidence intervals. The intercept row is the baseline expected "
+"count (or rate, with an offset) when every predictor is 0 or at its "
+"reference category."
+msgstr ""
+"Intervalos de confianza de Wald al 95%. La fila del intercepto es el "
+"recuento esperado de base (o la tasa, con offset) cuando cada predictor vale "
+"0 o está en su categoría de referencia."
 
 #: R/anovacheck.b.R
 #: R/regcheck.b.R
@@ -16299,6 +17798,18 @@ msgstr ""
 "sólida. Cuando discrepan - por ejemplo, Pearson bajo pero CE significativa "
 "- esto sugiere una dependencia no lineal que Pearson no captura pero que la "
 "teoría de la información sí detecta."
+
+#: R/texts.R
+msgid ""
+"When cases were observed for different lengths of time or represent "
+"populations of different sizes, the exposure (person-time, population at "
+"risk) enters as an offset, log(exposure), so the model describes rates "
+"rather than raw counts."
+msgstr ""
+"Cuando los casos se observaron durante tiempos distintos o representan "
+"poblaciones de distinto tamaño, la exposición (persona-tiempo, población en "
+"riesgo) entra como offset, log(exposición), de modo que el modelo describe "
+"tasas en vez de recuentos brutos."
 
 #: R/anovacheck.b.R
 msgid ""
@@ -16555,6 +18066,28 @@ msgstr ""
 "criterios de la tabla \"Valoración del Tamaño de Muestra según la "
 "Complejidad del Modelo\"."
 
+#: R/texts.R
+msgid ""
+"With count data, a single case with a very large count can dominate the fit, "
+"especially under the Poisson model, whose variance is small for large counts."
+msgstr ""
+"Con datos de recuento, un solo caso con un recuento muy grande puede dominar "
+"el ajuste, sobre todo bajo el modelo de Poisson, cuya varianza es pequeña "
+"para recuentos grandes."
+
+#: R/texts.R
+msgid ""
+"With counts, and above all with small means, neither residual is normally "
+"distributed even when the model is right, so their Q-Q plot is hard to read. "
+"The randomized quantile residuals of Dunn and Smyth (1996) solve this: when "
+"the model is correct they are exactly standard normal."
+msgstr ""
+"Con recuentos, y sobre todo con medias pequeñas, ninguno de los dos residuos "
+"se distribuye normalmente aunque el modelo sea correcto, así que su gráfico "
+"Q-Q es difícil de leer. Los residuos cuantílicos aleatorizados de Dunn y "
+"Smyth (1996) resuelven esto: cuando el modelo es correcto, son exactamente "
+"normales estándar."
+
 #: R/groupcheck.b.R
 msgid ""
 "With large samples, normality tests can detect small deviations that may "
@@ -16566,6 +18099,28 @@ msgstr ""
 "desviaciones pequeñas que quizá no afecten seriamente el análisis. Con "
 "muestras pequeñas, las pruebas pueden tener baja potencia, por lo que la "
 "inspección visual y el juicio sustantivo son especialmente importantes."
+
+#: R/countcheck.b.R
+msgid ""
+"With overdispersed data, Poisson residuals are too spread out: a SD clearly "
+"above 1 and many cases beyond ±2 are the residual-side view of the "
+"overdispersion reported above."
+msgstr ""
+"Con datos sobredispersos, los residuos de Poisson están demasiado dispersos: "
+"una DE claramente mayor que 1 y muchos casos más allá de ±2 son la cara "
+"residual de la sobredispersión informada arriba."
+
+#: R/countcheck.b.R
+msgid ""
+"With overdispersed data, the Poisson spline test rejects linearity too "
+"often, because its likelihood ratio assumes the Poisson variance; check "
+"linearity again with the negative binomial model before acting on a "
+"significant result."
+msgstr ""
+"Con datos sobredispersos, la prueba con spline bajo Poisson rechaza la "
+"linealidad con demasiada frecuencia, porque su razón de verosimilitudes "
+"supone la varianza de Poisson; compruebe de nuevo la linealidad con el "
+"modelo binomial negativo antes de actuar ante un resultado significativo."
 
 #: R/texts.R
 msgid ""
@@ -16677,6 +18232,10 @@ msgstr "Sí"
 #: regCheck/options/linRefLine.title
 msgid "Zero reference line"
 msgstr "Línea de referencia en cero"
+
+#: R/countcheck.b.R
+msgid "Zeros"
+msgstr "Ceros"
 
 #: R/regcheck.b.R
 msgid "a horizontal band with similar dispersion across the X axis."
@@ -17068,6 +18627,14 @@ msgstr ""
 msgid "frequency or number of cases."
 msgstr "frecuencia o número de casos."
 
+#: R/countcheck.b.R
+msgid ""
+"glm.nb() reported a convergence warning (%s). This usually means θ is "
+"growing without bound because the data show little or no overdispersion."
+msgstr ""
+"glm.nb() emitió una advertencia de convergencia (%s). Suele significar que θ "
+"crece sin límite porque los datos muestran poca o ninguna sobredispersión."
+
 #: R/anovacheck.b.R
 msgid "groups / cells defined by the selected factor(s)."
 msgstr "grupos / celdas definidos por el o los factores seleccionados."
@@ -17149,6 +18716,10 @@ msgid "leverage, or the case distance from the center of the predictor space."
 msgstr ""
 "leverage, o distancia del caso respecto al centro del espacio de "
 "predictores."
+
+#: R/countcheck.b.R
+msgid "log(%s)"
+msgstr "log(%s)"
 
 #: regCheck/results/transformationFit.columns.title
 #: regCheck/results/transformationNormality.columns.title
@@ -17245,6 +18816,10 @@ msgstr "ninguna multicolinealidad relevante"
 #: R/anovacheck.b.R
 msgid "non-linear covariate dependence"
 msgstr "dependencia no lineal en covariables"
+
+#: R/countcheck.b.R
+msgid "none"
+msgstr "ninguna"
 
 #: R/groupcheck.b.R
 msgid "normality diagnostics"
@@ -17781,6 +19356,27 @@ msgstr "valores de la segunda variable del par."
 msgid "values predicted by the model."
 msgstr "valores predichos por el modelo."
 
+#: R/texts.R
+msgid ""
+"van den Broek's (1995) score test compares the Poisson model with a "
+"zero-inflated Poisson model. Overdispersion alone also produces extra zeros, "
+"so a significant result must be read together with the zeros expected by the "
+"negative binomial model."
+msgstr ""
+"La prueba de puntuación de van den Broek (1995) compara el modelo de Poisson "
+"con un modelo de Poisson inflado en ceros. La sobredispersión por sí sola "
+"también produce ceros de más, así que un resultado significativo debe leerse "
+"junto con los ceros esperados por el modelo binomial negativo."
+
+#: R/countcheck.b.R
+msgid ""
+"van den Broek's score test is defined against the Poisson model only; for "
+"the negative binomial, compare observed and expected zeros."
+msgstr ""
+"La prueba de puntuación de van den Broek solo está definida frente al modelo "
+"de Poisson; para la binomial negativa, compare los ceros observados y "
+"esperados."
+
 #: R/groupcheck.b.R
 msgid "variance homogeneity diagnostics"
 msgstr "diagnósticos de homogeneidad de varianzas"
@@ -17835,3 +19431,15 @@ msgstr ""
 #: R/pathcheck.b.R
 msgid "without statistical significance"
 msgstr "sin significancia estadística"
+
+#: countCheck/results/modelComparison.columns.title
+msgid "α = 1/θ"
+msgstr "α = 1/θ"
+
+#: countCheck/results/modelComparison.columns.title
+msgid "θ"
+msgstr "θ"
+
+#: countCheck/results/linearity.columns.title
+msgid "χ²"
+msgstr "χ²"

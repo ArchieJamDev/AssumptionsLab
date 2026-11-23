@@ -1,0 +1,426 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: countCheck
+title: Count and Rate Regression
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: Introduction
+    type: Html
+
+  - name: designGuide
+    title: Model design
+    type: Html
+
+  - name: design
+    title: Design summary
+    type: Table
+    rows: 0
+    columns:
+      - name: element
+        title: Item
+        type: text
+      - name: value
+        title: Value
+        type: text
+
+  - name: dispersionGuide
+    title: Overdispersion
+    type: Html
+
+  - name: dispersion
+    title: Overdispersion
+    type: Table
+    rows: 0
+    refs:
+      - cameron_2013
+      - dean_1989
+      - cameron_1990
+      - self_1987
+    columns:
+      - name: test
+        title: Test
+        type: text
+      - name: statistic
+        title: Statistic
+        type: number
+      - name: df
+        title: df
+        type: integer
+      - name: ratio
+        title: Ratio
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: modelComparisonGuide
+    title: Poisson vs negative binomial
+    type: Html
+
+  - name: modelComparison
+    title: Poisson vs negative binomial
+    type: Table
+    rows: 0
+    refs:
+      - venables_2002
+      - hilbe_2011
+    columns:
+      - name: model
+        title: Model
+        type: text
+      - name: logLik
+        title: Log-likelihood
+        type: number
+      - name: k
+        title: Parameters
+        type: integer
+      - name: aic
+        title: AIC
+        type: number
+      - name: bic
+        title: BIC
+        type: number
+      - name: theta
+        title: θ
+        type: number
+      - name: alpha
+        title: "α = 1/θ"
+        type: number
+
+  - name: dispersionInterpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: meanVariancePlot
+    title: Mean-variance relationship
+    type: Image
+    width: 560
+    height: 360
+    renderFun: .plotMeanVariance
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
+      - dispShowPlots
+
+  - name: zerosGuide
+    title: Excess zeros
+    type: Html
+
+  - name: zeros
+    title: Excess zeros
+    type: Table
+    rows: 0
+    refs:
+      - van_den_broek_1995
+    columns:
+      - name: model
+        title: Model
+        type: text
+      - name: observed
+        title: Observed zeros
+        type: integer
+      - name: expected
+        title: Expected zeros
+        type: number
+      - name: ratio
+        title: Observed / expected
+        type: number
+      - name: statistic
+        title: Score test
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: zerosInterpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: frequencyPlot
+    title: Observed vs expected frequencies
+    type: Image
+    width: 560
+    height: 340
+    renderFun: .plotFrequencies
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
+      - zeroShowPlots
+
+  - name: residualsGuide
+    title: Residuals
+    type: Html
+
+  - name: residuals
+    title: Residual summary
+    type: Table
+    rows: 0
+    refs:
+      - dunn_1996
+      - shapiro_1965
+    columns:
+      - name: type
+        title: Residual
+        type: text
+      - name: mean
+        title: Mean
+        type: number
+      - name: sd
+        title: SD
+        type: number
+      - name: min
+        title: Min
+        type: number
+      - name: max
+        title: Max
+        type: number
+      - name: over2
+        title: "% |r| > 2"
+        type: number
+      - name: over3
+        title: "% |r| > 3"
+        type: number
+
+  - name: residualsInterpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: residualPlot
+    title: Residuals vs linear predictor
+    type: Image
+    width: 620
+    height: 340
+    renderFun: .plotResiduals
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
+      - residShowPlots
+      - residSmoother
+
+  - name: quantileResidualPlot
+    title: Q-Q plot of randomized quantile residuals
+    type: Image
+    width: 460
+    height: 400
+    renderFun: .plotQuantileResiduals
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
+      - residShowPlots
+
+  - name: linearityGuide
+    title: Linearity on the log scale
+    type: Html
+
+  - name: linearity
+    title: Linearity on the log scale (spline LR test)
+    type: Table
+    rows: 0
+    refs:
+      - harrell_2015
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: statistic
+        title: χ²
+        type: number
+      - name: df
+        title: df
+        type: integer
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: linearityInterpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: linearityPlot
+    title: Partial residuals vs predictor
+    type: Image
+    width: 560
+    height: 340
+    renderFun: .plotLinearity
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
+      - linShowPlots
+      - linSmoother
+
+  - name: multicollinearityGuide
+    title: Multicollinearity
+    type: Html
+
+  - name: multicollinearity
+    title: Multicollinearity
+    type: Table
+    rows: 0
+    refs:
+      - fox_1992
+      - marquardt_1970
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: gvif
+        title: GVIF
+        type: number
+      - name: df
+        title: df
+        type: integer
+      - name: gvifAdj
+        title: "GVIF^(1/(2·df))"
+        type: number
+
+  - name: multicollinearityInterpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: influenceGuide
+    title: Influential cases
+    type: Html
+
+  - name: influence
+    title: Influential cases
+    type: Table
+    rows: 0
+    refs:
+      - cook_1977
+      - pregibon_1981
+    columns:
+      - name: case
+        title: Case
+        type: integer
+      - name: cooksD
+        title: Cook's D
+        type: number
+        format: decimal
+      - name: leverage
+        title: Leverage
+        type: number
+        format: decimal
+      - name: stdResid
+        title: Std. deviance residual
+        type: number
+        format: decimal
+
+  - name: influenceInterpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: influencePlot
+    title: "Cook's D by case"
+    type: Image
+    width: 560
+    height: 320
+    renderFun: .plotInfluence
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
+      - influenceShowPlots
+      - influenceLabelMode
+      - influenceShowThreshold
+
+  - name: rateRatiosGuide
+    title: Incidence rate ratios
+    type: Html
+
+  - name: rateRatios
+    title: Incidence rate ratios
+    type: Table
+    rows: 0
+    refs:
+      - mccullagh_1989
+    columns:
+      - name: predictor
+        title: Predictor
+        type: text
+      - name: irr
+        title: IRR
+        type: number
+        format: decimal
+      - name: ciLower
+        title: 95% CI lower
+        type: number
+        format: decimal
+      - name: ciUpper
+        title: 95% CI upper
+        type: number
+        format: decimal
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: pSig
+        title: Sig.
+        type: text
+
+  - name: rateRatiosInterpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: notes
+    title: Notes and recommendation
+    type: Html

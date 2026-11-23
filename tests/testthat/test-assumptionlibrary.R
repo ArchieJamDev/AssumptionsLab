@@ -22,7 +22,8 @@ library_sources <- c(
     "normalitySources", "homoscedasticitySources", "linearitySources",
     "independenceSources", "multicollinearitySources", "influenceSources",
     "sphericitySources", "proportionalOddsSources",
-    "independenceIrrelevantAlternativesSources", "robustSources")
+    "independenceIrrelevantAlternativesSources", "countModelsSources",
+    "robustSources")
 
 test_that("every library category has a filled Sources table", {
     res <- AssumptionsLab::assumptionLibrary(data = library_data)
@@ -38,6 +39,7 @@ test_that("Sources tables follow the category filter", {
         category = "normality")
     expect_true(res$normalitySources$visible)
     expect_false(res$robustSources$visible)
+    expect_false(res$countModelsSources$visible)
     expect_false(res$linearitySources$visible)
 })
 

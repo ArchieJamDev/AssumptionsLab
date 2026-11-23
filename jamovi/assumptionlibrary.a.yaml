@@ -56,6 +56,8 @@ options:
         name: proportionalOdds
       - title: Independence of Irrelevant Alternatives
         name: independenceIrrelevantAlternatives
+      - title: Equidispersion and Excess Zeros
+        name: countModels
       - title: Transformations and Robust Alternatives
         name: robust
     default: all

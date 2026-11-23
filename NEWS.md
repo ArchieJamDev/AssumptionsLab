@@ -1,3 +1,34 @@
+# AssumptionsLab (development version)
+
+## New analysis: Count and Rate Regression (Poisson / Negative Binomial)
+
+- `countCheck` (menu Regression > Poisson / Negative Binomial) checks the
+  assumptions of Poisson and negative binomial regression (`MASS::glm.nb`)
+  for a count outcome, with an optional exposure entered as an offset
+  (raw exposure, whose log is taken, or a variable already on the log
+  scale), so the model describes rates.
+- Overdispersion: Pearson and deviance dispersion ratios, the Dean-Lawless
+  score test, the Cameron-Trivedi auxiliary regression and the
+  Poisson-versus-negative-binomial likelihood ratio test with its boundary
+  correction (half the chi-square tail), plus a table comparing both models
+  (log-likelihood, AIC, BIC, theta and alpha) and a mean-variance plot.
+- Excess zeros: observed against expected zeros under both models, van den
+  Broek's score test against the Poisson model and a plot of observed
+  against expected frequencies of each count.
+- Residuals: Pearson, deviance and randomized quantile residuals (Dunn &
+  Smyth, 1996), a residuals-versus-linear-predictor plot and a Q-Q plot of
+  the quantile residuals.
+- Linearity of each numeric predictor on the log scale (likelihood ratio
+  test against a 3-df natural spline) with partial residual plots;
+  generalized VIF; Cook's distance and leverage; incidence rate ratios with
+  Wald intervals.
+- The numerical core lives in `R/count-helpers.R`, free of jmvcore, and is
+  checked against independent computations in
+  `validation/countcheck_verification.R`.
+- Eleven new sources in `jamovi/00refs.yaml` and `docs/Bibliography.md`.
+- The Assumption Library gains a category, "Equidispersion and Excess
+  Zeros".
+
 # AssumptionsLab 1.7.1 (2026-11-20)
 
 ## The Assumption Library cites like the other analyses

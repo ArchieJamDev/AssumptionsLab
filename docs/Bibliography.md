@@ -82,13 +82,18 @@ investigación.
 - Brant, R. (1990). Assessing proportionality in the proportional odds model for ordinal logistic regression. *Biometrics, 46*(4), 1171-1178. https://doi.org/10.2307/2532457
 - Breusch, T. S. (1978). Testing for autocorrelation in dynamic linear models. *Australian Economic Papers, 17*(31), 334-355. https://doi.org/10.1111/j.1467-8454.1978.tb00635.x
 - Breusch, T. S., & Pagan, A. R. (1979). A simple test for heteroscedasticity and random coefficient variation. *Econometrica, 47*(5), 1287-1294. https://doi.org/10.2307/1911963
+- van den Broek, J. (1995). A score test for zero inflation in a Poisson distribution. *Biometrics, 51*(2), 738-743. https://doi.org/10.2307/2532959
 - Brown, M. B., & Forsythe, A. B. (1974). Robust tests for the equality of variances. *Journal of the American Statistical Association, 69*(346), 364-367. https://doi.org/10.1080/01621459.1974.10482955
 - Brown, R. L., Durbin, J., & Evans, J. M. (1975). Techniques for testing the constancy of regression relationships over time. *Journal of the Royal Statistical Society, Series B, 37*(2), 149-192. https://doi.org/10.1111/j.2517-6161.1975.tb01532.x
+- Cameron, A. C., & Trivedi, P. K. (1990). Regression-based tests for overdispersion in the Poisson model. *Journal of Econometrics, 46*(3), 347-364. https://doi.org/10.1016/0304-4076(90)90014-K
+- Cameron, A. C., & Trivedi, P. K. (2013). *Regression Analysis of Count Data* (2nd ed.). Cambridge University Press. https://doi.org/10.1017/CBO9781139013567
 - Canova, F., & Hansen, B. E. (1995). Are seasonal patterns constant over time? A test for seasonal stability. *Journal of Business & Economic Statistics, 13*(3), 237-252. https://doi.org/10.1080/07350015.1995.10524598
 - Cheng, S., & Long, J. S. (2007). Testing for IIA in the multinomial logit model. *Sociological Methods & Research, 35*(4), 583-600. https://doi.org/10.1177/0049124106292361
 - Cook, R. D. (1977). Detection of influential observation in linear regression. *Technometrics, 19*(1), 15-18. https://doi.org/10.1080/00401706.1977.10489493
+- Dean, C., & Lawless, J. F. (1989). Tests for detecting overdispersion in Poisson regression models. *Journal of the American Statistical Association, 84*(406), 467-472. https://doi.org/10.1080/01621459.1989.10478792
 - Dickey, D. A., & Fuller, W. A. (1979). Distribution of the estimators for autoregressive time series with a unit root. *Journal of the American Statistical Association, 74*(366a), 427-431. https://doi.org/10.1080/01621459.1979.10482531
 - Duncan, O. D. (1966). Path analysis: Sociological examples. *American Journal of Sociology, 72*(1), 1-16. https://doi.org/10.1086/224256
+- Dunn, P. K., & Smyth, G. K. (1996). Randomized quantile residuals. *Journal of Computational and Graphical Statistics, 5*(3), 236-244. https://doi.org/10.1080/10618600.1996.10474708
 - Durbin, J., & Watson, G. S. (1951). Testing for serial correlation in least squares regression II. *Biometrika, 38*(1-2), 159-178. https://doi.org/10.1093/biomet/38.1-2.159
 - Engle, R. F. (1982). Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation. *Econometrica, 50*(4), 987-1007. https://doi.org/10.2307/1912773
 - Engle, R. F., & Granger, C. W. J. (1987). Co-integration and error correction: Representation, estimation, and testing. *Econometrica, 55*(2), 251-276. https://doi.org/10.2307/1913236
@@ -96,6 +101,7 @@ investigación.
 - Fagerland, M. W., & Hosmer, D. W. (2013). A goodness-of-fit test for the proportional odds regression model. *Statistics in Medicine, 32*(13), 2235-2249. https://doi.org/10.1002/sim.5645
 - Firth, D. (1993). Bias reduction of maximum likelihood estimates. *Biometrika, 80*(1), 27-38. https://doi.org/10.1093/biomet/80.1.27
 - Fligner, M. A., & Killeen, T. J. (1976). Distribution-free two-sample tests for scale. *Journal of the American Statistical Association, 71*(353), 210-213. https://doi.org/10.1080/01621459.1976.10480351
+- Fox, J., & Monette, G. (1992). Generalized collinearity diagnostics. *Journal of the American Statistical Association, 87*(417), 178-183. https://doi.org/10.1080/01621459.1992.10475190
 - Friedman, M. (1937). The use of ranks to avoid the assumption of normality implicit in the analysis of variance. *Journal of the American Statistical Association, 32*(200), 675-701. https://doi.org/10.2307/2279372
 - Glosten, L. R., Jagannathan, R., & Runkle, D. E. (1993). On the relation between the expected value and the volatility of the nominal excess return on stocks. *Journal of Finance, 48*(5), 1779-1801. https://doi.org/10.1111/j.1540-6261.1993.tb05128.x
 - Godfrey, L. G. (1978). Testing against general autoregressive and moving average error models when the regressors include lagged dependent variables. *Econometrica, 46*(6), 1293-1302. https://www.jstor.org/stable/1913829
@@ -103,8 +109,10 @@ investigación.
 - Green, S. B. (1991). How many subjects does it take to do a regression analysis?. *Multivariate Behavioral Research, 26*(3), 499-510. https://doi.org/10.1207/s15327906mbr2603_7
 - Greenhouse, S. W., & Geisser, S. (1959). On methods in the analysis of profile data. *Psychometrika, 24*(2), 95-112. https://doi.org/10.1007/BF02289823
 - Hanley, J. A., & McNeil, B. J. (1982). The meaning and use of the area under a receiver operating characteristic (ROC) curve. *Radiology, 143*(1), 29-36. https://doi.org/10.1148/radiology.143.1.7063747
+- Harrell, F. E., Jr. (2015). *Regression Modeling Strategies* (2nd ed.). Springer. https://doi.org/10.1007/978-3-319-19425-7
 - Hartley, H. O. (1950). The maximum F-ratio as a short-cut test for heterogeneity of variance. *Biometrika, 37*(3-4), 308-312. https://doi.org/10.1093/biomet/37.3-4.308
 - Hausman, J., & McFadden, D. (1984). Specification tests for the multinomial logit model. *Econometrica, 52*(5), 1219-1240. https://doi.org/10.2307/1910997
+- Hilbe, J. M. (2011). *Negative Binomial Regression* (2nd ed.). Cambridge University Press. https://doi.org/10.1017/CBO9780511973420
 - Hosmer, D. W., & Lemeshow, S. (1980). Goodness of fit tests for the multiple logistic regression model. *Communications in Statistics - Theory and Methods, 9*(10), 1043-1069. https://doi.org/10.1080/03610928008827941
 - Huitema, B. E. (2011). *The Analysis of Covariance and Alternatives (2nd ed.)*. Wiley.
 - Huynh, H., & Feldt, L. S. (1976). Estimation of the Box correction for degrees of freedom from sample data in randomized block and split-plot designs. *Journal of Educational Statistics, 1*(1), 69-82. https://doi.org/10.2307/1164736
@@ -128,6 +136,7 @@ investigación.
 - Mauchly, J. W. (1940). Significance test for sphericity of a normal n-variate distribution. *The Annals of Mathematical Statistics, 11*(2), 204-209. https://doi.org/10.1214/aoms/1177731915
 - Maxwell, S. E., & Delaney, H. D. (2004). *Designing Experiments and Analyzing Data: A Model Comparison Perspective (2nd ed.)*. Lawrence Erlbaum Associates.
 - McCullagh, P. (1980). Regression models for ordinal data. *Journal of the Royal Statistical Society: Series B (Methodological), 42*(2), 109-127. https://doi.org/10.1111/j.2517-6161.1980.tb01109.x
+- McCullagh, P., & Nelder, J. A. (1989). *Generalized Linear Models* (2nd ed.). Chapman & Hall. https://doi.org/10.1007/978-1-4899-3242-6
 - Nelson, D. B. (1991). Conditional heteroskedasticity in asset returns: A new approach. *Econometrica, 59*(2), 347-370. https://doi.org/10.2307/2938260
 - Nyblom, J. (1989). Testing for the constancy of parameters over time. *Journal of the American Statistical Association, 84*(405), 223-230. https://doi.org/10.1080/01621459.1989.10478759
 - O'Brien, R. M. (2007). A caution regarding rules of thumb for variance inflation factors. *Quality & Quantity, 41*(5), 673-690. https://doi.org/10.1007/s11135-006-9018-6
@@ -138,6 +147,7 @@ investigación.
 - Pulkstenis, E., & Robinson, T. J. (2004). Goodness-of-fit tests for ordinal response regression models. *Statistics in Medicine, 23*(6), 999-1014. https://doi.org/10.1002/sim.1659
 - Ramsey, J. B. (1969). Tests for specification errors in classical linear least-squares regression analysis. *Journal of the Royal Statistical Society, Series B, 31*(2), 350-371. https://doi.org/10.1111/j.2517-6161.1969.tb00796.x
 - Razali, N. M., & Wah, Y. B. (2011). Power comparisons of Shapiro-Wilk, Kolmogorov-Smirnov, Lilliefors and Anderson-Darling tests. *Journal of Statistical Modeling and Analytics, 2*(1), 21-33. https://www.nrc.gov/docs/ml1714/ml17143a100.pdf
+- Self, S. G., & Liang, K.-Y. (1987). Asymptotic properties of maximum likelihood estimators and likelihood ratio tests under nonstandard conditions. *Journal of the American Statistical Association, 82*(398), 605-610. https://doi.org/10.1080/01621459.1987.10478472
 - Shapiro, S. S., & Wilk, M. B. (1965). An analysis of variance test for normality (complete samples). *Biometrika, 52*(3-4), 591-611. https://doi.org/10.1093/biomet/52.3-4.591
 - Shapiro, S. S., & Francia, R. S. (1972). An approximate analysis of variance test for normality. *Journal of the American Statistical Association, 67*(337), 215-216. https://doi.org/10.1080/01621459.1972.10481232
 - Small, K. A., & Hsiao, C. (1985). Multinomial logit specification tests. *International Economic Review, 26*(3), 619-627. https://doi.org/10.2307/2526707
@@ -145,6 +155,7 @@ investigación.
 - Székely, G. J., Rizzo, M. L., & Bakirov, N. K. (2007). Measuring and testing dependence by correlation of distances. *The Annals of Statistics, 35*(6), 2769-2794. https://doi.org/10.1214/009053607000000505
 - Tukey, J. W. (1977). *Exploratory Data Analysis*. Addison-Wesley.
 - Utts, J. M. (1982). The rainbow test for lack of fit in regression. *Communications in Statistics - Theory and Methods, 11*(24), 2801-2815. https://doi.org/10.1080/03610928208828423
+- Venables, W. N., & Ripley, B. D. (2002). *Modern Applied Statistics with S* (4th ed.). Springer. https://doi.org/10.1007/978-0-387-21706-2
 - Wald, A., & Wolfowitz, J. (1940). On a test whether two samples are from the same population. *The Annals of Mathematical Statistics, 11*(2), 147-162. https://doi.org/10.1214/aoms/1177731909
 - Welch, B. L. (1947). The generalization of 'Student's' problem when several different population variances are involved. *Biometrika, 34*(1-2), 28-35. https://doi.org/10.1093/biomet/34.1-2.28
 - White, H. (1980). A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity. *Econometrica, 48*(4), 817-838. https://doi.org/10.2307/1912934
@@ -181,13 +192,17 @@ indexación bibliométrica aplican a revistas, no a libros).
 | Brant (1990) | pending | — | — |
 | Breusch (1978) | 943 | Wiley/Crossref | RePEc (512) |
 | Breusch & Pagan (1979) | 4812 | Semantic Scholar | EconPapers/RePEc (1320) |
+| van den Broek (1995) | pending | — | — |
 | Brown & Forsythe (1974) | 4639 | Google Scholar | Crossref API (2317); OpenAlex ( 2910) |
 | Brown et al. (1975) | 5117 | OpenAlex | Crossref API (3522) |
+| Cameron & Trivedi (1990) | pending | — | — |
 | Canova & Hansen (1995) | 754 | Google Scholar | Crossref API (227); OpenAlex (193) |
 | Cheng & Long (2007) | pending | — | — |
 | Cook (1977) | 4661 | BishtRef | CiNii (11) |
+| Dean & Lawless (1989) | pending | — | — |
 | Dickey & Fuller (1979) | 23128 | OpenAlex | Crossref API (6688) |
 | Duncan (1966) | 1286 | OpenAlex | Crossref API (792) |
+| Dunn & Smyth (1996) | pending | — | — |
 | Durbin & Watson (1951) | 3647 | OpenAlex | Crossref API (1491) |
 | Engle (1982) | 20792 | OpenAlex | Crossref API (14663) |
 | Engle & Granger (1987) | 32099 | OpenAlex | Crossref API (19239) |
@@ -195,6 +210,7 @@ indexación bibliométrica aplican a revistas, no a libros).
 | Fagerland & Hosmer (2013) | pending | — | — |
 | Firth (1993) | 4623 | OpenAlex | Crossref API (4051 |
 | Fligner & Killeen (1976) | 13 | OpenAlex | Crossref API (12) |
+| Fox & Monette (1992) | pending | — | — |
 | Friedman (1937) | 6494 | Crossref API | OpenAlex (3886) |
 | Glosten et al. (1993) | 11346 | Crossref API | OpenAlex (8736) |
 | Godfrey (1978) | 1452 | OpenAlex | Crossref API (943) |
@@ -232,6 +248,7 @@ indexación bibliométrica aplican a revistas, no a libros).
 | Pulkstenis & Robinson (2004) | pending | — | — |
 | Ramsey (1969) | 3345 | OpenAlex | Crossref API (2288) |
 | Razali & Wah (2011) | 9510 | Google Scholar | — |
+| Self & Liang (1987) | pending | — | — |
 | Shapiro & Francia (1972) | 1079 | OpenAlex | Crossref API ( 906) |
 | Shapiro & Wilk (1965) | 19700 | OpenAlex | Crossref API ( 14478 |
 | Small & Hsiao (1985) | pending | — | — |
@@ -266,6 +283,7 @@ de la revista. Los libros no tienen datos de indexación y no se listan.
 | JAMA | Yes | Yes | — | Q1 |
 | Journal of Business & Economic Statistics | Yes | Yes | — | Q1 |
 | Journal of Clinical Epidemiology | Yes | Yes | — | Q1 |
+| Journal of Computational and Graphical Statistics | pending | pending | — | pending verification |
 | Journal of Econometrics | Yes | Yes | — | Q1 |
 | Journal of Educational Statistics | Yes | Yes | — | Q2 |
 | Journal of Finance | Yes | Yes | — | Q1 |
@@ -299,3 +317,9 @@ de la revista. Los libros no tienen datos de indexación y no se listan.
 
 *77 referencias, verificadas individualmente contra su fuente primaria.
 70 artículos de revista con datos de conteo de citas; 7 libros.*
+
+*Development version: 11 references added for Count and Rate Regression
+(6 articles, 5 books), pending primary-source verification and citation
+counts. / Versión en desarrollo: 11 referencias agregadas para la
+regresión de recuentos y tasas (6 artículos, 5 libros), pendientes de
+verificación contra la fuente primaria y de conteo de citas.*

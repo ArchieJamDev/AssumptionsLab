@@ -187,6 +187,12 @@
         independenceIrrelevantAlternativesSources = list(
             c(.("Hausman-McFadden test"), "Hausman & McFadden (1984)"),
             c(.("Behaviour of Hausman-type IIA tests"), "Cheng & Long (2007)")),
+        countModelsSources = list(
+            c(.("Overdispersion and count regression"), "Cameron & Trivedi (2013)"),
+            c(.("Dean-Lawless score test"), "Dean & Lawless (1989)"),
+            c(.("Cameron-Trivedi auxiliary regression"), "Cameron & Trivedi (1990)"),
+            c(.("Likelihood ratio test on the boundary"), "Self & Liang (1987)"),
+            c(.("Score test for zero inflation"), "van den Broek (1995)")),
         robustSources = list(
             c(.("Welch's t and F tests"), "Welch (1947)"),
             c("Brown-Forsythe", "Brown & Forsythe (1974)"),
@@ -265,6 +271,10 @@ assumptionLibraryClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R
             hide_if_needed(self$results$independenceIrrelevantAlternativesTable, "independenceIrrelevantAlternatives")
             hide_if_needed(self$results$independenceIrrelevantAlternativesGuide2, "independenceIrrelevantAlternatives")
             hide_if_needed(self$results$independenceIrrelevantAlternativesSources, "independenceIrrelevantAlternatives")
+            hide_if_needed(self$results$countModels, "countModels")
+            hide_if_needed(self$results$countModelsTable, "countModels")
+            hide_if_needed(self$results$countModelsGuide2, "countModels")
+            hide_if_needed(self$results$countModelsSources, "countModels")
             hide_if_needed(self$results$robust, "robust")
             hide_if_needed(self$results$robustTable, "robust")
             hide_if_needed(self$results$robustGuide2, "robust")

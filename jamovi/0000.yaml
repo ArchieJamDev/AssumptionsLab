@@ -12,10 +12,11 @@ description: >
   methodological guidance, interpretation, and educational support, rather than
   reporting isolated test statistics. It covers group comparisons (independent
   and related samples, ANOVA/ANCOVA), regression (linear, logistic, ordinal
-  logistic, multinomial logistic), path analysis and structural validation, and
-  time series, alongside a built-in methodological library. Every method-backed
-  result cites its own source in jamovi's native numbered format, and the
-  complete APA 7th edition bibliography lives in the module's documentation.
+  logistic, multinomial logistic, Poisson and negative binomial), path
+  analysis and structural validation, and time series, alongside a built-in
+  methodological library. Every method-backed result cites its own source in
+  jamovi's native numbered format, and the complete APA 7th edition
+  bibliography lives in the module's documentation.
 usesNative: false
 minApp: 1.0.8
 icon: assets/assumptionslab-icon.png
@@ -157,6 +158,25 @@ analyses:
       nominal outcome with three or more unordered categories is modeled, to
       confirm the model's structural assumptions before interpreting its
       category-specific coefficients.
+    category: analyses
+  - title: Count and Rate Regression
+    name: countCheck
+    ns: AssumptionsLab
+    menuGroup: Assumption Lab
+    menuSubgroup: Regression
+    menuTitle: Poisson / Negative Binomial
+    description: >
+      Evaluates the assumptions of Poisson and negative binomial regression
+      (MASS::glm.nb) for a count outcome predicted by numeric and/or
+      categorical predictors, with an optional exposure entered as an offset
+      so the model describes rates. It checks overdispersion (Pearson
+      dispersion ratio, Dean-Lawless and Cameron-Trivedi tests, and the
+      Poisson-versus-negative-binomial likelihood ratio test), excess zeros
+      against both models, Pearson, deviance and randomized quantile
+      residuals, linearity of numeric predictors on the log scale, collinearity
+      and case influence, and reports incidence rate ratios. Use it before
+      trusting the rate ratios of a count model, to decide between Poisson and
+      negative binomial and to detect when neither is adequate.
     category: analyses
   - title: Path Analysis & Structural Validation
     name: pathCheck

@@ -1,0 +1,117 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+title: Count and Rate Regression
+name: countCheck
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Dependent Variable (count)
+        children:
+          - type: VariablesListBox
+            name: dep
+            maxItemCount: 1
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Numeric Predictors
+        children:
+          - type: VariablesListBox
+            name: covs
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Categorical Predictors
+        children:
+          - type: VariablesListBox
+            name: factors
+            isTarget: true
+      - type: TargetLayoutBox
+        label: Exposure (offset)
+        children:
+          - type: VariablesListBox
+            name: exposure
+            maxItemCount: 1
+            isTarget: true
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: family
+      - type: ComboBox
+        name: exposureScale
+        enable: (exposure)
+  - type: CollapseBox
+    label: Diagnostic Plots
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: showPlots
+  - type: CollapseBox
+    label: 'Plots: Overdispersion and Zeros'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: dispShowPlots
+        enable: (showPlots)
+      - type: CheckBox
+        name: zeroShowPlots
+        enable: (showPlots)
+  - type: CollapseBox
+    label: 'Plots: Residuals'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: residShowPlots
+        enable: (showPlots)
+      - type: CheckBox
+        name: residSmoother
+        enable: (showPlots && residShowPlots)
+  - type: CollapseBox
+    label: 'Plots: Linearity on the Log Scale'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: linShowPlots
+        enable: (showPlots)
+      - type: ComboBox
+        name: linSmoother
+        enable: (showPlots && linShowPlots)
+  - type: CollapseBox
+    label: 'Plots: Influence'
+    collapsed: true
+    children:
+      - type: CheckBox
+        name: influenceShowPlots
+        enable: (showPlots)
+      - type: ComboBox
+        name: influenceLabelMode
+        enable: (showPlots && influenceShowPlots)
+      - type: CheckBox
+        name: influenceShowThreshold
+        enable: (showPlots && influenceShowPlots)

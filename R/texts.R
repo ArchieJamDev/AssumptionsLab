@@ -260,6 +260,48 @@
         .("Common error: interpreting the OR as if it were a relative risk."),
         .("The two coincide only when the event is rare; with common events (above 10%), the OR systematically overstates the real relative effect (Zhang & Yu, 1998)."))
     ),
+    count = list(
+        title = .("Count and Rate Regression"),
+        designGuide = c(
+        .("Poisson and negative binomial regression model a count (number of events, visits, admissions, errors) as a function of one or more predictors, on the log scale: each coefficient is a log rate ratio."),
+        .("When cases were observed for different lengths of time or represent populations of different sizes, the exposure (person-time, population at risk) enters as an offset, log(exposure), so the model describes rates rather than raw counts."),
+        .("The Poisson model assumes the variance of the count equals its mean (equidispersion); the negative binomial model relaxes this by adding a dispersion parameter, var = mu + mu^2/theta (Hilbe, 2011)."),
+        .("Before interpreting rate ratios, check that the outcome is a non-negative whole number, how many zeros it has, and how its variance compares with its mean.")),
+        dispersionGuide = c(
+        .("Overdispersion means the counts vary more than the Poisson model allows. It is the most common problem with Poisson regression in applied data, and it is caused by unmeasured heterogeneity between cases, clustering or contagion between events."),
+        .("Its consequence is serious: coefficients stay roughly unbiased, but standard errors are too small, so confidence intervals are too narrow and p-values too optimistic."),
+        .("The Pearson dispersion ratio (Pearson chi-square divided by its degrees of freedom) should be close to 1 under the Poisson model; values clearly above 1 indicate overdispersion and values clearly below 1 indicate underdispersion (Cameron & Trivedi, 2013)."),
+        .("Two formal tests are reported against the negative binomial alternative: the Dean-Lawless score test (Dean & Lawless, 1989) and the Cameron-Trivedi auxiliary regression (Cameron & Trivedi, 1990)."),
+        .("The likelihood ratio test compares the Poisson and negative binomial fits directly; because the Poisson model sits on the boundary of the negative binomial (alpha = 0), its p-value is half the usual chi-square tail (Self & Liang, 1987).")),
+        modelComparisonGuide = c(
+        .("This table compares the two candidate models fitted to the same cases. A lower AIC or BIC indicates a better balance between fit and complexity."),
+        .("The negative binomial dispersion parameter is shown as theta and as alpha = 1/theta: alpha close to 0 (theta very large) means the negative binomial reduces to the Poisson model.")),
+        zerosGuide = c(
+        .("Count data often contain more zeros than a Poisson or negative binomial model expects, for example when part of the population cannot experience the event at all (structural zeros)."),
+        .("The check compares the observed number of zeros with the number each model expects, the sum of each case's fitted probability of a zero."),
+        .("van den Broek's (1995) score test compares the Poisson model with a zero-inflated Poisson model. Overdispersion alone also produces extra zeros, so a significant result must be read together with the zeros expected by the negative binomial model."),
+        .("If the negative binomial model reproduces the zeros well, a zero-inflated model is usually unnecessary; if it does not, consider a zero-inflated or hurdle model and justify it substantively.")),
+        residualsGuide = c(
+        .("Pearson residuals divide the raw residual by the standard deviation the model predicts; deviance residuals measure each case's contribution to the deviance. Both should scatter around 0 with no pattern against the fitted values."),
+        .("With counts, and above all with small means, neither residual is normally distributed even when the model is right, so their Q-Q plot is hard to read. The randomized quantile residuals of Dunn and Smyth (1996) solve this: when the model is correct they are exactly standard normal."),
+        .("A funnel shape in the residuals suggests the variance function is wrong (for example, Poisson when the data are overdispersed); a curve suggests a misspecified predictor or a missing term.")),
+        linearityGuide = c(
+        .("A count model assumes each numeric predictor acts linearly on the log of the expected count, not on the count itself."),
+        .("The check replaces each numeric predictor's linear term with a natural cubic spline of 3 degrees of freedom and compares the two fits with a likelihood ratio test on 2 degrees of freedom (Harrell, 2015). A significant result suggests the relationship on the log scale is curved."),
+        .("The partial residual plot shows the same thing graphically: the working residuals plus the predictor's linear contribution, against the predictor. A smooth curve that departs from the straight line points to non-linearity."),
+        .("This check only applies to numeric predictors; categorical predictors do not have this assumption.")),
+        multicollinearityGuide = c(
+        .("Multicollinearity evaluates whether predictors carry very redundant information. It does not bias the predicted counts, but it makes coefficients unstable and widens their standard errors."),
+        .("The generalized variance inflation factor (GVIF) is reported, adjusted as GVIF^(1/(2 df)) so that categorical predictors with several levels are comparable with numeric ones; its square is on the usual VIF scale.")),
+        influenceGuide = c(
+        .("Influence diagnostics identify cases that may substantially change the coefficients. In generalized linear models, Cook's distance and leverage come from the weighted hat matrix of the fitted model (Pregibon, 1981; McCullagh & Nelder, 1989)."),
+        .("With count data, a single case with a very large count can dominate the fit, especially under the Poisson model, whose variance is small for large counts."),
+        .("An influential case should not be removed automatically. Check whether it is a recording error, a valid but extreme case, or a sign that the model does not represent all subgroups well.")),
+        rateRatiosGuide = c(
+        .("The incidence rate ratio (IRR) is the exponentiated coefficient: it is the factor by which the expected count (or rate, when there is an offset) is multiplied for each one-unit increase in the predictor, or for a category compared with the reference category."),
+        .("An IRR of 1 indicates no effect; above 1, a higher rate; below 1, a lower rate."),
+        .("The confidence intervals shown are Wald intervals from the model being diagnosed. If the data are overdispersed and the Poisson model is used, these intervals are too narrow."))
+    ),
     path = list(
         title = .("Path Analysis"),
         outlierAnalysisGuide = c(
