@@ -185,6 +185,7 @@ refs:
         volume: '2'
         issue: '1'
         pages: '49-55'
+        url: https://doi.org/10.1007/s13171-019-00164-5
 
     wilcoxon_1945:
         type: 'article'
@@ -298,6 +299,7 @@ refs:
         year: 2011
         title: 'The Analysis of Covariance and Alternatives (2nd ed.)'
         publisher: 'Wiley'
+        url: https://doi.org/10.1002/9781118067475
 
     maxwell_2004:
         type: 'book'
@@ -305,6 +307,7 @@ refs:
         year: 2004
         title: 'Designing Experiments and Analyzing Data: A Model Comparison Perspective (2nd ed.)'
         publisher: 'Lawrence Erlbaum Associates'
+        url: https://doi.org/10.4324/9781410609243
 
     tukey_1977:
         type: 'book'
@@ -312,6 +315,7 @@ refs:
         year: 1977
         title: 'Exploratory Data Analysis'
         publisher: 'Addison-Wesley'
+        url: https://archive.org/details/exploratorydataa00tuke_0
 
     belsley_1980:
         type: 'book'
@@ -464,16 +468,6 @@ refs:
         pages: '1219-1240'
         url: https://doi.org/10.2307/1910997
 
-    small_1985:
-        type: 'article'
-        author: 'Small, K. A., & Hsiao, C.'
-        year: 1985
-        title: 'Multinomial logit specification tests'
-        publisher: 'International Economic Review'
-        volume: '26'
-        issue: '3'
-        pages: '619-627'
-        url: https://doi.org/10.2307/2526707
 
     cheng_2007:
         type: 'article'
@@ -579,6 +573,7 @@ refs:
         year: 2023
         title: 'Principles and Practice of Structural Equation Modeling (5th ed.)'
         publisher: 'The Guilford Press'
+        url: https://www.guilford.com/books/Principles-and-Practice-of-Structural-Equation-Modeling/Rex-Kline/9781462551910
 
     sz_kely_2007:
         type: 'article'

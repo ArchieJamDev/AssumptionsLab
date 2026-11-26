@@ -27,7 +27,7 @@ title: Assumption Library
 menuTitle: Assumption Library
 menuGroup: Assumption Lab
 menuSubgroup: Methodological Guide
-version: '1.1.0'
+version: '1.2.0'
 jas: '1.2'
 options:
   - name: data

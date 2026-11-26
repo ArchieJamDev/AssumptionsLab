@@ -53,6 +53,11 @@ children:
           - type: VariablesListBox
             name: factors
             isTarget: true
+  - type: Label
+    label: Output
+    children:
+      - type: CheckBox
+        name: showGuides
   - type: CollapseBox
     label: Diagnostic Plots
     collapsed: true

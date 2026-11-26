@@ -15,7 +15,8 @@ multCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             linBins = 8,
             influenceShowPlots = TRUE,
             influenceLabelMode = "top5",
-            influenceShowThreshold = TRUE, ...) {
+            influenceShowThreshold = TRUE,
+            showGuides = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -63,7 +64,7 @@ multCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "linear",
                     "loess"),
                 default="none")
-            private$..linBins <- jmvcore::OptionNumber$new(
+            private$..linBins <- jmvcore::OptionInteger$new(
                 "linBins",
                 linBins,
                 min=4,
@@ -86,6 +87,12 @@ multCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 influenceShowThreshold,
                 default=TRUE)
 
+            private$..showGuides <- jmvcore::OptionBool$new(
+                "showGuides",
+                showGuides,
+                default=TRUE)
+
+            self$.addOption(private$..showGuides)
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
             self$.addOption(private$..factors)
@@ -98,6 +105,7 @@ multCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..influenceShowThreshold)
         }),
     active = list(
+        showGuides = function() private$..showGuides$value,
         dep = function() private$..dep$value,
         covs = function() private$..covs$value,
         factors = function() private$..factors$value,
@@ -109,6 +117,7 @@ multCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         influenceLabelMode = function() private$..influenceLabelMode$value,
         influenceShowThreshold = function() private$..influenceShowThreshold$value),
     private = list(
+        ..showGuides = NA,
         ..dep = NA,
         ..covs = NA,
         ..factors = NA,
@@ -176,11 +185,13 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Introduction"))
+                title="Introduction",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="designGuide",
-                title="Model design"))
+                title="Model design",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="design",
@@ -216,7 +227,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="separationGuide",
-                title="Complete separation"))
+                title="Complete separation",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="separation",
@@ -247,7 +259,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="linearityGuide",
-                title="Linearity in the multinomial logit"))
+                title="Linearity in the multinomial logit",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="linearity",
@@ -299,7 +312,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="iiaGuide",
-                title="Independence of irrelevant alternatives (IIA)"))
+                title="Independence of irrelevant alternatives (IIA)",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="iia",
@@ -341,7 +355,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="goodnessOfFitGuide",
-                title="Goodness of fit"))
+                title="Goodness of fit",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="goodnessOfFit",
@@ -379,7 +394,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="discriminationGuide",
-                title="Pseudo-R\u00B2"))
+                title="Pseudo-R\u00B2",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="discrimination",
@@ -401,7 +417,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="classificationGuide",
-                title="Classification table"))
+                title="Classification table",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="classification",
@@ -419,7 +436,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityGuide",
-                title="Multicollinearity"))
+                title="Multicollinearity",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="multicollinearity",
@@ -550,7 +568,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influenceGuide",
-                title="Influential cases"))
+                title="Influential cases",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="influence",
@@ -596,7 +615,8 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="coefficientsGuide",
-                title="Coefficients and odds ratios (by category)"))
+                title="Coefficients and odds ratios (by category)",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="coefficients",
@@ -679,6 +699,8 @@ multCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param influenceShowPlots .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
+#' @param showGuides Show the fixed explanations (introduction and
+#'   interpretation guides).
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -742,7 +764,8 @@ multCheck <- function(
     linBins = 8,
     influenceShowPlots = TRUE,
     influenceLabelMode = "top5",
-    influenceShowThreshold = TRUE) {
+    influenceShowThreshold = TRUE,
+    showGuides = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("multCheck requires jmvcore to be installed (restart may be required)")
@@ -770,7 +793,8 @@ multCheck <- function(
         linBins = linBins,
         influenceShowPlots = influenceShowPlots,
         influenceLabelMode = influenceLabelMode,
-        influenceShowThreshold = influenceShowThreshold)
+        influenceShowThreshold = influenceShowThreshold,
+        showGuides = showGuides)
 
     analysis <- multCheckClass$new(
         options = options,

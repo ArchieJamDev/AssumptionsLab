@@ -136,6 +136,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .run = function() {
+            # Hide the fixed guides when "Explanations" is off (see
+            # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
+            on.exit(.al_apply_guides(self), add = TRUE)
 
             lang <- .al_lang(self$options)
             . <- lang$tr
@@ -462,13 +465,13 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             factors <- self$options$factors
             covs <- self$options$covs
 
-            if (is.null(dep) || dep == "") {
-                jmvcore::reject(.("Select a numeric dependent variable."))
-            }
-
-            if (length(factors) == 0) {
-                jmvcore::reject(.("Select at least one categorical factor for ANOVA/ANCOVA."))
-            }
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep) || dep == "" || length(factors) == 0)
+                return()
 
             vars <- c(dep, factors, covs)
             dat <- self$data[, vars, drop = FALSE]
@@ -845,7 +848,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             else
                 add_norm("Shapiro-Wilk", "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, .))
 
-            # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
+            # Lilliefors / Anderson-Darling / Cramér-von Mises / Shapiro-Francia /
             # Pearson chi-square: identical tryCatch calls in every module,
             # consolidated in shared-helpers.R (.al_nortest_battery).
             # ES: idénticas en todos los módulos, consolidadas en shared-helpers.R.
@@ -863,9 +866,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 add_norm("Anderson-Darling", "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, .))
 
             if (!is.null(cvm))
-                add_norm("Cramer-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
+                add_norm("Cram\u00e9r-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
             else
-                add_norm("Cramer-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
+                add_norm("Cram\u00e9r-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
 
             if (!is.null(sf))
                 add_norm("Shapiro-Francia", "W'", sf$statistic[[1]], sf$p.value)

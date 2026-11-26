@@ -31,14 +31,19 @@ items:
   - name: intro
     title: Introduction
     type: Html
+    visible: (showGuides)
 
   - name: designGuide
     title: Model design
     type: Html
+    visible: (showGuides)
 
   - name: design
     title: Design summary
     type: Table
+    refs:
+      - peduzzi_1996
+      - firth_1993
     columns:
       - name: element
         title: Item
@@ -50,6 +55,7 @@ items:
   - name: separationGuide
     title: Complete separation
     type: Html
+    visible: (showGuides)
 
   - name: separation
     title: Complete separation
@@ -69,10 +75,13 @@ items:
   - name: separationInterpretation
     title: Applied interpretation
     type: Html
+    refs:
+      - firth_1993
 
   - name: linearityGuide
     title: Linearity in the logit
     type: Html
+    visible: (showGuides)
 
   - name: linearity
     title: Linearity in the logit (Box-Tidwell)
@@ -109,13 +118,13 @@ items:
       - dep
       - covs
       - factors
-      - plotStyle
       - linSmoother
       - linBins
 
   - name: goodnessOfFitGuide
     title: Goodness of fit
     type: Html
+    visible: (showGuides)
 
   - name: goodnessOfFit
     title: Goodness of fit
@@ -152,13 +161,13 @@ items:
       - dep
       - covs
       - factors
-      - plotStyle
       - caliBins
       - caliRefLine
 
   - name: discriminationGuide
     title: Discrimination
     type: Html
+    visible: (showGuides)
 
   - name: discrimination
     title: Discrimination
@@ -188,13 +197,13 @@ items:
       - dep
       - covs
       - factors
-      - plotStyle
       - rocRefLine
       - rocShowAUCLabel
 
   - name: multicollinearityGuide
     title: Multicollinearity
     type: Html
+    visible: (showGuides)
 
   - name: multicollinearity
     title: Multicollinearity
@@ -309,6 +318,7 @@ items:
   - name: influenceGuide
     title: Influential cases
     type: Html
+    visible: (showGuides)
 
   - name: influence
     title: Influential cases
@@ -343,17 +353,19 @@ items:
       - dep
       - covs
       - factors
-      - plotStyle
       - influenceLabelMode
       - influenceShowThreshold
 
   - name: oddsRatiosGuide
     title: Odds Ratios
     type: Html
+    visible: (showGuides)
 
   - name: oddsRatios
     title: Odds Ratios
     type: Table
+    refs:
+      - zhang_1998
     columns:
       - name: predictor
         title: Predictor

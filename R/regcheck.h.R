@@ -29,7 +29,8 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             corrHighlightDiscordant = TRUE,
             influenceShowPlots = TRUE,
             influenceLabelMode = "top5",
-            influenceShowThreshold = TRUE, ...) {
+            influenceShowThreshold = TRUE,
+            showGuides = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -167,6 +168,12 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 influenceShowThreshold,
                 default=TRUE)
 
+            private$..showGuides <- jmvcore::OptionBool$new(
+                "showGuides",
+                showGuides,
+                default=TRUE)
+
+            self$.addOption(private$..showGuides)
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
             self$.addOption(private$..factors)
@@ -193,6 +200,7 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..influenceShowThreshold)
         }),
     active = list(
+        showGuides = function() private$..showGuides$value,
         dep = function() private$..dep$value,
         covs = function() private$..covs$value,
         factors = function() private$..factors$value,
@@ -218,6 +226,7 @@ regCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         influenceLabelMode = function() private$..influenceLabelMode$value,
         influenceShowThreshold = function() private$..influenceShowThreshold$value),
     private = list(
+        ..showGuides = NA,
         ..dep = NA,
         ..covs = NA,
         ..factors = NA,
@@ -319,11 +328,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Simple and Multiple Regression"))
+                title="Simple and Multiple Regression",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="designGuide",
-                title="Regression model"))
+                title="Regression model",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="modelSummary",
@@ -361,7 +372,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="linearityGuide",
-                title="Linearity"))
+                title="Linearity",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="linearityPredictor",
@@ -586,7 +598,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="diagnosticPlotsGuide",
-                title="Regression diagnostic plots"))
+                title="Regression diagnostic plots",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualsFittedPlot",
@@ -597,7 +610,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsFittedGuide",
-                title="Guide: Residuals vs fitted values"))
+                title="Guide: Residuals vs fitted values",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="observedPredictedPlot",
@@ -608,7 +622,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="observedPredictedGuide",
-                title="Guide: Observed vs predicted values"))
+                title="Guide: Observed vs predicted values",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="predictorEffectsPlot",
@@ -619,11 +634,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="predictorEffectsGuide",
-                title="Guide: Visual effects of numeric predictors"))
+                title="Guide: Visual effects of numeric predictors",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalityGuide",
-                title="Residual normality"))
+                title="Residual normality",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="residualNormality",
@@ -673,7 +690,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="qqResidualsGuide",
-                title="Guide: Residual Q-Q plot"))
+                title="Guide: Residual Q-Q plot",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualHistogramPlot",
@@ -684,7 +702,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualHistogramGuide",
-                title="Guide: Residual histogram"))
+                title="Guide: Residual histogram",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualNormalCurvePlot",
@@ -695,11 +714,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalCurveGuide",
-                title="Guide: Observed distribution vs theoretical normal"))
+                title="Guide: Observed distribution vs theoretical normal",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homoscedasticityGuide",
-                title="Homoscedasticity and heteroscedasticity"))
+                title="Homoscedasticity and heteroscedasticity",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="homoscedasticity",
@@ -755,11 +776,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="scaleLocationGuide",
-                title="Guide: Scale-location plot"))
+                title="Guide: Scale-location plot",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independenceGuide",
-                title="Independence of errors"))
+                title="Independence of errors",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="independence",
@@ -801,7 +824,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityGuide",
-                title="Multicollinearity"))
+                title="Multicollinearity",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="multicollinearity",
@@ -837,7 +861,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influenceGuide",
-                title="Outlying and influential cases"))
+                title="Outlying and influential cases",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="influence",
@@ -896,7 +921,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="numericBoxplotsGuide",
-                title="Guide: Boxplots of numeric variables"))
+                title="Guide: Boxplots of numeric variables",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualsLeveragePlot",
@@ -907,7 +933,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsLeverageGuide",
-                title="Guide: Studentized residuals vs leverage"))
+                title="Guide: Studentized residuals vs leverage",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="cooksDPlot",
@@ -918,11 +945,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="cooksDGuide",
-                title="Guide: Cook's D by case"))
+                title="Guide: Cook's D by case",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="transformationsGuide",
-                title="Exploratory transformations"))
+                title="Exploratory transformations",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="transformationNormality",
@@ -990,7 +1019,8 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="robustOptionsGuide",
-                title="Robust and resampling options"))
+                title="Robust and resampling options",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="robustOptionsText",
@@ -1049,6 +1079,8 @@ regCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param influenceShowPlots .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
+#' @param showGuides Show the fixed explanations (introduction and
+#'   interpretation guides).
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -1146,7 +1178,8 @@ regCheck <- function(
     corrHighlightDiscordant = TRUE,
     influenceShowPlots = TRUE,
     influenceLabelMode = "top5",
-    influenceShowThreshold = TRUE) {
+    influenceShowThreshold = TRUE,
+    showGuides = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("regCheck requires jmvcore to be installed (restart may be required)")
@@ -1187,7 +1220,8 @@ regCheck <- function(
         corrHighlightDiscordant = corrHighlightDiscordant,
         influenceShowPlots = influenceShowPlots,
         influenceLabelMode = influenceLabelMode,
-        influenceShowThreshold = influenceShowThreshold)
+        influenceShowThreshold = influenceShowThreshold,
+        showGuides = showGuides)
 
     analysis <- regCheckClass$new(
         options = options,

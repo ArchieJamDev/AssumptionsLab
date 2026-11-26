@@ -104,11 +104,11 @@ test_that("relatedCheck tolerates three or more related measures (sphericity pat
     )
 })
 
-test_that("relatedCheck rejects when only one measure is selected", {
+test_that("relatedCheck returns quietly (no error) when only one measure is selected", {
 
     data <- edgeBaseData()
 
-    expect_error(
+    expect_no_error(
         AssumptionsLab::relatedCheck(
             data     = data,
             measures = "dep"

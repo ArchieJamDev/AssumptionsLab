@@ -33,6 +33,7 @@ items:
   - name: intro
     title: Time Series
     type: Html
+    visible: (showGuides)
 
   - name: modelProfile
     title: Model methodological profile
@@ -122,6 +123,11 @@ items:
       - johansen_1991
       - bollerslev_1986
       - engle_1993
+      - canova_1995
+      - osborn_1988
+      - brown_1975
+      - nyblom_1989
+      - l_tkepohl_2005
     clearWith:
       - dateVar
       - exogenous
@@ -183,6 +189,25 @@ items:
   - name: foundations
     title: Methodological foundations and references
     type: Html
+    refs:
+      - dickey_1979
+      - phillips_1988
+      - kwiatkowski_1992
+      - canova_1995
+      - osborn_1988
+      - hyndman_2008
+      - ljung_1978
+      - engle_1982
+      - bollerslev_1986
+      - jarque_1987
+      - engle_1987
+      - johansen_1991
+      - l_tkepohl_2005
+      - brown_1975
+      - nyblom_1989
+      - engle_1993
+      - nelson_1991
+      - glosten_1993
 
   - name: diagnosticsActions
     title: Recommended methodological action

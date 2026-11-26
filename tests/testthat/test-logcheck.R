@@ -170,11 +170,11 @@ test_that("logCheck rejects a dependent variable with three levels", {
     )
 })
 
-test_that("logCheck rejects when no predictor is selected", {
+test_that("logCheck returns quietly (no error) when no predictor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_error(
+    expect_no_error(
         AssumptionsLab::logCheck(
             data = data,
             dep  = "bin"

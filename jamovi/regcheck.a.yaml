@@ -160,7 +160,7 @@ options:
   # Freedman-Diaconis). Reglas distintas pueden revelar u ocultar rasgos
   # distribucionales según el tamaño de muestra y la asimetría.
   - name: normHistBins
-    title: Histogram Binning Method
+    title: Histogram binning method
     type: List
     options:
       - title: Automatic (Sturges)
@@ -274,7 +274,7 @@ options:
   # directamente) o barras agrupadas (r de Pearson y dCor como barras
   # adyacentes por par).
   - name: corrComparativeStyle
-    title: Comparison Plot Style
+    title: Comparison plot style
     type: List
     options:
       - title: Dumbbell (Pearson vs dCor connected)
@@ -316,7 +316,7 @@ options:
   # casos más influyentes. Afecta solo el etiquetado del gráfico, nunca
   # qué casos se marcan en la tabla de influencia misma.
   - name: influenceLabelMode
-    title: Label Cases
+    title: Label cases
     type: List
     options:
       - title: None
@@ -341,3 +341,10 @@ options:
     title: Threshold line
     type: Bool
     default: true
+
+  - name: showGuides
+    title: Explanations
+    type: Bool
+    default: true
+    description: >-
+      Show the fixed explanations: the introduction and the guides on how to read each test and plot. Uncheck for a compact report; the applied interpretations of your own results are always shown.

@@ -125,7 +125,7 @@ options:
   # es razonable para exploración, 4999 o más para resultados finales.
   - name: permutations
     title: Permutations (dCor / Copula Entropy)
-    type: Number
+    type: Integer
     default: 999
     min: 199
     max: 9999
@@ -140,15 +140,15 @@ options:
   # ES: Semilla usada para las pruebas de permutación, por
   # reproducibilidad.
   - name: permutationSeed
-    title: Permutation Seed
-    type: Number
+    title: Permutation seed
+    type: Integer
     default: 2026
     min: 1
     max: 999999
     description: Seed used for the permutation tests, for reproducibility.
 
   - name: residBinMethod
-    title: Histogram Binning Method
+    title: Histogram binning method
     type: List
     options:
       - title: Automatic (Sturges)
@@ -276,3 +276,10 @@ options:
       - title: Abbreviate to 4 Characters
         name: abbrev4
     default: none
+
+  - name: showGuides
+    title: Explanations
+    type: Bool
+    default: true
+    description: >-
+      Show the fixed explanations: the introduction and the guides on how to read each test and plot. Uncheck for a compact report; the applied interpretations of your own results are always shown.

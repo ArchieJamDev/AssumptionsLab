@@ -46,6 +46,11 @@ children:
             name: group
             maxItemCount: 1
             isTarget: true
+  - type: Label
+    label: Output
+    children:
+      - type: CheckBox
+        name: showGuides
   - type: CollapseBox
     label: 'Plots: Distribution by Group'
     collapsed: true

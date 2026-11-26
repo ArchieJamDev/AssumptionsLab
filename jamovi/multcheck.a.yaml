@@ -126,8 +126,8 @@ options:
     default: none
 
   - name: linBins
-    title: Number of Groups (bins) for the Empirical Logit
-    type: Number
+    title: Number of groups (bins) for the empirical logit
+    type: Integer
     min: 4
     max: 20
     default: 8
@@ -143,7 +143,7 @@ options:
     default: true
 
   - name: influenceLabelMode
-    title: Label Cases
+    title: Label cases
     type: List
     options:
       - title: None
@@ -158,3 +158,10 @@ options:
     title: Threshold line
     type: Bool
     default: true
+
+  - name: showGuides
+    title: Explanations
+    type: Bool
+    default: true
+    description: >-
+      Show the fixed explanations: the introduction and the guides on how to read each test and plot. Uncheck for a compact report; the applied interpretations of your own results are always shown.

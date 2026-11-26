@@ -1,4 +1,4 @@
-# AssumptionsLab (development version)
+# AssumptionsLab 1.8.0 (unreleased)
 
 ## New analysis: Count and Rate Regression (Poisson / Negative Binomial)
 
@@ -28,6 +28,47 @@
 - Eleven new sources in `jamovi/00refs.yaml` and `docs/Bibliography.md`.
 - The Assumption Library gains a category, "Equidispersion and Excess
   Zeros".
+
+## Second jamovi review of 1.7.1
+
+- The Assumption Library is built only from native jamovi elements. Each
+  comparison table is a native `Table` (columns declared in the r.yaml,
+  rows added in `.init()`), so it takes the results theme, Copy Latex and
+  a real grid when pasted. The prose is a `Text` element that carries each
+  category's `refs:` directly; the Sources tables are gone. Every
+  paragraph, list item and cell is its own entry in the translation
+  catalogue, with no HTML or CSS around the words.
+- `minApp` is now 28.3.0 (needed for `Text`), and `jmvcore (>= 28.3)`.
+- Regression: the correlation plots follow the "Diagnostic plots" switch,
+  so turning it off no longer leaves two empty frames; their controls are
+  greyed out with the switch.
+- Opening an analysis with nothing selected no longer shows an error: the
+  analysis returns quietly and keeps the empty results skeleton.
+  `reject()` stays for real problems (wrong variable type, too few cases,
+  model that cannot be fitted).
+- New "Explanations" checkbox (on by default) in every data analysis. Off,
+  it hides the introduction and every fixed `*Guide` block for a compact
+  report; the applied interpretations of the user's own results stay. It
+  sits under a new "Output" heading at the top of the panel, which also
+  takes the "Diagnostic plots" switch where that switch had a box of its
+  own.
+- Fixed seeds (permutation p-values, quantile residuals, plot jitter,
+  trajectory sampling, spring layout) now restore the session's
+  random-number state when they finish, through `.al_local_seed()`.
+- References the text cites are now attached: Firth (1993), Peduzzi et
+  al. (1996) and Zhang & Yu (1998) in Logistic Regression; Canova &
+  Hansen, Osborn et al., Brown et al., Nyblom, Hyndman & Khandakar,
+  Lütkepohl, Engle & Granger, Nelson and Glosten et al. in Time Series;
+  Wright, Duncan, Baron & Kenny and Kozachenko & Leonenko in Path
+  Analysis; Liu et al. (2009) in Ordinal and Multinomial; Maxwell &
+  Delaney in ANOVA. The unused `small_1985` entry was removed, and five
+  entries gained a DOI or publisher URL (Levene, 1960, has none to give).
+- Polish: `plotStyle` removed from every `clearWith`; "Cramér-von Mises"
+  with its accent; results titles "Independent Groups" and "Related
+  Groups"; sentence case for control labels; Independent Groups'
+  variable boxes restrict their types; counts and seeds are `Integer`
+  options; Time Series declares `compilerMode: tame`; the Levene footnote
+  reads "Requires at least two groups".
 
 # AssumptionsLab 1.7.1 (2026-11-20)
 

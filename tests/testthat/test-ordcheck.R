@@ -130,11 +130,11 @@ test_that("ordCheck rejects a dependent variable with a single level", {
     )
 })
 
-test_that("ordCheck rejects when no predictor is selected", {
+test_that("ordCheck returns quietly (no error) when no predictor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_error(
+    expect_no_error(
         AssumptionsLab::ordCheck(
             data = data,
             dep  = "ord3"

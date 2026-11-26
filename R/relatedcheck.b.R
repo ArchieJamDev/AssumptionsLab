@@ -142,6 +142,9 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
         # informe seleccionado por el usuario.
         # -----------------------------------------------------------------------------
         .run = function() {
+            # Hide the fixed guides when "Explanations" is off (see
+            # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
+            on.exit(.al_apply_guides(self), add = TRUE)
 
         lang <- .al_lang(self$options)
         . <- lang$tr
@@ -286,8 +289,13 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
 
 
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
             if (length(measures) < 2) {
-                jmvcore::reject(.("Select at least two related numeric variables."))
+                return()
             }
 
             dat <- self$data[, measures, drop = FALSE]
@@ -774,7 +782,7 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                         add_norm_row(nm, "Shapiro-Wilk", "W", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nc_d$reasons$sw, .))
                     }
 
-                    # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
+                    # Lilliefors / Anderson-Darling / Cramér-von Mises / Shapiro-Francia /
                     # Pearson chi-square: identical tryCatch calls in every module,
                     # consolidated in shared-helpers.R (.al_nortest_battery).
                     # ES: idénticas en todos los módulos, consolidadas en shared-helpers.R.
@@ -810,14 +818,14 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
                     if (!is.null(cvm)) {
                         add_norm_row(
                             nm,
-                            "Cramer-von Mises",
+                            "Cram\u00e9r-von Mises",
                             "W²",
                             unname(cvm$statistic),
                             cvm$p.value,
                             n_norm
                         )
                     } else {
-                        add_norm_row(nm, "Cramer-von Mises", "W²", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$cvm, .))
+                        add_norm_row(nm, "Cram\u00e9r-von Mises", "W²", NA_real_, NA_real_, n_norm, reason = .al_norm_reason_text(.nt_d$reasons$cvm, .))
                     }
 
                     if (!is.null(sf)) {
@@ -1792,7 +1800,7 @@ self$results$notes$setContent(html_block(
 
             max_cases_to_draw <- 120
             if (n_cases > max_cases_to_draw) {
-                set.seed(1234)
+                .al_local_seed(1234)
                 keep_cases <- sort(sample(case_id, max_cases_to_draw))
                 traj_note <- sprintf(.("Showing %s individual trajectories from %s cases to preserve readability."), max_cases_to_draw, n_cases)
             } else {

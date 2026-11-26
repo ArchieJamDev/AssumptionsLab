@@ -112,11 +112,11 @@ test_that("anovaCheck rejects a single-level factor (lm() cannot build contrasts
     )
 })
 
-test_that("anovaCheck rejects when no factor is selected", {
+test_that("anovaCheck returns quietly (no error) when no factor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_error(
+    expect_no_error(
         AssumptionsLab::anovaCheck(
             data = data,
             dep  = "dep"

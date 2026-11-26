@@ -24,17 +24,19 @@
 
 ---
 name: relatedCheck
-title: Related groups
+title: Related Groups
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Related groups
+    title: Related Groups
     type: Html
+    visible: (showGuides)
 
   - name: designGuide
     title: Related-groups design
     type: Html
+    visible: (showGuides)
 
   - name: designSummary
     title: Design summary
@@ -88,7 +90,6 @@ items:
     clearWith:
       - measures
       - showProfilePlot
-      - plotStyle
 
   - name: differencePlot
     title: Distribution of paired differences
@@ -100,7 +101,6 @@ items:
     clearWith:
       - measures
       - showDifferencePlots
-      - plotStyle
 
   - name: normalityPlot
     title: Q-Q plots of paired differences
@@ -112,7 +112,6 @@ items:
     clearWith:
       - measures
       - showNormalityPlots
-      - plotStyle
 
 
   - name: normalCurvePlot
@@ -125,12 +124,12 @@ items:
     clearWith:
       - measures
       - showNormalityPlots
-      - plotStyle
 
 
   - name: differenceGuide
     title: Paired differences
     type: Html
+    visible: (showGuides)
 
   - name: differenceSummary
     title: Summary of paired differences
@@ -161,6 +160,7 @@ items:
   - name: normalityGuide
     title: Normality of differences/residuals
     type: Html
+    visible: (showGuides)
 
   - name: normality
     title: Normality of differences/residuals
@@ -219,6 +219,7 @@ items:
   - name: symmetryGuide
     title: Symmetry of differences
     type: Html
+    visible: (showGuides)
 
   - name: symmetry
     title: Symmetry of differences
@@ -248,6 +249,7 @@ items:
   - name: sphericityGuide
     title: Sphericity
     type: Html
+    visible: (showGuides)
 
   - name: sphericity
     title: Sphericity and corrections
@@ -284,6 +286,7 @@ items:
   - name: correlationMatrixGuide
     title: Correlation matrix
     type: Html
+    visible: (showGuides)
 
   - name: pearsonMatrixTable
     title: Pearson correlation matrix (APA 7 format)
@@ -312,6 +315,7 @@ items:
   - name: correlationComparisonGuide
     title: Pearson / dCor / copula entropy discordance analysis
     type: Html
+    visible: (showGuides)
 
   - name: correlationComparisonTable
     title: Pairs with a notable gap between Pearson and dCor
@@ -363,6 +367,7 @@ items:
   - name: outliersGuide
     title: Outliers in differences
     type: Html
+    visible: (showGuides)
 
   - name: outliers
     title: Outliers in differences
@@ -388,6 +393,7 @@ items:
   - name: methodGuide
     title: Test selection
     type: Html
+    visible: (showGuides)
 
   - name: methodOptions
     title: Methodological options

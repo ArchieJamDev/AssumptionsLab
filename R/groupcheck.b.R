@@ -138,6 +138,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # informe seleccionado por el usuario.
         # -----------------------------------------------------------------------------
         .run = function() {
+            # Hide the fixed guides when "Explanations" is off (see
+            # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
+            on.exit(.al_apply_guides(self), add = TRUE)
             data <- self$data
             dep <- self$options$dep
             group <- self$options$group
@@ -385,9 +388,13 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # análisis parcialmente calculado ni un error crudo de R mientras la
             # selección de variables esté incompleta o no sea adecuada.
             # -----------------------------------------------------------------------------
-            if (is.null(dep) || is.null(group)) {
-                jmvcore::reject(.("Select a dependent variable and a grouping variable to begin."))
-            }
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep) || is.null(group))
+                return()
 
             if (! dep %in% names(data) || ! group %in% names(data)) {
                 jmvcore::reject(.("Selected variables were not found in the data."))
@@ -879,13 +886,13 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # ES: Batería diagnóstica de normalidad por grupo.
             #
             # Runs the full normality battery (Shapiro-Wilk, Lilliefors, Anderson-
-            # Darling, Cramer-von Mises, Shapiro-Francia, Pearson chi-square, Jarque-
+            # Darling, Cramér-von Mises, Shapiro-Francia, Pearson chi-square, Jarque-
             # Bera, skewness and kurtosis tests) independently within every group,
             # because a parametric group comparison assumes approximate normality at
             # each level of the grouping factor, not only in the pooled sample.
             #
             # ES: ejecuta la batería completa de normalidad (Shapiro-Wilk, Lilliefors,
-            # Anderson-Darling, Cramer-von Mises, Shapiro-Francia, chi-cuadrado de
+            # Anderson-Darling, Cramér-von Mises, Shapiro-Francia, chi-cuadrado de
             # Pearson, Jarque-Bera, y pruebas de asimetría y curtosis) de forma
             # independiente dentro de cada grupo, porque una comparación paramétrica
             # de grupos supone normalidad aproximada en cada nivel del factor de
@@ -903,7 +910,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 if (test == "Anderson-Darling")
                     return(.("Useful when deviations in the distribution tails are important."))
 
-                if (test == "Cramer-von Mises")
+                if (test == "Cram\u00e9r-von Mises")
                     return(.("Alternative empirical-distribution test, sensitive across the whole range of the distribution."))
 
                 if (test == "Shapiro-Francia")
@@ -970,7 +977,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     add_normality(level, "Shapiro-Wilk", n_valid, "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$sw, .))
                 }
 
-                # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
+                # Lilliefors / Anderson-Darling / Cramér-von Mises / Shapiro-Francia /
                 # Pearson chi-square: identical tryCatch calls in every module,
                 # consolidated in shared-helpers.R (.al_nortest_battery).
                 # ES: idénticas en todos los módulos, consolidadas en shared-helpers.R.
@@ -990,9 +997,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 }
 
                 if (!is.null(cvm)) {
-                    add_normality(level, "Cramer-von Mises", n_valid, "W²", unname(cvm$statistic), cvm$p.value)
+                    add_normality(level, "Cram\u00e9r-von Mises", n_valid, "W²", unname(cvm$statistic), cvm$p.value)
                 } else {
-                    add_normality(level, "Cramer-von Mises", n_valid, "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$cvm, .))
+                    add_normality(level, "Cram\u00e9r-von Mises", n_valid, "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$cvm, .))
                 }
 
                 if (!is.null(sf)) {
@@ -1226,9 +1233,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 }
 
             } else {
-                add_homogeneity(.("Levene (median-centered)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
-                add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
-                add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
+                add_homogeneity(.("Levene (median-centered)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires at least two groups"))
+                add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires at least two groups"))
+                add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires at least two groups"))
             }
 
             if (length(unique(g_complete)) >= 2) {
@@ -2082,7 +2089,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 outcex = 0.65)
 
             if (isTRUE(self$options$showJitterPoints)) {
-                set.seed(2026)
+                .al_local_seed(2026)
                 for (i in seq_along(values_by_group)) {
                     values <- values_by_group[[i]]
                     xj <- stats::runif(length(values), min = i - 0.16, max = i + 0.16)

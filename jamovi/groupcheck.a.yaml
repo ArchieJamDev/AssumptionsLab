@@ -35,9 +35,18 @@ options:
   - name: dep
     title: Dependent Variable
     type: Variable
+    suggested:
+      - continuous
+    permitted:
+      - numeric
   - name: group
     title: Group Variable
     type: Variable
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
   - name: showDistributionPlot
     title: Distribution by group
     type: Bool
@@ -71,7 +80,7 @@ options:
     type: Bool
     default: false
   - name: curveBandwidth
-    title: Curve Smoothing (bandwidth)
+    title: Curve smoothing (bandwidth)
     type: Number
     default: 1
     min: 0.3
@@ -85,3 +94,10 @@ options:
     title: Color by group
     type: Bool
     default: true
+
+  - name: showGuides
+    title: Explanations
+    type: Bool
+    default: true
+    description: >-
+      Show the fixed explanations: the introduction and the guides on how to read each test and plot. Uncheck for a compact report; the applied interpretations of your own results are always shown.

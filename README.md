@@ -304,6 +304,7 @@ testthat::test_dir("tests/testthat")  # run the edge-case suite
 | 6 | Lessons from the jamovi audits of MokkenLab and EGAnetLab: numeric columns, jamovi's palette, native notices, interruptible permutation tests | ✅ Done |
 | 7 | Release 1.7.0, with Zenodo DOI [10.5281/zenodo.24390225](https://doi.org/10.5281/zenodo.24390225) | ✅ Done |
 | 7.1 | Release 1.7.1, with Zenodo DOI [10.5281/zenodo.24403336](https://doi.org/10.5281/zenodo.24403336): the Assumption Library cites through jamovi's own references | ✅ Done |
+| 7.2 | Release 1.8.0: count and rate regression, and the second jamovi review (native Library tables and text, Explanations option) | 🔄 In progress |
 | 8 | Submission to the jamovi Library | 🔄 In progress |
 | 9 | Count and rate regression (Poisson, negative binomial), then Cox regression | 🔄 In progress |
 | Next | SEM and PLS-SEM, Bayesian methods, multilevel models, survival analysis, meta-analysis | 🗓 Planned |
@@ -331,7 +332,7 @@ its own DOI, listed on the Zenodo page. Version 1.7.1 is
 [10.5281/zenodo.24403336](https://doi.org/10.5281/zenodo.24403336).
 
 > Chacón Chacón, A. D. L. (2026). *AssumptionsLab: A jamovi module for
-> statistical assumptions* (Version 1.7.1) [Computer software]. Zenodo.
+> statistical assumptions* (Version 1.8.0) [Computer software]. Zenodo.
 > https://doi.org/10.5281/zenodo.22209135
 
 The methods behind each analysis are listed in

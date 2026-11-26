@@ -31,10 +31,12 @@ items:
   - name: intro
     title: ANOVA/ANCOVA
     type: Html
+    visible: (showGuides)
 
   - name: designGuide
     title: Model design
     type: Html
+    visible: (showGuides)
 
   - name: designSummary
     title: Design summary
@@ -78,10 +80,13 @@ items:
   - name: designInterpretation
     title: Applied interpretation
     type: Html
+    refs:
+      - maxwell_2004
 
   - name: diagnosticPlotsGuide
     title: ANOVA/ANCOVA diagnostic plots
     type: Html
+    visible: (showGuides)
 
   - name: groupBoxplotsPlot
     title: Dependent variable by group
@@ -93,10 +98,12 @@ items:
   - name: groupBoxplotsGuide
     title: 'Guide: Dependent variable by group'
     type: Html
+    visible: (showGuides)
 
   - name: residualNormalityGuide
     title: Residual normality
     type: Html
+    visible: (showGuides)
 
   - name: residualNormality
     title: Residual normality
@@ -142,6 +149,7 @@ items:
   - name: residualsFittedGuide
     title: 'Guide: Residuals vs fitted values'
     type: Html
+    visible: (showGuides)
 
   - name: qqResidualsPlot
     title: Residual Q-Q plot
@@ -153,6 +161,7 @@ items:
   - name: qqResidualsGuide
     title: 'Guide: Residual Q-Q plot'
     type: Html
+    visible: (showGuides)
 
   - name: residualHistogramPlot
     title: Residual histogram
@@ -164,6 +173,7 @@ items:
   - name: residualHistogramGuide
     title: 'Guide: Residual histogram'
     type: Html
+    visible: (showGuides)
 
   - name: residualNormalCurvePlot
     title: Observed residual distribution vs theoretical normal curve
@@ -175,10 +185,12 @@ items:
   - name: residualNormalCurveGuide
     title: 'Guide: Observed distribution vs theoretical normal'
     type: Html
+    visible: (showGuides)
 
   - name: varianceGuide
     title: Homogeneity of variances
     type: Html
+    visible: (showGuides)
 
   - name: varianceTests
     title: Homogeneity of variances across groups
@@ -444,6 +456,7 @@ items:
   - name: influenceGuide
     title: Outlying and influential cases
     type: Html
+    visible: (showGuides)
 
   - name: influence
     title: Outlying and influential cases
@@ -495,6 +508,7 @@ items:
   - name: residualsLeverageGuide
     title: 'Guide: Studentized residuals vs leverage'
     type: Html
+    visible: (showGuides)
 
   - name: cooksDPlot
     title: "Cook's D by case"
@@ -506,14 +520,17 @@ items:
   - name: cooksDGuide
     title: "Guide: Cook's D by case"
     type: Html
+    visible: (showGuides)
 
   - name: independenceGuide
     title: Design independence
     type: Html
+    visible: (showGuides)
 
   - name: alternativesGuide
     title: Methodological alternatives
     type: Html
+    visible: (showGuides)
 
   - name: alternatives
     title: Methodological alternatives

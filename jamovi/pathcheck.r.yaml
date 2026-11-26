@@ -31,6 +31,7 @@ items:
   - name: intro
     title: Path Analysis
     type: Html
+    visible: (showGuides)
 
   - name: modelSummary
     title: Current model
@@ -195,6 +196,9 @@ items:
   - name: equationsGuide
     title: Model Design
     type: Html
+    refs:
+      - wright_1934
+      - duncan_1966
     visible: (isFinalized)
 
   - name: pathCoefficients
@@ -588,6 +592,7 @@ items:
     type: Table
     refs:
       - ma_2011
+      - kozachenko_1987
     clearWith:
       - vars
       - relations
@@ -632,6 +637,7 @@ items:
     type: Table
     refs:
       - sobel_1982
+      - baron_1986
     clearWith:
       - vars
       - relations

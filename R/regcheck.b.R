@@ -151,6 +151,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .run = function() {
+            # Hide the fixed guides when "Explanations" is off (see
+            # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
+            on.exit(.al_apply_guides(self), add = TRUE)
 
             lang <- .al_lang(self$options)
             . <- lang$tr
@@ -268,18 +271,18 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 table$addRow(rowKey = key, values = values)
             }
 
-            if (is.null(self$options$dep) || self$options$dep == "") {
-                jmvcore::reject(.("Select a numeric dependent variable."))
-            }
-
             dep <- self$options$dep
             covs <- self$options$covs
             factors <- self$options$factors
             predictors <- c(covs, factors)
 
-            if (length(predictors) == 0) {
-                jmvcore::reject(.("Select at least one numeric or categorical predictor."))
-            }
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep) || dep == "" || length(predictors) == 0)
+                return()
 
             data <- self$data
             vars <- c(dep, predictors)
@@ -913,8 +916,14 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             k <- length(matVars)
             pairResults <- list()
 
-            corr_show_individual <- tryCatch(isTRUE(self$options$corrShowIndividual), error = function(e) TRUE)
-            corr_show_comparative <- tryCatch(isTRUE(self$options$corrShowComparative), error = function(e) TRUE)
+            # "Diagnostic plots" (showPlots) is the master switch for every
+            # plot of this analysis, the correlation plots included; without
+            # it a text-only report would keep two empty image frames.
+            # ES: "Diagnostic plots" (showPlots) es el interruptor general de
+            # todos los gráficos, también los de correlación.
+            plots_on <- isTRUE(self$options$showPlots)
+            corr_show_individual <- plots_on && isTRUE(self$options$corrShowIndividual)
+            corr_show_comparative <- plots_on && isTRUE(self$options$corrShowComparative)
             self$results$correlationIndividualPlot$setVisible(k >= 2 && corr_show_individual)
             self$results$correlationIndividualGuide$setVisible(k >= 2 && corr_show_individual)
             self$results$correlationComparativePlot$setVisible(k >= 2 && corr_show_comparative)
@@ -1137,7 +1146,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             } else
                 add_res_norm("Shapiro-Wilk", "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, .))
 
-            # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
+            # Lilliefors / Anderson-Darling / Cramér-von Mises / Shapiro-Francia /
             # Pearson chi-square: identical tryCatch calls in every module,
             # consolidated in shared-helpers.R (.al_nortest_battery).
             # ES: idénticas en todos los módulos, consolidadas en shared-helpers.R.
@@ -1155,9 +1164,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 add_res_norm("Anderson-Darling", "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, .))
 
             if (!is.null(cvm))
-                add_res_norm("Cramer-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
+                add_res_norm("Cram\u00e9r-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
             else
-                add_res_norm("Cramer-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
+                add_res_norm("Cram\u00e9r-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
 
             if (!is.null(sf))
                 add_res_norm("Shapiro-Francia", "W'", sf$statistic[[1]], sf$p.value)

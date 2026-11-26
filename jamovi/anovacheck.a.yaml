@@ -101,7 +101,7 @@ options:
   # que realmente se necesita en vez de pagar siempre el costo de cada
   # gráfico.
   - name: plotSet
-    title: Plot Set
+    title: Plot set
     type: List
     options:
       - title: Basic
@@ -174,7 +174,7 @@ options:
   # simplemente los 5 casos más influyentes. Afecta solo el etiquetado del
   # gráfico, nunca qué casos se marcan en la tabla de influencia misma.
   - name: influenceLabelMode
-    title: Label Cases
+    title: Label cases
     type: List
     options:
       - title: None
@@ -199,3 +199,10 @@ options:
     title: Threshold line
     type: Bool
     default: true
+
+  - name: showGuides
+    title: Explanations
+    type: Bool
+    default: true
+    description: >-
+      Show the fixed explanations: the introduction and the guides on how to read each test and plot. Uncheck for a compact report; the applied interpretations of your own results are always shown.

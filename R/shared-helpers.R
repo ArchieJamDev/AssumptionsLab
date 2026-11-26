@@ -362,7 +362,7 @@
 #   with `li <- b$li; ad <- b$ad; ...` and keep every downstream line (row
 #   building, NA fallback, narrative text) completely unchanged.
 #
-# These 5 calls - Lilliefors, Anderson-Darling, Cramer-von Mises,
+# These 5 calls - Lilliefors, Anderson-Darling, Cramér-von Mises,
 # Shapiro-Francia, Pearson chi-square - were verified byte-identical (same
 # tryCatch/error-handling shape, no per-module guard condition) across
 # anovaCheck, groupCheck, pathCheck, regCheck, and relatedCheck. Unlike
@@ -371,7 +371,7 @@
 # - and are intentionally NOT included here), these 5 have no divergence to
 # reconcile, so consolidating them changes nothing about what gets computed.
 #
-# ES: Estas 5 llamadas - Lilliefors, Anderson-Darling, Cramer-von Mises,
+# ES: Estas 5 llamadas - Lilliefors, Anderson-Darling, Cramér-von Mises,
 # Shapiro-Francia, Pearson chi-cuadrado - se verificaron idénticas byte a
 # byte (mismo manejo de tryCatch/error, sin ninguna guarda propia por
 # módulo) en anovaCheck, groupCheck, pathCheck, regCheck y relatedCheck. A
@@ -676,7 +676,8 @@
 #
 # Input: x, y - numeric vectors of equal length; B - number of permutations
 #   used to build the null distribution (default 199, matching every
-#   calling module's hardcoded default).
+#   calling module's hardcoded default); seed - fixed seed, restored on
+#   exit (see .al_local_seed()).
 # Output: list(ce=, p=) with the observed copula entropy (copent::copent())
 #   and its permutation p-value, or NULL if the copent package is
 #   unavailable or the observed value cannot be computed.
@@ -709,9 +710,15 @@
 # preservando su propio valor de B por defecto y sin tocar ningún sitio
 # de llamada.
 # -----------------------------------------------------------------------------
-.al_copent_test <- function(x, y, B = 199) {
+.al_copent_test <- function(x, y, B = 199, seed = 20260704) {
     if (!requireNamespace("copent", quietly = TRUE))
         return(NULL)
+
+    # Same fixed seed as .al_dcor_test(), restored on exit: the estimator
+    # and the permutations draw random numbers, and the report must be the
+    # same on every run without touching the session's random state.
+    # ES: Misma semilla fija que .al_dcor_test(), restaurada al salir.
+    .al_local_seed(seed)
 
     x <- as.numeric(x); y <- as.numeric(y)
     obs <- tryCatch(copent::copent(cbind(x, y)), error = function(e) NA_real_)
@@ -785,6 +792,41 @@
 }
 
 # -----------------------------------------------------------------------------
+# .al_local_seed()
+#
+# Input: seed - the fixed seed; envir - the frame whose exit restores the
+#   previous state (default: the caller).
+# Output: none; called for its side effect.
+#
+# Fixed seeds keep the permutation p-values, the randomized quantile
+# residuals and the plot jitter reproducible, but the R session is shared
+# with every other analysis open in jamovi. This sets the seed and, when the
+# calling function exits, puts the global random-number state back exactly
+# as it was (or removes it, if there was none), so no other analysis starts
+# from AssumptionsLab's seed. Same idea as withr::local_seed(), without the
+# extra dependency.
+#
+# ES: Fija la semilla y, al salir de la función que llama, devuelve el
+# estado global del generador aleatorio exactamente a como estaba (o lo
+# elimina, si no existía), porque la sesión de R es compartida con los
+# demás análisis de jamovi.
+# -----------------------------------------------------------------------------
+.al_local_seed <- function(seed, envir = parent.frame()) {
+    genv <- globalenv()
+    had_seed <- exists(".Random.seed", envir = genv, inherits = FALSE)
+    old_seed <- if (had_seed) genv[[".Random.seed"]] else NULL
+    restore <- function() {
+        if (had_seed)
+            assign(".Random.seed", old_seed, envir = genv)
+        else if (exists(".Random.seed", envir = genv, inherits = FALSE))
+            rm(".Random.seed", envir = genv)
+    }
+    do.call(base::on.exit, list(as.call(list(restore)), TRUE, FALSE), envir = envir)
+    set.seed(seed)
+    invisible(NULL)
+}
+
+# -----------------------------------------------------------------------------
 # .al_dcor_test(x, y, B = 199, seed = 20260704)
 #
 # Permutation p-value for .al_dcor_stat(), consolidating each module's local
@@ -810,7 +852,7 @@
     obs <- .al_dcor_stat(x, y)
     if (is.na(obs)) return(list(dcor = NA_real_, p = NA_real_))
 
-    set.seed(seed)
+    .al_local_seed(seed)
     perm <- vapply(seq_len(B), function(k) .al_dcor_stat(x, sample(y)), numeric(1))
 
     p <- (1 + sum(perm >= obs, na.rm = TRUE)) / (1 + B)
@@ -1092,4 +1134,36 @@
     index <- if (is.na(pos)) 1 else if (isTRUE(before)) pos else pos + 1
     self$results$insert(index, notice)
     invisible(notice)
+}
+
+# -----------------------------------------------------------------------------
+# .al_apply_guides(analysis)
+#
+# Input: analysis - the running analysis (`self`).
+# Output: none; called for its side effect.
+#
+# "Explanations" (showGuides, on by default) controls the fixed teaching
+# text: the introduction and every `*Guide` element. Their visibility is
+# declared in each .r.yaml as `(showGuides && ...)`, but several analyses
+# also call setVisible() on a guide from R, which would override the
+# declaration. Called through on.exit() at the start of .run(), this hides
+# every guide when the option is off, whatever .run() did or wherever it
+# stopped. The data-driven "Applied interpretation" blocks are not guides
+# and stay visible.
+#
+# ES: "Explanations" (showGuides) controla el texto didáctico fijo: la
+# introducción y cada elemento `*Guide`. Llamada con on.exit() al inicio de
+# .run(), oculta todas las guías cuando la opción está desactivada, aunque
+# .run() haya llamado setVisible() sobre alguna. Las interpretaciones
+# aplicadas a los datos del usuario siguen visibles.
+# -----------------------------------------------------------------------------
+.al_apply_guides <- function(analysis) {
+    if (!identical(analysis$options$showGuides, FALSE))
+        return(invisible(NULL))
+    for (item in analysis$results$items) {
+        name <- item$name
+        if (identical(name, "intro") || grepl("Guide$", name))
+            item$setVisible(FALSE)
+    }
+    invisible(NULL)
 }

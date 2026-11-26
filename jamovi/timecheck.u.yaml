@@ -28,13 +28,14 @@
 name: timeCheck
 title: Time Series
 jus: '3.0'
+compilerMode: tame
 
 children:
   - type: VariableSupplier
     persistentItems: true
     children:
       - type: TargetLayoutBox
-        label: Time series
+        label: Time Series
         children:
           - type: VariablesListBox
             name: series
@@ -67,6 +68,11 @@ children:
               - factor
               - numeric
 
+  - type: Label
+    label: Output
+    children:
+      - type: CheckBox
+        name: showGuides
   - type: CollapseBox
     label: Time Series Model
     collapsed: false

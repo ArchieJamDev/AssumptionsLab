@@ -123,6 +123,9 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .run = function() {
+            # Hide the fixed guides when "Explanations" is off (see
+            # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
+            on.exit(.al_apply_guides(self), add = TRUE)
 
             # -----------------------------------------------------------------------------
             # Initial setup and shared helpers (AssumptionsLab standard).
@@ -191,13 +194,21 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             factors <- self$options$factors
             show_plots <- self$options$showPlots
 
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep_var) || !nzchar(dep_var) || length(c(covs, factors)) == 0)
+                return()
+
             data <- self$data
             if (is.null(data) || nrow(data) == 0) {
                 jmvcore::reject(.("No data are available."))
             }
 
-            if (is.null(dep_var) || !(dep_var %in% names(data))) {
-                jmvcore::reject(.("Dependent variable not selected."))
+            if (!(dep_var %in% names(data))) {
+                jmvcore::reject(.("Selected variables were not found in the data."))
             }
 
             dep_data <- data[[dep_var]]
@@ -230,9 +241,6 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             predictors <- c(covs, factors)
-            if (length(predictors) == 0) {
-                jmvcore::reject(.("Select at least one predictor."))
-            }
 
             model_data <- data
             model_data$dep_binary <- dep_binary
