@@ -16,7 +16,8 @@ normal con tres puntos: la media (ámbar) y una desviación típica a cada lado
 (azul), la forma de referencia con la que se comparan los datos en la mayoría
 de las comprobaciones de supuestos.
 
-Run: python3 docs/logo/build_logo.py   (writes the SVGs next to this file and,
+Run: python3 docs/logo/build_logo.py   (writes the SVGs next to this file, the
+Analyses menu icon in jamovi/icons/assumptionslab.svg and,
 when rsvg-convert is available, jamovi/assets/assumptionslab-icon.png and the
 PNG sizes in inst/assets/icons/)
 """
@@ -35,7 +36,7 @@ THEMES = {
 }
 
 
-def mark(x0, x1, base, height, sd, r, sw, swl, fill="#FFFFFF", base_col=BASE):
+def mark(x0, x1, base, height, sd, r, sw, swl, fill="#FFFFFF", base_col=BASE, n=60):
     """Normal curve from x0 to x1 over a baseline, with points at the mean and
     at +/- 1.33 sd. ES: Curva normal con puntos en la media y a ambos lados."""
     mid = (x0 + x1) / 2
@@ -44,7 +45,7 @@ def mark(x0, x1, base, height, sd, r, sw, swl, fill="#FFFFFF", base_col=BASE):
         z = (x - mid) / sd
         return base - height * math.exp(-z * z / 2)
 
-    pts = " ".join(f"{x0 + (x1 - x0) * i / 60:.1f},{y(x0 + (x1 - x0) * i / 60):.1f}" for i in range(61))
+    pts = " ".join(f"{x0 + (x1 - x0) * i / n:.1f},{y(x0 + (x1 - x0) * i / n):.1f}" for i in range(n + 1))
     gap = sw * 1.1
     out = (f'  <polyline points="{pts}" fill="none" stroke="{GREY}" stroke-width="{swl:.1f}" '
            'stroke-linecap="round" stroke-linejoin="round"/>\n'
@@ -63,6 +64,16 @@ def icon():
             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" '
             'role="img" aria-label="AssumptionsLab">\n  <title>AssumptionsLab</title>\n'
             '  <rect x="6" y="6" width="244" height="244" rx="52" fill="#F4F7FB" stroke="#D5DEEA" stroke-width="2"/>\n'
+            f'{body}</svg>\n')
+
+
+def menu_icon():
+    """Ribbon icon for jamovi's Analyses menu (menuIcons in 0000.yaml): the same
+    mark on jamovi's 74 x 44 canvas, without the tile, in jamovi's palette only
+    and as plain SVG with no metadata. ES: Icono del menú de análisis de jamovi:
+    el mismo símbolo en el lienzo de 74 x 44, sin fondo ni metadatos."""
+    body = mark(12, 62, 33, 24, 8.5, 4, 2.4, 3, base_col=GREY, n=24)
+    return ('<svg version="1.1" viewBox="0 0 74 44" xmlns="http://www.w3.org/2000/svg">\n'
             f'{body}</svg>\n')
 
 
@@ -88,6 +99,9 @@ if __name__ == "__main__":
     (OUT / "assumptionslab-icon.svg").write_text(icon(), encoding="utf-8")
     (OUT / "assumptionslab-logo.svg").write_text(logo("light"), encoding="utf-8")
     (OUT / "assumptionslab-logo-dark.svg").write_text(logo("dark"), encoding="utf-8")
+    menu = ROOT / "jamovi" / "icons"
+    menu.mkdir(exist_ok=True)
+    (menu / "assumptionslab.svg").write_text(menu_icon(), encoding="utf-8")
     if shutil.which("rsvg-convert"):
         svg = OUT / "assumptionslab-icon.svg"
         png(svg, 256, ROOT / "jamovi" / "assets" / "assumptionslab-icon.png")
