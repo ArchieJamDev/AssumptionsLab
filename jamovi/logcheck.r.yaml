@@ -39,6 +39,9 @@ items:
   - name: design
     title: Design summary
     type: Table
+    refs:
+      - peduzzi_1996
+      - firth_1993
     columns:
       - name: element
         title: Item
@@ -69,6 +72,8 @@ items:
   - name: separationInterpretation
     title: Applied interpretation
     type: Html
+    refs:
+      - firth_1993
 
   - name: linearityGuide
     title: Linearity in the logit
@@ -354,6 +359,8 @@ items:
   - name: oddsRatios
     title: Odds Ratios
     type: Table
+    refs:
+      - zhang_1998
     columns:
       - name: predictor
         title: Predictor

@@ -385,7 +385,7 @@
         lower <- stats::pnbinom(y - 1, size = theta, mu = mu)
         upper <- stats::pnbinom(y, size = theta, mu = mu)
     }
-    set.seed(seed)
+    .al_local_seed(seed)
     u <- stats::runif(length(y), min = lower, max = upper)
     u <- pmin(pmax(u, 1e-12), 1 - 1e-12)
     stats::qnorm(u)

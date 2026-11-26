@@ -1797,7 +1797,7 @@ self$results$notes$setContent(html_block(
 
             max_cases_to_draw <- 120
             if (n_cases > max_cases_to_draw) {
-                set.seed(1234)
+                .al_local_seed(1234)
                 keep_cases <- sort(sample(case_id, max_cases_to_draw))
                 traj_note <- sprintf(.("Showing %s individual trajectories from %s cases to preserve readability."), max_cases_to_draw, n_cases)
             } else {

@@ -78,6 +78,8 @@ items:
   - name: designInterpretation
     title: Applied interpretation
     type: Html
+    refs:
+      - maxwell_2004
 
   - name: diagnosticPlotsGuide
     title: ANOVA/ANCOVA diagnostic plots

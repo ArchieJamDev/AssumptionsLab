@@ -785,6 +785,41 @@
 }
 
 # -----------------------------------------------------------------------------
+# .al_local_seed()
+#
+# Input: seed - the fixed seed; envir - the frame whose exit restores the
+#   previous state (default: the caller).
+# Output: none; called for its side effect.
+#
+# Fixed seeds keep the permutation p-values, the randomized quantile
+# residuals and the plot jitter reproducible, but the R session is shared
+# with every other analysis open in jamovi. This sets the seed and, when the
+# calling function exits, puts the global random-number state back exactly
+# as it was (or removes it, if there was none), so no other analysis starts
+# from AssumptionsLab's seed. Same idea as withr::local_seed(), without the
+# extra dependency.
+#
+# ES: Fija la semilla y, al salir de la función que llama, devuelve el
+# estado global del generador aleatorio exactamente a como estaba (o lo
+# elimina, si no existía), porque la sesión de R es compartida con los
+# demás análisis de jamovi.
+# -----------------------------------------------------------------------------
+.al_local_seed <- function(seed, envir = parent.frame()) {
+    genv <- globalenv()
+    had_seed <- exists(".Random.seed", envir = genv, inherits = FALSE)
+    old_seed <- if (had_seed) genv[[".Random.seed"]] else NULL
+    restore <- function() {
+        if (had_seed)
+            assign(".Random.seed", old_seed, envir = genv)
+        else if (exists(".Random.seed", envir = genv, inherits = FALSE))
+            rm(".Random.seed", envir = genv)
+    }
+    do.call(base::on.exit, list(as.call(list(restore)), TRUE, FALSE), envir = envir)
+    set.seed(seed)
+    invisible(NULL)
+}
+
+# -----------------------------------------------------------------------------
 # .al_dcor_test(x, y, B = 199, seed = 20260704)
 #
 # Permutation p-value for .al_dcor_stat(), consolidating each module's local
@@ -810,7 +845,7 @@
     obs <- .al_dcor_stat(x, y)
     if (is.na(obs)) return(list(dcor = NA_real_, p = NA_real_))
 
-    set.seed(seed)
+    .al_local_seed(seed)
     perm <- vapply(seq_len(B), function(k) .al_dcor_stat(x, sample(y)), numeric(1))
 
     p <- (1 + sum(perm >= obs, na.rm = TRUE)) / (1 + B)

@@ -2086,7 +2086,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 outcex = 0.65)
 
             if (isTRUE(self$options$showJitterPoints)) {
-                set.seed(2026)
+                .al_local_seed(2026)
                 for (i in seq_along(values_by_group)) {
                     values <- values_by_group[[i]]
                     xj <- stats::runif(length(values), min = i - 0.16, max = i + 0.16)

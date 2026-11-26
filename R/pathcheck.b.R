@@ -1417,7 +1417,7 @@ pathCheckClass <- R6::R6Class(
             if (is.na(seed_perm)) seed_perm <- 2026
             floor_p <- 1 / (B_perm + 1)
             floor_p_str <- sub("^0", "", sprintf("%.3f", floor_p))
-            set.seed(seed_perm)
+            .al_local_seed(seed_perm)
 
             pairResults <- list()
             for (i in seq_len(k)) {
@@ -1880,7 +1880,7 @@ pathCheckClass <- R6::R6Class(
 
             if (identical(layout, "spring")) {
                 if (n == 1) return(list(x = stats::setNames(0.5, vars), y = stats::setNames(0.5, vars)))
-                set.seed(42)
+                .al_local_seed(42)
                 pos <- matrix(stats::runif(n * 2, 0.25, 0.75), ncol = 2)
                 rownames(pos) <- vars
                 edgeIdx <- Filter(function(ix) !any(is.na(ix)),

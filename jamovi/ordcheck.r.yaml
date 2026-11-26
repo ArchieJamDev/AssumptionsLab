@@ -333,6 +333,8 @@ items:
   - name: influenceGuide
     title: Influential cases
     type: Html
+    refs:
+      - liu_2009
 
   - name: influence
     title: Influential cases
