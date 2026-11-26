@@ -111,11 +111,11 @@ test_that("regCheck rejects a categorical predictor with a single level (lm() ca
     )
 })
 
-test_that("regCheck rejects when no predictor is selected", {
+test_that("regCheck returns quietly (no error) when no predictor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_error(
+    expect_no_error(
         AssumptionsLab::regCheck(
             data = data,
             dep  = "dep"

@@ -268,13 +268,21 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             covs <- self$options$covs
             factors <- self$options$factors
 
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep_var) || !nzchar(dep_var) || length(c(covs, factors)) == 0)
+                return()
+
             data <- self$data
             if (is.null(data) || nrow(data) == 0) {
                 jmvcore::reject(.("No data are available."))
             }
 
-            if (is.null(dep_var) || !nzchar(dep_var) || !(dep_var %in% names(data))) {
-                jmvcore::reject(.("Dependent variable not selected."))
+            if (!(dep_var %in% names(data))) {
+                jmvcore::reject(.("Selected variables were not found in the data."))
             }
 
             dep_raw <- data[[dep_var]]
@@ -290,9 +298,6 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             predictors <- c(covs, factors)
-            if (length(predictors) == 0) {
-                jmvcore::reject(.("Select at least one predictor."))
-            }
 
             model_data <- data
             model_data$dep_ord <- factor(dep_raw, levels = dep_levels, ordered = TRUE)

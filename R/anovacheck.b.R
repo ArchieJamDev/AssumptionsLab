@@ -462,13 +462,13 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             factors <- self$options$factors
             covs <- self$options$covs
 
-            if (is.null(dep) || dep == "") {
-                jmvcore::reject(.("Select a numeric dependent variable."))
-            }
-
-            if (length(factors) == 0) {
-                jmvcore::reject(.("Select at least one categorical factor for ANOVA/ANCOVA."))
-            }
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep) || dep == "" || length(factors) == 0)
+                return()
 
             vars <- c(dep, factors, covs)
             dat <- self$data[, vars, drop = FALSE]

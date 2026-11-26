@@ -385,9 +385,13 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # análisis parcialmente calculado ni un error crudo de R mientras la
             # selección de variables esté incompleta o no sea adecuada.
             # -----------------------------------------------------------------------------
-            if (is.null(dep) || is.null(group)) {
-                jmvcore::reject(.("Select a dependent variable and a grouping variable to begin."))
-            }
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep) || is.null(group))
+                return()
 
             if (! dep %in% names(data) || ! group %in% names(data)) {
                 jmvcore::reject(.("Selected variables were not found in the data."))

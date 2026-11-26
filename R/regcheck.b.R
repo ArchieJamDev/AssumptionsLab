@@ -268,18 +268,18 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 table$addRow(rowKey = key, values = values)
             }
 
-            if (is.null(self$options$dep) || self$options$dep == "") {
-                jmvcore::reject(.("Select a numeric dependent variable."))
-            }
-
             dep <- self$options$dep
             covs <- self$options$covs
             factors <- self$options$factors
             predictors <- c(covs, factors)
 
-            if (length(predictors) == 0) {
-                jmvcore::reject(.("Select at least one numeric or categorical predictor."))
-            }
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep) || dep == "" || length(predictors) == 0)
+                return()
 
             data <- self$data
             vars <- c(dep, predictors)
@@ -913,8 +913,14 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             k <- length(matVars)
             pairResults <- list()
 
-            corr_show_individual <- tryCatch(isTRUE(self$options$corrShowIndividual), error = function(e) TRUE)
-            corr_show_comparative <- tryCatch(isTRUE(self$options$corrShowComparative), error = function(e) TRUE)
+            # "Diagnostic plots" (showPlots) is the master switch for every
+            # plot of this analysis, the correlation plots included; without
+            # it a text-only report would keep two empty image frames.
+            # ES: "Diagnostic plots" (showPlots) es el interruptor general de
+            # todos los gráficos, también los de correlación.
+            plots_on <- isTRUE(self$options$showPlots)
+            corr_show_individual <- plots_on && isTRUE(self$options$corrShowIndividual)
+            corr_show_comparative <- plots_on && isTRUE(self$options$corrShowComparative)
             self$results$correlationIndividualPlot$setVisible(k >= 2 && corr_show_individual)
             self$results$correlationIndividualGuide$setVisible(k >= 2 && corr_show_individual)
             self$results$correlationComparativePlot$setVisible(k >= 2 && corr_show_comparative)

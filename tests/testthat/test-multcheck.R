@@ -128,11 +128,11 @@ test_that("multCheck rejects a dependent variable with a single level", {
     )
 })
 
-test_that("multCheck rejects when no predictor is selected", {
+test_that("multCheck returns quietly (no error) when no predictor is selected", {
 
     data <- edgeBaseData(n = 30)
 
-    expect_error(
+    expect_no_error(
         AssumptionsLab::multCheck(
             data = data,
             dep  = "group3"

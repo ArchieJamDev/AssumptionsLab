@@ -123,11 +123,19 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Validate the input (Category A: each problem blocks the analysis).
             # ES: Validar la entrada (Categoría A: cada problema bloquea el análisis).
             # -----------------------------------------------------------------------------
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
+            if (is.null(dep_var) || !nzchar(dep_var))
+                return()
+
             data <- self$data
             if (is.null(data) || nrow(data) == 0)
                 jmvcore::reject(.("No data are available."))
-            if (is.null(dep_var) || !(dep_var %in% names(data)))
-                jmvcore::reject(.("Dependent variable not selected."))
+            if (!(dep_var %in% names(data)))
+                jmvcore::reject(.("Selected variables were not found in the data."))
 
             predictors <- c(covs, factors)
             used <- unique(c(dep_var, predictors, exposure_var))

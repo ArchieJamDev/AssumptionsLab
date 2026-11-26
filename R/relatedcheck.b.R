@@ -286,8 +286,13 @@ relatedCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Clas
 
 
 
+            # Not configured yet (nothing selected): return quietly and leave the
+            # empty results skeleton in place; reject() is kept for real
+            # problems the user can fix.
+            # ES: Aún sin configurar (nada seleccionado): volver en silencio y
+            # dejar el esqueleto vacío; reject() queda para errores reales.
             if (length(measures) < 2) {
-                jmvcore::reject(.("Select at least two related numeric variables."))
+                return()
             }
 
             dat <- self$data[, measures, drop = FALSE]

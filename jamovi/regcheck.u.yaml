@@ -111,16 +111,19 @@ children:
     children:
       - type: CheckBox
         name: corrShowIndividual
+        enable: (showPlots)
       - type: CheckBox
         name: corrShowComparative
+        enable: (showPlots)
       - type: CheckBox
         name: corrIndividualFit
-        enable: (corrShowIndividual)
+        enable: (showPlots && corrShowIndividual)
       - type: ComboBox
         name: corrComparativeStyle
-        enable: (corrShowComparative)
+        enable: (showPlots && corrShowComparative)
       - type: CheckBox
         name: corrHighlightDiscordant
+        enable: (showPlots && (corrShowIndividual || corrShowComparative))
   - type: CollapseBox
     label: 'Plots: Influence'
     collapsed: true
