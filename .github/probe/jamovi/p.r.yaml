@@ -1,0 +1,11 @@
+---
+name: p
+title: P
+jrs: '1.1'
+items:
+  - name: prose
+    title: Prose
+    type: Text
+    visible: (showGuides)
+    refs: [ x ]
+    content: "**Bold** para.\n\nSecond para."

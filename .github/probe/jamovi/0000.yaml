@@ -1,0 +1,15 @@
+---
+name: probe
+title: Probe
+version: 1.0.0
+jms: '1.0'
+authors: [ x ]
+maintainer: x <x@x.x>
+description: probe
+minApp: 28.3.0
+analyses:
+  - title: P
+    name: p
+    ns: probe
+    menuGroup: P
+    menuTitle: P
