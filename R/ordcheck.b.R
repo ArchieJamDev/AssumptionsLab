@@ -171,6 +171,20 @@ ordCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
     private = list(
         .init = function() {
             private$.initCorrelationMatrix()
+
+            # Rows whose keys are known from the options alone, with their
+            # labels; .run() fills them with setRow() (via .al_add_row()).
+            # ES: Filas cuyas claves se conocen solo con las opciones, con sus
+            # etiquetas; .run() las rellena con setRow() (vía .al_add_row()).
+            . <- .al_lang(self$options)$tr
+            .al_init_rows(self$results$design, paste0("design_", 1:5),
+                list(list(element = .("Total cases")),
+                     list(element = .("Complete cases")),
+                     list(element = .("Number of categories")),
+                     list(element = .("Smallest category")),
+                     list(element = .("Estimated parameters"))))
+            .al_init_rows(self$results$discrimination, c("disc_1", "disc_2"),
+                list(list(metric = "McFadden R\u00b2"), list(metric = "Nagelkerke R\u00b2")))
         },
 
         # dcor_stat/dcor_pvalue's column-per-variable dynamic setup:

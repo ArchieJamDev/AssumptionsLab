@@ -130,6 +130,23 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .plotVolatilityData = NULL,
         .plotN = NULL,
 
+        # -----------------------------------------------------------------------------
+        # The model profile and the conditions/decisions matrices depend only on
+        # the options (series, model, regressors), so they are built whole here,
+        # before .run() computes anything.
+        # ES: El perfil del modelo y las matrices de condiciones/decisiones
+        # dependen solo de las opciones (series, modelo, regresores), así que se
+        # construyen enteras aquí, antes de que .run() calcule nada.
+        # -----------------------------------------------------------------------------
+        .init = function() {
+            lang <- .al_lang(self$options)
+            . <- lang$tr
+            txt <- function(section, key) .al_text(lang, section, key)
+            model <- self$options$model
+            private$.fillModelProfile(self$options$series, self$options$exogenous, model, ., txt)
+            private$.fillConditions(model, txt)
+        },
+
         .run = function() {
             # Hide the fixed guides when "Explanations" is off (see
             # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
@@ -491,11 +508,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 invisible(NULL)
             }
 
-
-
-
-            private$.fillModelProfile(series, exogenous, model, ., txt)
-
             # -----------------------------------------------------------------------------
             # Model description: what the selected model is, when to use it, what it
             # offers and its main limitations, so this decision is not left implicit.
@@ -507,8 +519,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             model_description <- model_descriptions[[model]]
             if (!is.null(model_description))
                 set_html_safe("modelDescription", html_block(NULL, model_description, paragraphs = FALSE))
-
-            private$.fillConditions(model, txt)
 
             # -----------------------------------------------------------------------------
             # Guard: decide whether the diagnostic battery can run at all (enough
@@ -650,13 +660,13 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }
 
                 for (i in seq_along(results_rows))
-                    self$results$diagnosticsResults$addRow(rowKey = i, values = results_rows[[i]])
+                    .al_add_row(self$results$diagnosticsResults, i, values = results_rows[[i]])
 
                 for (fn in note_footnotes)
                     self$results$diagnosticsResults$addFootnote(col = "evidence", note = fn$text, rowNo = fn$row)
 
                 for (i in seq_along(actions_rows))
-                    self$results$diagnosticsActions$addRow(rowKey = i, values = actions_rows[[i]])
+                    .al_add_row(self$results$diagnosticsActions, i, values = actions_rows[[i]])
             }
 
             # -----------------------------------------------------------------------------
@@ -701,17 +711,17 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             profile_table <- self$results$modelProfile
             profile_table$deleteRows()
-            profile_table$addRow(rowKey = "series", values = list(
+            .al_add_row(profile_table, "series", values = list(
                 element = txt("time", "seriesRowLabel"),
                 value = series_value
             ))
-            profile_table$addRow(rowKey = "model", values = list(
+            .al_add_row(profile_table, "model", values = list(
                 element = txt("time", "modelRowLabel"),
                 value = model_label
             ))
 
             if (model %in% c("arima", "sarima") && !is.null(exogenous) && length(exogenous) > 0) {
-                profile_table$addRow(rowKey = "exogenous", values = list(
+                .al_add_row(profile_table, "exogenous", values = list(
                     element = .("External regressors (ARIMAX/SARIMAX)"),
                     value = paste(exogenous, collapse = ", ")
                 ))
@@ -739,12 +749,12 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(model_rows)) {
                 for (i in seq_along(model_rows)) {
                     row <- model_rows[[i]]
-                    conditions_table$addRow(rowKey = i, values = list(
+                    .al_add_row(conditions_table, i, values = list(
                         area = row[1],
                         condition = row[2],
                         diagnostic = row[3]
                     ))
-                    decisions_table$addRow(rowKey = i, values = list(
+                    .al_add_row(decisions_table, i, values = list(
                         area = row[1],
                         condition = row[2],
                         role = row[4],

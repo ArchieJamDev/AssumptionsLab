@@ -127,6 +127,31 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .init = function() {
             private$.initCorrelationMatrix()
+
+            # Rows whose keys are known from the options alone, with their
+            # labels; .run() fills them with setRow() (via .al_add_row()).
+            # ES: Filas cuyas claves se conocen solo con las opciones, con sus
+            # etiquetas; .run() las rellena con setRow() (vía .al_add_row()).
+            . <- .al_lang(self$options)$tr
+            r <- self$results
+            ms_items <- list(.("Model"), .("Cases used"), .("Selected predictors"),
+                             .("Estimated parameters"), "R²", .("Adjusted R²"),
+                             .("Residual standard error"), .("Model p"))
+            .al_init_rows(r$modelSummary, paste0("ms_", seq_along(ms_items)),
+                          lapply(ms_items, function(x) list(item = x)))
+            miss_items <- list(.("Total rows"), .("Complete cases used"),
+                               .("Cases excluded due to missing data"), .("Excluded percentage"))
+            .al_init_rows(r$missingSummary, paste0("miss_", seq_along(miss_items)),
+                          lapply(miss_items, function(x) list(item = x)))
+            norm <- .al_norm_battery_labels(.)
+            .al_init_rows(r$residualNormality,
+                          paste0("norm_", vapply(norm, function(x) .al_safe_key(x$test), character(1))),
+                          norm)
+            .al_init_rows(r$independence, paste0("ind_", 1:4),
+                list(list(test = "Durbin-Watson", statistic = "DW"),
+                     list(test = "Breusch-Godfrey", statistic = "LM"),
+                     list(test = "Ljung-Box", statistic = "Q"),
+                     list(test = "Runs test", statistic = "z")))
         },
 
         .initCorrelationMatrix = function() {
@@ -268,7 +293,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             add_table_row <- function(table, key, values) {
-                table$addRow(rowKey = key, values = values)
+                .al_add_row(table, key, values = values)
             }
 
             dep <- self$options$dep
@@ -1021,9 +1046,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                         }
                     }
-                    pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                    .al_add_row(pearsonTable, rowVar, values = pearsonVals)
                     for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
-                    dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                    .al_add_row(dcorTable, rowVar, values = dcorVals)
                     for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                 }
 
@@ -1058,7 +1083,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 gap <- pr$dcor - abs(pr$pearsonR)
                 if (gap <= gapThreshold) next()
                 flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
-                compTable$addRow(rowKey = key, values = list(
+                .al_add_row(compTable, key, values = list(
                     var1 = pr$v1,
                     var2 = pr$v2,
                     pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),

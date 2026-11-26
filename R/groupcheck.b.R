@@ -121,6 +121,36 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         .qqPlotSelected = NULL,
 
         # -----------------------------------------------------------------------------
+        # Lay out the rows whose keys are known from the options alone, with their
+        # labels; .run() fills them with setRow() (via .al_add_row()). The rows per
+        # group level, per case and the two-group F test depend on the data and
+        # are still added in .run().
+        # ES: Crea las filas cuyas claves se conocen solo con las opciones, con sus
+        # etiquetas; .run() las rellena con setRow() (vía .al_add_row()). Las filas
+        # por nivel del grupo, por caso y la prueba F de dos grupos dependen de los
+        # datos y se siguen añadiendo en .run().
+        # -----------------------------------------------------------------------------
+        .init = function() {
+            . <- .al_lang(self$options)$tr
+
+            .al_init_rows(self$results$design,
+                c("design", "total", "validGroup", "missingGroup", "groups", "missingDep"),
+                list(list(item = .("Detected design")),
+                     list(item = .("Total rows")),
+                     list(item = .("Rows with valid group value")),
+                     list(item = .("Rows without group value")),
+                     list(item = .("Detected groups")),
+                     list(item = .("Missing dependent values"))))
+
+            .al_init_rows(self$results$homogeneity, paste0("hom_", 1:5),
+                list(list(test = .("Levene (median-centered)")),
+                     list(test = "Brown-Forsythe"),
+                     list(test = "Levene"),
+                     list(test = "Bartlett"),
+                     list(test = "Fligner-Killeen")))
+        },
+
+        # -----------------------------------------------------------------------------
         # Main analysis entry point.
         # ES: Punto de entrada principal del análisis.
         #
@@ -540,32 +570,32 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 .("Only one group detected")
             }
 
-            self$results$design$addRow(rowKey = "design", values = list(
+            .al_add_row(self$results$design, "design", values = list(
                 item = .("Detected design"),
                 value = design_text
             ))
 
-            self$results$design$addRow(rowKey = "total", values = list(
+            .al_add_row(self$results$design, "total", values = list(
                 item = .("Total rows"),
                 value = as.character(n_total)
             ))
 
-            self$results$design$addRow(rowKey = "validGroup", values = list(
+            .al_add_row(self$results$design, "validGroup", values = list(
                 item = .("Rows with valid group value"),
                 value = as.character(n_used)
             ))
 
-            self$results$design$addRow(rowKey = "missingGroup", values = list(
+            .al_add_row(self$results$design, "missingGroup", values = list(
                 item = .("Rows without group value"),
                 value = as.character(n_no_group)
             ))
 
-            self$results$design$addRow(rowKey = "groups", values = list(
+            .al_add_row(self$results$design, "groups", values = list(
                 item = .("Detected groups"),
                 value = as.character(n_groups)
             ))
 
-            self$results$design$addRow(rowKey = "missingDep", values = list(
+            .al_add_row(self$results$design, "missingDep", values = list(
                 item = .("Missing dependent values"),
                 value = paste0(n_missing_dep, " (", missing_dep_pct, "%)")
             ))
@@ -599,8 +629,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             summary_table <- do.call(rbind, summary_rows)
 
             for (i in seq_len(nrow(summary_table))) {
-                self$results$descriptives$addRow(
-                    rowKey = paste0("desc_", i),
+                .al_add_row(self$results$descriptives, paste0("desc_", i),
                     values = list(
                         group = summary_table$group[i],
                         n = summary_table$n[i],
@@ -727,8 +756,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             outlier_table <- do.call(rbind, outlier_rows)
 
             for (i in seq_len(nrow(outlier_table))) {
-                self$results$outliers$addRow(
-                    rowKey = paste0("out_", i),
+                .al_add_row(self$results$outliers, paste0("out_", i),
                     values = list(
                         group = outlier_table$group[i],
                         n = outlier_table$n[i],
@@ -829,8 +857,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             if (max_cases_to_show > 0) {
                 for (i in seq_len(max_cases_to_show)) {
-                    self$results$caseDiagnostics$addRow(
-                        rowKey = paste0("case_", i),
+                    .al_add_row(self$results$caseDiagnostics, paste0("case_", i),
                         values = list(
                             case = case_diag$case[i],
                             group = case_diag$group[i],
@@ -1047,8 +1074,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     group_label <- if (j == 1) as.character(level) else ""
 
                     row_key <- paste0("norm_", row_counter)
-                    self$results$normality$addRow(
-                        rowKey = row_key,
+                    .al_add_row(self$results$normality, row_key,
                         values = list(
                             group = group_label,
                             test = sub_norm$test[j],
@@ -1088,8 +1114,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     .("At least one sig. test")
                 }
 
-                self$results$normalitySummary$addRow(
-                    rowKey = paste0("normsum_", i),
+                .al_add_row(self$results$normalitySummary, paste0("normsum_", i),
                     values = list(
                         group = as.character(level),
                         significant = significant,
@@ -1609,8 +1634,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             for (i in seq_len(nrow(homogeneity_table))) {
                 row_key <- paste0("hom_", i)
-                self$results$homogeneity$addRow(
-                    rowKey = row_key,
+                .al_add_row(self$results$homogeneity, row_key,
                     values = list(
                         test = homogeneity_table$test[i],
                         statistic = homogeneity_table$statistic[i],

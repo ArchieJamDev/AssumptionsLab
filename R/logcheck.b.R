@@ -99,6 +99,20 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
     private = list(
         .init = function() {
             private$.initCorrelationMatrix()
+
+            # Rows whose keys are known from the options alone, with their
+            # labels; .run() fills them with setRow() (via .al_add_row()).
+            # ES: Filas cuyas claves se conocen solo con las opciones, con sus
+            # etiquetas; .run() las rellena con setRow() (vía .al_add_row()).
+            . <- .al_lang(self$options)$tr
+            .al_init_rows(self$results$design, paste0("design_", 1:4),
+                list(list(element = .("Total cases")),
+                     list(element = .("Complete cases")),
+                     list(element = .("Events")),
+                     list(element = .("EPV (least-frequent category)"))))
+            .al_init_rows(self$results$goodnessOfFit, c("gof_deviance", "gof_hl"),
+                list(list(test = "Deviance"), list(test = "Hosmer-Lemeshow")))
+            .al_init_rows(self$results$discrimination, "disc_auc", list(list(metric = "AUC")))
         },
 
         .initCorrelationMatrix = function() {
@@ -386,7 +400,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             bt_skipped <- character(0)
 
             if (length(covs) == 0) {
-                self$results$linearity$addRow(rowKey = "lin_none", values = list(
+                .al_add_row(self$results$linearity, "lin_none", values = list(
                     predictor = .("Not applicable"),
                     statistic = NA_real_,
                     p = NA_real_,
@@ -459,7 +473,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         if (!is.na(p_val) && p_val < .05)
                             bt_significant <- bt_significant + 1
 
-                        self$results$linearity$addRow(rowKey = paste0("lin_", predictor), values = list(
+                        .al_add_row(self$results$linearity, paste0("lin_", predictor), values = list(
                             predictor = predictor,
                             statistic = stat_val,
                             p = p_val,
@@ -512,7 +526,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             deviance_df <- model$df.residual
             deviance_p <- pchisq(deviance_val, deviance_df, lower.tail = FALSE)
 
-            self$results$goodnessOfFit$addRow(rowKey = "gof_deviance", values = list(
+            .al_add_row(self$results$goodnessOfFit, "gof_deviance", values = list(
                 test = "Deviance",
                 statistic = deviance_val,
                 p = deviance_p,
@@ -548,7 +562,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 hl_reason <- .("Could not be computed - the predicted probabilities are not spread out enough to form 10 distinct groups (too few observations or too little variation in fitted probabilities).")
         
 
-            self$results$goodnessOfFit$addRow(rowKey = "gof_hl", values = list(
+            .al_add_row(self$results$goodnessOfFit, "gof_hl", values = list(
                 test = "Hosmer-Lemeshow",
                 statistic = if (!is.null(hl_test)) hl_test$statistic else NA_real_,
                 p = if (!is.null(hl_test)) hl_test$p.value else NA_real_,
@@ -606,7 +620,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 auc_reason <- .("Could not be computed for this model's predicted probabilities.")
             }
         
-            self$results$discrimination$addRow(rowKey = "disc_auc", values = list(metric = "AUC", value = auc_val))
+            .al_add_row(self$results$discrimination, "disc_auc", values = list(metric = "AUC", value = auc_val))
             if (!is.null(auc_reason))
                 tryCatch(
                     self$results$discrimination$addFootnote(col = "value", note = auc_reason, rowKey = "disc_auc"),
@@ -659,7 +673,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             add_multi <- function(diagnostic, item, statistic, value, reason = NULL) {
                 multi_i <<- multi_i + 1
                 key <- paste0("multi_", multi_i)
-                self$results$multicollinearity$addRow(rowKey = key, values = list(
+                .al_add_row(self$results$multicollinearity, key, values = list(
                     diagnostic = diagnostic, item = item, statistic = statistic,
                     value = if (is.na(value)) NA_real_ else value
                 ))
@@ -844,9 +858,9 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                         }
                     }
-                    pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                    .al_add_row(pearsonTable, rowVar, values = pearsonVals)
                     for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
-                    dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                    .al_add_row(dcorTable, rowVar, values = dcorVals)
                     for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                 }
 
@@ -881,7 +895,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 gap <- pr$dcor - abs(pr$pearsonR)
                 if (gap <= gapThreshold) next()
                 flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
-                compTable$addRow(rowKey = key, values = list(
+                .al_add_row(compTable, key, values = list(
                     var1 = pr$v1, var2 = pr$v2,
                     pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
                     dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
@@ -951,7 +965,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
                 if (cooks_ok || leverage_ok) {
                     n_influential <- n_influential + 1
-                    self$results$influence$addRow(rowKey = paste0("case_", i), values = list(
+                    .al_add_row(self$results$influence, paste0("case_", i), values = list(
                         case = i,
                         cooksD = clean_num(cooks_d[i]),
                         leverage = clean_num(leverage_vals[i])
@@ -1014,7 +1028,7 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             for (i in seq_along(ors)) {
                 p_val <- p_values_by_name[i]
-                self$results$oddsRatios$addRow(rowKey = paste0("or_", i), values = list(
+                .al_add_row(self$results$oddsRatios, paste0("or_", i), values = list(
                     predictor = strip_qname(names(ors)[i]),
                     or = ors[i],
                     ciLower = if (!is.null(ci) && nrow(ci) >= i) ci[i, 1] else NA,

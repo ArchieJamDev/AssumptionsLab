@@ -112,6 +112,20 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .init = function() {
             private$.initCorrelationMatrix()
+
+            # Rows whose keys are known from the options alone, with their
+            # labels; .run() fills them with setRow() (via .al_add_row()).
+            # ES: Filas cuyas claves se conocen solo con las opciones, con sus
+            # etiquetas; .run() las rellena con setRow() (vía .al_add_row()).
+            . <- .al_lang(self$options)$tr
+            ds_items <- list(.("Model"), .("Total cases"), .("Complete cases used"),
+                             .("Cases excluded for missing data"), .("Number of factors"),
+                             .("Number of covariates"), .("Number of observed cells"),
+                             .("Minimum cell size"), .("Maximum cell size"), .("Max/min ratio"))
+            .al_init_rows(self$results$designSummary, paste0("ds_", seq_along(ds_items)),
+                          lapply(ds_items, function(x) list(item = x)))
+            norm <- .al_norm_battery_labels(.)
+            .al_init_rows(self$results$residualNormality, paste0("norm_", seq_along(norm)), norm)
         },
 
         .initCorrelationMatrix = function() {
@@ -458,7 +472,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             add_table_row <- function(table, key, values) {
-                table$addRow(rowKey = key, values = values)
+                .al_add_row(table, key, values = values)
             }
 
             dep <- self$options$dep
@@ -1479,9 +1493,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                 dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                             }
                         }
-                        pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                        .al_add_row(pearsonTable, rowVar, values = pearsonVals)
                         for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
-                        dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                        .al_add_row(dcorTable, rowVar, values = dcorVals)
                         for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                     }
 
@@ -1513,7 +1527,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     gap <- pr$dcor - abs(pr$pearsonR)
                     if (gap <= gapThreshold) next()
                     flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
-                    compTable$addRow(rowKey = key, values = list(
+                    .al_add_row(compTable, key, values = list(
                         var1 = pr$v1, var2 = pr$v2,
                         pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
                         dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),

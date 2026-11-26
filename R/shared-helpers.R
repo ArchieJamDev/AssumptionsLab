@@ -345,8 +345,71 @@
 
 .al_strip_qname <- function(x) gsub("^`|`$", "", x)
 
+# -----------------------------------------------------------------------------
+# .al_init_rows() / .al_add_row()
+#
+# Rows whose keys are known from the options alone are laid out in .init()
+# with .al_init_rows() (with their label cells, when those do not depend on
+# the data), so the table shows its final shape before .run() computes
+# anything. .run() then fills every row with .al_add_row(), which calls
+# setRow() for a row that .init() already created and addRow() for one that
+# only the data can tell (an outlying case, a factor level...). Rows keep
+# the order in which they were created.
+# ES: Las filas cuyas claves se conocen solo con las opciones se crean en
+# .init() con .al_init_rows() (con sus celdas de etiqueta, cuando no dependen
+# de los datos), así la tabla muestra su forma final antes de que .run()
+# calcule nada. .run() rellena cada fila con .al_add_row(), que usa setRow()
+# para una fila que .init() ya creó y addRow() para una que solo los datos
+# pueden decir (un caso atípico, un nivel de un factor...). Las filas
+# conservan el orden en que se crearon.
+# -----------------------------------------------------------------------------
+.al_has_row <- function(table, key) {
+    keys <- tryCatch(table$rowKeys, error = function(e) list())
+    length(keys) > 0 && isTRUE(key %in% keys)
+}
+
+.al_init_rows <- function(table, keys, values = NULL) {
+    if (is.null(table))
+        return(invisible(NULL))
+    for (i in seq_along(keys)) {
+        key <- keys[[i]]
+        if (.al_has_row(table, key))
+            next()
+        row_values <- if (is.null(values)) list() else values[[i]]
+        table$addRow(rowKey = key, values = row_values)
+    }
+    invisible(NULL)
+}
+
+# The residual-normality battery every module reports, in its table order:
+# test label and statistic symbol, for laying out its rows in .init().
+# ES: La batería de normalidad que reporta cada módulo, en el orden de su
+# tabla: etiqueta de la prueba y símbolo del estadístico, para crear sus
+# filas en .init().
+.al_norm_battery_labels <- function(.) {
+    list(
+        list(test = "Shapiro-Wilk", statistic = "W"),
+        list(test = .("Lilliefors (corrected K-S)"), statistic = "D"),
+        list(test = "Anderson-Darling", statistic = "A²"),
+        list(test = "Cram\u00e9r-von Mises", statistic = "W²"),
+        list(test = "Shapiro-Francia", statistic = "W'"),
+        list(test = .("Pearson chi-square"), statistic = "P"),
+        list(test = "Jarque-Bera", statistic = "JB"),
+        list(test = .("Skewness test"), statistic = "z"),
+        list(test = .("Kurtosis test"), statistic = "z")
+    )
+}
+
+.al_safe_key <- function(x) {
+    x <- gsub("[^A-Za-z0-9_]+", "_", x)
+    gsub("_+", "_", x)
+}
+
 .al_add_row <- function(table, key, values) {
-    table$addRow(rowKey = key, values = values)
+    if (.al_has_row(table, key))
+        table$setRow(rowKey = key, values = values)
+    else
+        table$addRow(rowKey = key, values = values)
 }
 
 # -----------------------------------------------------------------------------
