@@ -1114,9 +1114,6 @@
             "Before interpreting the model, review that every category has a reasonable number of cases and that the number of estimated parameters is small relative to the smallest category.": [
                 "Antes de interpretar el modelo, revise que cada categoría tenga un número razonable de casos y que el número de parámetros estimados sea pequeño frente a la categoría más pequeña."
             ],
-            "Behaviour of Hausman-type IIA tests": [
-                "Comportamiento de las pruebas de IIA tipo Hausman"
-            ],
             "Bentler & Chou (1987) — minimum cases:parameters ratio": [
                 "Bentler & Chou (1987) — razón mínima casos:parámetros"
             ],
@@ -1230,9 +1227,6 @@
             ],
             "Calibration plots": [
                 "Gráficos de calibración"
-            ],
-            "Cameron-Trivedi auxiliary regression": [
-                "Regresión auxiliar de Cameron-Trivedi"
             ],
             "Cameron-Trivedi auxiliary regression (z)": [
                 "Regresión auxiliar de Cameron-Trivedi (z)"
@@ -1555,14 +1549,14 @@
             "Comparison": [
                 "Comparación"
             ],
-            "Comparison Plot Style": [
-                "Estilo del Gráfico de Comparación"
-            ],
             "Comparison of three or more independent groups": [
                 "Comparación de tres o más grupos independientes"
             ],
             "Comparison of two independent groups": [
                 "Comparación de dos grupos independientes"
+            ],
+            "Comparison plot style": [
+                "Estilo del gráfico de comparación"
             ],
             "Compatible": [
                 "Compatible"
@@ -1638,9 +1632,6 @@
             ],
             "Condition index and eigenvalues:": [
                 "Índice de condición y eigenvalues:"
-            ],
-            "Condition index and variance proportions": [
-                "Índice de condición y proporciones de varianza"
             ],
             "Conditional heteroscedasticity (ARCH-LM, GARCH)": [
                 "Heterocedasticidad condicional (ARCH-LM, GARCH)"
@@ -1921,8 +1912,8 @@
             "Curvature of a specific predictor against the original model": [
                 "Curvatura de un predictor específico frente al modelo original"
             ],
-            "Curve Smoothing (bandwidth)": [
-                "Suavizado de la Curva (ancho de banda)"
+            "Curve smoothing (bandwidth)": [
+                "Suavizado de la curva (ancho de banda)"
             ],
             "Cutpoint": [
                 "Punto de corte"
@@ -1947,9 +1938,6 @@
             ],
             "Dean-Lawless and Cameron-Trivedi tests": [
                 "Pruebas de Dean-Lawless y Cameron-Trivedi"
-            ],
-            "Dean-Lawless score test": [
-                "Prueba de puntuación de Dean-Lawless"
             ],
             "Dean-Lawless score test (z)": [
                 "Prueba de puntuación de Dean-Lawless (z)"
@@ -1980,9 +1968,6 @@
             ],
             "Dependent variable by group": [
                 "Variable dependiente por grupo"
-            ],
-            "Dependent variable not selected.": [
-                "Variable dependiente no seleccionada."
             ],
             "Depends on how the data are grouped into intervals; tends to be less powerful than full-distribution tests": [
                 "Depende de cómo se agrupan los datos en intervalos; suele ser menos potente que pruebas basadas en la distribución completa"
@@ -2521,6 +2506,9 @@
             "Explained Variance (R²)": [
                 "Varianza Explicada (R²)"
             ],
+            "Explanations": [
+                "Explicaciones"
+            ],
             "Explicitly models the correlation between related observations instead of assuming independence": [
                 "Modela explícitamente la correlación entre observaciones relacionadas en vez de asumir independencia"
             ],
@@ -2599,9 +2587,6 @@
             "Final recommendation if a default test is needed:": [
                 "Recomendación final si se busca una prueba por defecto:"
             ],
-            "Finalize Model": [
-                "Finalizar Modelo"
-            ],
             "Finalize model": [
                 "Finalizar modelo"
             ],
@@ -2661,9 +2646,6 @@
             ],
             "Freedman-Diaconis": [
                 "Freedman-Diaconis"
-            ],
-            "Friedman test": [
-                "Prueba de Friedman"
             ],
             "Friedman — what it does and when to use it:": [
                 "Friedman — qué hace y cuándo usarla:"
@@ -2748,9 +2730,6 @@
             ],
             "Green (1991) — overall R² test": [
                 "Green (1991) — prueba de R² global"
-            ],
-            "Greenhouse-Geisser and lower-bound": [
-                "Greenhouse-Geisser y límite inferior"
             ],
             "Greenhouse-Geisser — what it does and when to use it:": [
                 "Greenhouse-Geisser — qué hace y cuándo usarla:"
@@ -2932,8 +2911,8 @@
             "High values indicate that a predictor is too well explained by other predictors.": [
                 "Valores altos indican que un predictor se explica demasiado bien por otros predictores."
             ],
-            "Histogram Binning Method": [
-                "Método de Agrupación del Histograma"
+            "Histogram binning method": [
+                "Método de agrupación del histograma"
             ],
             "Homogeneity of slopes": [
                 "Homogeneidad de pendientes"
@@ -3006,9 +2985,6 @@
             ],
             "IQR": [
                 "IQR"
-            ],
-            "IQR rule": [
-                "Regla del IQR"
             ],
             "IQR — what it assesses and when to use it:": [
                 "IQR — qué evalúa y cuándo usarlo:"
@@ -3186,9 +3162,6 @@
             ],
             "Independent Groups, Related Groups, ANOVA/ANCOVA, and Regression.": [
                 "Independent Groups, Related Groups, ANOVA/ANCOVA y Regression."
-            ],
-            "Independent groups": [
-                "Grupos independientes"
             ],
             "Independent-samples t-test": [
                 "t de Student para grupos independientes"
@@ -3430,8 +3403,8 @@
             "LOESS curve": [
                 "Curva LOESS"
             ],
-            "Label Cases": [
-                "Etiquetar Casos"
+            "Label cases": [
+                "Etiquetar casos"
             ],
             "Labels (a, b, c...)": [
                 "Etiquetas (a, b, c...)"
@@ -3511,17 +3484,11 @@
             "Leverage — what it assesses and a caution about the threshold:": [
                 "Leverage — qué evalúa y advertencia sobre el umbral:"
             ],
-            "Leverage, studentized residuals and DFFITS": [
-                "Leverage, residuos estudentizados y DFFITS"
-            ],
             "Like all statistical tests, failure to reject independence does not prove independence - it only means the data do not provide strong evidence against it.": [
                 "Como todas las pruebas estadísticas, no rechazar independencia no prueba independencia - solo significa que los datos no proporcionan evidencia fuerte en contra."
             ],
             "Likelihood ratio test - what it does and when to use it:": [
                 "Prueba de razón de verosimilitudes - qué hace y cuándo usarla:"
-            ],
-            "Likelihood ratio test on the boundary": [
-                "Prueba de razón de verosimilitudes en la frontera"
             ],
             "Likelihood ratio test, Poisson vs negative binomial": [
                 "Prueba de razón de verosimilitudes, Poisson vs binomial negativa"
@@ -3531,9 +3498,6 @@
             ],
             "Lilliefors (corrected K-S)": [
                 "Lilliefors (K-S corregido)"
-            ],
-            "Lilliefors (corrected Kolmogorov-Smirnov)": [
-                "Lilliefors (Kolmogorov-Smirnov corregida)"
             ],
             "Lilliefors (corrected Kolmogorov-Smirnov):": [
                 "Lilliefors (Kolmogorov-Smirnov corregido):"
@@ -3837,9 +3801,6 @@
             ],
             "Meets %d of %d criteria (see section above).": [
                 "Cumple %d de %d criterios (ver sección anterior)."
-            ],
-            "Method": [
-                "Método"
             ],
             "Method: dCor and CE p-values are obtained by permutation (B = %d permutations, seed = %d). The minimum achievable p at this resolution is %s; a p equal to this value should be read as p ≤ %s (Monte Carlo), not as an exact value.": [
                 "Método: los valores p de dCor y CE se obtienen por permutación (B = %d permutaciones, semilla = %d). El p mínimo alcanzable con esta resolución es %s; un p igual a este valor debe leerse como p ≤ %s (Monte Carlo), no como un valor exacto."
@@ -4561,12 +4522,6 @@
             "Notes and recommendation": [
                 "Notas y recomendación"
             ],
-            "Number of Groups (bins) for the Empirical Logit": [
-                "Número de Grupos (bins) para el Logit Empírico"
-            ],
-            "Number of Groups (deciles) for Calibration": [
-                "Número de Grupos (deciles) para la Calibración"
-            ],
             "Number of cases": [
                 "Número de casos"
             ],
@@ -4578,6 +4533,12 @@
             ],
             "Number of factors": [
                 "Número de factores"
+            ],
+            "Number of groups (bins) for the empirical logit": [
+                "Número de grupos (bins) para el logit empírico"
+            ],
+            "Number of groups (deciles) for calibration": [
+                "Número de grupos (deciles) para la calibración"
             ],
             "Number of measurements": [
                 "Número de mediciones"
@@ -4819,6 +4780,9 @@
             "Outlying or influential cases. At least one case activated numerical influence or outlier criteria. The recommendation is not automatic deletion, but reviewing the original value, documenting its plausibility and comparing sensitivity analyses with and without those cases.": [
                 "Casos atípicos o influyentes. Algún caso activó criterios numéricos de influencia o atipicidad. La recomendación no es eliminarlo automáticamente, sino revisar el dato original, documentar su plausibilidad y comparar análisis de sensibilidad con y sin esos casos."
             ],
+            "Output": [
+                "Salida"
+            ],
             "Outside %s": [
                 "Fuera de %s"
             ],
@@ -4839,9 +4803,6 @@
             ],
             "Overdispersion": [
                 "Sobredispersión"
-            ],
-            "Overdispersion and count regression": [
-                "Sobredispersión y regresión de recuentos"
             ],
             "Overdispersion means the counts vary more than the Poisson model allows. It is the most common problem with Poisson regression in applied data, and it is caused by unmeasured heterogeneity between cases, clustering or contagion between events.": [
                 "La sobredispersión significa que los recuentos varían más de lo que permite el modelo de Poisson. Es el problema más frecuente de la regresión de Poisson con datos aplicados, y se debe a heterogeneidad no medida entre casos, agrupamiento o contagio entre eventos."
@@ -5032,11 +4993,11 @@
             "Periodicity (seasonal frequency)": [
                 "Periodicidad (frecuencia estacional)"
             ],
-            "Permutation Seed": [
-                "Semilla de Permutación"
-            ],
             "Permutation Tests (dCor / Copula Entropy)": [
                 "Pruebas de Permutación (dCor / Entropía Copular)"
+            ],
+            "Permutation seed": [
+                "Semilla de permutación"
             ],
             "Permutations (dCor / Copula Entropy)": [
                 "Permutaciones (dCor / Entropía Copular)"
@@ -5044,8 +5005,8 @@
             "Phillips-Perron (unit root)": [
                 "Phillips-Perron (raíz unitaria)"
             ],
-            "Plot Set": [
-                "Conjunto de Gráficos"
+            "Plot set": [
+                "Conjunto de gráficos"
             ],
             "Plots": [
                 "Gráficos"
@@ -5149,9 +5110,6 @@
             "Potential influence": [
                 "Influencia potencial"
             ],
-            "Power of Shapiro-Wilk against other normality tests": [
-                "Potencia de Shapiro-Wilk frente a otras pruebas de normalidad"
-            ],
             "Powerful when normality is plausible; sensitive to non-normality.": [
                 "Potente cuando la normalidad es plausible; sensible a la no normalidad."
             ],
@@ -5220,9 +5178,6 @@
             ],
             "Proportional odds (parallel lines)": [
                 "Momios proporcionales (líneas paralelas)"
-            ],
-            "Proportional-odds model": [
-                "Modelo de momios proporcionales"
             ],
             "Pseudo-R²": [
                 "Pseudo-R²"
@@ -5422,9 +5377,6 @@
             "Related Measurements": [
                 "Mediciones Relacionadas"
             ],
-            "Related groups": [
-                "Grupos relacionados"
-            ],
             "Related-groups design": [
                 "Diseño de grupos relacionados"
             ],
@@ -5466,9 +5418,6 @@
             ],
             "Requires at least two groups": [
                 "Requiere al menos dos grupos"
-            ],
-            "Requires car package and at least two groups": [
-                "Requiere paquete car y al menos dos grupos"
             ],
             "Requires choosing the ordering variable and omitting a central band of data": [
                 "Requiere elegir la variable de ordenamiento y omitir una franja central de datos"
@@ -5650,14 +5599,8 @@
             "Rule": [
                 "Regla"
             ],
-            "Rules of thumb for the VIF": [
-                "Reglas prácticas para el VIF"
-            ],
             "Run the analysis again or check the Image result definition.": [
                 "Vuelva a ejecutar el análisis o revise la definición del resultado Image."
-            ],
-            "Runs test": [
-                "Prueba de rachas"
             ],
             "Runs test — what it actually assesses:": [
                 "Runs test — qué evalúa realmente:"
@@ -5764,9 +5707,6 @@
             "Score test": [
                 "Prueba de puntuación"
             ],
-            "Score test for zero inflation": [
-                "Prueba de puntuación para inflación de ceros"
-            ],
             "Score test: van den Broek (1995), zero-inflated Poisson vs Poisson, χ²(1).": [
                 "Prueba de puntuación: van den Broek (1995), Poisson inflado en ceros vs Poisson, χ²(1)."
             ],
@@ -5803,29 +5743,11 @@
             "Seed used for the permutation tests, for reproducibility.": [
                 "Semilla usada para las pruebas de permutación, para reproducibilidad."
             ],
-            "Select a dependent variable and a grouping variable to begin.": [
-                "Seleccione una variable dependiente y una variable de grupo para comenzar."
-            ],
-            "Select a numeric dependent variable.": [
-                "Seleccione una variable dependiente numérica."
-            ],
-            "Select at least one categorical factor for ANOVA/ANCOVA.": [
-                "Seleccione al menos un factor categórico para ANOVA/ANCOVA."
-            ],
-            "Select at least one numeric or categorical predictor.": [
-                "Seleccione al menos un predictor numérico o categórico."
-            ],
-            "Select at least one predictor.": [
-                "Seleccione al menos un predictor."
-            ],
             "Select at least one time series to run the diagnostics below.": [
                 "Seleccione al menos una serie temporal para ejecutar los diagnósticos siguientes."
             ],
             "Select at least two related measurements.": [
                 "Seleccione al menos dos mediciones relacionadas."
-            ],
-            "Select at least two related numeric variables.": [
-                "Seleccione al menos dos variables numéricas relacionadas."
             ],
             "Select the numeric variable(s) representing the time series to evaluate. Univariate models (ARIMA, SARIMA, ETS, GARCH) use a single series; multivariate models (VAR, VECM) allow several.": [
                 "Seleccione la(s) variable(s) numérica(s) que representan la serie temporal a evaluar. Los modelos univariados (ARIMA, SARIMA, ETS, GARCH) usan una sola serie; los modelos multivariados (VAR, VECM) permiten varias."
@@ -5889,6 +5811,9 @@
             ],
             "Show": [
                 "Mostrar"
+            ],
+            "Show the fixed explanations: the introduction and the guides on how to read each test and plot. Uncheck for a compact report; the applied interpretations of your own results are always shown.": [
+                "Muestra las explicaciones fijas: la introducción y las guías para leer cada prueba y gráfico. Desmárquela para un informe compacto; las interpretaciones aplicadas a sus propios resultados se muestran siempre."
             ],
             "Showing %s individual trajectories from %s cases to preserve readability.": [
                 "Se muestran %s trayectorias individuales de %s casos para mantener legibilidad."
@@ -6006,12 +5931,6 @@
             ],
             "Some factor × covariate interaction was relevant.": [
                 "Alguna interacción factor × covariable fue relevante."
-            ],
-            "Source": [
-                "Fuente"
-            ],
-            "Sources": [
-                "Fuentes"
             ],
             "Spearman |residuals| vs fitted": [
                 "Spearman |residuos| vs ajustados"
@@ -7402,9 +7321,6 @@
             "VIF >= 5 is a moderate concern; VIF >= 10 is a severe problem.": [
                 "VIF >= 5 es una alerta moderada; VIF >= 10 es un problema severo."
             ],
-            "VIF and tolerance": [
-                "VIF y tolerancia"
-            ],
             "VIF and tolerance describe how much each model term overlaps with the others; the eigenvalue/condition index diagnose collinearity across the whole design matrix at once.": [
                 "VIF y tolerancia describen cuánto se solapa cada término del modelo con los demás; el eigenvalue/índice de condición diagnostican la colinealidad en toda la matriz de diseño a la vez."
             ],
@@ -7551,9 +7467,6 @@
             ],
             "Welch — what it does and when to use it:": [
                 "Welch — qué hace y cuándo usarla:"
-            ],
-            "Welch's t and F tests": [
-                "Pruebas t y F de Welch"
             ],
             "Welch's t-test is a useful robust parametric option. Mann-Whitney U is appropriate when the analyst prioritizes a non-parametric interpretation or when distributional concerns are considered substantively important.": [
                 "La t de Welch es una opción paramétrica robusta útil. La U de Mann-Whitney es apropiada cuando se prioriza una interpretación no paramétrica o cuando las preocupaciones distribucionales se consideran sustantivamente importantes."
@@ -7761,9 +7674,6 @@
             ],
             "Why it matters: unequal variances mainly threaten the classical F-test when group sizes are also unequal; with equal group sizes, ANOVA is fairly robust to moderate variance differences.": [
                 "Por qué importa: las varianzas desiguales amenazan principalmente a la prueba F clásica cuando además los tamaños de grupo son desiguales; con tamaños de grupo iguales, el ANOVA es bastante robusto a diferencias moderadas de varianza."
-            ],
-            "Wilcoxon signed-rank test": [
-                "Prueba de rangos con signo de Wilcoxon"
             ],
             "Wilcoxon signed-rank — what it does and when to use it:": [
                 "Wilcoxon signed-rank — qué hace y cuándo usarla:"
