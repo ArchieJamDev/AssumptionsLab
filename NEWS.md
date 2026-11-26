@@ -1,4 +1,4 @@
-# AssumptionsLab 1.8.0 (unreleased)
+# AssumptionsLab 1.8.0 (2026-11-26)
 
 ## New analysis: Count and Rate Regression (Poisson / Negative Binomial)
 
