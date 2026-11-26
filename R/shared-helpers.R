@@ -676,7 +676,8 @@
 #
 # Input: x, y - numeric vectors of equal length; B - number of permutations
 #   used to build the null distribution (default 199, matching every
-#   calling module's hardcoded default).
+#   calling module's hardcoded default); seed - fixed seed, restored on
+#   exit (see .al_local_seed()).
 # Output: list(ce=, p=) with the observed copula entropy (copent::copent())
 #   and its permutation p-value, or NULL if the copent package is
 #   unavailable or the observed value cannot be computed.
@@ -709,9 +710,15 @@
 # preservando su propio valor de B por defecto y sin tocar ningún sitio
 # de llamada.
 # -----------------------------------------------------------------------------
-.al_copent_test <- function(x, y, B = 199) {
+.al_copent_test <- function(x, y, B = 199, seed = 20260704) {
     if (!requireNamespace("copent", quietly = TRUE))
         return(NULL)
+
+    # Same fixed seed as .al_dcor_test(), restored on exit: the estimator
+    # and the permutations draw random numbers, and the report must be the
+    # same on every run without touching the session's random state.
+    # ES: Misma semilla fija que .al_dcor_test(), restaurada al salir.
+    .al_local_seed(seed)
 
     x <- as.numeric(x); y <- as.numeric(y)
     obs <- tryCatch(copent::copent(cbind(x, y)), error = function(e) NA_real_)

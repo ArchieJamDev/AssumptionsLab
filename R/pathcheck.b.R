@@ -291,8 +291,8 @@ pathCheckClass <- R6::R6Class(
         # (shared-helpers.R) en vez de reimplementar localmente la misma
         # prueba de entropía copular basada en permutaciones — el cuerpo
         # era idéntico byte a byte.
-        .copentTest = function(x, y, B = 999) {
-            .al_copent_test(x, y, B = B)
+        .copentTest = function(x, y, B = 999, seed = 2026) {
+            .al_copent_test(x, y, B = B, seed = seed)
         },
 
         # -----------------------------------------------------------------------------
@@ -1433,7 +1433,7 @@ pathCheckClass <- R6::R6Class(
                     x <- covData[[v1]]; y <- covData[[v2]]
                     ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)
                     dRes <- tryCatch(private$.dCorTest(x, y, B = B_perm), error = function(e) NULL)
-                    ceRes <- if (hasCopent) tryCatch(private$.copentTest(x, y, B = B_perm), error = function(e) NULL) else NULL
+                    ceRes <- if (hasCopent) tryCatch(private$.copentTest(x, y, B = B_perm, seed = seed_perm), error = function(e) NULL) else NULL
                     isConnected <- any(vapply(edges, function(e)
                         (identical(e$pred, v1) && identical(e$dep, v2)) ||
                         (identical(e$pred, v2) && identical(e$dep, v1)), logical(1)))
