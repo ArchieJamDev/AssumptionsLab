@@ -28,6 +28,7 @@ assumptionLibraryOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                     "sphericity",
                     "proportionalOdds",
                     "independenceIrrelevantAlternatives",
+                    "countModels",
                     "robust"),
                 default="all")
 
@@ -82,6 +83,10 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
         independenceIrrelevantAlternativesTable = function() private$.items[["independenceIrrelevantAlternativesTable"]],
         independenceIrrelevantAlternativesGuide2 = function() private$.items[["independenceIrrelevantAlternativesGuide2"]],
         independenceIrrelevantAlternativesSources = function() private$.items[["independenceIrrelevantAlternativesSources"]],
+        countModels = function() private$.items[["countModels"]],
+        countModelsTable = function() private$.items[["countModelsTable"]],
+        countModelsGuide2 = function() private$.items[["countModelsGuide2"]],
+        countModelsSources = function() private$.items[["countModelsSources"]],
         robust = function() private$.items[["robust"]],
         robustTable = function() private$.items[["robustTable"]],
         robustGuide2 = function() private$.items[["robustGuide2"]],
@@ -422,6 +427,41 @@ assumptionLibraryResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R
                         `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="countModels",
+                title="Equidispersion and Excess Zeros",
+                content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">What it evaluates:</p><p style=\"margin: 0 0 0.6em 0;\">The Poisson model assumes the variance of the count equals its mean (equidispersion), and both the Poisson and the negative binomial models assume their own distribution produces the zeros in the data. Overdispersion (variance above the mean) and excess zeros (more zeros than the model expects) are the two most common departures in applied count data (Cameron &amp; Trivedi, 2013).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Where it is used in AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">countCheck (Poisson and negative binomial regression, with an optional exposure offset).</p><p style=\"margin: 0 0 0.6em 0;\">It does not apply to linear, logistic, ordinal or multinomial regression, whose outcomes are not counts.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Why it matters:</p><p style=\"margin: 0 0 0.6em 0;\">Under overdispersion, a Poisson model keeps roughly correct rate ratios but understates their standard errors, so confidence intervals are too narrow and p-values too small. Excess zeros that neither model reproduces usually signal a separate process, such as a group of cases that cannot experience the event at all.</p></div>"))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="countModelsTable",
+                title="",
+                content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: 0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Diagnostic / alternative</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">What it does</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">When to use it</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Main limitation</th></tr></thead><tbody><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Pearson dispersion ratio</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Divides the Pearson chi-square by its degrees of freedom; about 1 under the Poisson model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">As the first, descriptive check of any Poisson fit</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">A ratio, not a test; with small means it can be unreliable</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Dean-Lawless and Cameron-Trivedi tests</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Test the Poisson model against negative binomial overdispersion, var = mu + alpha mu^2</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">To confirm formally what the ratio suggests</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Very sensitive in large samples, where a trivial excess of variance becomes significant</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Likelihood ratio test, Poisson vs negative binomial</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Compares the two fits; the p-value is halved because alpha = 0 lies on the boundary</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">To decide between the two models</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Needs the negative binomial fit to converge; glm.nb() warns when there is no overdispersion</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Observed vs expected zeros and van den Broek score test</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Compares the observed zeros with the zeros each model predicts; the score test checks a zero-inflated Poisson against the Poisson model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">When the outcome has many zeros</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">The score test is confounded by overdispersion; read it with the negative binomial expected zeros</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Negative binomial, zero-inflated and hurdle models</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Model the extra variance, or a separate process for the zeros</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">When overdispersion or excess zeros are confirmed</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Zero-inflated and hurdle models need a substantive justification for the extra process</td></tr></tbody></table></div>"))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="countModelsGuide2",
+                title="",
+                content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Overdispersion tests - what they evaluate and their limitations:</p><p style=\"margin: 0 0 0.6em 0;\">The Dean-Lawless score test (Dean &amp; Lawless, 1989) and the Cameron-Trivedi auxiliary regression (Cameron &amp; Trivedi, 1990) both test H0: equidispersion against H1: overdispersion of the negative binomial form. They only need the Poisson fit. Like any test, they become very sensitive in large samples, so the dispersion ratio and the mean-variance plot should be read alongside them.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Likelihood ratio test - what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Compares the Poisson and negative binomial log-likelihoods. Because the Poisson model is the negative binomial with alpha = 0, a value on the boundary of the parameter space, the statistic follows a 50:50 mixture of 0 and chi-square(1), so the usual p-value is halved (Self &amp; Liang, 1987).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Excess zeros - what it evaluates and its limitations:</p><p style=\"margin: 0 0 0.6em 0;\">The observed number of zeros is compared with the sum of each case's fitted probability of a zero under each model. van den Broek's (1995) score test compares a zero-inflated Poisson model with the Poisson model; overdispersion alone also produces extra zeros, so a significant result does not by itself justify a zero-inflated model.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">A Pearson ratio close to 1 and non-significant tests are compatible with equidispersion. A ratio clearly above 1 with significant tests indicates overdispersion; a ratio clearly below 1 indicates underdispersion.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">With overdispersion, prefer the negative binomial model (or at least robust standard errors). If the negative binomial still under-predicts the zeros, consider a zero-inflated or hurdle model and justify the extra process substantively. With underdispersion, consider a generalized Poisson or Conway-Maxwell-Poisson model.</p></div>"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="countModelsSources",
+                title="Sources",
+                rows=0,
+                refs=list(
+                    "cameron_2013",
+                    "dean_1989",
+                    "cameron_1990",
+                    "self_1987",
+                    "van_den_broek_1995"),
+                columns=list(
+                    list(
+                        `name`="method", 
+                        `title`="Method", 
+                        `type`="text"),
+                    list(
+                        `name`="source", 
+                        `title`="Source", 
+                        `type`="text"))))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="robust",
                 title="Transformations and robust alternatives",
                 content="<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">What they assess:</p><p style=\"margin: 0 0 0.6em 0;\">These are not assumptions in themselves, but methodological responses when a specific assumption is not defensible or when results are sensitive to important deviations from it.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Where they're used in AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">Independent Groups, Related Groups, ANOVA/ANCOVA, and Regression.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">How to choose among them:</p><p style=\"margin: 0 0 0.6em 0;\">The right alternative depends on which specific assumption fails, not on a general preference for \"robust\" methods. Switching methods without first identifying which assumption was violated tends to complicate interpretation without solving the real problem.</p></div>"))
@@ -528,6 +568,10 @@ assumptionLibraryBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Cl
 #'   \code{results$independenceIrrelevantAlternativesTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$independenceIrrelevantAlternativesGuide2} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$independenceIrrelevantAlternativesSources} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$countModels} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$countModelsTable} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$countModelsGuide2} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$countModelsSources} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$robust} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$robustTable} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$robustGuide2} \tab \tab \tab \tab \tab a html \cr

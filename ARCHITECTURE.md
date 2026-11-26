@@ -237,6 +237,12 @@ builders, plot color derivation, the normality/stationarity batteries.
 A new duplicate belongs there, not copy-pasted into a third file. See
 DEVELOPER_GUIDE.md §13.
 
+`R/count-helpers.R` holds the numerical core of Count and Rate Regression
+(`countCheck`): plain functions with no jmvcore dependency, so the tests
+and `validation/countcheck_verification.R` can check each statistic
+without running a jamovi analysis. A new analysis with a substantial
+numerical core can follow the same split.
+
 ### jamovi/
 
 Defines analysis options and user interfaces. Also holds `jamovi/assets/`,

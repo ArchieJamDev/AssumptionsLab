@@ -1,0 +1,221 @@
+# -----------------------------------------------------------------------------
+# AssumptionsLab
+# A Jamovi module for statistical assumptions assessment and methodological
+# decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of AssumptionsLab.
+#
+# AssumptionsLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# AssumptionsLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AssumptionsLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+name: countCheck
+title: Count and Rate Regression
+menuTitle: Poisson / Negative Binomial
+menuGroup: Assumption Lab
+menuSubgroup: Regression
+version: '1.0.0'
+jas: '1.2'
+options:
+  - name: data
+    type: Data
+
+  # The count outcome: a non-negative whole number per case (events,
+  # visits, admissions). Non-integer or negative values block the analysis.
+  # ES: El desenlace de recuento: un número entero no negativo por caso
+  # (eventos, visitas, ingresos). Valores no enteros o negativos bloquean el
+  # análisis.
+  - name: dep
+    title: Dependent Variable (count)
+    type: Variable
+    suggested:
+      - continuous
+      - ordinal
+    permitted:
+      - numeric
+
+  # Numeric predictors of log(mu). Feed the linearity (spline) check and the
+  # partial residual plots, which only apply to numeric predictors.
+  # ES: Predictores numéricos de log(mu). Alimentan la comprobación de
+  # linealidad (spline) y los gráficos de residuos parciales, que solo
+  # aplican a predictores numéricos.
+  - name: covs
+    title: Numeric Predictors
+    type: Variables
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    default: null
+
+  # Categorical predictors of log(mu).
+  # ES: Predictores categóricos de log(mu).
+  - name: factors
+    title: Categorical Predictors
+    type: Variables
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+    default: null
+
+  # Optional exposure (person-time, population at risk). It enters the
+  # model as an offset, so the coefficients describe rates instead of raw
+  # counts.
+  # ES: Exposición opcional (persona-tiempo, población en riesgo). Entra en
+  # el modelo como offset, de modo que los coeficientes describen tasas en
+  # vez de recuentos brutos.
+  - name: exposure
+    title: Exposure (offset)
+    type: Variable
+    suggested:
+      - continuous
+    permitted:
+      - numeric
+    default: null
+
+  # Whether the exposure variable holds the raw exposure (its log is taken,
+  # so it must be positive) or is already on the log scale.
+  # ES: Si la variable de exposición contiene la exposición bruta (se toma
+  # su logaritmo, así que debe ser positiva) o ya está en escala
+  # logarítmica.
+  - name: exposureScale
+    title: Exposure scale
+    type: List
+    options:
+      - title: Exposure (log taken automatically)
+        name: raw
+      - title: Already on the log scale
+        name: log
+    default: raw
+
+  # The model whose residuals, linearity, influence and rate ratios are
+  # diagnosed. The overdispersion and zero checks always compare both.
+  # ES: El modelo cuyos residuos, linealidad, influencia y razones de tasas
+  # se diagnostican. Las comprobaciones de sobredispersión y ceros siempre
+  # comparan ambos.
+  - name: family
+    title: Model to diagnose
+    type: List
+    options:
+      - title: Poisson
+        name: poisson
+      - title: Negative binomial
+        name: negbin
+    default: poisson
+
+  # Master switch for the whole diagnostic-plots block.
+  # ES: Interruptor maestro para todo el bloque de gráficos diagnósticos.
+  - name: showPlots
+    title: Diagnostic plots
+    type: Bool
+    default: true
+    description: Uncheck for a text-only report.
+
+  # -----------------------------------------------------------------------------
+  # Area: dispersion and zeros.
+  # ES: Área: dispersión y ceros.
+  # -----------------------------------------------------------------------------
+  # Mean-variance plot: observed variance against observed mean in groups
+  # of fitted values, with the Poisson and negative binomial variance
+  # functions.
+  # ES: Gráfico media-varianza: varianza observada frente a media observada
+  # en grupos de valores ajustados, con las funciones de varianza de Poisson
+  # y binomial negativa.
+  - name: dispShowPlots
+    title: Mean-variance plot
+    type: Bool
+    default: true
+
+  # Observed vs expected frequency of each count value (0, 1, 2, ...).
+  # ES: Frecuencia observada vs esperada de cada valor del recuento.
+  - name: zeroShowPlots
+    title: Observed vs expected frequencies
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: residuals.
+  # ES: Área: residuos.
+  # -----------------------------------------------------------------------------
+  - name: residShowPlots
+    title: Residual plots
+    type: Bool
+    default: true
+
+  # LOESS curve over the residuals-vs-fitted plot, to make a trend visible.
+  # ES: Curva LOESS sobre el gráfico de residuos vs ajustados, para hacer
+  # visible una tendencia.
+  - name: residSmoother
+    title: LOESS curve
+    type: Bool
+    default: true
+
+  # -----------------------------------------------------------------------------
+  # Area: linearity on the log scale.
+  # ES: Área: linealidad en la escala logarítmica.
+  # -----------------------------------------------------------------------------
+  - name: linShowPlots
+    title: Partial residual plots
+    type: Bool
+    default: true
+
+  # Curve drawn over the partial residuals, next to the straight line the
+  # model assumes.
+  # ES: Curva dibujada sobre los residuos parciales, junto a la recta que
+  # supone el modelo.
+  - name: linSmoother
+    title: Smoother
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: LOESS
+        name: loess
+    default: loess
+
+  # -----------------------------------------------------------------------------
+  # Area: influence.
+  # ES: Área: influencia.
+  # -----------------------------------------------------------------------------
+  - name: influenceShowPlots
+    title: Influence plots
+    type: Bool
+    default: true
+
+  # Which cases get a text label on the Cook's D plot. Affects only the
+  # plot, never which cases are listed in the influence table.
+  # ES: Qué casos reciben una etiqueta en el gráfico de Cook's D. Afecta
+  # solo al gráfico, nunca a qué casos se listan en la tabla de influencia.
+  - name: influenceLabelMode
+    title: Label Cases
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: High Cook's D
+        name: cooks
+      - title: High Leverage
+        name: leverage
+      - title: Top 5 Influence
+        name: top5
+    default: top5
+
+  - name: influenceShowThreshold
+    title: Threshold line
+    type: Bool
+    default: true

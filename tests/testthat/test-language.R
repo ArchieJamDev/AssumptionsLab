@@ -47,3 +47,12 @@ test_that("groupCheck report follows the language, with no cache", {
     check_language_cycle(AssumptionsLab::groupCheck,
         data = sub, dep = "y", group = "g")
 })
+
+test_that("countCheck report follows the language, with no cache", {
+    set.seed(20261123)
+    count_data <- data.frame(y = rpois(60, 2), x1 = rnorm(60),
+        g = factor(rep(c("a", "b", "c"), each = 20)))
+    out <- check_language_cycle(AssumptionsLab::countCheck,
+        data = count_data, dep = "y", covs = "x1", factors = "g")
+    expect_true(grepl("Sobredispersión", out$es, fixed = TRUE))
+})
