@@ -174,13 +174,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 invisible(TRUE)
             }
 
-            set_visible_safe <- function(name, visible) {
-                element <- tryCatch(self$results[[name]], error = function(e) NULL)
-                if (is.null(element)) return(invisible(FALSE))
-                tryCatch(element$setVisible(visible), error = function(e) invisible(FALSE))
-                invisible(TRUE)
-            }
-
             # -----------------------------------------------------------------------------
             # Statistical helpers shared by every model.
             # ES: Auxiliares estadísticos compartidos por todos los modelos.
@@ -667,20 +660,17 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             # -----------------------------------------------------------------------------
-            # Plot visibility: each plot's private data field is populated only when
-            # that plot is applicable and computable, so visibility is just whether
-            # showPlots is on and the corresponding data field ended up non-empty.
-            # ES: Visibilidad de gráficos: el campo privado de datos de cada gráfico
-            # solo se llena cuando ese gráfico aplica y es calculable, así que la
-            # visibilidad es simplemente si showPlots está activo y el campo de datos
-            # correspondiente terminó con contenido.
+            # Plot visibility is declared in timecheck.r.yaml (showPlots and the model
+            # each plot applies to). Here, once the series are selected, a plot that
+            # applies to the model but could not be computed gets an error that says
+            # why, instead of an empty frame.
+            # ES: La visibilidad de los gráficos se declara en timecheck.r.yaml
+            # (showPlots y el modelo al que aplica cada gráfico). Aquí, con las series
+            # ya seleccionadas, un gráfico que aplica al modelo pero no pudo calcularse
+            # recibe un error que explica por qué, en vez de un marco vacío.
             # -----------------------------------------------------------------------------
-            plots_on <- isTRUE(self$options$showPlots)
-            set_visible_safe("seriesPlot", plots_on && !is.null(private$.plotSeriesData) && nrow(private$.plotSeriesData) > 0)
-            set_visible_safe("acfPlot", plots_on && !is.null(private$.plotAcfData))
-            set_visible_safe("pacfPlot", plots_on && !is.null(private$.plotPacfData))
-            set_visible_safe("residualsPlot", plots_on && !is.null(private$.plotResidualsData))
-            set_visible_safe("volatilityPlot", plots_on && !is.null(private$.plotVolatilityData))
+            if (isTRUE(self$options$showPlots) && is.null(notice))
+                private$.setPlotErrors(model, .)
 
             private$.fillFoundations(model, txt, html_block, set_html_safe)
 
@@ -1669,18 +1659,53 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # data.frame directamente — así que esta guarda desenvuelve cualquiera de
         # las dos formas antes de verificar que esté presente y no vacía.
         .requirePlot = function(image) {
-            . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
+            # No data: either nothing is selected yet (the image stays empty) or
+            # .setPlotErrors() already gave the image its error in .run().
+            # ES: Sin datos: o aún no hay nada seleccionado (la imagen queda vacía)
+            # o .setPlotErrors() ya le dio su error a la imagen en .run().
             st <- image$state
             d <- if (is.list(st) && !is.data.frame(st)) st$data else st
-            if (is.null(st) || is.null(d) || (is.data.frame(d) && nrow(d) == 0)) {
-                image$setError(.("No plot data are available."))
+            if (is.null(st) || is.null(d) || (is.data.frame(d) && nrow(d) == 0))
                 return(FALSE)
-            }
 
             TRUE
+        },
+
+        # -----------------------------------------------------------------------------
+        # Gives each plot that applies to the chosen model, but has no data after
+        # the diagnostics ran, an error that explains why. Which plots apply to
+        # which model mirrors the visible: expressions in timecheck.r.yaml.
+        # ES: Da a cada gráfico que aplica al modelo elegido, pero quedó sin datos
+        # tras los diagnósticos, un error que explica por qué. Qué gráficos aplican
+        # a qué modelo replica las expresiones visible: de timecheck.r.yaml.
+        # -----------------------------------------------------------------------------
+        .setPlotErrors = function(model, .) {
+            no_data <- function(d) is.null(d) || (is.data.frame(d) && nrow(d) == 0)
+            set_error <- function(name, message) {
+                image <- tryCatch(self$results[[name]], error = function(e) NULL)
+                if (!is.null(image))
+                    tryCatch(image$setError(message), error = function(e) NULL)
+            }
+
+            if (no_data(private$.plotSeriesData))
+                set_error("seriesPlot", .("The series could not be plotted because no complete observations are available."))
+
+            if (model %in% c("arima", "sarima", "ets", "garch")) {
+                if (no_data(private$.plotAcfData))
+                    set_error("acfPlot", .("The autocorrelation function could not be computed because there are too few complete observations."))
+                if (no_data(private$.plotPacfData))
+                    set_error("pacfPlot", .("The partial autocorrelation function could not be computed because there are too few complete observations."))
+                if (no_data(private$.plotResidualsData))
+                    set_error("residualsPlot", .("No residuals are available because there are too few complete observations or the model could not be fitted."))
+            }
+
+            if (model == "garch" && no_data(private$.plotVolatilityData))
+                set_error("volatilityPlot", .("No conditional volatility is available because there are too few complete observations or the GARCH model could not be fitted."))
+
+            invisible(NULL)
         },
 
         .plotSeries = function(image, ggtheme, theme, ...) {

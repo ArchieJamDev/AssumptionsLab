@@ -724,13 +724,24 @@ pathCheckClass <- R6::R6Class(
             # necesita es peso innecesario en cada archivo de resultados
             # exportado o guardado). Coincide con cómo se empaqueta el estado en
             # el resto de la suite (p. ej. ordcheck.b.R/groupcheck.b.R).
-            pathFitsForPlots <- lapply(fits, function(f) list(
+            # Each plot gets only its own pieces: the diagram reads the
+            # coefficient table, R² and the standard deviations of the
+            # equation's variables (for the standardized betas); the residual
+            # plots read only the residuals.
+            # ES: Cada gráfico recibe solo sus piezas: el diagrama lee la tabla
+            # de coeficientes, el R² y las desviaciones típicas de las variables
+            # de la ecuación (para las betas estandarizadas); los gráficos de
+            # residuos leen solo los residuos.
+            diagramFits <- lapply(fits, function(f) list(
                 coefficients = summary(f$fit)$coefficients,
                 r2           = summary(f$fit)$r.squared,
-                residuals    = stats::residuals(f$fit)
+                sds          = vapply(f$data, function(v) tryCatch(stats::sd(v), error = function(e) NA_real_), numeric(1))
             ))
-            self$results$pathDiagram$setState(list(fits = pathFitsForPlots))
-            self$results$residualPlots$setState(list(fits = pathFitsForPlots))
+            residualFits <- lapply(fits, function(f) list(
+                residuals = stats::residuals(f$fit)
+            ))
+            self$results$pathDiagram$setState(list(fits = diagramFits))
+            self$results$residualPlots$setState(list(fits = residualFits))
 
             if (length(fits) == 0) return()
 
@@ -2046,9 +2057,14 @@ pathCheckClass <- R6::R6Class(
                             if (identical(edgeLabelMode, "coef")) {
                                 label <- sprintf("%.3f%s", co[rn, "Estimate"], stars)
                             } else {
+                                # sds is stored with the state; $data only in
+                                # states saved before 1.8.1.
+                                # ES: sds se guarda en el state; $data solo en
+                                # los guardados antes de la 1.8.1.
+                                sds <- fits[[e$dep]]$sds
                                 d <- fits[[e$dep]]$data
-                                sdY <- stats::sd(d[[e$dep]])
-                                sdX <- stats::sd(d[[e$pred]])
+                                sdY <- if (!is.null(sds) && e$dep %in% names(sds)) sds[[e$dep]] else if (!is.null(d)) stats::sd(d[[e$dep]]) else NA_real_
+                                sdX <- if (!is.null(sds) && e$pred %in% names(sds)) sds[[e$pred]] else if (!is.null(d)) stats::sd(d[[e$pred]]) else NA_real_
                                 beta <- co[rn, "Estimate"] * (sdX / sdY)
                                 label <- sprintf("%.3f%s", beta, stars)
                             }

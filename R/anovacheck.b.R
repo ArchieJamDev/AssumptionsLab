@@ -619,12 +619,19 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # resultados, y ese sí sobrevive a ese contexto de exportación. Sin
             # esto, estos gráficos se ven bien en pantalla pero exportan en
             # blanco (hallazgo de la revisión de jamovi).
-            self$results$residualsFittedPlot$setState(private$.plotData)
-            self$results$qqResidualsPlot$setState(private$.plotData)
-            self$results$residualHistogramPlot$setState(private$.plotData)
-            self$results$residualNormalCurvePlot$setState(private$.plotData)
-            self$results$residualsLeveragePlot$setState(private$.plotData)
-            self$results$cooksDPlot$setState(private$.plotData)
+            # Each plot keeps only the columns its own render function reads
+            # (the influence plots also need what .labelPlotCases() reads).
+            # ES: Cada gráfico guarda solo las columnas que lee su propia
+            # función de dibujo (los de influencia, además, lo que lee
+            # .labelPlotCases()).
+            plot_cols <- function(cols) private$.plotData[, cols, drop = FALSE]
+            influence_cols <- c("case", "leverage", "studResidual", "cooksD", "pModel")
+            self$results$residualsFittedPlot$setState(plot_cols(c("fitted", "residual")))
+            self$results$qqResidualsPlot$setState(plot_cols("stdResidual"))
+            self$results$residualHistogramPlot$setState(plot_cols("stdResidual"))
+            self$results$residualNormalCurvePlot$setState(plot_cols("stdResidual"))
+            self$results$residualsLeveragePlot$setState(plot_cols(influence_cols))
+            self$results$cooksDPlot$setState(plot_cols(influence_cols))
 
             self$results$residualsFittedGuide$setContent(plot_guide(
                 .("check for residual patterns not captured by group or cell means."),

@@ -115,7 +115,7 @@ items:
       - model
       - frequency
       - showPlots
-    visible: false
+    visible: (showPlots)
 
   - name: diagnosticsResults
     title: Test results
@@ -170,7 +170,7 @@ items:
       - model
       - frequency
       - showPlots
-    visible: false
+    visible: (showPlots && (model:arima || model:sarima || model:ets || model:garch))
 
   - name: pacfPlot
     title: Partial autocorrelation (PACF)
@@ -185,7 +185,7 @@ items:
       - model
       - frequency
       - showPlots
-    visible: false
+    visible: (showPlots && (model:arima || model:sarima || model:ets || model:garch))
 
   - name: residualsPlot
     title: Residuals over time
@@ -200,7 +200,7 @@ items:
       - model
       - frequency
       - showPlots
-    visible: false
+    visible: (showPlots && (model:arima || model:sarima || model:ets || model:garch))
 
   - name: volatilityPlot
     title: Estimated conditional volatility
@@ -215,7 +215,7 @@ items:
       - model
       - frequency
       - showPlots
-    visible: false
+    visible: (showPlots && model:garch)
 
   - name: interpretation
     title: Methodological reading

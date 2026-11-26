@@ -374,16 +374,30 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # propio setState() más abajo y en su asignación private$
             # correspondiente; las funciones de render leen image$state en
             # lugar de campos private$.
-            reg_plot_state <- list(plotData = private$.plotData, pModel = p_model)
+            # Each plot keeps only the columns its own render function reads
+            # (the influence plots also need what .labelPlotCases() reads,
+            # and the model's parameter count). The list(plotData = ...)
+            # shape is kept, so analyses saved by earlier versions still draw.
+            # ES: Cada gráfico guarda solo las columnas que lee su propia
+            # función de dibujo (los de influencia, además, lo que lee
+            # .labelPlotCases() y el número de parámetros del modelo). Se
+            # mantiene la forma list(plotData = ...), así que los análisis
+            # guardados con versiones anteriores siguen dibujándose.
+            plot_state <- function(cols, pModel = NULL) {
+                state <- list(plotData = private$.plotData[, cols, drop = FALSE])
+                if (!is.null(pModel)) state$pModel <- pModel
+                state
+            }
+            influence_cols <- c("case", "leverage", "studResidual", "cooksD")
 
-            self$results$residualsFittedPlot$setState(reg_plot_state)
-            self$results$qqResidualsPlot$setState(reg_plot_state)
-            self$results$residualHistogramPlot$setState(reg_plot_state)
-            self$results$residualNormalCurvePlot$setState(reg_plot_state)
-            self$results$scaleLocationPlot$setState(reg_plot_state)
-            self$results$residualsLeveragePlot$setState(reg_plot_state)
-            self$results$cooksDPlot$setState(reg_plot_state)
-            self$results$observedPredictedPlot$setState(reg_plot_state)
+            self$results$residualsFittedPlot$setState(plot_state(c("fitted", "residual")))
+            self$results$qqResidualsPlot$setState(plot_state("stdResidual"))
+            self$results$residualHistogramPlot$setState(plot_state("stdResidual"))
+            self$results$residualNormalCurvePlot$setState(plot_state("stdResidual"))
+            self$results$scaleLocationPlot$setState(plot_state(c("fitted", "absStdResidual")))
+            self$results$residualsLeveragePlot$setState(plot_state(influence_cols, p_model))
+            self$results$cooksDPlot$setState(plot_state(influence_cols, p_model))
+            self$results$observedPredictedPlot$setState(plot_state(c("fitted", "observed")))
 
             box_vars <- unique(c(dep, self$options$covs))
             box_vars <- box_vars[box_vars %in% names(dat2)]

@@ -218,7 +218,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "model",
                     "frequency",
                     "showPlots"),
-                visible=FALSE))
+                visible="(showPlots)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="diagnosticsResults",
@@ -272,7 +272,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "model",
                     "frequency",
                     "showPlots"),
-                visible=FALSE))
+                visible="(showPlots && (model:arima || model:sarima || model:ets || model:garch))"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="pacfPlot",
@@ -287,7 +287,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "model",
                     "frequency",
                     "showPlots"),
-                visible=FALSE))
+                visible="(showPlots && (model:arima || model:sarima || model:ets || model:garch))"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualsPlot",
@@ -302,7 +302,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "model",
                     "frequency",
                     "showPlots"),
-                visible=FALSE))
+                visible="(showPlots && (model:arima || model:sarima || model:ets || model:garch))"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="volatilityPlot",
@@ -317,7 +317,7 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "model",
                     "frequency",
                     "showPlots"),
-                visible=FALSE))
+                visible="(showPlots && model:garch)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="interpretation",
