@@ -108,6 +108,13 @@ items:
     width: 700
     height: 280
     renderFun: .plotSeries
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
     visible: false
 
   - name: diagnosticsResults
@@ -156,6 +163,13 @@ items:
     width: 460
     height: 260
     renderFun: .plotAcf
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
     visible: false
 
   - name: pacfPlot
@@ -164,6 +178,13 @@ items:
     width: 460
     height: 260
     renderFun: .plotPacf
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
     visible: false
 
   - name: residualsPlot
@@ -172,6 +193,13 @@ items:
     width: 700
     height: 260
     renderFun: .plotResiduals
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
     visible: false
 
   - name: volatilityPlot
@@ -180,6 +208,13 @@ items:
     width: 700
     height: 260
     renderFun: .plotVolatility
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
     visible: false
 
   - name: interpretation

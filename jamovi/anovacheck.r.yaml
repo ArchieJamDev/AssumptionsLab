@@ -94,6 +94,11 @@ items:
     width: 600
     height: 340
     renderFun: .plotGroupBoxplots
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
 
   - name: groupBoxplotsGuide
     title: 'Guide: Dependent variable by group'
@@ -145,6 +150,14 @@ items:
     width: 560
     height: 315
     renderFun: .plotResidualsFitted
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - residSmoother
+      - residShowBand
+      - residRefLine
 
   - name: residualsFittedGuide
     title: 'Guide: Residuals vs fitted values'
@@ -157,6 +170,11 @@ items:
     width: 560
     height: 310
     renderFun: .plotQQResiduals
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
 
   - name: qqResidualsGuide
     title: 'Guide: Residual Q-Q plot'
@@ -169,6 +187,11 @@ items:
     width: 560
     height: 300
     renderFun: .plotResidualHistogram
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
 
   - name: residualHistogramGuide
     title: 'Guide: Residual histogram'
@@ -181,6 +204,11 @@ items:
     width: 560
     height: 315
     renderFun: .plotResidualNormalCurve
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
 
   - name: residualNormalCurveGuide
     title: 'Guide: Observed distribution vs theoretical normal'
@@ -504,6 +532,13 @@ items:
     width: 600
     height: 350
     renderFun: .plotResidualsLeverage
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - influenceLabelMode
+      - influenceShowThreshold
 
   - name: residualsLeverageGuide
     title: 'Guide: Studentized residuals vs leverage'
@@ -516,6 +551,13 @@ items:
     width: 560
     height: 300
     renderFun: .plotCooksD
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - influenceLabelMode
+      - influenceShowThreshold
 
   - name: cooksDGuide
     title: "Guide: Cook's D by case"

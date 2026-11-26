@@ -41,6 +41,10 @@ items:
   - name: design
     title: Design summary
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: element
         title: Item
@@ -53,6 +57,10 @@ items:
     title: Distribution by category
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: category
         title: Category
@@ -73,6 +81,10 @@ items:
   - name: separation
     title: Complete separation
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor
@@ -99,6 +111,10 @@ items:
     type: Table
     refs:
       - box_1962
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor
@@ -143,6 +159,10 @@ items:
     refs:
       - brant_1990
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: term
         title: Term
@@ -178,6 +198,10 @@ items:
       - pulkstenis_2004
       - fagerland_2013
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: test
         title: Test
@@ -209,6 +233,10 @@ items:
   - name: discrimination
     title: Pseudo-R²
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: metric
         title: Metric
@@ -233,6 +261,10 @@ items:
     refs:
       - marquardt_1970
       - belsley_1980
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: diagnostic
         title: Diagnostic
@@ -261,6 +293,10 @@ items:
     type: Table
     rows: 0
     visible: (covs)
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var
         title: Variable
@@ -273,6 +309,10 @@ items:
     visible: (covs)
     refs:
       - sz_kely_2007
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var
         title: Variable
@@ -296,6 +336,10 @@ items:
     refs:
       - sz_kely_2007
       - ma_2011
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var1
         title: Variable 1
@@ -348,6 +392,10 @@ items:
     title: Influential cases
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: case
         title: Case
@@ -389,6 +437,10 @@ items:
   - name: coefficients
     title: Coefficients and odds ratios
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor
@@ -421,6 +473,10 @@ items:
     title: Cutpoints (intercepts)
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: cutpoint
         title: Cutpoint

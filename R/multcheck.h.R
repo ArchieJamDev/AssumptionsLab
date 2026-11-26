@@ -196,6 +196,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="design",
                 title="Design summary",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="element", 
@@ -210,6 +214,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="categoryDistribution",
                 title="Distribution by category",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="category", 
@@ -234,6 +242,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="separation",
                 title="Complete separation",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -268,6 +280,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "box_1962"),
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -321,6 +337,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "hausman_1984"),
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="category", 
@@ -364,6 +384,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "pulkstenis_2004"),
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -400,6 +424,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="discrimination",
                 title="Pseudo-R\u00B2",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="metric", 
@@ -424,6 +452,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="classification",
                 title="Observed vs predicted",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="observed", 
@@ -445,6 +477,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "marquardt_1970",
                     "belsley_1980"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="diagnostic", 
@@ -477,6 +513,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Pearson correlation matrix (APA 7 format)",
                 rows=0,
                 visible="(covs)",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -490,6 +530,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(covs)",
                 refs=list(
                     "sz_kely_2007"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -514,6 +558,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "sz_kely_2007",
                     "ma_2011"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="var1", 
@@ -575,6 +623,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="influence",
                 title="Influential cases",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -622,6 +674,10 @@ multCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="coefficients",
                 title="Coefficients and odds ratios",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="predictor", 

@@ -44,6 +44,10 @@ items:
     refs:
       - peduzzi_1996
       - firth_1993
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: element
         title: Item
@@ -60,6 +64,10 @@ items:
   - name: separation
     title: Complete separation
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor
@@ -88,6 +96,10 @@ items:
     type: Table
     refs:
       - box_1962
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor
@@ -131,6 +143,10 @@ items:
     type: Table
     refs:
       - hosmer_1980
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: test
         title: Test
@@ -174,6 +190,10 @@ items:
     type: Table
     refs:
       - hanley_1982
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: metric
         title: Metric
@@ -211,6 +231,10 @@ items:
     refs:
       - marquardt_1970
       - belsley_1980
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: diagnostic
         title: Diagnostic
@@ -239,6 +263,10 @@ items:
     type: Table
     rows: 0
     visible: (covs)
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var
         title: Variable
@@ -251,6 +279,10 @@ items:
     visible: (covs)
     refs:
       - sz_kely_2007
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var
         title: Variable
@@ -274,6 +306,10 @@ items:
     refs:
       - sz_kely_2007
       - ma_2011
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var1
         title: Variable 1
@@ -326,6 +362,10 @@ items:
     refs:
       - cook_1977
       - pregibon_1981
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: case
         title: Case
@@ -366,6 +406,10 @@ items:
     type: Table
     refs:
       - zhang_1998
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor

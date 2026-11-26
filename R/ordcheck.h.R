@@ -194,6 +194,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="design",
                 title="Design summary",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="element", 
@@ -208,6 +212,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="categoryDistribution",
                 title="Distribution by category",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="category", 
@@ -231,6 +239,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="separation",
                 title="Complete separation",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -260,6 +272,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Linearity in the cumulative logit (Box-Tidwell)",
                 refs=list(
                     "box_1962"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -309,6 +325,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "brant_1990"),
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="term", 
@@ -349,6 +369,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "pulkstenis_2004",
                     "fagerland_2013"),
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -385,6 +409,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="discrimination",
                 title="Pseudo-R\u00B2",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="metric", 
@@ -411,6 +439,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "marquardt_1970",
                     "belsley_1980"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="diagnostic", 
@@ -443,6 +475,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Pearson correlation matrix (APA 7 format)",
                 rows=0,
                 visible="(covs)",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -456,6 +492,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(covs)",
                 refs=list(
                     "sz_kely_2007"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -480,6 +520,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "sz_kely_2007",
                     "ma_2011"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="var1", 
@@ -541,6 +585,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="influence",
                 title="Influential cases",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -587,6 +635,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="coefficients",
                 title="Coefficients and odds ratios",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -625,6 +677,10 @@ ordCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="cutpoints",
                 title="Cutpoints (intercepts)",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors"),
                 columns=list(
                     list(
                         `name`="cutpoint", 

@@ -247,6 +247,14 @@ items:
     width: 620
     height: 380
     renderFun: .plotCorrelationIndividual
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - corrShowIndividual
+      - corrIndividualFit
+      - corrHighlightDiscordant
     visible: false
 
   - name: correlationIndividualGuide
@@ -260,6 +268,14 @@ items:
     width: 620
     height: 380
     renderFun: .plotCorrelationComparative
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - corrShowComparative
+      - corrComparativeStyle
+      - corrHighlightDiscordant
     visible: false
 
   - name: correlationComparativeGuide
@@ -278,6 +294,15 @@ items:
     width: 560
     height: 315
     renderFun: .plotResidualsFitted
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - linShowPlots
+      - linSmoother
+      - linShowBand
+      - linRefLine
 
   - name: residualsFittedGuide
     title: 'Guide: Residuals vs fitted values'
@@ -290,6 +315,12 @@ items:
     width: 560
     height: 315
     renderFun: .plotObservedPredicted
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - linShowPlots
 
   - name: observedPredictedGuide
     title: 'Guide: Observed vs predicted values'
@@ -302,6 +333,12 @@ items:
     width: 620
     height: 350
     renderFun: .plotPredictorEffects
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - linShowPlots
 
 
   - name: predictorEffectsGuide
@@ -354,6 +391,14 @@ items:
     width: 560
     height: 310
     renderFun: .plotQQResiduals
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - normShowPlots
+      - normQQBand
+      - normFlagOutliers
 
   - name: qqResidualsGuide
     title: 'Guide: Residual Q-Q plot'
@@ -366,6 +411,14 @@ items:
     width: 560
     height: 300
     renderFun: .plotResidualHistogram
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - normShowPlots
+      - normHistBins
+      - normCurveOverlay
 
   - name: residualHistogramGuide
     title: 'Guide: Residual histogram'
@@ -378,6 +431,12 @@ items:
     width: 560
     height: 315
     renderFun: .plotResidualNormalCurve
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - normShowPlots
 
 
   - name: residualNormalCurveGuide
@@ -435,6 +494,14 @@ items:
     width: 560
     height: 315
     renderFun: .plotScaleLocation
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - homoShowPlots
+      - homoSmoother
+      - homoShowBand
 
   - name: scaleLocationGuide
     title: 'Guide: Scale-location plot'
@@ -563,6 +630,12 @@ items:
     width: 620
     height: 360
     renderFun: .plotNumericBoxplots
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - influenceShowPlots
 
   - name: numericBoxplotsGuide
     title: 'Guide: Boxplots of numeric variables'
@@ -575,6 +648,14 @@ items:
     width: 600
     height: 350
     renderFun: .plotResidualsLeverage
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - influenceShowPlots
+      - influenceLabelMode
+      - influenceShowThreshold
 
   - name: residualsLeverageGuide
     title: 'Guide: Studentized residuals vs leverage'
@@ -587,6 +668,14 @@ items:
     width: 560
     height: 300
     renderFun: .plotCooksD
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - showPlots
+      - influenceShowPlots
+      - influenceLabelMode
+      - influenceShowThreshold
 
   - name: cooksDGuide
     title: "Guide: Cook's D by case"

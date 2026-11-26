@@ -456,6 +456,21 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=600,
                 height=400,
                 renderFun=".plotPathDiagram",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "showDiagram",
+                    "diagramEdgeLabel",
+                    "diagramShowErrors",
+                    "diagramOffsetLabels",
+                    "diagramLayout",
+                    "diagramRotate",
+                    "diagramNodeSize",
+                    "diagramShape",
+                    "diagramAbbreviate"),
                 visible="(showDiagram)"))
             self$add(jmvcore::Html$new(
                 options=options,
@@ -621,6 +636,16 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=700,
                 height=350,
                 renderFun=".plotResidualHistograms",
+                clearWith=list(
+                    "vars",
+                    "relations",
+                    "isFinalized",
+                    "permutations",
+                    "permutationSeed",
+                    "showResiduals",
+                    "residBinMethod",
+                    "residShowNormalCurve",
+                    "residFlagOutliers"),
                 visible="(isFinalized && showResiduals)"))
             self$add(jmvcore::Html$new(
                 options=options,

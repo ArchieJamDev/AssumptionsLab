@@ -124,6 +124,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="designSummary",
                 title="Design summary",
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="item", 
@@ -138,6 +140,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 name="descriptiveSummary",
                 title="Descriptives by measurement",
                 rows="(measures)",
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="measure", 
@@ -229,6 +233,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="differenceSummary",
                 title="Summary of paired differences",
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="comparison", 
@@ -273,6 +279,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                     "anderson_1952",
                     "shapiro_1972",
                     "jarque_1987"),
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="scope", 
@@ -303,6 +311,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="normalitySummary",
                 title="Normality summary by comparison",
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="comparison", 
@@ -337,6 +347,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="symmetry",
                 title="Symmetry of differences",
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="comparison", 
@@ -376,6 +388,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                     "mauchly_1940",
                     "greenhouse_1959",
                     "huynh_1976"),
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="diagnostic", 
@@ -416,6 +430,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 name="pearsonMatrixTable",
                 title="Pearson correlation matrix (APA 7 format)",
                 rows=0,
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -428,6 +444,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 refs=list(
                     "sz_kely_2007"),
                 rows=0,
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -450,6 +468,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                     "sz_kely_2007",
                     "ma_2011"),
                 rows=0,
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="var1", 
@@ -509,6 +529,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="outliers",
                 title="Outliers in differences",
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -539,6 +561,8 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 options=options,
                 name="methodOptions",
                 title="Methodological options",
+                clearWith=list(
+                    "measures"),
                 columns=list(
                     list(
                         `name`="design", 

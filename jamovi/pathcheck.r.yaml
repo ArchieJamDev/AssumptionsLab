@@ -151,6 +151,21 @@ items:
     width: 600
     height: 400
     renderFun: .plotPathDiagram
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - showDiagram
+      - diagramEdgeLabel
+      - diagramShowErrors
+      - diagramOffsetLabels
+      - diagramLayout
+      - diagramRotate
+      - diagramNodeSize
+      - diagramShape
+      - diagramAbbreviate
     visible: (showDiagram)
 
   - name: outlierGuide
@@ -299,6 +314,16 @@ items:
     width: 700
     height: 350
     renderFun: .plotResidualHistograms
+    clearWith:
+      - vars
+      - relations
+      - isFinalized
+      - permutations
+      - permutationSeed
+      - showResiduals
+      - residBinMethod
+      - residShowNormalCurve
+      - residFlagOutliers
     visible: (isFinalized && showResiduals)
 
   - name: normalityGuide

@@ -211,6 +211,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=700,
                 height=280,
                 renderFun=".plotSeries",
+                clearWith=list(
+                    "series",
+                    "dateVar",
+                    "exogenous",
+                    "model",
+                    "frequency",
+                    "showPlots"),
                 visible=FALSE))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -258,6 +265,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=460,
                 height=260,
                 renderFun=".plotAcf",
+                clearWith=list(
+                    "series",
+                    "dateVar",
+                    "exogenous",
+                    "model",
+                    "frequency",
+                    "showPlots"),
                 visible=FALSE))
             self$add(jmvcore::Image$new(
                 options=options,
@@ -266,6 +280,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=460,
                 height=260,
                 renderFun=".plotPacf",
+                clearWith=list(
+                    "series",
+                    "dateVar",
+                    "exogenous",
+                    "model",
+                    "frequency",
+                    "showPlots"),
                 visible=FALSE))
             self$add(jmvcore::Image$new(
                 options=options,
@@ -274,6 +295,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=700,
                 height=260,
                 renderFun=".plotResiduals",
+                clearWith=list(
+                    "series",
+                    "dateVar",
+                    "exogenous",
+                    "model",
+                    "frequency",
+                    "showPlots"),
                 visible=FALSE))
             self$add(jmvcore::Image$new(
                 options=options,
@@ -282,6 +310,13 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=700,
                 height=260,
                 renderFun=".plotVolatility",
+                clearWith=list(
+                    "series",
+                    "dateVar",
+                    "exogenous",
+                    "model",
+                    "frequency",
+                    "showPlots"),
                 visible=FALSE))
             self$add(jmvcore::Html$new(
                 options=options,
