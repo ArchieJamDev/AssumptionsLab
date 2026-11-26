@@ -1,4 +1,4 @@
-# AssumptionsLab (development version)
+# AssumptionsLab 1.8.0 (unreleased)
 
 ## New analysis: Count and Rate Regression (Poisson / Negative Binomial)
 
@@ -29,7 +29,7 @@
 - The Assumption Library gains a category, "Equidispersion and Excess
   Zeros".
 
-## Second jamovi review (1.7.1)
+## Second jamovi review of 1.7.1
 
 - The Assumption Library is built only from native jamovi elements. Each
   comparison table is a native `Table` (columns declared in the r.yaml,
