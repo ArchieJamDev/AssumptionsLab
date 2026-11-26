@@ -120,8 +120,8 @@ options:
     default: none
 
   - name: linBins
-    title: Number of Groups (bins) for the Empirical Logit
-    type: Number
+    title: Number of groups (bins) for the empirical logit
+    type: Integer
     min: 4
     max: 20
     default: 8
@@ -137,7 +137,7 @@ options:
     default: true
 
   - name: influenceLabelMode
-    title: Label Cases
+    title: Label cases
     type: List
     options:
       - title: None

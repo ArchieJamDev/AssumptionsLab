@@ -662,6 +662,22 @@ was removed from the library's introduction; that page stays the APA 7th
 edition home of the full list (CODE_STYLE.md §21: jamovi's own numbered
 format in-app, APA 7th in `docs/Bibliography.md`).
 
+**Library as native Text and Table elements (second jamovi review,
+minApp 28.3.0).** jamovi later moved reference rendering into the code
+shared by every result type (jamovi 2.7.7), so `refs:` attached to `Html`
+and `Text` elements are now numbered and listed like table references.
+The library therefore dropped its Sources tables: each category's prose is
+a `Text` element (jamovi's Markdown: bold lines and lists, no HTML or
+CSS) that carries the category's `refs:` directly, and each comparison
+table is a native `Table` whose columns are declared in
+`jamovi/assumptionlibrary.r.yaml` and whose rows are added in `.init()`.
+Every paragraph, list item and cell is its own `.()` entry
+(`.al_library_text()` / `.al_library_tables()` in
+`R/assumptionlibrary.b.R`), so the Spanish catalogue holds clean sentences
+and the old split around R's string-length limit is gone. The category
+filter is declared in the r.yaml as `visible: (category:all ||
+category:<name>)`, and `.run()` has nothing left to do.
+
 **Library's entire content moved to jamovi's native i18n catalog,
 `reportLang` and all.** A separate part of the same review asked Library
 to use jamovi's translation catalog instead of its own `reportLang`
@@ -747,6 +763,21 @@ biblioteca el puntero de texto a `docs/Bibliography.md`; esa página
 sigue siendo la sede en APA 7.ª edición de la lista completa
 (CODE_STYLE.md §21: formato numerado de jamovi dentro de la app, APA 7.ª
 edición en `docs/Bibliography.md`).
+
+**Library como elementos nativos Text y Table (segunda revisión de
+jamovi, minApp 28.3.0).** jamovi pasó después el dibujo de referencias al
+código común de todos los tipos de resultado (jamovi 2.7.7), así que los
+`refs:` de elementos `Html` y `Text` ya se numeran y listan como los de
+las tablas. Por eso la biblioteca quitó sus tablas Fuentes: la prosa de
+cada categoría es un elemento `Text` (Markdown de jamovi: líneas en
+negrita y listas, sin HTML ni CSS) que lleva directamente los `refs:` de
+la categoría, y cada tabla comparativa es una `Table` nativa con columnas
+declaradas en `jamovi/assumptionlibrary.r.yaml` y filas añadidas en
+`.init()`. Cada párrafo, ítem y celda es su propia entrada `.()`
+(`.al_library_text()` / `.al_library_tables()`), de modo que el catálogo
+en español guarda frases limpias y desaparece la división por el límite
+de longitud de cadenas de R. El filtro de categoría se declara en el
+r.yaml con `visible: (category:all || category:<nombre>)`.
 
 **Todo el contenido de Library se mudó al catálogo i18n nativo de jamovi,
 incluida la opción `reportLang` misma.** Otra parte de la misma revisión

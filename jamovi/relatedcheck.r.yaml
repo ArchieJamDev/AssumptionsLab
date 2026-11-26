@@ -24,12 +24,12 @@
 
 ---
 name: relatedCheck
-title: Related groups
+title: Related Groups
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Related groups
+    title: Related Groups
     type: Html
 
   - name: designGuide
@@ -88,7 +88,6 @@ items:
     clearWith:
       - measures
       - showProfilePlot
-      - plotStyle
 
   - name: differencePlot
     title: Distribution of paired differences
@@ -100,7 +99,6 @@ items:
     clearWith:
       - measures
       - showDifferencePlots
-      - plotStyle
 
   - name: normalityPlot
     title: Q-Q plots of paired differences
@@ -112,7 +110,6 @@ items:
     clearWith:
       - measures
       - showNormalityPlots
-      - plotStyle
 
 
   - name: normalCurvePlot
@@ -125,7 +122,6 @@ items:
     clearWith:
       - measures
       - showNormalityPlots
-      - plotStyle
 
 
   - name: differenceGuide

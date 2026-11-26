@@ -992,7 +992,7 @@ pathCheckClass <- R6::R6Class(
                 else
                     add_norm("Shapiro-Wilk", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, .))
 
-                # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
+                # Lilliefors / Anderson-Darling / Cramér-von Mises / Shapiro-Francia /
                 # Pearson chi-square: identical tryCatch calls in every module,
                 # consolidated in shared-helpers.R (.al_nortest_battery).
                 # ES: idénticas en todos los módulos, consolidadas en shared-helpers.R.
@@ -1010,9 +1010,9 @@ pathCheckClass <- R6::R6Class(
                     add_norm(.("Lilliefors (corrected K-S)"), NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$li, .))
 
                 if (!is.null(cvm))
-                    add_norm("Cramer-von Mises", unname(cvm$statistic), cvm$p.value)
+                    add_norm("Cram\u00e9r-von Mises", unname(cvm$statistic), cvm$p.value)
                 else
-                    add_norm("Cramer-von Mises", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
+                    add_norm("Cram\u00e9r-von Mises", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
 
                 if (!is.null(sf))
                     add_norm("Shapiro-Francia", unname(sf$statistic), sf$p.value)

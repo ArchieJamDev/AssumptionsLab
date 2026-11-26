@@ -63,7 +63,7 @@ multCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "linear",
                     "loess"),
                 default="none")
-            private$..linBins <- jmvcore::OptionNumber$new(
+            private$..linBins <- jmvcore::OptionInteger$new(
                 "linBins",
                 linBins,
                 min=4,

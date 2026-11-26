@@ -202,7 +202,7 @@ options:
   # ES: Qué casos reciben una etiqueta en el gráfico de Cook's D. Afecta
   # solo al gráfico, nunca a qué casos se listan en la tabla de influencia.
   - name: influenceLabelMode
-    title: Label Cases
+    title: Label cases
     type: List
     options:
       - title: None

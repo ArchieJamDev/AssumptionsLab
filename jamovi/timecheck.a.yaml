@@ -148,7 +148,7 @@ options:
   # ETS.
   - name: frequency
     title: Periodicity (seasonal frequency)
-    type: Number
+    type: Integer
     min: 1
     default: 12
     description: >-

@@ -133,7 +133,6 @@ items:
       - dep
       - covs
       - factors
-      - plotStyle
       - linSmoother
       - linBins
 
@@ -397,7 +396,6 @@ items:
       - dep
       - covs
       - factors
-      - plotStyle
       - influenceLabelMode
       - influenceShowThreshold
 

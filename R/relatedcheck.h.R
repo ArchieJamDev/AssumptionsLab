@@ -100,11 +100,11 @@ relatedCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             super$initialize(
                 options=options,
                 name="",
-                title="Related groups")
+                title="Related Groups")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Related groups"))
+                title="Related Groups"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="designGuide",

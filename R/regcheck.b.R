@@ -1143,7 +1143,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             } else
                 add_res_norm("Shapiro-Wilk", "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_res$reasons$sw, .))
 
-            # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
+            # Lilliefors / Anderson-Darling / Cramér-von Mises / Shapiro-Francia /
             # Pearson chi-square: identical tryCatch calls in every module,
             # consolidated in shared-helpers.R (.al_nortest_battery).
             # ES: idénticas en todos los módulos, consolidadas en shared-helpers.R.
@@ -1161,9 +1161,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 add_res_norm("Anderson-Darling", "A²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$ad, .))
 
             if (!is.null(cvm))
-                add_res_norm("Cramer-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
+                add_res_norm("Cram\u00e9r-von Mises", "W²", cvm$statistic[[1]], cvm$p.value)
             else
-                add_res_norm("Cramer-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
+                add_res_norm("Cram\u00e9r-von Mises", "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_res$reasons$cvm, .))
 
             if (!is.null(sf))
                 add_res_norm("Shapiro-Francia", "W'", sf$statistic[[1]], sf$p.value)

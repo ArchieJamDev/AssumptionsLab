@@ -35,9 +35,18 @@ options:
   - name: dep
     title: Dependent Variable
     type: Variable
+    suggested:
+      - continuous
+    permitted:
+      - numeric
   - name: group
     title: Group Variable
     type: Variable
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
   - name: showDistributionPlot
     title: Distribution by group
     type: Bool
@@ -71,7 +80,7 @@ options:
     type: Bool
     default: false
   - name: curveBandwidth
-    title: Curve Smoothing (bandwidth)
+    title: Curve smoothing (bandwidth)
     type: Number
     default: 1
     min: 0.3

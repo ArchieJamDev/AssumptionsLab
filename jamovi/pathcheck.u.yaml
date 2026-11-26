@@ -56,7 +56,7 @@ children:
     children:
       - type: CheckBox
         name: isFinalized
-        label: Finalize Model
+        label: Finalize model
 
   - type: CollapseBox
     label: 'Plots: Path Diagram'

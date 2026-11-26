@@ -55,7 +55,7 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "vecm",
                     "garch"),
                 default="sarima")
-            private$..frequency <- jmvcore::OptionNumber$new(
+            private$..frequency <- jmvcore::OptionInteger$new(
                 "frequency",
                 frequency,
                 min=1,

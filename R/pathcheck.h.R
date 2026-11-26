@@ -81,13 +81,13 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "showEndogenous",
                 showEndogenous,
                 default=TRUE)
-            private$..permutations <- jmvcore::OptionNumber$new(
+            private$..permutations <- jmvcore::OptionInteger$new(
                 "permutations",
                 permutations,
                 default=999,
                 min=199,
                 max=9999)
-            private$..permutationSeed <- jmvcore::OptionNumber$new(
+            private$..permutationSeed <- jmvcore::OptionInteger$new(
                 "permutationSeed",
                 permutationSeed,
                 default=2026,

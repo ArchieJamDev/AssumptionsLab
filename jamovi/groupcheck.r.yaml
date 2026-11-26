@@ -24,12 +24,12 @@
 
 ---
 name: groupCheck
-title: Independent groups
+title: Independent Groups
 jrs: '1.1'
 
 items:
   - name: intro
-    title: Independent groups
+    title: Independent Groups
     type: Html
 
   - name: design

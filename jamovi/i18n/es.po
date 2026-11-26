@@ -18628,3 +18628,27 @@ msgstr "Diagnósticos y alternativas"
 
 msgid "Alternatives by problem"
 msgstr "Alternativas según el problema"
+
+msgid "Label cases"
+msgstr "Etiquetar casos"
+
+msgid "Plot set"
+msgstr "Conjunto de gráficos"
+
+msgid "Curve smoothing (bandwidth)"
+msgstr "Suavizado de la curva (ancho de banda)"
+
+msgid "Number of groups (bins) for the empirical logit"
+msgstr "Número de grupos (bins) para el logit empírico"
+
+msgid "Permutation seed"
+msgstr "Semilla de permutación"
+
+msgid "Histogram binning method"
+msgstr "Método de agrupación del histograma"
+
+msgid "Comparison plot style"
+msgstr "Estilo del gráfico de comparación"
+
+msgid "Number of groups (deciles) for calibration"
+msgstr "Número de grupos (deciles) para la calibración"

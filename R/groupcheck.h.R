@@ -28,10 +28,19 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
             private$..dep <- jmvcore::OptionVariable$new(
                 "dep",
-                dep)
+                dep,
+                suggested=list(
+                    "continuous"),
+                permitted=list(
+                    "numeric"))
             private$..group <- jmvcore::OptionVariable$new(
                 "group",
-                group)
+                group,
+                suggested=list(
+                    "nominal",
+                    "ordinal"),
+                permitted=list(
+                    "factor"))
             private$..showDistributionPlot <- jmvcore::OptionBool$new(
                 "showDistributionPlot",
                 showDistributionPlot,
@@ -155,11 +164,11 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 options=options,
                 name="",
-                title="Independent groups")
+                title="Independent Groups")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Independent groups"))
+                title="Independent Groups"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="design",

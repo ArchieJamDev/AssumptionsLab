@@ -883,13 +883,13 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             # ES: Batería diagnóstica de normalidad por grupo.
             #
             # Runs the full normality battery (Shapiro-Wilk, Lilliefors, Anderson-
-            # Darling, Cramer-von Mises, Shapiro-Francia, Pearson chi-square, Jarque-
+            # Darling, Cramér-von Mises, Shapiro-Francia, Pearson chi-square, Jarque-
             # Bera, skewness and kurtosis tests) independently within every group,
             # because a parametric group comparison assumes approximate normality at
             # each level of the grouping factor, not only in the pooled sample.
             #
             # ES: ejecuta la batería completa de normalidad (Shapiro-Wilk, Lilliefors,
-            # Anderson-Darling, Cramer-von Mises, Shapiro-Francia, chi-cuadrado de
+            # Anderson-Darling, Cramér-von Mises, Shapiro-Francia, chi-cuadrado de
             # Pearson, Jarque-Bera, y pruebas de asimetría y curtosis) de forma
             # independiente dentro de cada grupo, porque una comparación paramétrica
             # de grupos supone normalidad aproximada en cada nivel del factor de
@@ -907,7 +907,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 if (test == "Anderson-Darling")
                     return(.("Useful when deviations in the distribution tails are important."))
 
-                if (test == "Cramer-von Mises")
+                if (test == "Cram\u00e9r-von Mises")
                     return(.("Alternative empirical-distribution test, sensitive across the whole range of the distribution."))
 
                 if (test == "Shapiro-Francia")
@@ -974,7 +974,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                     add_normality(level, "Shapiro-Wilk", n_valid, "W", NA_real_, NA_real_, reason = .al_norm_reason_text(.nc_x$reasons$sw, .))
                 }
 
-                # Lilliefors / Anderson-Darling / Cramer-von Mises / Shapiro-Francia /
+                # Lilliefors / Anderson-Darling / Cramér-von Mises / Shapiro-Francia /
                 # Pearson chi-square: identical tryCatch calls in every module,
                 # consolidated in shared-helpers.R (.al_nortest_battery).
                 # ES: idénticas en todos los módulos, consolidadas en shared-helpers.R.
@@ -994,9 +994,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 }
 
                 if (!is.null(cvm)) {
-                    add_normality(level, "Cramer-von Mises", n_valid, "W²", unname(cvm$statistic), cvm$p.value)
+                    add_normality(level, "Cram\u00e9r-von Mises", n_valid, "W²", unname(cvm$statistic), cvm$p.value)
                 } else {
-                    add_normality(level, "Cramer-von Mises", n_valid, "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$cvm, .))
+                    add_normality(level, "Cram\u00e9r-von Mises", n_valid, "W²", NA_real_, NA_real_, reason = .al_norm_reason_text(.nt_x$reasons$cvm, .))
                 }
 
                 if (!is.null(sf)) {
@@ -1230,9 +1230,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 }
 
             } else {
-                add_homogeneity(.("Levene (median-centered)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
-                add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
-                add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires car package and at least two groups"))
+                add_homogeneity(.("Levene (median-centered)"), "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires at least two groups"))
+                add_homogeneity("Brown-Forsythe", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires at least two groups"))
+                add_homogeneity("Levene", "F", NA_real_, NA_integer_, NA_integer_, NA_real_, .("Requires at least two groups"))
             }
 
             if (length(unique(g_complete)) >= 2) {

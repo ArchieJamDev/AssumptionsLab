@@ -362,7 +362,7 @@
 #   with `li <- b$li; ad <- b$ad; ...` and keep every downstream line (row
 #   building, NA fallback, narrative text) completely unchanged.
 #
-# These 5 calls - Lilliefors, Anderson-Darling, Cramer-von Mises,
+# These 5 calls - Lilliefors, Anderson-Darling, Cramér-von Mises,
 # Shapiro-Francia, Pearson chi-square - were verified byte-identical (same
 # tryCatch/error-handling shape, no per-module guard condition) across
 # anovaCheck, groupCheck, pathCheck, regCheck, and relatedCheck. Unlike
@@ -371,7 +371,7 @@
 # - and are intentionally NOT included here), these 5 have no divergence to
 # reconcile, so consolidating them changes nothing about what gets computed.
 #
-# ES: Estas 5 llamadas - Lilliefors, Anderson-Darling, Cramer-von Mises,
+# ES: Estas 5 llamadas - Lilliefors, Anderson-Darling, Cramér-von Mises,
 # Shapiro-Francia, Pearson chi-cuadrado - se verificaron idénticas byte a
 # byte (mismo manejo de tryCatch/error, sin ninguna guarda propia por
 # módulo) en anovaCheck, groupCheck, pathCheck, regCheck y relatedCheck. A
