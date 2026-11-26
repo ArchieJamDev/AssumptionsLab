@@ -131,6 +131,9 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .plotN = NULL,
 
         .run = function() {
+            # Hide the fixed guides when "Explanations" is off (see
+            # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
+            on.exit(.al_apply_guides(self), add = TRUE)
 
             series <- self$options$series
             date_var <- self$options$dateVar

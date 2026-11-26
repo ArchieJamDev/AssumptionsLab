@@ -31,10 +31,12 @@ items:
   - name: intro
     title: Introduction
     type: Html
+    visible: (showGuides)
 
   - name: designGuide
     title: Model design
     type: Html
+    visible: (showGuides)
 
   - name: design
     title: Design summary
@@ -66,6 +68,7 @@ items:
   - name: separationGuide
     title: Complete separation
     type: Html
+    visible: (showGuides)
 
   - name: separation
     title: Complete separation
@@ -89,6 +92,7 @@ items:
   - name: linearityGuide
     title: Linearity in the cumulative logit
     type: Html
+    visible: (showGuides)
 
   - name: linearity
     title: Linearity in the cumulative logit (Box-Tidwell)
@@ -131,6 +135,7 @@ items:
   - name: proportionalOddsGuide
     title: Proportional odds (parallel lines)
     type: Html
+    visible: (showGuides)
 
   - name: proportionalOdds
     title: Brant Test
@@ -164,6 +169,7 @@ items:
   - name: goodnessOfFitGuide
     title: Goodness of fit
     type: Html
+    visible: (showGuides)
 
   - name: goodnessOfFit
     title: Goodness of fit
@@ -198,6 +204,7 @@ items:
   - name: discriminationGuide
     title: Pseudo-R²
     type: Html
+    visible: (showGuides)
 
   - name: discrimination
     title: Pseudo-R²
@@ -218,6 +225,7 @@ items:
   - name: multicollinearityGuide
     title: Multicollinearity
     type: Html
+    visible: (showGuides)
 
   - name: multicollinearity
     title: Multicollinearity
@@ -332,6 +340,7 @@ items:
   - name: influenceGuide
     title: Influential cases
     type: Html
+    visible: (showGuides)
     refs:
       - liu_2009
 
@@ -375,6 +384,7 @@ items:
   - name: coefficientsGuide
     title: Coefficients and odds ratios (proportional odds)
     type: Html
+    visible: (showGuides)
 
   - name: coefficients
     title: Coefficients and odds ratios

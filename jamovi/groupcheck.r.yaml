@@ -31,6 +31,7 @@ items:
   - name: intro
     title: Independent Groups
     type: Html
+    visible: (showGuides)
 
   - name: design
     title: Design summary
@@ -168,6 +169,7 @@ items:
   - name: caseDiagnosticsGuide
     title: Case diagnostics guide
     type: Html
+    visible: (showGuides)
 
   - name: caseDiagnosticsInterpretation
     title: Applied interpretation of case diagnostics
@@ -216,6 +218,7 @@ items:
   - name: normalityGuide
     title: Normality interpretation guide
     type: Html
+    visible: (showGuides)
 
 
 
@@ -305,6 +308,7 @@ items:
   - name: homogeneityGuide
     title: Variance interpretation guide
     type: Html
+    visible: (showGuides)
 
   - name: homogeneityInterpretation
     title: Applied interpretation

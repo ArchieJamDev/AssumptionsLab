@@ -68,6 +68,11 @@ children:
               - factor
               - numeric
 
+  - type: Label
+    label: Output
+    children:
+      - type: CheckBox
+        name: showGuides
   - type: CollapseBox
     label: Time Series Model
     collapsed: false

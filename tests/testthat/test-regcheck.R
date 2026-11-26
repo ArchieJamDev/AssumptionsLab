@@ -144,3 +144,46 @@ test_that("regCheck's suggested decision reacts to small-sample non-normal resid
     expect_match(notes_html, "bootstrap", ignore.case = TRUE)
     expect_match(notes_html, "Central Limit Theorem", fixed = TRUE)
 })
+
+# -----------------------------------------------------------------------------
+# Second jamovi review: "Explanations" hides the fixed guides only, and the
+# correlation plots follow the "Diagnostic plots" master switch.
+# ES: Segunda revisión de jamovi: "Explanations" oculta solo las guías fijas,
+# y los gráficos de correlación siguen el interruptor "Diagnostic plots".
+# -----------------------------------------------------------------------------
+test_that("regCheck hides only the fixed guides when Explanations is off", {
+    data <- edgeBaseData(n = 40)
+    res <- AssumptionsLab::regCheck(data = data, dep = "dep",
+        covs = c("cov1", "cov2"), showGuides = FALSE)
+    for (item in res$items) {
+        if (identical(item$name, "intro") || grepl("Guide$", item$name))
+            expect_false(item$visible, info = item$name)
+    }
+    expect_true(res$residualNormality$visible)
+    expect_true(res$homoscedasticityInterpretation$visible)
+
+    on <- AssumptionsLab::regCheck(data = data, dep = "dep",
+        covs = c("cov1", "cov2"))
+    expect_true(on$intro$visible)
+    expect_true(on$residualNormalityGuide$visible)
+})
+
+test_that("regCheck's correlation plots follow the Diagnostic plots switch", {
+    data <- edgeBaseData(n = 40)
+    off <- AssumptionsLab::regCheck(data = data, dep = "dep",
+        covs = c("cov1", "cov2"), showPlots = FALSE)
+    expect_false(off$correlationIndividualPlot$visible)
+    expect_false(off$correlationComparativePlot$visible)
+    expect_false(off$correlationIndividualGuide$visible)
+    on <- AssumptionsLab::regCheck(data = data, dep = "dep",
+        covs = c("cov1", "cov2"))
+    expect_true(on$correlationIndividualPlot$visible)
+})
+
+test_that("regCheck leaves the session's random-number state untouched", {
+    data <- edgeBaseData(n = 40)
+    set.seed(99); expected <- stats::runif(3)
+    set.seed(99)
+    AssumptionsLab::regCheck(data = data, dep = "dep", covs = c("cov1", "cov2"))
+    expect_identical(stats::runif(3), expected)
+})

@@ -18652,3 +18652,18 @@ msgstr "Estilo del gráfico de comparación"
 
 msgid "Number of groups (deciles) for calibration"
 msgstr "Número de grupos (deciles) para la calibración"
+
+msgid "Output"
+msgstr "Salida"
+
+msgid "Explanations"
+msgstr "Explicaciones"
+
+msgid ""
+"Show the fixed explanations: the introduction and the guides on how to read "
+"each test and plot. Uncheck for a compact report; the applied "
+"interpretations of your own results are always shown."
+msgstr ""
+"Muestra las explicaciones fijas: la introducción y las guías para leer cada "
+"prueba y gráfico. Desmárquela para un informe compacto; las interpretaciones"
+" aplicadas a sus propios resultados se muestran siempre."

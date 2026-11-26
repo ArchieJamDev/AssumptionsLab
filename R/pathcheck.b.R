@@ -328,6 +328,9 @@ pathCheckClass <- R6::R6Class(
         },
 
         .run = function() {
+            # Hide the fixed guides when "Explanations" is off (see
+            # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
+            on.exit(.al_apply_guides(self), add = TRUE)
             lang <- .al_lang(self$options)
             . <- lang$tr
 

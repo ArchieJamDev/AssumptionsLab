@@ -1,6 +1,0 @@
-Package: probe
-Title: Probe
-Version: 1.0.0
-Description: probe
-License: GPL-3
-Imports: jmvcore, R6

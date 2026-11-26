@@ -29,7 +29,8 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             diagramRotate = "exogLeft",
             diagramNodeSize = "medium",
             diagramShape = "ellipse",
-            diagramAbbreviate = "none", ...) {
+            diagramAbbreviate = "none",
+            showGuides = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -172,6 +173,12 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "abbrev4"),
                 default="none")
 
+            private$..showGuides <- jmvcore::OptionBool$new(
+                "showGuides",
+                showGuides,
+                default=TRUE)
+
+            self$.addOption(private$..showGuides)
             self$.addOption(private$..vars)
             self$.addOption(private$..relations)
             self$.addOption(private$..isFinalized)
@@ -198,6 +205,7 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..diagramAbbreviate)
         }),
     active = list(
+        showGuides = function() private$..showGuides$value,
         vars = function() private$..vars$value,
         relations = function() private$..relations$value,
         isFinalized = function() private$..isFinalized$value,
@@ -223,6 +231,7 @@ pathCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         diagramShape = function() private$..diagramShape$value,
         diagramAbbreviate = function() private$..diagramAbbreviate$value),
     private = list(
+        ..showGuides = NA,
         ..vars = NA,
         ..relations = NA,
         ..isFinalized = NA,
@@ -311,7 +320,8 @@ pathCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Path Analysis"))
+                title="Path Analysis",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="modelSummary",
@@ -1188,6 +1198,8 @@ pathCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param diagramNodeSize .
 #' @param diagramShape .
 #' @param diagramAbbreviate .
+#' @param showGuides Show the fixed explanations (introduction and
+#'   interpretation guides).
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -1272,7 +1284,8 @@ pathCheck <- function(
     diagramRotate = "exogLeft",
     diagramNodeSize = "medium",
     diagramShape = "ellipse",
-    diagramAbbreviate = "none") {
+    diagramAbbreviate = "none",
+    showGuides = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("pathCheck requires jmvcore to be installed (restart may be required)")
@@ -1308,7 +1321,8 @@ pathCheck <- function(
         diagramRotate = diagramRotate,
         diagramNodeSize = diagramNodeSize,
         diagramShape = diagramShape,
-        diagramAbbreviate = diagramAbbreviate)
+        diagramAbbreviate = diagramAbbreviate,
+        showGuides = showGuides)
 
     analysis <- pathCheckClass$new(
         options = options,

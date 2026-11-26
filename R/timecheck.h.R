@@ -11,7 +11,8 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             exogenous = NULL,
             model = "sarima",
             frequency = 12,
-            showPlots = TRUE, ...) {
+            showPlots = TRUE,
+            showGuides = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -65,6 +66,12 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 showPlots,
                 default=TRUE)
 
+            private$..showGuides <- jmvcore::OptionBool$new(
+                "showGuides",
+                showGuides,
+                default=TRUE)
+
+            self$.addOption(private$..showGuides)
             self$.addOption(private$..series)
             self$.addOption(private$..dateVar)
             self$.addOption(private$..exogenous)
@@ -73,6 +80,7 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..showPlots)
         }),
     active = list(
+        showGuides = function() private$..showGuides$value,
         series = function() private$..series$value,
         dateVar = function() private$..dateVar$value,
         exogenous = function() private$..exogenous$value,
@@ -80,6 +88,7 @@ timeCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         frequency = function() private$..frequency$value,
         showPlots = function() private$..showPlots$value),
     private = list(
+        ..showGuides = NA,
         ..series = NA,
         ..dateVar = NA,
         ..exogenous = NA,
@@ -117,7 +126,8 @@ timeCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Time Series"))
+                title="Time Series",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="modelProfile",
@@ -351,6 +361,8 @@ timeCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   = quarterly, 7 = daily with a weekly cycle, 1 = no seasonality). Used for
 #'   seasonal tests and differencing in SARIMA and ETS.
 #' @param showPlots Uncheck for a text-only report.
+#' @param showGuides Show the fixed explanations (introduction and
+#'   interpretation guides).
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -384,7 +396,8 @@ timeCheck <- function(
     exogenous = NULL,
     model = "sarima",
     frequency = 12,
-    showPlots = TRUE) {
+    showPlots = TRUE,
+    showGuides = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("timeCheck requires jmvcore to be installed (restart may be required)")
@@ -406,7 +419,8 @@ timeCheck <- function(
         exogenous = exogenous,
         model = model,
         frequency = frequency,
-        showPlots = showPlots)
+        showPlots = showPlots,
+        showGuides = showGuides)
 
     analysis <- timeCheckClass$new(
         options = options,

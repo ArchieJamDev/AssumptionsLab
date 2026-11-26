@@ -31,10 +31,12 @@ items:
   - name: intro
     title: Introduction
     type: Html
+    visible: (showGuides)
 
   - name: designGuide
     title: Model design
     type: Html
+    visible: (showGuides)
 
   - name: design
     title: Design summary
@@ -51,6 +53,7 @@ items:
   - name: dispersionGuide
     title: Overdispersion
     type: Html
+    visible: (showGuides)
 
   - name: dispersion
     title: Overdispersion
@@ -85,6 +88,7 @@ items:
   - name: modelComparisonGuide
     title: Poisson vs negative binomial
     type: Html
+    visible: (showGuides)
 
   - name: modelComparison
     title: Poisson vs negative binomial
@@ -138,6 +142,7 @@ items:
   - name: zerosGuide
     title: Excess zeros
     type: Html
+    visible: (showGuides)
 
   - name: zeros
     title: Excess zeros
@@ -191,6 +196,7 @@ items:
   - name: residualsGuide
     title: Residuals
     type: Html
+    visible: (showGuides)
 
   - name: residuals
     title: Residual summary
@@ -260,6 +266,7 @@ items:
   - name: linearityGuide
     title: Linearity on the log scale
     type: Html
+    visible: (showGuides)
 
   - name: linearity
     title: Linearity on the log scale (spline LR test)
@@ -308,6 +315,7 @@ items:
   - name: multicollinearityGuide
     title: Multicollinearity
     type: Html
+    visible: (showGuides)
 
   - name: multicollinearity
     title: Multicollinearity
@@ -337,6 +345,7 @@ items:
   - name: influenceGuide
     title: Influential cases
     type: Html
+    visible: (showGuides)
 
   - name: influence
     title: Influential cases
@@ -386,6 +395,7 @@ items:
   - name: rateRatiosGuide
     title: Incidence rate ratios
     type: Html
+    visible: (showGuides)
 
   - name: rateRatios
     title: Incidence rate ratios

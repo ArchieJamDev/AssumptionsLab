@@ -1128,3 +1128,35 @@
     self$results$insert(index, notice)
     invisible(notice)
 }
+
+# -----------------------------------------------------------------------------
+# .al_apply_guides(analysis)
+#
+# Input: analysis - the running analysis (`self`).
+# Output: none; called for its side effect.
+#
+# "Explanations" (showGuides, on by default) controls the fixed teaching
+# text: the introduction and every `*Guide` element. Their visibility is
+# declared in each .r.yaml as `(showGuides && ...)`, but several analyses
+# also call setVisible() on a guide from R, which would override the
+# declaration. Called through on.exit() at the start of .run(), this hides
+# every guide when the option is off, whatever .run() did or wherever it
+# stopped. The data-driven "Applied interpretation" blocks are not guides
+# and stay visible.
+#
+# ES: "Explanations" (showGuides) controla el texto didáctico fijo: la
+# introducción y cada elemento `*Guide`. Llamada con on.exit() al inicio de
+# .run(), oculta todas las guías cuando la opción está desactivada, aunque
+# .run() haya llamado setVisible() sobre alguna. Las interpretaciones
+# aplicadas a los datos del usuario siguen visibles.
+# -----------------------------------------------------------------------------
+.al_apply_guides <- function(analysis) {
+    if (!identical(analysis$options$showGuides, FALSE))
+        return(invisible(NULL))
+    for (item in analysis$results$items) {
+        name <- item$name
+        if (identical(name, "intro") || grepl("Guide$", name))
+            item$setVisible(FALSE)
+    }
+    invisible(NULL)
+}

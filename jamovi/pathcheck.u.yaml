@@ -58,6 +58,11 @@ children:
         name: isFinalized
         label: Finalize model
 
+  - type: Label
+    label: Output
+    children:
+      - type: CheckBox
+        name: showGuides
   - type: CollapseBox
     label: 'Plots: Path Diagram'
     collapsed: true

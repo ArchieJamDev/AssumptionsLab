@@ -152,3 +152,10 @@ options:
     title: Threshold line
     type: Bool
     default: true
+
+  - name: showGuides
+    title: Explanations
+    type: Bool
+    default: true
+    description: >-
+      Show the fixed explanations: the introduction and the guides on how to read each test and plot. Uncheck for a compact report; the applied interpretations of your own results are always shown.

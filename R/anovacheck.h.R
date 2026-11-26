@@ -15,7 +15,8 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             residShowBand = FALSE,
             residRefLine = TRUE,
             influenceLabelMode = "top5",
-            influenceShowThreshold = TRUE, ...) {
+            influenceShowThreshold = TRUE,
+            showGuides = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -91,6 +92,12 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 influenceShowThreshold,
                 default=TRUE)
 
+            private$..showGuides <- jmvcore::OptionBool$new(
+                "showGuides",
+                showGuides,
+                default=TRUE)
+
+            self$.addOption(private$..showGuides)
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
             self$.addOption(private$..factors)
@@ -103,6 +110,7 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..influenceShowThreshold)
         }),
     active = list(
+        showGuides = function() private$..showGuides$value,
         dep = function() private$..dep$value,
         covs = function() private$..covs$value,
         factors = function() private$..factors$value,
@@ -114,6 +122,7 @@ anovaCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         influenceLabelMode = function() private$..influenceLabelMode$value,
         influenceShowThreshold = function() private$..influenceShowThreshold$value),
     private = list(
+        ..showGuides = NA,
         ..dep = NA,
         ..covs = NA,
         ..factors = NA,
@@ -190,11 +199,13 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="ANOVA/ANCOVA"))
+                title="ANOVA/ANCOVA",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="designGuide",
-                title="Model design"))
+                title="Model design",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="designSummary",
@@ -248,7 +259,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="diagnosticPlotsGuide",
-                title="ANOVA/ANCOVA diagnostic plots"))
+                title="ANOVA/ANCOVA diagnostic plots",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="groupBoxplotsPlot",
@@ -259,11 +271,13 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="groupBoxplotsGuide",
-                title="Guide: Dependent variable by group"))
+                title="Guide: Dependent variable by group",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalityGuide",
-                title="Residual normality"))
+                title="Residual normality",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="residualNormality",
@@ -313,7 +327,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsFittedGuide",
-                title="Guide: Residuals vs fitted values"))
+                title="Guide: Residuals vs fitted values",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="qqResidualsPlot",
@@ -324,7 +339,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="qqResidualsGuide",
-                title="Guide: Residual Q-Q plot"))
+                title="Guide: Residual Q-Q plot",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualHistogramPlot",
@@ -335,7 +351,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualHistogramGuide",
-                title="Guide: Residual histogram"))
+                title="Guide: Residual histogram",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="residualNormalCurvePlot",
@@ -346,11 +363,13 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalCurveGuide",
-                title="Guide: Observed distribution vs theoretical normal"))
+                title="Guide: Observed distribution vs theoretical normal",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="varianceGuide",
-                title="Homogeneity of variances"))
+                title="Homogeneity of variances",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="varianceTests",
@@ -653,7 +672,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influenceGuide",
-                title="Outlying and influential cases"))
+                title="Outlying and influential cases",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="influence",
@@ -712,7 +732,8 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsLeverageGuide",
-                title="Guide: Studentized residuals vs leverage"))
+                title="Guide: Studentized residuals vs leverage",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="cooksDPlot",
@@ -723,15 +744,18 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="cooksDGuide",
-                title="Guide: Cook's D by case"))
+                title="Guide: Cook's D by case",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="independenceGuide",
-                title="Design independence"))
+                title="Design independence",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="alternativesGuide",
-                title="Methodological alternatives"))
+                title="Methodological alternatives",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="alternatives",
@@ -797,6 +821,8 @@ anovaCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param residRefLine .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
+#' @param showGuides Show the fixed explanations (introduction and
+#'   interpretation guides).
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -869,7 +895,8 @@ anovaCheck <- function(
     residShowBand = FALSE,
     residRefLine = TRUE,
     influenceLabelMode = "top5",
-    influenceShowThreshold = TRUE) {
+    influenceShowThreshold = TRUE,
+    showGuides = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("anovaCheck requires jmvcore to be installed (restart may be required)")
@@ -896,7 +923,8 @@ anovaCheck <- function(
         residShowBand = residShowBand,
         residRefLine = residRefLine,
         influenceLabelMode = influenceLabelMode,
-        influenceShowThreshold = influenceShowThreshold)
+        influenceShowThreshold = influenceShowThreshold,
+        showGuides = showGuides)
 
     analysis <- anovaCheckClass$new(
         options = options,

@@ -31,10 +31,12 @@ items:
   - name: intro
     title: Introduction
     type: Html
+    visible: (showGuides)
 
   - name: designGuide
     title: Model design
     type: Html
+    visible: (showGuides)
 
   - name: design
     title: Design summary
@@ -53,6 +55,7 @@ items:
   - name: separationGuide
     title: Complete separation
     type: Html
+    visible: (showGuides)
 
   - name: separation
     title: Complete separation
@@ -78,6 +81,7 @@ items:
   - name: linearityGuide
     title: Linearity in the logit
     type: Html
+    visible: (showGuides)
 
   - name: linearity
     title: Linearity in the logit (Box-Tidwell)
@@ -120,6 +124,7 @@ items:
   - name: goodnessOfFitGuide
     title: Goodness of fit
     type: Html
+    visible: (showGuides)
 
   - name: goodnessOfFit
     title: Goodness of fit
@@ -162,6 +167,7 @@ items:
   - name: discriminationGuide
     title: Discrimination
     type: Html
+    visible: (showGuides)
 
   - name: discrimination
     title: Discrimination
@@ -197,6 +203,7 @@ items:
   - name: multicollinearityGuide
     title: Multicollinearity
     type: Html
+    visible: (showGuides)
 
   - name: multicollinearity
     title: Multicollinearity
@@ -311,6 +318,7 @@ items:
   - name: influenceGuide
     title: Influential cases
     type: Html
+    visible: (showGuides)
 
   - name: influence
     title: Influential cases
@@ -351,6 +359,7 @@ items:
   - name: oddsRatiosGuide
     title: Odds Ratios
     type: Html
+    visible: (showGuides)
 
   - name: oddsRatios
     title: Odds Ratios

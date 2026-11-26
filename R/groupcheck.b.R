@@ -138,6 +138,9 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # informe seleccionado por el usuario.
         # -----------------------------------------------------------------------------
         .run = function() {
+            # Hide the fixed guides when "Explanations" is off (see
+            # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
+            on.exit(.al_apply_guides(self), add = TRUE)
             data <- self$data
             dep <- self$options$dep
             group <- self$options$group

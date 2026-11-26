@@ -33,6 +33,7 @@ items:
   - name: intro
     title: Time Series
     type: Html
+    visible: (showGuides)
 
   - name: modelProfile
     title: Model methodological profile

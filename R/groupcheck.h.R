@@ -18,7 +18,8 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             showNormalCurvePlots = FALSE,
             curveBandwidth = 1,
             curveShowRug = FALSE,
-            distColorByGroup = TRUE, ...) {
+            distColorByGroup = TRUE,
+            showGuides = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -88,6 +89,12 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 distColorByGroup,
                 default=TRUE)
 
+            private$..showGuides <- jmvcore::OptionBool$new(
+                "showGuides",
+                showGuides,
+                default=TRUE)
+
+            self$.addOption(private$..showGuides)
             self$.addOption(private$..dep)
             self$.addOption(private$..group)
             self$.addOption(private$..showDistributionPlot)
@@ -103,6 +110,7 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..distColorByGroup)
         }),
     active = list(
+        showGuides = function() private$..showGuides$value,
         dep = function() private$..dep$value,
         group = function() private$..group$value,
         showDistributionPlot = function() private$..showDistributionPlot$value,
@@ -117,6 +125,7 @@ groupCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         curveShowRug = function() private$..curveShowRug$value,
         distColorByGroup = function() private$..distColorByGroup$value),
     private = list(
+        ..showGuides = NA,
         ..dep = NA,
         ..group = NA,
         ..showDistributionPlot = NA,
@@ -168,7 +177,8 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Independent Groups"))
+                title="Independent Groups",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="design",
@@ -333,7 +343,8 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="caseDiagnosticsGuide",
-                title="Case diagnostics guide"))
+                title="Case diagnostics guide",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="caseDiagnosticsInterpretation",
@@ -388,7 +399,8 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normalityGuide",
-                title="Normality interpretation guide"))
+                title="Normality interpretation guide",
+                visible="(showGuides)"))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="qqNormalityPlot",
@@ -488,7 +500,8 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homogeneityGuide",
-                title="Variance interpretation guide"))
+                title="Variance interpretation guide",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="homogeneityInterpretation",
@@ -542,6 +555,8 @@ groupCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   more.
 #' @param curveShowRug .
 #' @param distColorByGroup .
+#' @param showGuides Show the fixed explanations (introduction and
+#'   interpretation guides).
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -589,7 +604,8 @@ groupCheck <- function(
     showNormalCurvePlots = FALSE,
     curveBandwidth = 1,
     curveShowRug = FALSE,
-    distColorByGroup = TRUE) {
+    distColorByGroup = TRUE,
+    showGuides = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("groupCheck requires jmvcore to be installed (restart may be required)")
@@ -616,7 +632,8 @@ groupCheck <- function(
         showNormalCurvePlots = showNormalCurvePlots,
         curveBandwidth = curveBandwidth,
         curveShowRug = curveShowRug,
-        distColorByGroup = distColorByGroup)
+        distColorByGroup = distColorByGroup,
+        showGuides = showGuides)
 
     analysis <- groupCheckClass$new(
         options = options,

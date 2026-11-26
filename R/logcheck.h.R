@@ -21,7 +21,8 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             rocShowAUCLabel = TRUE,
             influenceShowPlots = TRUE,
             influenceLabelMode = "top5",
-            influenceShowThreshold = TRUE, ...) {
+            influenceShowThreshold = TRUE,
+            showGuides = TRUE, ...) {
 
             super$initialize(
                 package="AssumptionsLab",
@@ -121,6 +122,12 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 influenceShowThreshold,
                 default=TRUE)
 
+            private$..showGuides <- jmvcore::OptionBool$new(
+                "showGuides",
+                showGuides,
+                default=TRUE)
+
+            self$.addOption(private$..showGuides)
             self$.addOption(private$..dep)
             self$.addOption(private$..covs)
             self$.addOption(private$..factors)
@@ -139,6 +146,7 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..influenceShowThreshold)
         }),
     active = list(
+        showGuides = function() private$..showGuides$value,
         dep = function() private$..dep$value,
         covs = function() private$..covs$value,
         factors = function() private$..factors$value,
@@ -156,6 +164,7 @@ logCheckOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         influenceLabelMode = function() private$..influenceLabelMode$value,
         influenceShowThreshold = function() private$..influenceShowThreshold$value),
     private = list(
+        ..showGuides = NA,
         ..dep = NA,
         ..covs = NA,
         ..factors = NA,
@@ -224,11 +233,13 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="intro",
-                title="Introduction"))
+                title="Introduction",
+                visible="(showGuides)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="designGuide",
-                title="Model design"))
+                title="Model design",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="design",
@@ -245,7 +256,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="separationGuide",
-                title="Complete separation"))
+                title="Complete separation",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="separation",
@@ -271,7 +283,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="linearityGuide",
-                title="Linearity in the logit"))
+                title="Linearity in the logit",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="linearity",
@@ -318,7 +331,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="goodnessOfFitGuide",
-                title="Goodness of fit"))
+                title="Goodness of fit",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="goodnessOfFit",
@@ -365,7 +379,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="discriminationGuide",
-                title="Discrimination"))
+                title="Discrimination",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="discrimination",
@@ -403,7 +418,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="multicollinearityGuide",
-                title="Multicollinearity"))
+                title="Multicollinearity",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="multicollinearity",
@@ -534,7 +550,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="influenceGuide",
-                title="Influential cases"))
+                title="Influential cases",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="influence",
@@ -578,7 +595,8 @@ logCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="oddsRatiosGuide",
-                title="Odds Ratios"))
+                title="Odds Ratios",
+                visible="(showGuides)"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="oddsRatios",
@@ -662,6 +680,8 @@ logCheckBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param influenceShowPlots .
 #' @param influenceLabelMode .
 #' @param influenceShowThreshold .
+#' @param showGuides Show the fixed explanations (introduction and
+#'   interpretation guides).
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
@@ -726,7 +746,8 @@ logCheck <- function(
     rocShowAUCLabel = TRUE,
     influenceShowPlots = TRUE,
     influenceLabelMode = "top5",
-    influenceShowThreshold = TRUE) {
+    influenceShowThreshold = TRUE,
+    showGuides = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("logCheck requires jmvcore to be installed (restart may be required)")
@@ -760,7 +781,8 @@ logCheck <- function(
         rocShowAUCLabel = rocShowAUCLabel,
         influenceShowPlots = influenceShowPlots,
         influenceLabelMode = influenceLabelMode,
-        influenceShowThreshold = influenceShowThreshold)
+        influenceShowThreshold = influenceShowThreshold,
+        showGuides = showGuides)
 
     analysis <- logCheckClass$new(
         options = options,

@@ -31,10 +31,12 @@ items:
   - name: intro
     title: Simple and Multiple Regression
     type: Html
+    visible: (showGuides)
 
   - name: designGuide
     title: Regression model
     type: Html
+    visible: (showGuides)
 
   - name: modelSummary
     title: Model summary
@@ -69,6 +71,7 @@ items:
   - name: linearityGuide
     title: Linearity
     type: Html
+    visible: (showGuides)
 
   - name: linearityPredictor
     title: Linearity by numeric predictor
@@ -267,6 +270,7 @@ items:
   - name: diagnosticPlotsGuide
     title: Regression diagnostic plots
     type: Html
+    visible: (showGuides)
 
   - name: residualsFittedPlot
     title: Residuals vs fitted values
@@ -278,6 +282,7 @@ items:
   - name: residualsFittedGuide
     title: 'Guide: Residuals vs fitted values'
     type: Html
+    visible: (showGuides)
 
   - name: observedPredictedPlot
     title: Observed vs predicted values
@@ -289,6 +294,7 @@ items:
   - name: observedPredictedGuide
     title: 'Guide: Observed vs predicted values'
     type: Html
+    visible: (showGuides)
 
   - name: predictorEffectsPlot
     title: Visual effects of numeric predictors on the dependent variable
@@ -301,10 +307,12 @@ items:
   - name: predictorEffectsGuide
     title: 'Guide: Visual effects of numeric predictors'
     type: Html
+    visible: (showGuides)
 
   - name: residualNormalityGuide
     title: Residual normality
     type: Html
+    visible: (showGuides)
 
   - name: residualNormality
     title: Residual normality
@@ -350,6 +358,7 @@ items:
   - name: qqResidualsGuide
     title: 'Guide: Residual Q-Q plot'
     type: Html
+    visible: (showGuides)
 
   - name: residualHistogramPlot
     title: Residual histogram
@@ -361,6 +370,7 @@ items:
   - name: residualHistogramGuide
     title: 'Guide: Residual histogram'
     type: Html
+    visible: (showGuides)
 
   - name: residualNormalCurvePlot
     title: Observed residual distribution vs theoretical normal curve
@@ -373,10 +383,12 @@ items:
   - name: residualNormalCurveGuide
     title: 'Guide: Observed distribution vs theoretical normal'
     type: Html
+    visible: (showGuides)
 
   - name: homoscedasticityGuide
     title: Homoscedasticity and heteroscedasticity
     type: Html
+    visible: (showGuides)
 
   - name: homoscedasticity
     title: Homoscedasticity and heteroscedasticity
@@ -427,10 +439,12 @@ items:
   - name: scaleLocationGuide
     title: 'Guide: Scale-location plot'
     type: Html
+    visible: (showGuides)
 
   - name: independenceGuide
     title: Independence of errors
     type: Html
+    visible: (showGuides)
 
   - name: independence
     title: Independence of errors
@@ -468,6 +482,7 @@ items:
   - name: multicollinearityGuide
     title: Multicollinearity
     type: Html
+    visible: (showGuides)
 
   - name: multicollinearity
     title: Multicollinearity
@@ -500,6 +515,7 @@ items:
   - name: influenceGuide
     title: Outlying and influential cases
     type: Html
+    visible: (showGuides)
 
   - name: influence
     title: Outlying and influential cases
@@ -551,6 +567,7 @@ items:
   - name: numericBoxplotsGuide
     title: 'Guide: Boxplots of numeric variables'
     type: Html
+    visible: (showGuides)
 
   - name: residualsLeveragePlot
     title: Studentized residuals vs leverage
@@ -562,6 +579,7 @@ items:
   - name: residualsLeverageGuide
     title: 'Guide: Studentized residuals vs leverage'
     type: Html
+    visible: (showGuides)
 
   - name: cooksDPlot
     title: "Cook's D by case"
@@ -573,10 +591,12 @@ items:
   - name: cooksDGuide
     title: "Guide: Cook's D by case"
     type: Html
+    visible: (showGuides)
 
   - name: transformationsGuide
     title: Exploratory transformations
     type: Html
+    visible: (showGuides)
 
   - name: transformationNormality
     title: Residual normality by transformation
@@ -637,6 +657,7 @@ items:
   - name: robustOptionsGuide
     title: Robust and resampling options
     type: Html
+    visible: (showGuides)
 
   - name: robustOptionsText
     title: Methodological interpretation of robust options
