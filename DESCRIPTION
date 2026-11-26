@@ -7,7 +7,7 @@ License: GPL-3
 Depends:
     R (>= 4.3.0)
 Imports:
-    jmvcore,
+    jmvcore (>= 28.3),
     R6,
     MASS,
     nnet,

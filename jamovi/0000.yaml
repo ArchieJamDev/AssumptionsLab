@@ -18,7 +18,7 @@ description: >
   jamovi's native numbered format, and the complete APA 7th edition
   bibliography lives in the module's documentation.
 usesNative: false
-minApp: 1.0.8
+minApp: 28.3.0
 icon: assets/assumptionslab-icon.png
 menuIcons:
   Assumption Lab: icons/assumptionslab.svg
