@@ -576,6 +576,14 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=620,
                 height=380,
                 renderFun=".plotCorrelationIndividual",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "corrShowIndividual",
+                    "corrIndividualFit",
+                    "corrHighlightDiscordant"),
                 visible=FALSE))
             self$add(jmvcore::Html$new(
                 options=options,
@@ -589,6 +597,14 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 width=620,
                 height=380,
                 renderFun=".plotCorrelationComparative",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "corrShowComparative",
+                    "corrComparativeStyle",
+                    "corrHighlightDiscordant"),
                 visible=FALSE))
             self$add(jmvcore::Html$new(
                 options=options,
@@ -606,7 +622,16 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Residuals vs fitted values",
                 width=560,
                 height=315,
-                renderFun=".plotResidualsFitted"))
+                renderFun=".plotResidualsFitted",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "linShowPlots",
+                    "linSmoother",
+                    "linShowBand",
+                    "linRefLine")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsFittedGuide",
@@ -618,7 +643,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Observed vs predicted values",
                 width=560,
                 height=315,
-                renderFun=".plotObservedPredicted"))
+                renderFun=".plotObservedPredicted",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "linShowPlots")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="observedPredictedGuide",
@@ -630,7 +661,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Visual effects of numeric predictors on the dependent variable",
                 width=620,
                 height=350,
-                renderFun=".plotPredictorEffects"))
+                renderFun=".plotPredictorEffects",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "linShowPlots")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="predictorEffectsGuide",
@@ -686,7 +723,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Residual Q-Q plot",
                 width=560,
                 height=310,
-                renderFun=".plotQQResiduals"))
+                renderFun=".plotQQResiduals",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "normShowPlots",
+                    "normQQBand",
+                    "normFlagOutliers")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="qqResidualsGuide",
@@ -698,7 +743,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Residual histogram",
                 width=560,
                 height=300,
-                renderFun=".plotResidualHistogram"))
+                renderFun=".plotResidualHistogram",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "normShowPlots",
+                    "normHistBins",
+                    "normCurveOverlay")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualHistogramGuide",
@@ -710,7 +763,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Observed residual distribution vs theoretical normal curve",
                 width=560,
                 height=315,
-                renderFun=".plotResidualNormalCurve"))
+                renderFun=".plotResidualNormalCurve",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "normShowPlots")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalCurveGuide",
@@ -772,7 +831,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Scale-location plot",
                 width=560,
                 height=315,
-                renderFun=".plotScaleLocation"))
+                renderFun=".plotScaleLocation",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "homoShowPlots",
+                    "homoSmoother",
+                    "homoShowBand")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="scaleLocationGuide",
@@ -917,7 +984,13 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Boxplots of the dependent variable and numeric predictors",
                 width=620,
                 height=360,
-                renderFun=".plotNumericBoxplots"))
+                renderFun=".plotNumericBoxplots",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "influenceShowPlots")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="numericBoxplotsGuide",
@@ -929,7 +1002,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Studentized residuals vs leverage",
                 width=600,
                 height=350,
-                renderFun=".plotResidualsLeverage"))
+                renderFun=".plotResidualsLeverage",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "influenceShowPlots",
+                    "influenceLabelMode",
+                    "influenceShowThreshold")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsLeverageGuide",
@@ -941,7 +1022,15 @@ regCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Cook's D by case",
                 width=560,
                 height=300,
-                renderFun=".plotCooksD"))
+                renderFun=".plotCooksD",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "influenceShowPlots",
+                    "influenceLabelMode",
+                    "influenceShowThreshold")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="cooksDGuide",

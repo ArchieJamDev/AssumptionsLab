@@ -246,6 +246,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="design",
                 title="Design summary",
                 rows=0,
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="element", 
@@ -270,6 +277,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "dean_1989",
                     "cameron_1990",
                     "self_1987"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="test", 
@@ -309,6 +323,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "venables_2002",
                     "hilbe_2011"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="model", 
@@ -369,6 +390,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 rows=0,
                 refs=list(
                     "van_den_broek_1995"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="model", 
@@ -431,6 +459,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "dunn_1996",
                     "shapiro_1965"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="type", 
@@ -507,6 +542,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 rows=0,
                 refs=list(
                     "harrell_2015"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -562,6 +604,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "fox_1992",
                     "marquardt_1970"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="predictor", 
@@ -596,6 +645,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 refs=list(
                     "cook_1977",
                     "pregibon_1981"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="case", 
@@ -649,6 +705,13 @@ countCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 rows=0,
                 refs=list(
                     "mccullagh_1989"),
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "exposure",
+                    "exposureScale",
+                    "family"),
                 columns=list(
                     list(
                         `name`="predictor", 

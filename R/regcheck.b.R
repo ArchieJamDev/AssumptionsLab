@@ -127,6 +127,31 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .init = function() {
             private$.initCorrelationMatrix()
+
+            # Rows whose keys are known from the options alone, with their
+            # labels; .run() fills them with setRow() (via .al_add_row()).
+            # ES: Filas cuyas claves se conocen solo con las opciones, con sus
+            # etiquetas; .run() las rellena con setRow() (vía .al_add_row()).
+            . <- .al_lang(self$options)$tr
+            r <- self$results
+            ms_items <- list(.("Model"), .("Cases used"), .("Selected predictors"),
+                             .("Estimated parameters"), "R²", .("Adjusted R²"),
+                             .("Residual standard error"), .("Model p"))
+            .al_init_rows(r$modelSummary, paste0("ms_", seq_along(ms_items)),
+                          lapply(ms_items, function(x) list(item = x)))
+            miss_items <- list(.("Total rows"), .("Complete cases used"),
+                               .("Cases excluded due to missing data"), .("Excluded percentage"))
+            .al_init_rows(r$missingSummary, paste0("miss_", seq_along(miss_items)),
+                          lapply(miss_items, function(x) list(item = x)))
+            norm <- .al_norm_battery_labels(.)
+            .al_init_rows(r$residualNormality,
+                          paste0("norm_", vapply(norm, function(x) .al_safe_key(x$test), character(1))),
+                          norm)
+            .al_init_rows(r$independence, paste0("ind_", 1:4),
+                list(list(test = "Durbin-Watson", statistic = "DW"),
+                     list(test = "Breusch-Godfrey", statistic = "LM"),
+                     list(test = "Ljung-Box", statistic = "Q"),
+                     list(test = "Runs test", statistic = "z")))
         },
 
         .initCorrelationMatrix = function() {
@@ -268,7 +293,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             add_table_row <- function(table, key, values) {
-                table$addRow(rowKey = key, values = values)
+                .al_add_row(table, key, values = values)
             }
 
             dep <- self$options$dep
@@ -374,16 +399,30 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # propio setState() más abajo y en su asignación private$
             # correspondiente; las funciones de render leen image$state en
             # lugar de campos private$.
-            reg_plot_state <- list(plotData = private$.plotData, pModel = p_model)
+            # Each plot keeps only the columns its own render function reads
+            # (the influence plots also need what .labelPlotCases() reads,
+            # and the model's parameter count). The list(plotData = ...)
+            # shape is kept, so analyses saved by earlier versions still draw.
+            # ES: Cada gráfico guarda solo las columnas que lee su propia
+            # función de dibujo (los de influencia, además, lo que lee
+            # .labelPlotCases() y el número de parámetros del modelo). Se
+            # mantiene la forma list(plotData = ...), así que los análisis
+            # guardados con versiones anteriores siguen dibujándose.
+            plot_state <- function(cols, pModel = NULL) {
+                state <- list(plotData = private$.plotData[, cols, drop = FALSE])
+                if (!is.null(pModel)) state$pModel <- pModel
+                state
+            }
+            influence_cols <- c("case", "leverage", "studResidual", "cooksD")
 
-            self$results$residualsFittedPlot$setState(reg_plot_state)
-            self$results$qqResidualsPlot$setState(reg_plot_state)
-            self$results$residualHistogramPlot$setState(reg_plot_state)
-            self$results$residualNormalCurvePlot$setState(reg_plot_state)
-            self$results$scaleLocationPlot$setState(reg_plot_state)
-            self$results$residualsLeveragePlot$setState(reg_plot_state)
-            self$results$cooksDPlot$setState(reg_plot_state)
-            self$results$observedPredictedPlot$setState(reg_plot_state)
+            self$results$residualsFittedPlot$setState(plot_state(c("fitted", "residual")))
+            self$results$qqResidualsPlot$setState(plot_state("stdResidual"))
+            self$results$residualHistogramPlot$setState(plot_state("stdResidual"))
+            self$results$residualNormalCurvePlot$setState(plot_state("stdResidual"))
+            self$results$scaleLocationPlot$setState(plot_state(c("fitted", "absStdResidual")))
+            self$results$residualsLeveragePlot$setState(plot_state(influence_cols, p_model))
+            self$results$cooksDPlot$setState(plot_state(influence_cols, p_model))
+            self$results$observedPredictedPlot$setState(plot_state(c("fitted", "observed")))
 
             box_vars <- unique(c(dep, self$options$covs))
             box_vars <- box_vars[box_vars %in% names(dat2)]
@@ -780,7 +819,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         ce_res$p
                     )
                 } else {
-                    ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) .("The 'copent' package is not installed.") else .("Could not be computed for this predictor pair (copula entropy needs enough distinct values to estimate a copula density).")
+                    ce_reason <- .("Could not be computed for this predictor pair (copula entropy needs enough distinct values to estimate a copula density).")
                     add_linearity_predictor(
                         xname,
                         .("Copula entropy (copent)"),
@@ -1007,9 +1046,9 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                         }
                     }
-                    pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                    .al_add_row(pearsonTable, rowVar, values = pearsonVals)
                     for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
-                    dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                    .al_add_row(dcorTable, rowVar, values = dcorVals)
                     for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                 }
 
@@ -1044,7 +1083,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 gap <- pr$dcor - abs(pr$pearsonR)
                 if (gap <= gapThreshold) next()
                 flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
-                compTable$addRow(rowKey = key, values = list(
+                .al_add_row(compTable, key, values = list(
                     var1 = pr$v1,
                     var2 = pr$v2,
                     pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
@@ -2582,11 +2621,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
-
             # image$state, not private$.plotData, is the export-safe check
             # (see the setState() comment in .run()).
             # ES: image$state, no private$.plotData, es la verificación
@@ -2604,11 +2638,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
-
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
 
             if (is.null(image$state) || length(image$state$corrPairResults) == 0) {
                 image$setError(.("Not enough numeric variables are available for this plot."))

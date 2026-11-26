@@ -41,6 +41,10 @@ items:
   - name: design
     title: Design summary
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: element
         title: Item
@@ -53,6 +57,10 @@ items:
     title: Distribution by category
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: category
         title: Category
@@ -74,6 +82,10 @@ items:
     title: Complete separation
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor
@@ -104,6 +116,10 @@ items:
     refs:
       - box_1962
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor
@@ -151,6 +167,10 @@ items:
     refs:
       - hausman_1984
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: category
         title: Omitted category
@@ -188,6 +208,10 @@ items:
     refs:
       - pulkstenis_2004
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: test
         title: Test
@@ -219,6 +243,10 @@ items:
   - name: discrimination
     title: Pseudo-R²
     type: Table
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: metric
         title: Metric
@@ -241,6 +269,10 @@ items:
     title: Observed vs predicted
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: observed
         title: Observed
@@ -261,6 +293,10 @@ items:
     refs:
       - marquardt_1970
       - belsley_1980
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: diagnostic
         title: Diagnostic
@@ -289,6 +325,10 @@ items:
     type: Table
     rows: 0
     visible: (covs)
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var
         title: Variable
@@ -301,6 +341,10 @@ items:
     visible: (covs)
     refs:
       - sz_kely_2007
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var
         title: Variable
@@ -324,6 +368,10 @@ items:
     refs:
       - sz_kely_2007
       - ma_2011
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: var1
         title: Variable 1
@@ -376,6 +424,10 @@ items:
     title: Influential cases
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: case
         title: Case
@@ -418,6 +470,10 @@ items:
     title: Coefficients and odds ratios
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
     columns:
       - name: predictor
         title: Predictor

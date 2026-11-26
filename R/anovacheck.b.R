@@ -112,6 +112,20 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .init = function() {
             private$.initCorrelationMatrix()
+
+            # Rows whose keys are known from the options alone, with their
+            # labels; .run() fills them with setRow() (via .al_add_row()).
+            # ES: Filas cuyas claves se conocen solo con las opciones, con sus
+            # etiquetas; .run() las rellena con setRow() (vía .al_add_row()).
+            . <- .al_lang(self$options)$tr
+            ds_items <- list(.("Model"), .("Total cases"), .("Complete cases used"),
+                             .("Cases excluded for missing data"), .("Number of factors"),
+                             .("Number of covariates"), .("Number of observed cells"),
+                             .("Minimum cell size"), .("Maximum cell size"), .("Max/min ratio"))
+            .al_init_rows(self$results$designSummary, paste0("ds_", seq_along(ds_items)),
+                          lapply(ds_items, function(x) list(item = x)))
+            norm <- .al_norm_battery_labels(.)
+            .al_init_rows(self$results$residualNormality, paste0("norm_", seq_along(norm)), norm)
         },
 
         .initCorrelationMatrix = function() {
@@ -458,7 +472,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
 
             add_table_row <- function(table, key, values) {
-                table$addRow(rowKey = key, values = values)
+                .al_add_row(table, key, values = values)
             }
 
             dep <- self$options$dep
@@ -619,12 +633,19 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # resultados, y ese sí sobrevive a ese contexto de exportación. Sin
             # esto, estos gráficos se ven bien en pantalla pero exportan en
             # blanco (hallazgo de la revisión de jamovi).
-            self$results$residualsFittedPlot$setState(private$.plotData)
-            self$results$qqResidualsPlot$setState(private$.plotData)
-            self$results$residualHistogramPlot$setState(private$.plotData)
-            self$results$residualNormalCurvePlot$setState(private$.plotData)
-            self$results$residualsLeveragePlot$setState(private$.plotData)
-            self$results$cooksDPlot$setState(private$.plotData)
+            # Each plot keeps only the columns its own render function reads
+            # (the influence plots also need what .labelPlotCases() reads).
+            # ES: Cada gráfico guarda solo las columnas que lee su propia
+            # función de dibujo (los de influencia, además, lo que lee
+            # .labelPlotCases()).
+            plot_cols <- function(cols) private$.plotData[, cols, drop = FALSE]
+            influence_cols <- c("case", "leverage", "studResidual", "cooksD", "pModel")
+            self$results$residualsFittedPlot$setState(plot_cols(c("fitted", "residual")))
+            self$results$qqResidualsPlot$setState(plot_cols("stdResidual"))
+            self$results$residualHistogramPlot$setState(plot_cols("stdResidual"))
+            self$results$residualNormalCurvePlot$setState(plot_cols("stdResidual"))
+            self$results$residualsLeveragePlot$setState(plot_cols(influence_cols))
+            self$results$cooksDPlot$setState(plot_cols(influence_cols))
 
             self$results$residualsFittedGuide$setContent(plot_guide(
                 .("check for residual patterns not captured by group or cell means."),
@@ -1242,7 +1263,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (!is.null(ce_res)) {
                         add_covlin(cv, .("Copula entropy (copent)"), "CE", ce_res$ce, ce_res$p)
                     } else {
-                        ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) .("The 'copent' package is not installed.") else .("Could not be computed for this covariate (copula entropy needs enough distinct values to estimate a copula density).")
+                        ce_reason <- .("Could not be computed for this covariate (copula entropy needs enough distinct values to estimate a copula density).")
                         add_covlin(cv, .("Copula entropy (copent)"), "CE", NA_real_, NA_real_, reason = ce_reason)
                     }
                 }
@@ -1472,9 +1493,9 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                 dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                             }
                         }
-                        pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                        .al_add_row(pearsonTable, rowVar, values = pearsonVals)
                         for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
-                        dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                        .al_add_row(dcorTable, rowVar, values = dcorVals)
                         for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
                     }
 
@@ -1506,7 +1527,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     gap <- pr$dcor - abs(pr$pearsonR)
                     if (gap <= gapThreshold) next()
                     flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
-                    compTable$addRow(rowKey = key, values = list(
+                    .al_add_row(compTable, key, values = list(
                         var1 = pr$v1, var2 = pr$v2,
                         pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
                         dcor = pr$dcor, dcorSig = .al_p_sig(pr$dcorP),
@@ -1847,10 +1868,6 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
             # image$state, not private$.plotData: state is what survives into the
             # fresh render context jamovi uses for PDF/image export.
             # ES: image$state, no private$.plotData: el state es lo que
@@ -1868,10 +1885,6 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
             if (is.null(image$state) || nrow(image$state) == 0) {
                 image$setError(.("No group plot data are available."))
                 return(FALSE)

@@ -285,6 +285,21 @@ multCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .init = function() {
             private$.initCorrelationMatrix()
             private$.initClassificationTable()
+
+            # Rows whose keys are known from the options alone, with their
+            # labels; .run() fills them with setRow() (via .al_add_row()).
+            # ES: Filas cuyas claves se conocen solo con las opciones, con sus
+            # etiquetas; .run() las rellena con setRow() (vía .al_add_row()).
+            . <- .al_lang(self$options)$tr
+            .al_init_rows(self$results$design, paste0("design_", 1:6),
+                list(list(element = .("Total cases")),
+                     list(element = .("Complete cases")),
+                     list(element = .("Number of categories")),
+                     list(element = .("Reference category")),
+                     list(element = .("Smallest category")),
+                     list(element = .("Estimated parameters"))))
+            .al_init_rows(self$results$discrimination, c("disc_1", "disc_2"),
+                list(list(metric = "McFadden R²"), list(metric = "Nagelkerke R²")))
         },
 
         # Numeric-predictors-only column set (see file header: the outcome

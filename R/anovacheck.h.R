@@ -267,7 +267,12 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Dependent variable by group",
                 width=600,
                 height=340,
-                renderFun=".plotGroupBoxplots"))
+                renderFun=".plotGroupBoxplots",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="groupBoxplotsGuide",
@@ -323,7 +328,15 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Residuals vs fitted values",
                 width=560,
                 height=315,
-                renderFun=".plotResidualsFitted"))
+                renderFun=".plotResidualsFitted",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "residSmoother",
+                    "residShowBand",
+                    "residRefLine")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsFittedGuide",
@@ -335,7 +348,12 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Residual Q-Q plot",
                 width=560,
                 height=310,
-                renderFun=".plotQQResiduals"))
+                renderFun=".plotQQResiduals",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="qqResidualsGuide",
@@ -347,7 +365,12 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Residual histogram",
                 width=560,
                 height=300,
-                renderFun=".plotResidualHistogram"))
+                renderFun=".plotResidualHistogram",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualHistogramGuide",
@@ -359,7 +382,12 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Observed residual distribution vs theoretical normal curve",
                 width=560,
                 height=315,
-                renderFun=".plotResidualNormalCurve"))
+                renderFun=".plotResidualNormalCurve",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualNormalCurveGuide",
@@ -728,7 +756,14 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Studentized residuals vs leverage",
                 width=600,
                 height=350,
-                renderFun=".plotResidualsLeverage"))
+                renderFun=".plotResidualsLeverage",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "influenceLabelMode",
+                    "influenceShowThreshold")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="residualsLeverageGuide",
@@ -740,7 +775,14 @@ anovaCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Cook's D by case",
                 width=560,
                 height=300,
-                renderFun=".plotCooksD"))
+                renderFun=".plotCooksD",
+                clearWith=list(
+                    "dep",
+                    "covs",
+                    "factors",
+                    "showPlots",
+                    "influenceLabelMode",
+                    "influenceShowThreshold")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="cooksDGuide",

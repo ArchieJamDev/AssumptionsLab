@@ -302,6 +302,25 @@ pathCheckClass <- R6::R6Class(
 
         .init = function() {
             private$.initCorrelationMatrix()
+
+            # The model structure (exogenous/endogenous variables) and the
+            # specified model depend only on the options (variables and
+            # relations), so their tables are built whole here, before .run()
+            # computes anything.
+            # ES: La estructura del modelo (variables exógenas/endógenas) y el
+            # modelo especificado dependen solo de las opciones (variables y
+            # relaciones), así que sus tablas se construyen enteras aquí, antes
+            # de que .run() calcule nada.
+            . <- .al_lang(self$options)$tr
+            vars  <- self$options$vars
+            edges <- private$.buildEdges(self$options$relations)
+            deps  <- unique(vapply(edges, function(e) e$dep, character(1)))
+            private$.fillStructure(., .al_html_block, function(name, html) {
+                element <- tryCatch(self$results[[name]], error = function(e) NULL)
+                if (!is.null(element)) tryCatch(element$setContent(html), error = function(e) NULL)
+                invisible(TRUE)
+            }, edges, setdiff(vars, deps), deps)
+            private$.fillSpecifiedModel(., edges, deps)
         },
 
         # Las matrices de Pearson y dCor tienen una columna numerada por
@@ -431,10 +450,6 @@ pathCheckClass <- R6::R6Class(
                 casesPerRelation = casesPerRelation
             ))
 
-            private$.fillStructure(., html_block, set_html_safe, edges, exogenous, endogenous)
-
-            private$.fillSpecifiedModel(., edges, deps)
-
             # NULL means the model is not finalized or not valid: stop here.
             step <- private$.validateModel(., html_guide, set_html_safe, vars, isFinalized, edges, deps, isolated)
             if (is.null(step)) return()
@@ -496,14 +511,14 @@ pathCheckClass <- R6::R6Class(
             exogTable$deleteRows()
             for (v in exogenous) {
                 nOut <- sum(vapply(edges, function(e) identical(e$pred, v), logical(1)))
-                exogTable$addRow(rowKey = v, values = list(variable = v, outgoingPaths = nOut))
+                .al_add_row(exogTable, v, values = list(variable = v, outgoingPaths = nOut))
             }
 
             endogTable <- self$results$endogenousTable
             endogTable$deleteRows()
             for (v in endogenous) {
                 nIn <- sum(vapply(edges, function(e) identical(e$dep, v), logical(1)))
-                endogTable$addRow(rowKey = v, values = list(variable = v, incomingPaths = nIn))
+                .al_add_row(endogTable, v, values = list(variable = v, incomingPaths = nIn))
             }
 
             invisible(NULL)
@@ -516,7 +531,7 @@ pathCheckClass <- R6::R6Class(
             # -----------------------------------------------------------------------------
             self$results$specifiedModel$deleteRows()
             if (length(edges) == 0) {
-                self$results$specifiedModel$addRow(rowKey = "empty", values = list(
+                .al_add_row(self$results$specifiedModel, "empty", values = list(
                     dependent  = "—",
                     predictors = .("No relations have been defined yet.")
                 ))
@@ -525,7 +540,7 @@ pathCheckClass <- R6::R6Class(
                     preds_d <- vapply(
                         Filter(function(e) identical(e$dep, d), edges),
                         function(e) e$pred, character(1))
-                    self$results$specifiedModel$addRow(rowKey = d, values = list(
+                    .al_add_row(self$results$specifiedModel, d, values = list(
                         dependent  = d,
                         predictors = paste(unique(preds_d), collapse = " + ")
                     ))
@@ -542,7 +557,7 @@ pathCheckClass <- R6::R6Class(
             # -----------------------------------------------------------------------------
             self$results$validationSummary$deleteRows()
             addCheck <- function(key, check, ok, detailsOk, detailsFail) {
-                self$results$validationSummary$addRow(rowKey = key, values = list(
+                .al_add_row(self$results$validationSummary, key, values = list(
                     check   = check,
                     status  = if (ok) "\u2714" else "\u26A0",
                     details = if (ok) detailsOk else detailsFail
@@ -684,7 +699,7 @@ pathCheckClass <- R6::R6Class(
                         est = co[rn, "Estimate"], se = co[rn, "Std. Error"],
                         t = co[rn, "t value"], p = co[rn, "Pr(>|t|)"], beta = beta
                     )
-                    coefTable$addRow(rowKey = paste(d, p, sep = "|"), values = list(
+                    .al_add_row(coefTable, paste(d, p, sep = "|"), values = list(
                         dep   = d,
                         pred  = p,
                         est   = co[rn, "Estimate"],
@@ -695,7 +710,7 @@ pathCheckClass <- R6::R6Class(
                     ))
                 }
 
-                r2Table$addRow(rowKey = d, values = list(
+                r2.al_add_row(Table, d, values = list(
                     var   = d,
                     r2    = s$r.squared,
                     adjR2 = s$adj.r.squared
@@ -724,13 +739,24 @@ pathCheckClass <- R6::R6Class(
             # necesita es peso innecesario en cada archivo de resultados
             # exportado o guardado). Coincide con cómo se empaqueta el estado en
             # el resto de la suite (p. ej. ordcheck.b.R/groupcheck.b.R).
-            pathFitsForPlots <- lapply(fits, function(f) list(
+            # Each plot gets only its own pieces: the diagram reads the
+            # coefficient table, R² and the standard deviations of the
+            # equation's variables (for the standardized betas); the residual
+            # plots read only the residuals.
+            # ES: Cada gráfico recibe solo sus piezas: el diagrama lee la tabla
+            # de coeficientes, el R² y las desviaciones típicas de las variables
+            # de la ecuación (para las betas estandarizadas); los gráficos de
+            # residuos leen solo los residuos.
+            diagramFits <- lapply(fits, function(f) list(
                 coefficients = summary(f$fit)$coefficients,
                 r2           = summary(f$fit)$r.squared,
-                residuals    = stats::residuals(f$fit)
+                sds          = vapply(f$data, function(v) tryCatch(stats::sd(v), error = function(e) NA_real_), numeric(1))
             ))
-            self$results$pathDiagram$setState(list(fits = pathFitsForPlots))
-            self$results$residualPlots$setState(list(fits = pathFitsForPlots))
+            residualFits <- lapply(fits, function(f) list(
+                residuals = stats::residuals(f$fit)
+            ))
+            self$results$pathDiagram$setState(list(fits = diagramFits))
+            self$results$residualPlots$setState(list(fits = residualFits))
 
             if (length(fits) == 0) return()
 
@@ -764,7 +790,7 @@ pathCheckClass <- R6::R6Class(
                     r1 <- resids[[pr[1]]]; r2 <- resids[[pr[2]]]
                     n <- min(length(r1), length(r2))
                     if (n < 3) next()
-                    covTable$addRow(rowKey = paste(pr, collapse = "|"), values = list(
+                    .al_add_row(covTable, paste(pr, collapse = "|"), values = list(
                         var1 = pr[1],
                         var2 = pr[2],
                         covariance  = stats::cov(r1, r2),
@@ -922,7 +948,7 @@ pathCheckClass <- R6::R6Class(
                         crit <- c(crit, sprintf("Cook > %.4f", cookThreshold))
                     if (length(crit) == 0) next()
 
-                    outlierTable$addRow(rowKey = i, values = list(
+                    .al_add_row(outlierTable, i, values = list(
                         case     = i,
                         d2       = mahaResult$d2[i],
                         pD2      = mahaResult$p[i],
@@ -965,7 +991,7 @@ pathCheckClass <- R6::R6Class(
 
                 add_norm <- function(testName, statistic, p, reason = NULL) {
                     key <- paste(d, testName, sep = "|")
-                    normTable$addRow(rowKey = key, values = list(
+                    .al_add_row(normTable, key, values = list(
                         dep = d, test = testName, statistic = statistic, p = p, pSig = p_sig_stars(p)
                     ))
                     if (!is.null(reason) && is.na(p))
@@ -1090,7 +1116,7 @@ pathCheckClass <- R6::R6Class(
 
                 add_homo <- function(testName, statistic, value, df, p, reason = NULL) {
                     key <- paste(d, testName, sep = "|")
-                    homoTable$addRow(rowKey = key, values = list(
+                    .al_add_row(homoTable, key, values = list(
                         dep = d, test = testName, statistic = statistic,
                         value = value, df = df, p = p, pSig = p_sig_stars(p)
                     ))
@@ -1194,7 +1220,7 @@ pathCheckClass <- R6::R6Class(
             add_multi_row <- function(d, diagnostic, item, statistic, value, reason = NULL) {
                 multiRowKey <<- multiRowKey + 1
                 key <- paste0("multi_", multiRowKey)
-                vifTable$addRow(rowKey = key, values = list(
+                .al_add_row(vifTable, key, values = list(
                     dep = d, diagnostic = diagnostic, item = item, statistic = statistic,
                     value = if (is.na(value)) NA_real_ else value
                 ))
@@ -1343,7 +1369,7 @@ pathCheckClass <- R6::R6Class(
             }, error = function(e) NULL)
 
             if (!is.null(mardiaRes)) {
-                mardiaTable$addRow(rowKey = "skew", values = list(
+                .al_add_row(mardiaTable, "skew", values = list(
                     measure   = .("Mardia's skewness"),
                     value     = mardiaRes$b1p,
                     statistic = mardiaRes$skewStat,
@@ -1351,7 +1377,7 @@ pathCheckClass <- R6::R6Class(
                     p         = mardiaRes$skewP,
                     pSig      = p_sig_stars(mardiaRes$skewP)
                 ))
-                mardiaTable$addRow(rowKey = "kurt", values = list(
+                .al_add_row(mardiaTable, "kurt", values = list(
                     measure   = .("Mardia's kurtosis"),
                     value     = mardiaRes$b2p,
                     statistic = mardiaRes$kurtZ,
@@ -1412,7 +1438,6 @@ pathCheckClass <- R6::R6Class(
             # resultado se reutiliza en las matrices APA, en el análisis de
             # discordancia y en la tabla de entropía copular.
             k <- length(vars)
-            hasCopent <- requireNamespace("copent", quietly = TRUE)
 
             B_perm <- tryCatch(as.integer(self$options$permutations), error = function(e) NA_integer_)
             if (is.na(B_perm) || B_perm < 199) B_perm <- 999
@@ -1433,7 +1458,7 @@ pathCheckClass <- R6::R6Class(
                     x <- covData[[v1]]; y <- covData[[v2]]
                     ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)
                     dRes <- tryCatch(private$.dCorTest(x, y, B = B_perm), error = function(e) NULL)
-                    ceRes <- if (hasCopent) tryCatch(private$.copentTest(x, y, B = B_perm, seed = seed_perm), error = function(e) NULL) else NULL
+                    ceRes <- tryCatch(private$.copentTest(x, y, B = B_perm, seed = seed_perm), error = function(e) NULL)
                     isConnected <- any(vapply(edges, function(e)
                         (identical(e$pred, v1) && identical(e$dep, v2)) ||
                         (identical(e$pred, v2) && identical(e$dep, v1)), logical(1)))
@@ -1471,9 +1496,9 @@ pathCheckClass <- R6::R6Class(
                         dcorSyms[[colName]] <- if (!is.null(pr)) .al_p_sig(pr$dcorP) else ""
                     }
                 }
-                pearsonTable$addRow(rowKey = rowVar, values = pearsonVals)
+                .al_add_row(pearsonTable, rowVar, values = pearsonVals)
                 for (cn in names(pearsonSyms)) if (nzchar(pearsonSyms[[cn]])) pearsonTable$addSymbol(rowNo = pearsonTable$rowCount, cn, pearsonSyms[[cn]])
-                dcorTable$addRow(rowKey = rowVar, values = dcorVals)
+                .al_add_row(dcorTable, rowVar, values = dcorVals)
                 for (cn in names(dcorSyms)) if (nzchar(dcorSyms[[cn]])) dcorTable$addSymbol(rowNo = dcorTable$rowCount, cn, dcorSyms[[cn]])
             }
 
@@ -1508,7 +1533,7 @@ pathCheckClass <- R6::R6Class(
                 if (gap <= gapThreshold) next()
                 flaggedPairs <- c(flaggedPairs, sprintf("%s-%s", pr$v1, pr$v2))
                 if (!is.na(pr$ceP) && pr$ceP < .05) flaggedCeSig <- flaggedCeSig + 1
-                compTable$addRow(rowKey = key, values = list(
+                .al_add_row(compTable, key, values = list(
                     var1  = pr$v1,
                     var2  = pr$v2,
                     pearson = pr$pearsonR, pearsonSig = .al_p_sig(pr$pearsonP),
@@ -1544,41 +1569,36 @@ pathCheckClass <- R6::R6Class(
             ceTable <- self$results$crossEntropyTable
             ceTable$deleteRows()
 
-            if (!hasCopent) {
-                set_html_safe("crossEntropyInterpretation", html_block(NULL,
-                    .("The 'copent' package is not installed; this section could not be computed. Install it with install.packages('copent')."),
-                    paragraphs = FALSE))
-            } else {
-                nCeSig <- 0
-                nCeTotal <- 0
-                connectedSigPairs <- character(0)
-                for (key in names(pairResults)) {
-                    pr <- pairResults[[key]]
-                    if (is.na(pr$ce)) next()
-                    ceTable$addRow(rowKey = key, values = list(
-                        var1      = pr$v1,
-                        var2      = pr$v2,
-                        connected = if (pr$connected) .("Yes") else .("No"),
-                        ce        = pr$ce,
-                        p         = pr$ceP,
-                        pSig      = p_sig_stars(pr$ceP)
-                    ))
-                    nCeTotal <- nCeTotal + 1
-                    if (!is.na(pr$ceP) && pr$ceP < .05) {
-                        nCeSig <- nCeSig + 1
-                        if (!pr$connected) connectedSigPairs <- c(connectedSigPairs, sprintf("%s-%s", pr$v1, pr$v2))
-                    }
-                }
-                unconnNote <- if (length(connectedSigPairs) > 0)
-                    sprintf(.(" Notably, %s show significant dependence despite not being directly connected in the model, which may indicate an omitted path or a common cause not currently included."), paste(connectedSigPairs, collapse = ", "))
-                else ""
-                methodNote <- sprintf(.(" Method: p-values by permutation (B = %d, seed = %d); minimum achievable p = %s (read as p ≤ %s, Monte Carlo)."), B_perm, seed_perm, floor_p_str, floor_p_str)
-                set_html_safe("crossEntropyInterpretation", html_block(
-                    .("Applied Interpretation"),
-                    paste0(sprintf(.("%d of %d variable pair(s) show statistically significant dependence by copula entropy (p < .05)."), nCeSig, nCeTotal), unconnNote, methodNote),
-                    paragraphs = FALSE
+            nCeSig <- 0
+            nCeTotal <- 0
+            connectedSigPairs <- character(0)
+            for (key in names(pairResults)) {
+                pr <- pairResults[[key]]
+                if (is.na(pr$ce)) next()
+                .al_add_row(ceTable, key, values = list(
+                    var1      = pr$v1,
+                    var2      = pr$v2,
+                    connected = if (pr$connected) .("Yes") else .("No"),
+                    ce        = pr$ce,
+                    p         = pr$ceP,
+                    pSig      = p_sig_stars(pr$ceP)
                 ))
+                nCeTotal <- nCeTotal + 1
+                if (!is.na(pr$ceP) && pr$ceP < .05) {
+                    nCeSig <- nCeSig + 1
+                    if (!pr$connected) connectedSigPairs <- c(connectedSigPairs, sprintf("%s-%s", pr$v1, pr$v2))
+                }
             }
+            unconnNote <- if (length(connectedSigPairs) > 0)
+                sprintf(.(" Notably, %s show significant dependence despite not being directly connected in the model, which may indicate an omitted path or a common cause not currently included."), paste(connectedSigPairs, collapse = ", "))
+            else ""
+            methodNote <- sprintf(.(" Method: p-values by permutation (B = %d, seed = %d); minimum achievable p = %s (read as p ≤ %s, Monte Carlo)."), B_perm, seed_perm, floor_p_str, floor_p_str)
+            set_html_safe("crossEntropyInterpretation", html_block(
+                .("Applied Interpretation"),
+                paste0(sprintf(.("%d of %d variable pair(s) show statistically significant dependence by copula entropy (p < .05)."), nCeSig, nCeTotal), unconnNote, methodNote),
+                paragraphs = FALSE
+            ))
+        
 
             list(nCeSig = nCeSig, nCeTotal = nCeTotal, connectedSigPairs = connectedSigPairs,
                  flaggedPairs = flaggedPairs, flaggedCeSig = flaggedCeSig)
@@ -1626,7 +1646,7 @@ pathCheckClass <- R6::R6Class(
             }
 
             for (mr in mediationRows) {
-                medTable$addRow(rowKey = paste(mr$x, mr$m, mr$y, sep = "|"), values = list(
+                .al_add_row(medTable, paste(mr$x, mr$m, mr$y, sep = "|"), values = list(
                     x = mr$x, m = mr$m, y = mr$y,
                     directBeta = mr$directBeta, indirectBeta = mr$indirectBeta, totalBeta = mr$totalBeta,
                     sobelZ = mr$sobelZ, sobelP = mr$sobelP, sobelPSig = p_sig_stars(mr$sobelP)
@@ -1714,7 +1734,7 @@ pathCheckClass <- R6::R6Class(
                 sc <- sizeCriteria[[i]]
                 st <- sizeStatus(sc$required)
                 if (identical(st, .("Meets"))) nMet <- nMet + 1
-                szTable$addRow(rowKey = i, values = list(
+                .al_add_row(szTable, i, values = list(
                     criterion = sc$criterion, rule = sc$rule,
                     required = sc$required, actual = N, status = st
                 ))
@@ -1761,7 +1781,7 @@ pathCheckClass <- R6::R6Class(
             concTable$deleteRows()
 
             addConc <- function(area, status, detail) {
-                concTable$addRow(rowKey = area, values = list(area = area, status = status, detail = detail))
+                .al_add_row(concTable, area, values = list(area = area, status = status, detail = detail))
             }
 
             addConc(.("Sample size"),
@@ -1979,11 +1999,6 @@ pathCheckClass <- R6::R6Class(
 
         .plotPathDiagram = function(image, theme, ...) {
             . <- .al_lang(self$options)$tr
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw the path diagram."))
-                return(FALSE)
-            }
-
             vars <- self$options$vars
             if (length(vars) == 0) return(FALSE)
 
@@ -2057,9 +2072,14 @@ pathCheckClass <- R6::R6Class(
                             if (identical(edgeLabelMode, "coef")) {
                                 label <- sprintf("%.3f%s", co[rn, "Estimate"], stars)
                             } else {
+                                # sds is stored with the state; $data only in
+                                # states saved before 1.8.1.
+                                # ES: sds se guarda en el state; $data solo en
+                                # los guardados antes de la 1.8.1.
+                                sds <- fits[[e$dep]]$sds
                                 d <- fits[[e$dep]]$data
-                                sdY <- stats::sd(d[[e$dep]])
-                                sdX <- stats::sd(d[[e$pred]])
+                                sdY <- if (!is.null(sds) && e$dep %in% names(sds)) sds[[e$dep]] else if (!is.null(d)) stats::sd(d[[e$dep]]) else NA_real_
+                                sdX <- if (!is.null(sds) && e$pred %in% names(sds)) sds[[e$pred]] else if (!is.null(d)) stats::sd(d[[e$pred]]) else NA_real_
                                 beta <- co[rn, "Estimate"] * (sdX / sdY)
                                 label <- sprintf("%.3f%s", beta, stars)
                             }
@@ -2173,11 +2193,6 @@ pathCheckClass <- R6::R6Class(
 
         .plotResidualHistograms = function(image, ggtheme, theme, ...) {
             . <- .al_lang(self$options)$tr
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
-
             # Read from image$state instead of private$.pathFits: see the
             # export-context comment on the equivalent guard in
             # .plotPathDiagram()/at the setState() call site in .run().

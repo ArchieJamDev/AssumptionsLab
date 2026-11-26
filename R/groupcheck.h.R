@@ -242,7 +242,15 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(showDistributionPlot)",
                 width=620,
                 height=520,
-                renderFun=".plotGroupDistribution"))
+                renderFun=".plotGroupDistribution",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "showDistributionPlot",
+                    "addViolinPlot",
+                    "showJitterPoints",
+                    "showMeanMarker",
+                    "distColorByGroup")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="distributionPlotGuide",
@@ -408,7 +416,13 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(showQQPlots)",
                 width=620,
                 height=720,
-                renderFun=".plotGroupQQNormality"))
+                renderFun=".plotGroupQQNormality",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "showQQPlots",
+                    "qqShowBand",
+                    "qqFlagOutliers")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="qqNormalityGuide",
@@ -421,7 +435,13 @@ groupCheckResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 visible="(showNormalCurvePlots)",
                 width=620,
                 height=720,
-                renderFun=".plotGroupNormalCurve"))
+                renderFun=".plotGroupNormalCurve",
+                clearWith=list(
+                    "dep",
+                    "group",
+                    "showNormalCurvePlots",
+                    "curveBandwidth",
+                    "curveShowRug")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="normalCurveGuide",

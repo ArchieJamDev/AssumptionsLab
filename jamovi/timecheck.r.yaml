@@ -108,7 +108,14 @@ items:
     width: 700
     height: 280
     renderFun: .plotSeries
-    visible: false
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
+    visible: (showPlots)
 
   - name: diagnosticsResults
     title: Test results
@@ -156,7 +163,14 @@ items:
     width: 460
     height: 260
     renderFun: .plotAcf
-    visible: false
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
+    visible: (showPlots && (model:arima || model:sarima || model:ets || model:garch))
 
   - name: pacfPlot
     title: Partial autocorrelation (PACF)
@@ -164,7 +178,14 @@ items:
     width: 460
     height: 260
     renderFun: .plotPacf
-    visible: false
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
+    visible: (showPlots && (model:arima || model:sarima || model:ets || model:garch))
 
   - name: residualsPlot
     title: Residuals over time
@@ -172,7 +193,14 @@ items:
     width: 700
     height: 260
     renderFun: .plotResiduals
-    visible: false
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
+    visible: (showPlots && (model:arima || model:sarima || model:ets || model:garch))
 
   - name: volatilityPlot
     title: Estimated conditional volatility
@@ -180,7 +208,14 @@ items:
     width: 700
     height: 260
     renderFun: .plotVolatility
-    visible: false
+    clearWith:
+      - series
+      - dateVar
+      - exogenous
+      - model
+      - frequency
+      - showPlots
+    visible: (showPlots && model:garch)
 
   - name: interpretation
     title: Methodological reading

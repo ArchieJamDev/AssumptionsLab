@@ -87,6 +87,48 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
     inherit = countCheckBase,
     private = list(
 
+        # -----------------------------------------------------------------------------
+        # Lay out the rows whose keys are known from the options alone, with their
+        # labels; .run() fills them with setRow() (via .al_add_row()).
+        # ES: Crea las filas cuyas claves se conocen solo con las opciones, con sus
+        # etiquetas; .run() las rellena con setRow() (vía .al_add_row()).
+        # -----------------------------------------------------------------------------
+        .init = function() {
+            . <- .al_lang(self$options)$tr
+            r <- self$results
+
+            design_labels <- c(.("Total cases"), .("Complete cases"), .("Mean count"),
+                               .("Variance of the count"), .("Variance / mean (raw data)"),
+                               .("Zeros"), .("Maximum count"), .("Exposure (offset)"),
+                               .("Model diagnosed"))
+            .al_init_rows(r$design, paste0("design_", seq_along(design_labels)),
+                          lapply(design_labels, function(x) list(element = x)))
+
+            disp_keys <- c("pearson", "deviance", "dl", "ct", "lr")
+            disp_labels <- list(.("Pearson χ² / df (Poisson)"), .("Deviance / df (Poisson)"),
+                                .("Dean-Lawless score test (z)"), .("Cameron-Trivedi auxiliary regression (z)"),
+                                .("Likelihood ratio, Poisson vs negative binomial (χ²)"))
+            if (identical(self$options$family, "negbin")) {
+                disp_keys <- c(disp_keys, "pearsonNb")
+                disp_labels <- c(disp_labels, .("Pearson χ² / df (negative binomial)"))
+            }
+            .al_init_rows(r$dispersion, disp_keys, lapply(disp_labels, function(x) list(test = x)))
+
+            models <- list(list(model = .("Poisson")), list(model = .("Negative binomial")))
+            .al_init_rows(r$modelComparison, c("pois", "nb"), models)
+            .al_init_rows(r$zeros, c("pois", "nb"), models)
+
+            .al_init_rows(r$residuals, c("pearson", "deviance", "quantile"),
+                          list(list(type = .("Pearson")), list(type = .("Deviance")),
+                               list(type = .("Randomized quantile"))))
+
+            covs <- self$options$covs
+            if (length(covs) == 0)
+                .al_init_rows(r$linearity, "lin_none", list(list(predictor = .("Not applicable"))))
+            else
+                .al_init_rows(r$linearity, paste0("lin_", covs), lapply(covs, function(v) list(predictor = v)))
+        },
+
         .run = function() {
             # Hide the fixed guides when "Explanations" is off (see
             # .al_apply_guides()). ES: oculta las guías fijas si está desactivado.
@@ -240,13 +282,13 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             table <- self$results$dispersion
             nb_reason <- if (is.null(fits$nb)) sprintf(.("Not computable: the negative binomial model could not be fitted (%s)."), fits$nb_error) else NULL
 
-            table$addRow(rowKey = "pearson", values = list(test = .("Pearson χ² / df (Poisson)"), statistic = d$pearson, df = d$df, ratio = d$pearson_ratio, p = d$pearson_p, pSig = .al_p_sig(d$pearson_p)))
-            table$addRow(rowKey = "deviance", values = list(test = .("Deviance / df (Poisson)"), statistic = d$deviance, df = d$df, ratio = d$deviance_ratio, p = d$deviance_p, pSig = .al_p_sig(d$deviance_p)))
-            table$addRow(rowKey = "dl", values = list(test = .("Dean-Lawless score test (z)"), statistic = d$dl_z, df = NA_real_, ratio = NA_real_, p = d$dl_p, pSig = .al_p_sig(d$dl_p)))
-            table$addRow(rowKey = "ct", values = list(test = .("Cameron-Trivedi auxiliary regression (z)"), statistic = d$ct_z, df = NA_real_, ratio = NA_real_, p = d$ct_p, pSig = .al_p_sig(d$ct_p)))
+            .al_add_row(table, "pearson", values = list(test = .("Pearson χ² / df (Poisson)"), statistic = d$pearson, df = d$df, ratio = d$pearson_ratio, p = d$pearson_p, pSig = .al_p_sig(d$pearson_p)))
+            .al_add_row(table, "deviance", values = list(test = .("Deviance / df (Poisson)"), statistic = d$deviance, df = d$df, ratio = d$deviance_ratio, p = d$deviance_p, pSig = .al_p_sig(d$deviance_p)))
+            .al_add_row(table, "dl", values = list(test = .("Dean-Lawless score test (z)"), statistic = d$dl_z, df = NA_real_, ratio = NA_real_, p = d$dl_p, pSig = .al_p_sig(d$dl_p)))
+            .al_add_row(table, "ct", values = list(test = .("Cameron-Trivedi auxiliary regression (z)"), statistic = d$ct_z, df = NA_real_, ratio = NA_real_, p = d$ct_p, pSig = .al_p_sig(d$ct_p)))
             if (is.na(d$ct_z))
                 table$addFootnote(rowKey = "ct", col = "statistic", note = .("Not computable: the auxiliary regression has no residual variation (too few cases or identical fitted values)."))
-            table$addRow(rowKey = "lr", values = list(test = .("Likelihood ratio, Poisson vs negative binomial (χ²)"), statistic = lr$lr, df = 1, ratio = NA_real_, p = lr$p, pSig = .al_p_sig(lr$p)))
+            .al_add_row(table, "lr", values = list(test = .("Likelihood ratio, Poisson vs negative binomial (χ²)"), statistic = lr$lr, df = 1, ratio = NA_real_, p = lr$p, pSig = .al_p_sig(lr$p)))
             if (!is.null(nb_reason))
                 table$addFootnote(rowKey = "lr", col = "statistic", note = nb_reason)
             else
@@ -257,19 +299,19 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 pearson_nb <- sum(stats::residuals(fits$nb, type = "pearson")^2)
                 df_nb <- fits$nb$df.residual
                 d_nb <- list(ratio = pearson_nb / df_nb, p = stats::pchisq(pearson_nb, df_nb, lower.tail = FALSE))
-                table$addRow(rowKey = "pearsonNb", values = list(test = .("Pearson χ² / df (negative binomial)"), statistic = pearson_nb, df = df_nb, ratio = d_nb$ratio, p = d_nb$p, pSig = .al_p_sig(d_nb$p)))
+                .al_add_row(table, "pearsonNb", values = list(test = .("Pearson χ² / df (negative binomial)"), statistic = pearson_nb, df = df_nb, ratio = d_nb$ratio, p = d_nb$p, pSig = .al_p_sig(d_nb$p)))
             }
             table$setNote("onesided", .("The Dean-Lawless and Cameron-Trivedi tests are one-sided (H1: overdispersion of the negative binomial form, var = μ + α·μ²)."))
 
             comp <- self$results$modelComparison
             self$results$modelComparisonGuide$setContent(html_guide(.("Poisson vs negative binomial"), "modelComparisonGuide"))
-            comp$addRow(rowKey = "pois", values = list(model = .("Poisson"), logLik = as.numeric(stats::logLik(fits$pois)), k = length(stats::coef(fits$pois)), aic = stats::AIC(fits$pois), bic = stats::BIC(fits$pois), theta = NA_real_, alpha = 0))
+            .al_add_row(comp, "pois", values = list(model = .("Poisson"), logLik = as.numeric(stats::logLik(fits$pois)), k = length(stats::coef(fits$pois)), aic = stats::AIC(fits$pois), bic = stats::BIC(fits$pois), theta = NA_real_, alpha = 0))
             if (!is.null(fits$nb)) {
-                comp$addRow(rowKey = "nb", values = list(model = .("Negative binomial"), logLik = as.numeric(stats::logLik(fits$nb)), k = length(stats::coef(fits$nb)) + 1L, aic = stats::AIC(fits$nb), bic = stats::BIC(fits$nb), theta = fits$nb$theta, alpha = 1 / fits$nb$theta))
+                .al_add_row(comp, "nb", values = list(model = .("Negative binomial"), logLik = as.numeric(stats::logLik(fits$nb)), k = length(stats::coef(fits$nb)) + 1L, aic = stats::AIC(fits$nb), bic = stats::BIC(fits$nb), theta = fits$nb$theta, alpha = 1 / fits$nb$theta))
                 if (length(fits$nb_warnings) > 0)
                     comp$addFootnote(rowKey = "nb", col = "theta", note = sprintf(.("glm.nb() reported a convergence warning (%s). This usually means θ is growing without bound because the data show little or no overdispersion."), paste(fits$nb_warnings, collapse = "; ")))
             } else {
-                comp$addRow(rowKey = "nb", values = list(model = .("Negative binomial"), logLik = NA_real_, k = NA_integer_, aic = NA_real_, bic = NA_real_, theta = NA_real_, alpha = NA_real_))
+                .al_add_row(comp, "nb", values = list(model = .("Negative binomial"), logLik = NA_real_, k = NA_integer_, aic = NA_real_, bic = NA_real_, theta = NA_real_, alpha = NA_real_))
                 comp$addFootnote(rowKey = "nb", col = "logLik", note = nb_reason)
             }
 
@@ -315,10 +357,10 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             ratio_pois <- if (z$expected_pois > 0) z$observed / z$expected_pois else NA_real_
             ratio_nb <- if (isTRUE(z$expected_nb > 0)) z$observed / z$expected_nb else NA_real_
 
-            table$addRow(rowKey = "pois", values = list(model = .("Poisson"), observed = z$observed, expected = z$expected_pois, ratio = ratio_pois, statistic = z$score, p = z$p, pSig = .al_p_sig(z$p)))
+            .al_add_row(table, "pois", values = list(model = .("Poisson"), observed = z$observed, expected = z$expected_pois, ratio = ratio_pois, statistic = z$score, p = z$p, pSig = .al_p_sig(z$p)))
             if (is.na(z$score))
                 table$addFootnote(rowKey = "pois", col = "statistic", note = .("Not computable: the score test's variance is not positive for these fitted values (usually very few zeros are expected and observed)."))
-            table$addRow(rowKey = "nb", values = list(model = .("Negative binomial"), observed = z$observed, expected = z$expected_nb, ratio = ratio_nb, statistic = NA_real_, p = NA_real_, pSig = ""))
+            .al_add_row(table, "nb", values = list(model = .("Negative binomial"), observed = z$observed, expected = z$expected_nb, ratio = ratio_nb, statistic = NA_real_, p = NA_real_, pSig = ""))
             table$addFootnote(rowKey = "nb", col = "statistic", note = .("van den Broek's score test is defined against the Poisson model only; for the negative binomial, compare observed and expected zeros."))
             table$setNote("score", .("Score test: van den Broek (1995), zero-inflated Poisson vs Poisson, χ²(1)."))
 
@@ -365,7 +407,7 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 quantile = c(list(type = .("Randomized quantile")), summarise(r_quantile))
             )
             for (key in names(rows))
-                self$results$residuals$addRow(rowKey = key, values = rows[[key]])
+                .al_add_row(self$results$residuals, key, values = rows[[key]])
             self$results$residuals$setNote("quantile", .("Randomized quantile residuals use a fixed seed (20260704), so the same data always give the same values. Under a correct model they are standard normal: mean 0, SD 1, about 4.6% beyond ±2 and 0.3% beyond ±3."))
 
             sw <- NULL
@@ -406,14 +448,14 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             work_resid <- stats::residuals(fit, type = "working")
 
             if (length(covs) == 0) {
-                table$addRow(rowKey = "lin_none", values = list(predictor = .("Not applicable"), statistic = NA_real_, df = NA_integer_, p = NA_real_, pSig = ""))
+                .al_add_row(table, "lin_none", values = list(predictor = .("Not applicable"), statistic = NA_real_, df = NA_integer_, p = NA_real_, pSig = ""))
             }
 
             for (predictor in covs) {
                 term <- .al_qname(predictor)
                 x <- model_data[[predictor]]
                 res <- .al_count_spline_test(fit, rhs_terms, term, x, model_data, family, offset_term)
-                table$addRow(rowKey = paste0("lin_", predictor), values = list(predictor = predictor, statistic = res$lr, df = 2L, p = res$p, pSig = .al_p_sig(res$p)))
+                .al_add_row(table, paste0("lin_", predictor), values = list(predictor = predictor, statistic = res$lr, df = 2L, p = res$p, pSig = .al_p_sig(res$p)))
                 if (!is.null(res$reason)) {
                     table$addFootnote(rowKey = paste0("lin_", predictor), col = "statistic", note = if (identical(res$reason, "fewvalues")) .("Not tested: the predictor has fewer than 5 distinct values, too few for a 3-df spline.") else .("Not computable: the model with the spline term could not be fitted."))
                 } else {
@@ -458,14 +500,14 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             table <- self$results$multicollinearity
 
             if (length(predictors) < 2) {
-                table$addRow(rowKey = "mc_none", values = list(predictor = .("Not applicable"), gvif = NA_real_, df = NA_integer_, gvifAdj = NA_real_))
+                .al_add_row(table, "mc_none", values = list(predictor = .("Not applicable"), gvif = NA_real_, df = NA_integer_, gvifAdj = NA_real_))
                 self$results$multicollinearityInterpretation$setContent(html_block(.("Applied Interpretation"), .("Multicollinearity needs at least two predictors, so it does not apply to this model."), paragraphs = TRUE))
                 return(NA_real_)
             }
 
             v <- tryCatch(suppressWarnings(car::vif(fit)), error = function(e) e)
             if (inherits(v, "error")) {
-                table$addRow(rowKey = "mc_fail", values = list(predictor = .("All predictors"), gvif = NA_real_, df = NA_integer_, gvifAdj = NA_real_))
+                .al_add_row(table, "mc_fail", values = list(predictor = .("All predictors"), gvif = NA_real_, df = NA_integer_, gvifAdj = NA_real_))
                 table$addFootnote(rowKey = "mc_fail", col = "gvif", note = sprintf(.("Not computable: %s"), conditionMessage(v)))
                 self$results$multicollinearityInterpretation$setContent(html_block(.("Applied Interpretation"), .("The variance inflation factors could not be computed; this usually means an exact linear dependency among predictors (an aliased coefficient)."), paragraphs = TRUE))
                 return(NA_real_)
@@ -474,7 +516,7 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 v <- cbind(GVIF = v, Df = 1, `GVIF^(1/(2*Df))` = sqrt(v))
 
             for (i in seq_len(nrow(v))) {
-                table$addRow(rowKey = paste0("mc_", i), values = list(predictor = .al_strip_qname(rownames(v)[i]), gvif = v[i, 1], df = as.integer(v[i, 2]), gvifAdj = v[i, 3]))
+                .al_add_row(table, paste0("mc_", i), values = list(predictor = .al_strip_qname(rownames(v)[i]), gvif = v[i, 1], df = as.integer(v[i, 2]), gvifAdj = v[i, 3]))
             }
             table$setNote("scale", .("GVIF^(1/(2·df)) above √5 ≈ 2.24 (VIF above 5) is a common warning threshold; above √10 ≈ 3.16, a strong one."))
 
@@ -509,11 +551,11 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             table <- self$results$influence
             if (n_influential == 0) {
-                table$addRow(rowKey = "none", values = list(case = NA_integer_, cooksD = NA_real_, leverage = NA_real_, stdResid = NA_real_))
+                .al_add_row(table, "none", values = list(case = NA_integer_, cooksD = NA_real_, leverage = NA_real_, stdResid = NA_real_))
                 table$addFootnote(rowKey = "none", col = "case", note = .("No case exceeds the Cook's D or leverage cutoffs."))
             }
             for (i in shown)
-                table$addRow(rowKey = paste0("case_", i), values = list(case = i, cooksD = .al_clean_num(cooks_d[i]), leverage = .al_clean_num(leverage[i]), stdResid = .al_clean_num(std_resid[i])))
+                .al_add_row(table, paste0("case_", i), values = list(case = i, cooksD = .al_clean_num(cooks_d[i]), leverage = .al_clean_num(leverage[i]), stdResid = .al_clean_num(std_resid[i])))
             table$setNote("cutoffs", sprintf(.("Cases flagged by Cook's D > 4/n = %s or leverage > 2p/n = %s; at most 30 are listed, ordered by Cook's D. Case numbers refer to the complete cases."), fmt_num(cook_cut, 4), fmt_num(lev_cut, 4)))
 
             pct <- 100 * n_influential / n_complete
@@ -543,7 +585,7 @@ countCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             for (i in seq_along(coefs)) {
                 nm <- names(coefs)[i]
-                self$results$rateRatios$addRow(rowKey = paste0("irr_", i), values = list(
+                .al_add_row(self$results$rateRatios, paste0("irr_", i), values = list(
                     predictor = .al_strip_qname(nm),
                     irr = unname(exp(coefs[i])),
                     ciLower = if (!is.null(ci) && nm %in% rownames(ci)) exp(ci[nm, 1]) else NA_real_,

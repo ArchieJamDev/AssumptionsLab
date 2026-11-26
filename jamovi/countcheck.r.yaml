@@ -42,6 +42,13 @@ items:
     title: Design summary
     type: Table
     rows: 0
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: element
         title: Item
@@ -64,6 +71,13 @@ items:
       - dean_1989
       - cameron_1990
       - self_1987
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: test
         title: Test
@@ -97,6 +111,13 @@ items:
     refs:
       - venables_2002
       - hilbe_2011
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: model
         title: Model
@@ -150,6 +171,13 @@ items:
     rows: 0
     refs:
       - van_den_broek_1995
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: model
         title: Model
@@ -205,6 +233,13 @@ items:
     refs:
       - dunn_1996
       - shapiro_1965
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: type
         title: Residual
@@ -274,6 +309,13 @@ items:
     rows: 0
     refs:
       - harrell_2015
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: predictor
         title: Predictor
@@ -324,6 +366,13 @@ items:
     refs:
       - fox_1992
       - marquardt_1970
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: predictor
         title: Predictor
@@ -354,6 +403,13 @@ items:
     refs:
       - cook_1977
       - pregibon_1981
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: case
         title: Case
@@ -403,6 +459,13 @@ items:
     rows: 0
     refs:
       - mccullagh_1989
+    clearWith:
+      - dep
+      - covs
+      - factors
+      - exposure
+      - exposureScale
+      - family
     columns:
       - name: predictor
         title: Predictor

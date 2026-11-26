@@ -41,6 +41,8 @@ items:
   - name: designSummary
     title: Design summary
     type: Table
+    clearWith:
+      - measures
     columns:
       - name: item
         title: Item
@@ -53,6 +55,8 @@ items:
     title: Descriptives by measurement
     type: Table
     rows: (measures)
+    clearWith:
+      - measures
     columns:
       - name: measure
         title: Measurement
@@ -134,6 +138,8 @@ items:
   - name: differenceSummary
     title: Summary of paired differences
     type: Table
+    clearWith:
+      - measures
     columns:
       - name: comparison
         title: Comparison
@@ -171,6 +177,8 @@ items:
       - anderson_1952
       - shapiro_1972
       - jarque_1987
+    clearWith:
+      - measures
     columns:
       - name: scope
         title: Scope
@@ -195,6 +203,8 @@ items:
   - name: normalitySummary
     title: Normality summary by comparison
     type: Table
+    clearWith:
+      - measures
     columns:
       - name: comparison
         title: Comparison
@@ -224,6 +234,8 @@ items:
   - name: symmetry
     title: Symmetry of differences
     type: Table
+    clearWith:
+      - measures
     columns:
       - name: comparison
         title: Comparison
@@ -258,6 +270,8 @@ items:
       - mauchly_1940
       - greenhouse_1959
       - huynh_1976
+    clearWith:
+      - measures
     columns:
       - name: diagnostic
         title: Diagnostic
@@ -292,6 +306,8 @@ items:
     title: Pearson correlation matrix (APA 7 format)
     type: Table
     rows: 0
+    clearWith:
+      - measures
     columns:
       - name: var
         title: Variable
@@ -303,6 +319,8 @@ items:
     refs:
       - sz_kely_2007
     rows: 0
+    clearWith:
+      - measures
     columns:
       - name: var
         title: Variable
@@ -324,6 +342,8 @@ items:
       - sz_kely_2007
       - ma_2011
     rows: 0
+    clearWith:
+      - measures
     columns:
       - name: var1
         title: Variable 1
@@ -372,6 +392,8 @@ items:
   - name: outliers
     title: Outliers in differences
     type: Table
+    clearWith:
+      - measures
     columns:
       - name: case
         title: Case
@@ -398,6 +420,8 @@ items:
   - name: methodOptions
     title: Methodological options
     type: Table
+    clearWith:
+      - measures
     columns:
       - name: design
         title: Design
