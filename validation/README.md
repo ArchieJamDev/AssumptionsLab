@@ -132,3 +132,21 @@ comparisons match.
 
 Reported in the manuscript's applied-cases section and its numeric
 verification table.
+
+## `countcheck_verification.R`
+
+Verifies Count and Rate Regression (`countCheck`). Part 1 checks the
+numerical core in `R/count-helpers.R` against the published negative
+binomial fit of `MASS::quine` (Venables & Ripley, 2002, theta = 1.275) and
+against the closed form of each statistic. Part 2 is a Monte Carlo study
+of the size and power of the decisions the analysis reports (Dean-Lawless,
+Cameron-Trivedi, the boundary-corrected likelihood ratio test, van den
+Broek's zero-inflation score test and the 3-df spline linearity test) in
+four scenarios (Poisson, negative binomial with size 2, zero-inflated
+Poisson with 20% structural zeros, Poisson with a quadratic term) at n = 100
+and n = 300, 1,000 replications per cell, seed `20261123`.
+
+Run from the repository root with `Rscript validation/countcheck_verification.R`
+(needs only MASS; a few minutes on a single core). Reproduces
+`countcheck_verification_results.csv`.
+

@@ -46,6 +46,12 @@
             " means the standard error of that coefficient is about %s times larger than it would be without collinearity. This does not invalidate the model as a whole, but it does make that specific coefficient's confidence interval much less precise.": [
                 " significa que el error estándar de ese coeficiente es aproximadamente %s veces más grande de lo que sería sin colinealidad. Esto no invalida el modelo en conjunto, pero sí hace que el intervalo de confianza de ese coeficiente en particular sea mucho menos preciso."
             ],
+            "% |r| > 2": [
+                "% |r| > 2"
+            ],
+            "% |r| > 3": [
+                "% |r| > 3"
+            ],
             "%d assumption(s) raised a concern (%s); review the suggested methodological options in this section before relying on the standard ANOVA/ANCOVA F-test.": [
                 "%d supuesto(s) mostraron alerta (%s); revise las opciones metodológicas sugeridas en esta sección antes de confiar en la prueba F estándar de ANOVA/ANCOVA."
             ],
@@ -105,6 +111,9 @@
             ],
             "%s %s potentially influential case(s) were flagged and are worth reviewing.": [
                 "%s Existen %s caso(s) potencialmente influyente(s) que conviene revisar."
+            ],
+            "%s (already on the log scale)": [
+                "%s (ya en escala logarítmica)"
             ],
             "%s * p < .05, ** p < .01, *** p < .001": [
                 "%s * p < .05, ** p < .01, *** p < .001"
@@ -183,6 +192,9 @@
             ],
             "%s of %s numeric predictor(s) showed a significant Box-Tidwell-style interaction, suggesting the relationship with the cumulative logit may not be linear for those predictors.": [
                 "%s de %s predictor(es) numérico(s) mostraron una interacción estilo Box-Tidwell significativa, lo que sugiere que la relación con el logit acumulativo podría no ser lineal para esos predictores."
+            ],
+            "%s of %s numeric predictor(s) showed a significant departure from linearity on the log scale (spline likelihood ratio test; Harrell, 2015; see references)%s": [
+                "%s de %s predictor(es) numérico(s) mostraron una desviación significativa de la linealidad en la escala logarítmica (prueba de razón de verosimilitudes con spline; Harrell, 2015; ver referencias)%s"
             ],
             "%s of %s numeric predictor(s) showed a significant likelihood-ratio test, suggesting the relationship with the logit may not be linear for those predictors in at least one category.": [
                 "%s de %s predictor(es) numérico(s) mostraron una prueba de razón de verosimilitud significativa, lo que sugiere que la relación con el logit podría no ser lineal para esos predictores en al menos una categoría."
@@ -316,6 +328,9 @@
             "95% CI upper": [
                 "IC 95% superior"
             ],
+            ": %s.": [
+                ": %s."
+            ],
             "<b>Analysis type:</b> ": [
                 "<b>Tipo de análisis:</b> "
             ],
@@ -330,6 +345,9 @@
             ],
             "<b>Complete cases:</b> %s | <b>Events:</b> %s | <b>Non-events:</b> %s": [
                 "<b>Casos completos:</b> %s | <b>Eventos:</b> %s | <b>No eventos:</b> %s"
+            ],
+            "<b>Complete cases:</b> %s | <b>Mean count:</b> %s | <b>Variance:</b> %s | <b>Zeros:</b> %s": [
+                "<b>Casos completos:</b> %s | <b>Recuento medio:</b> %s | <b>Varianza:</b> %s | <b>Ceros:</b> %s"
             ],
             "<b>Complete cases:</b> %s | <b>Smallest category:</b> %s (n = %s)": [
                 "<b>Casos completos:</b> %s | <b>Categoría más pequeña:</b> %s (n = %s)"
@@ -361,6 +379,9 @@
             "<b>Measurements:</b> ": [
                 "<b>Mediciones:</b> "
             ],
+            "<b>Model diagnosed:</b> %s | <b>Exposure (offset):</b> %s": [
+                "<b>Modelo diagnosticado:</b> %s | <b>Exposición (offset):</b> %s"
+            ],
             "<b>Numeric predictors:</b> ": [
                 "<b>Predictores numéricos:</b> "
             ],
@@ -369,6 +390,9 @@
             ],
             "<b>Reference level (0):</b> %s | <b>Event (1):</b> %s": [
                 "<b>Nivel de referencia (0):</b> %s | <b>Evento (1):</b> %s"
+            ],
+            "<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">Assumption check for count and rate regression</p><p style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">Use this analysis when you want to review whether a Poisson or negative binomial regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.</p><p style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>": [
+                "<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">Revisión de supuestos para regresión de recuentos y tasas</p><p style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">Use este análisis cuando quiera revisar si un modelo de regresión de Poisson o binomial negativa tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos.</p><p style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>"
             ],
             "<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">Assumption check for logistic regression</p><p style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">Use this analysis when you want to review whether a logistic regression model has defensible methodological assumptions. The goal is not only to compute tests, but to help justify the statistical decision with evidence obtained from your own data.</p><p style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>": [
                 "<div style=\"max-width: 7.25in; width: 100%%; box-sizing: border-box;\"><p style=\"font-weight: 700; margin: 0 0 0.10em 0; line-height: 1.25;\">AssumptionsLab</p><p style=\"margin: 0 0 0.35em 0; line-height: 1.25;\">Revisión de supuestos para regresión logística</p><p style=\"margin: 0 0 0.25em 0;\"> </p><p style=\"margin: 0 0 0.55em 0; line-height: 1.35;\">Use este análisis cuando quiera revisar si un modelo de regresión logística tiene supuestos metodológicos defendibles. El objetivo no es solo calcular pruebas, sino ayudar a justificar la decisión estadística con evidencia obtenida de sus propios datos.</p><p style=\"margin: 0 0 0.25em 0;\"> </p>%s</div>"
@@ -403,6 +427,9 @@
             "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Mauchly — what it assesses and limitations:</p><p style=\"margin: 0 0 0.6em 0;\">Tests H0: the variances of the differences between all pairs of levels are equal (sphericity), against H1: at least one pair differs (Mauchly, 1940). It is the historical reference test, but its behavior is not uniform: with small samples it can lack power to detect real violations, and with large samples it can flag deviations from sphericity too small to have practical relevance for the F statistic.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Greenhouse-Geisser — what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Rather than testing sphericity directly, it estimates how far the observed covariance pattern departs from it (epsilon, between 1/(k-1) and 1) and reduces the F test's degrees of freedom by multiplying them by that epsilon (Greenhouse &amp; Geisser, 1959). The F statistic itself does not change; only the degrees of freedom used to obtain the p-value change, making the test more conservative. It is the recommended default correction when the estimated epsilon is low (&lt; .75).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Huynh-Feldt — what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">An alternative correction that adjusts the Greenhouse-Geisser epsilon to reduce its tendency to be overly conservative, especially when the sphericity violation is mild or moderate (Huynh &amp; Feldt, 1976). The usual convention is to prefer Huynh-Feldt when the Greenhouse-Geisser-estimated epsilon exceeds .75, and Greenhouse-Geisser when it is below that.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Lower-bound — what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Applies the most extreme mathematically possible correction, assuming the worst-case violation of sphericity. It is useful as a safety bound — if the effect remains significant even under this severe correction, the conclusion is robust to any degree of sphericity violation — but it sacrifices considerable power and is rarely the final correction reported.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 on Mauchly's test suggests a statistically significant deviation from sphericity. p &gt;= .05 indicates that the result is compatible with approximate sphericity.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">If there is evidence against sphericity, use the Greenhouse-Geisser or Huynh-Feldt correction depending on the estimated epsilon, consider the nonparametric Friedman test (Friedman, 1937) as an alternative, or fit a mixed model that does not assume sphericity, depending on the study design.</p></div>": [
                 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Mauchly — qué evalúa y limitaciones:</p><p style=\"margin: 0 0 0.6em 0;\">Contrasta H0: las varianzas de todas las diferencias entre pares de niveles son iguales (esfericidad), frente a H1: al menos un par difiere (Mauchly, 1940). Es la prueba de referencia histórica, pero su comportamiento no es uniforme: con muestras pequeñas puede carecer de poder para detectar violaciones reales, y con muestras grandes puede marcar como significativas desviaciones de esfericidad demasiado pequeñas para tener relevancia práctica sobre el estadístico F.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Greenhouse-Geisser — qué hace y cuándo usarla:</p><p style=\"margin: 0 0 0.6em 0;\">En lugar de contrastar esfericidad directamente, estima cuánto se aleja de ella el patrón de covarianzas observado (epsilon, entre 1/(k-1) y 1) y reduce los grados de libertad del test F multiplicándolos por ese epsilon (Greenhouse &amp; Geisser, 1959). El estadístico F no cambia; solo cambian los grados de libertad usados para obtener el valor p, haciendo el contraste más conservador. Es la corrección por defecto recomendada cuando epsilon estimado es bajo (&lt; .75).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Huynh-Feldt — qué hace y cuándo usarla:</p><p style=\"margin: 0 0 0.6em 0;\">Es una corrección alternativa que ajusta el epsilon de Greenhouse-Geisser para reducir su tendencia a ser demasiado conservadora, especialmente cuando la violación de esfericidad es leve o moderada (Huynh &amp; Feldt, 1976). La convención habitual es preferir Huynh-Feldt cuando el epsilon estimado por Greenhouse-Geisser es superior a .75, y Greenhouse-Geisser cuando es menor.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Lower-bound — qué hace y cuándo usarla:</p><p style=\"margin: 0 0 0.6em 0;\">Aplica la corrección más extrema matemáticamente posible, asumiendo el peor caso de violación de esfericidad. Es útil como cota de seguridad —si el efecto sigue siendo significativo incluso con esta corrección tan severa, la conclusión es robusta a cualquier grado de violación de esfericidad— pero sacrifica bastante potencia y rara vez es la corrección final que se reporta.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretación:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 en Mauchly sugiere una desviación estadísticamente significativa respecto a la esfericidad. p &gt;= .05 indica que el resultado es compatible con esfericidad aproximada.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Decisión metodológica:</p><p style=\"margin: 0 0 0.6em 0;\">Si hay evidencia contra esfericidad, use la corrección Greenhouse-Geisser o Huynh-Feldt según el epsilon estimado, considere la prueba no paramétrica de Friedman (Friedman, 1937) como alternativa, o ajuste un modelo mixto que no asuma esfericidad, según el diseño del estudio.</p></div>"
             ],
+            "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Overdispersion tests - what they evaluate and their limitations:</p><p style=\"margin: 0 0 0.6em 0;\">The Dean-Lawless score test (Dean &amp; Lawless, 1989) and the Cameron-Trivedi auxiliary regression (Cameron &amp; Trivedi, 1990) both test H0: equidispersion against H1: overdispersion of the negative binomial form. They only need the Poisson fit. Like any test, they become very sensitive in large samples, so the dispersion ratio and the mean-variance plot should be read alongside them.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Likelihood ratio test - what it does and when to use it:</p><p style=\"margin: 0 0 0.6em 0;\">Compares the Poisson and negative binomial log-likelihoods. Because the Poisson model is the negative binomial with alpha = 0, a value on the boundary of the parameter space, the statistic follows a 50:50 mixture of 0 and chi-square(1), so the usual p-value is halved (Self &amp; Liang, 1987).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Excess zeros - what it evaluates and its limitations:</p><p style=\"margin: 0 0 0.6em 0;\">The observed number of zeros is compared with the sum of each case's fitted probability of a zero under each model. van den Broek's (1995) score test compares a zero-inflated Poisson model with the Poisson model; overdispersion alone also produces extra zeros, so a significant result does not by itself justify a zero-inflated model.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">A Pearson ratio close to 1 and non-significant tests are compatible with equidispersion. A ratio clearly above 1 with significant tests indicates overdispersion; a ratio clearly below 1 indicates underdispersion.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">With overdispersion, prefer the negative binomial model (or at least robust standard errors). If the negative binomial still under-predicts the zeros, consider a zero-inflated or hurdle model and justify the extra process substantively. With underdispersion, consider a generalized Poisson or Conway-Maxwell-Poisson model.</p></div>": [
+                "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Pruebas de sobredispersión - qué evalúan y sus limitaciones:</p><p style=\"margin: 0 0 0.6em 0;\">La prueba de puntuación de Dean-Lawless (Dean &amp; Lawless, 1989) y la regresión auxiliar de Cameron-Trivedi (Cameron &amp; Trivedi, 1990) contrastan H0: equidispersión frente a H1: sobredispersión de la forma binomial negativa. Solo necesitan el ajuste de Poisson. Como cualquier prueba, se vuelven muy sensibles en muestras grandes, así que el cociente de dispersión y el gráfico media-varianza deben leerse junto con ellas.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Prueba de razón de verosimilitudes - qué hace y cuándo usarla:</p><p style=\"margin: 0 0 0.6em 0;\">Compara las log-verosimilitudes de Poisson y binomial negativa. Como el modelo de Poisson es la binomial negativa con alfa = 0, un valor en la frontera del espacio de parámetros, el estadístico sigue una mezcla 50:50 de 0 y chi-cuadrado(1), así que el valor p habitual se divide a la mitad (Self &amp; Liang, 1987).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Exceso de ceros - qué evalúa y sus limitaciones:</p><p style=\"margin: 0 0 0.6em 0;\">El número observado de ceros se compara con la suma de la probabilidad ajustada de un cero en cada caso bajo cada modelo. La prueba de puntuación de van den Broek (1995) compara un modelo de Poisson inflado en ceros con el modelo de Poisson; la sobredispersión por sí sola también produce ceros de más, así que un resultado significativo no justifica por sí mismo un modelo inflado en ceros.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretación:</p><p style=\"margin: 0 0 0.6em 0;\">Un cociente de Pearson cercano a 1 y pruebas no significativas son compatibles con la equidispersión. Un cociente claramente mayor que 1 con pruebas significativas indica sobredispersión; un cociente claramente menor que 1 indica infradispersión.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Decisión metodológica:</p><p style=\"margin: 0 0 0.6em 0;\">Con sobredispersión, prefiera el modelo binomial negativo (o al menos errores estándar robustos). Si la binomial negativa sigue prediciendo menos ceros de los observados, considere un modelo inflado en ceros o hurdle y justifique sustantivamente el proceso adicional. Con infradispersión, considere un modelo de Poisson generalizado o de Conway-Maxwell-Poisson.</p></div>"
+            ],
             "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Shapiro-Wilk:</p><p style=\"margin: 0 0 0.6em 0;\">A classic and widely used normality test (Shapiro &amp; Wilk, 1965). Requires at least 3 valid cases. In R it is computed for up to 5000 observations. It is especially powerful in small to moderate samples relative to the other tests in this battery (Razali &amp; Wah, 2011).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Lilliefors (corrected Kolmogorov-Smirnov):</p><p style=\"margin: 0 0 0.6em 0;\">Compares the observed distribution against a theoretical one, but corrects the critical values because the mean and standard deviation are estimated from the same data (Lilliefors, 1967). The classic Kolmogorov-Smirnov test (without this correction) assumes parameters known in advance and is not valid in this context; this is why this module always uses the corrected Lilliefors version, not the classic K-S test.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Anderson-Darling:</p><p style=\"margin: 0 0 0.6em 0;\">Gives more weight to the tails (Anderson &amp; Darling, 1952). It is useful when heavy tails, extreme values, or deviations at the ends of the distribution are a concern.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Cramér-von Mises:</p><p style=\"margin: 0 0 0.6em 0;\">Compares the entire observed cumulative distribution against the theoretical one (Anderson &amp; Darling, 1952). It is more sensitive than Kolmogorov-Smirnov to deviations spread across the central body of the distribution, not just at one point.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Shapiro-Francia:</p><p style=\"margin: 0 0 0.6em 0;\">A variant of Shapiro-Wilk based on the same principles, with a different calculation that can perform better in some moderate or large samples (Shapiro &amp; Francia, 1972).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Pearson chi-square:</p><p style=\"margin: 0 0 0.6em 0;\">Compares observed and expected frequencies by interval. It depends on how the data are grouped into intervals, so it tends to be less powerful than tests based on the full distribution.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Jarque-Bera:</p><p style=\"margin: 0 0 0.6em 0;\">Jointly evaluates skewness and kurtosis (Jarque &amp; Bera, 1987). It is more informative in moderate or large samples, and less stable in very small samples.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Skewness test:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates skewness. Positive skewness suggests a long right tail; negative skewness suggests a long left tail.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Kurtosis test:</p><p style=\"margin: 0 0 0.6em 0;\">Evaluates peakedness and tail weight. It can indicate heavy tails, light tails, or a concentration different from what is expected under normality.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Sample-size criteria:</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &lt; 10:</b> interpretation is very unstable.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>10 &lt;= n &lt; 30:</b> small sample; low power to detect deviations.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>30 &lt;= n &lt;= 200:</b> moderate sample; the tests are useful diagnostics.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &gt; 200:</b> small deviations can produce significant p-values.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &gt; 5000:</b> Shapiro-Wilk is not computed in R.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretation:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 suggests a statistically significant deviation from a normal distribution. p &gt;= .05 indicates that the result is compatible with an approximately normal distribution.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Methodological decision:</p><p style=\"margin: 0 0 0.6em 0;\">Combine tests, plots, skewness, kurtosis, sample size, and outliers. If several tests suggest non-normality, consider transformation, bootstrap, robust methods, or nonparametric alternatives.</p></div>": [
                 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Shapiro-Wilk:</p><p style=\"margin: 0 0 0.6em 0;\">Prueba clásica y muy usada para normalidad (Shapiro &amp; Wilk, 1965). Requiere al menos 3 casos válidos. En R se calcula hasta 5000 observaciones. Es especialmente potente en muestras pequeñas o moderadas frente a otras pruebas de esta batería (Razali &amp; Wah, 2011).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Lilliefors (Kolmogorov-Smirnov corregido):</p><p style=\"margin: 0 0 0.6em 0;\">Compara la distribución observada con una distribución teórica, pero corrige los valores críticos porque la media y la desviación se estiman de los mismos datos (Lilliefors, 1967). El Kolmogorov-Smirnov clásico (sin esta corrección) asume parámetros conocidos de antemano y no es válido en este contexto; por eso este módulo siempre usa la versión corregida de Lilliefors, no el K-S clásico.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Anderson-Darling:</p><p style=\"margin: 0 0 0.6em 0;\">Da más peso a las colas de la distribución (Anderson &amp; Darling, 1952). Es útil cuando preocupan colas pesadas, valores extremos o desviaciones en los extremos de la distribución.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Cramér-von Mises:</p><p style=\"margin: 0 0 0.6em 0;\">Compara toda la distribución acumulada observada contra la teórica (Anderson &amp; Darling, 1952). Es más sensible que Kolmogorov-Smirnov a desviaciones distribuidas en el cuerpo central de la distribución, no solo en un punto.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Shapiro-Francia:</p><p style=\"margin: 0 0 0.6em 0;\">Variante de Shapiro-Wilk basada en los mismos principios, con un cálculo distinto que puede comportarse mejor en algunas muestras moderadas o grandes (Shapiro &amp; Francia, 1972).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Pearson chi-cuadrado:</p><p style=\"margin: 0 0 0.6em 0;\">Compara frecuencias observadas y esperadas por intervalos. Depende de cómo se agrupan los datos en intervalos, por lo que suele ser menos potente que las pruebas basadas en la distribución completa.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Jarque-Bera:</p><p style=\"margin: 0 0 0.6em 0;\">Evalúa conjuntamente asimetría y curtosis (Jarque &amp; Bera, 1987). Es más informativa en muestras moderadas o grandes, y menos estable en muestras muy pequeñas.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Skewness test:</p><p style=\"margin: 0 0 0.6em 0;\">Evalúa asimetría. Asimetría positiva sugiere cola larga a la derecha; asimetría negativa sugiere cola larga a la izquierda.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Kurtosis test:</p><p style=\"margin: 0 0 0.6em 0;\">Evalúa apuntamiento y peso de colas. Puede indicar colas pesadas, colas livianas o concentración distinta a la esperada bajo normalidad.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Criterios muestrales:</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &lt; 10:</b> interpretación muy inestable.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>10 &lt;= n &lt; 30:</b> muestra pequeña; baja potencia para detectar desviaciones.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>30 &lt;= n &lt;= 200:</b> muestra moderada; las pruebas son diagnósticos útiles.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &gt; 200:</b> pequeñas desviaciones pueden producir p-valores significativos.</p><p style=\"margin: 0 0 0.2em 1.2em;\"><b>n &gt; 5000:</b> Shapiro-Wilk no se calcula en R.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Interpretación:</p><p style=\"margin: 0 0 0.6em 0;\">p &lt; .05 sugiere una desviación estadísticamente significativa respecto a una distribución normal. p &gt;= .05 indica que el resultado es compatible con una distribución aproximadamente normal.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Decisión metodológica:</p><p style=\"margin: 0 0 0.6em 0;\">Combine pruebas, gráficos, asimetría, curtosis, tamaño muestral y casos atípicos. Si varias pruebas sugieren no normalidad, considere transformación, bootstrap, métodos robustos o alternativas no paramétricas.</p></div>"
             ],
@@ -433,6 +460,9 @@
             "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">What it assesses:</p><p style=\"margin: 0 0 0.6em 0;\">Sphericity evaluates whether the variances of the differences between all possible pairs of repeated measurements are approximately equal (Mauchly, 1940).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Where it's used in AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">Related Groups with three or more related measurements.</p><p style=\"margin: 0 0 0.6em 0;\">It does not apply with only two measurements, because with two levels there is only one possible pair of differences, and no variances to compare against each other.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Why it matters:</p><p style=\"margin: 0 0 0.6em 0;\">The classic repeated-measures ANOVA assumes sphericity so that its F statistic follows the nominal F distribution. When it is violated, the observed F tends to inflate and the real Type I error exceeds the nominal one; the degrees-of-freedom corrections exist precisely to compensate for that inflation without changing the F statistic itself.</p></div>": [
                 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Qué evalúa:</p><p style=\"margin: 0 0 0.6em 0;\">La esfericidad evalúa si las varianzas de las diferencias entre todos los pares posibles de mediciones repetidas son aproximadamente iguales (Mauchly, 1940).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Dónde se usa en AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">Related Groups con tres o más mediciones relacionadas.</p><p style=\"margin: 0 0 0.6em 0;\">No aplica con solo dos mediciones, porque con dos niveles solo hay un par de diferencias posible y no hay varianzas que comparar entre sí.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Por qué importa:</p><p style=\"margin: 0 0 0.6em 0;\">El ANOVA de medidas repetidas clásico asume esfericidad para que su estadístico F siga la distribución F nominal. Cuando se viola, el F observado tiende a inflarse y el error Tipo I real supera al nominal; las correcciones de grados de libertad existen precisamente para compensar esa inflación sin cambiar el estadístico F en sí.</p></div>"
             ],
+            "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">What it evaluates:</p><p style=\"margin: 0 0 0.6em 0;\">The Poisson model assumes the variance of the count equals its mean (equidispersion), and both the Poisson and the negative binomial models assume their own distribution produces the zeros in the data. Overdispersion (variance above the mean) and excess zeros (more zeros than the model expects) are the two most common departures in applied count data (Cameron &amp; Trivedi, 2013).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Where it is used in AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">countCheck (Poisson and negative binomial regression, with an optional exposure offset).</p><p style=\"margin: 0 0 0.6em 0;\">It does not apply to linear, logistic, ordinal or multinomial regression, whose outcomes are not counts.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Why it matters:</p><p style=\"margin: 0 0 0.6em 0;\">Under overdispersion, a Poisson model keeps roughly correct rate ratios but understates their standard errors, so confidence intervals are too narrow and p-values too small. Excess zeros that neither model reproduces usually signal a separate process, such as a group of cases that cannot experience the event at all.</p></div>": [
+                "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Qué evalúa:</p><p style=\"margin: 0 0 0.6em 0;\">El modelo de Poisson supone que la varianza del recuento es igual a su media (equidispersión), y tanto el modelo de Poisson como el binomial negativo suponen que su propia distribución produce los ceros de los datos. La sobredispersión (varianza mayor que la media) y el exceso de ceros (más ceros de los que espera el modelo) son las dos desviaciones más frecuentes en datos de recuento aplicados (Cameron &amp; Trivedi, 2013).</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Dónde se usa en AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">countCheck (regresión de Poisson y binomial negativa, con un offset de exposición opcional).</p><p style=\"margin: 0 0 0.6em 0;\">No aplica a la regresión lineal, logística, ordinal ni multinomial, cuyos desenlaces no son recuentos.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Por qué importa:</p><p style=\"margin: 0 0 0.6em 0;\">Con sobredispersión, un modelo de Poisson mantiene razones de tasas aproximadamente correctas pero subestima sus errores estándar, así que los intervalos de confianza son demasiado estrechos y los valores p demasiado pequeños. Un exceso de ceros que ninguno de los dos modelos reproduce suele indicar un proceso distinto, como un grupo de casos que no puede experimentar el evento en absoluto.</p></div>"
+            ],
             "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">What it evaluates:</p><p style=\"margin: 0 0 0.6em 0;\">The multinomial-logit model assumes the relative odds between any two categories of the outcome do not depend on which other categories are also available in the choice set - Independence of Irrelevant Alternatives (IIA). It is the one assumption unique to this model family, with no equivalent in binary or ordinal logistic regression.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Where it is used in AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">multCheck (multinomial logistic regression).</p><p style=\"margin: 0 0 0.6em 0;\">It does not apply to binary logistic regression (logCheck), since with only two categories there are no \"irrelevant alternatives\" that could be dropped from the choice set. It also does not apply to ordinal logistic regression (ordCheck), which instead depends on the proportional-odds (parallel-lines) assumption across ordered cutpoints.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Why it matters:</p><p style=\"margin: 0 0 0.6em 0;\">When violated, the reported odds ratios between categories are not stable - they shift depending on which other categories are present in the choice set - which undermines interpreting a single set of coefficients as describing a consistent preference among alternatives.</p></div>": [
                 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box; text-align: justify;\"><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Qué evalúa:</p><p style=\"margin: 0 0 0.6em 0;\">El modelo logit multinomial asume que los momios relativos entre dos categorías cualesquiera del desenlace no dependen de qué otras categorías también estén disponibles en el conjunto de elección: la independencia de alternativas irrelevantes (IIA). Es el único supuesto propio de esta familia de modelos, sin equivalente en regresión logística binaria ni ordinal.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Dónde se usa en AssumptionsLab:</p><p style=\"margin: 0 0 0.6em 0;\">multCheck (regresión logística multinomial).</p><p style=\"margin: 0 0 0.6em 0;\">No aplica a regresión logística binaria (logCheck), porque con solo dos categorías no existen \"alternativas irrelevantes\" que puedan retirarse del conjunto de elección. Tampoco aplica a regresión logística ordinal (ordCheck), que en su lugar depende del supuesto de momios proporcionales (líneas paralelas) entre puntos de corte ordenados.</p><p style=\"margin: 0.7em 0 0.15em 0; font-weight: 700;\">Por qué importa:</p><p style=\"margin: 0 0 0.6em 0;\">Si se viola, los odds ratios reportados entre categorías no son estables: cambian según qué otras categorías estén presentes en el conjunto de elección, lo que socava interpretar un único conjunto de coeficientes como si describiera una preferencia consistente entre alternativas.</p></div>"
             ],
@@ -450,6 +480,9 @@
             ],
             "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: 0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Diagnostic / alternative</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">What it does</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">When to use it</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Main limitation</th></tr></thead><tbody><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Hausman-McFadden test</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Refits the model omitting each outcome category in turn and compares the coefficients shared with the full model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">As an initial check right after fitting the multinomial model, before relying on the reported odds ratios</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">The statistic is not always computable (the covariance-matrix difference can fail to be invertible in finite samples); a non-computable result is not proof that IIA holds</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Nested logit model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Groups outcome categories into a hierarchical nest structure, allowing correlation between alternatives within the same nest</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">When the IIA violation follows a substantively meaningful grouping pattern (e.g., categories sharing unobserved attributes)</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Requires specifying a reasonable nest structure a priori; results are sensitive to that choice</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Multinomial probit model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Replaces the logit's independent-errors assumption with multivariate-normal errors, allowing correlation between alternatives</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">When enough computing time is available and no natural nest structure exists</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Computationally more expensive; has no closed form and requires numerical integration or simulation</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Report coefficients with caution</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Instead of discarding the model, the categories flagged by Hausman-McFadden are documented and their odds ratios interpreted with added reservation</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">As a transparent alternative when the violation affects only one or two specific categories rather than the general pattern</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Does not fix the underlying problem, only documents it, leaving interpretive caution to the reader</td></tr></tbody></table></div>": [
                 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: 0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Diagnóstico / alternativa</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Qué hace</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Cuándo usarlo</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Principal limitación</th></tr></thead><tbody><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Prueba de Hausman-McFadden</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Reajusta el modelo omitiendo, de a una, cada categoría del desenlace y compara los coeficientes compartidos con el modelo completo</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Como chequeo inicial tras ajustar el modelo multinomial, antes de confiar en los odds ratios reportados</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">El estadístico no siempre es calculable (la diferencia de matrices de covarianza puede no ser invertible en muestras finitas); un resultado no calculable no es prueba de que la IIA se sostenga</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Modelo logit anidado</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Agrupa las categorías del desenlace en una estructura jerárquica de nidos, permitiendo correlación entre alternativas dentro de un mismo nido</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Cuando la violación de IIA sigue un patrón de agrupamiento sustantivo (p. ej., categorías que comparten atributos no observados)</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Requiere especificar a priori una estructura de nidos razonable; los resultados son sensibles a esa elección</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Modelo probit multinomial</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Reemplaza el supuesto logit de errores independientes por errores con distribución normal multivariante, permitiendo correlación entre alternativas</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Cuando se dispone de tiempo de cómputo suficiente y no hay una estructura de nidos natural</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Computacionalmente más costoso; no tiene forma cerrada y requiere integración numérica o simulación</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Reportar coeficientes con cautela</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">En vez de descartar el modelo, se documentan las categorías señaladas por Hausman-McFadden y se interpretan sus odds ratios con reserva adicional</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Como alternativa transparente cuando la violación afecta solo una o dos categorías puntuales, no un patrón generalizado</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">No corrige el problema subyacente, solo lo documenta, dejando la cautela interpretativa a cargo del lector</td></tr></tbody></table></div>"
+            ],
+            "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: 0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Diagnostic / alternative</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">What it does</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">When to use it</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Main limitation</th></tr></thead><tbody><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Pearson dispersion ratio</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Divides the Pearson chi-square by its degrees of freedom; about 1 under the Poisson model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">As the first, descriptive check of any Poisson fit</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">A ratio, not a test; with small means it can be unreliable</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Dean-Lawless and Cameron-Trivedi tests</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Test the Poisson model against negative binomial overdispersion, var = mu + alpha mu^2</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">To confirm formally what the ratio suggests</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Very sensitive in large samples, where a trivial excess of variance becomes significant</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Likelihood ratio test, Poisson vs negative binomial</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Compares the two fits; the p-value is halved because alpha = 0 lies on the boundary</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">To decide between the two models</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Needs the negative binomial fit to converge; glm.nb() warns when there is no overdispersion</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Observed vs expected zeros and van den Broek score test</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Compares the observed zeros with the zeros each model predicts; the score test checks a zero-inflated Poisson against the Poisson model</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">When the outcome has many zeros</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">The score test is confounded by overdispersion; read it with the negative binomial expected zeros</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Negative binomial, zero-inflated and hurdle models</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Model the extra variance, or a separate process for the zeros</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">When overdispersion or excess zeros are confirmed</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Zero-inflated and hurdle models need a substantive justification for the extra process</td></tr></tbody></table></div>": [
+                "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: 0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Diagnóstico / alternativa</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Qué hace</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Cuándo usarlo</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Limitación principal</th></tr></thead><tbody><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Cociente de dispersión de Pearson</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Divide el chi-cuadrado de Pearson por sus grados de libertad; cercano a 1 bajo el modelo de Poisson</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Como primera comprobación descriptiva de cualquier ajuste de Poisson</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Es un cociente, no una prueba; con medias pequeñas puede ser poco fiable</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Pruebas de Dean-Lawless y Cameron-Trivedi</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Contrastan el modelo de Poisson frente a la sobredispersión binomial negativa, var = mu + alfa mu^2</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Para confirmar formalmente lo que sugiere el cociente</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Muy sensibles en muestras grandes, donde un exceso trivial de varianza se vuelve significativo</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Prueba de razón de verosimilitudes, Poisson vs binomial negativa</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Compara ambos ajustes; el valor p se divide a la mitad porque alfa = 0 está en la frontera</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Para decidir entre los dos modelos</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Necesita que el ajuste binomial negativo converja; glm.nb() advierte cuando no hay sobredispersión</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Ceros observados vs esperados y prueba de puntuación de van den Broek</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Compara los ceros observados con los que predice cada modelo; la prueba de puntuación contrasta un Poisson inflado en ceros frente al modelo de Poisson</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Cuando el desenlace tiene muchos ceros</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">La prueba de puntuación se confunde con la sobredispersión; léala junto con los ceros esperados por la binomial negativa</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Modelos binomial negativo, inflados en ceros y hurdle</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Modelan la varianza adicional, o un proceso distinto para los ceros</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Cuando se confirma sobredispersión o exceso de ceros</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Los modelos inflados en ceros y hurdle necesitan una justificación sustantiva del proceso adicional</td></tr></tbody></table></div>"
             ],
             "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: 0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Diagnostic / correction</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">What it does</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">When to use it</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Main limitation</th></tr></thead><tbody><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Mauchly (W)</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Tests the hypothesis of exact sphericity</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">As an initial check before deciding whether to correct degrees of freedom</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Unstable with small samples and overly sensitive (flags trivial violations) with large samples</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Greenhouse-Geisser</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Corrects degrees of freedom by multiplying them by an estimated epsilon</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Conservative default correction, especially if epsilon &lt; .75</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Can be excessively conservative (loses power) when the real violation is mild</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Huynh-Feldt</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Corrects degrees of freedom with an adjusted epsilon, less conservative than GG</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Preferred over Greenhouse-Geisser when the estimated epsilon &gt; .75</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Can overestimate epsilon (be too liberal) in small samples</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Lower-bound</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Applies the most severe possible correction (epsilon = 1/(k-1))</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">As an extreme conservative bound when avoiding false positives is the top priority</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Very conservative: sacrifices considerable statistical power relative to GG or HF</td></tr></tbody></table></div>": [
                 "<div style=\"max-width: 7.25in; width: 100%; box-sizing: border-box;\"><table style=\"border-collapse: collapse; width: 100%; margin: 0.5em 0 0.8em 0; font-size: 0.95em;\"><thead><tr><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Diagnóstico / corrección</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Qué hace</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Cuándo usarlo</th><th style=\"text-align: left; padding: 4px 8px; border-bottom: 2px solid #999; font-weight: 700;\">Principal limitación</th></tr></thead><tbody><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Mauchly (W)</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Contrasta la hipótesis de esfericidad exacta</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Como chequeo inicial antes de decidir si corregir los grados de libertad</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Inestable con muestras pequeñas y demasiado sensible (marca violaciones triviales) con muestras grandes</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Greenhouse-Geisser</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Corrige los grados de libertad multiplicándolos por epsilon estimado</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Corrección conservadora por defecto, especialmente si epsilon &lt; .75</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Puede ser excesivamente conservadora (pierde potencia) cuando la violación real es leve</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Huynh-Feldt</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Corrige los grados de libertad con un epsilon ajustado, menos conservador que GG</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Preferible sobre Greenhouse-Geisser cuando epsilon estimado &gt; .75</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Puede sobrestimar epsilon (ser demasiado liberal) en muestras pequeñas</td></tr><tr><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Lower-bound</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Aplica la corrección más severa posible (epsilon = 1/(k-1))</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Como cota conservadora extrema cuando se prioriza evitar falsos positivos a toda costa</td><td style=\"text-align: left; padding: 4px 8px; border-bottom: 1px solid #ddd; vertical-align: top;\">Muy conservadora: sacrifica bastante potencia estadística frente a GG o HF</td></tr></tbody></table></div>"
@@ -499,6 +532,9 @@
             "A case is flagged on leverage when it exceeds 2p/n (p = estimated parameters, including the intercept; n = cases), and on Cook's distance when it exceeds 4/n.": [
                 "El leverage marca un caso cuando supera 2p/n (p = parámetros estimados, incluyendo el intercepto; n = casos), y la distancia de Cook cuando supera 4/n."
             ],
+            "A count model assumes each numeric predictor acts linearly on the log of the expected count, not on the count itself.": [
+                "Un modelo de recuento supone que cada predictor numérico actúa de forma lineal sobre el logaritmo del recuento esperado, no sobre el recuento mismo."
+            ],
             "A covariate shows possible curvature.": [
                 "Una covariable muestra posible curvatura."
             ],
@@ -519,6 +555,9 @@
             ],
             "A flagged case should not be removed mechanically to \"clean up\" the data — first check whether it reflects a data entry mistake, a valid but extreme case, or substantive information about that group, comparing results with and without it before deciding. Worth keeping in mind while doing so: the 4/n threshold used for Cook's D (here 4/%s = %s) is numerically larger — more lenient — as the model sample shrinks, and smaller — stricter — as it grows, yet small or unbalanced groups often still flag several cases because individual Cook's D values tend to be inflated when n is small. Treat 4/n as a screening threshold, not confirmed influence.": [
                 "Un caso marcado no debe eliminarse mecánicamente para \"limpiar\" los datos — conviene primero verificar si refleja un error de registro, un caso válido pero extremo, o información sustantiva sobre ese grupo, comparando los resultados con y sin él antes de decidir. Al hacerlo, vale la pena recordar que el umbral 4/n usado para Cook's D (aquí 4/%s = %s) es numéricamente mayor —más laxo— cuanto más pequeña es la muestra del modelo, y menor —más estricto— cuanto más crece; aun así, los grupos pequeños o desbalanceados suelen seguir marcando varios casos porque los valores individuales de Cook's D tienden a inflarse cuando n es pequeño. Trátelo como un umbral de cribado, no como influencia confirmada."
+            ],
+            "A funnel shape in the residuals suggests the variance function is wrong (for example, Poisson when the data are overdispersed); a curve suggests a misspecified predictor or a missing term.": [
+                "Una forma de embudo en los residuos sugiere que la función de varianza es incorrecta (por ejemplo, Poisson con datos sobredispersos); una curva sugiere un predictor mal especificado o un término omitido."
             ],
             "A high AUC does not guarantee good calibration or good goodness of fit: a model can discriminate well and still over- or under-estimate the real probabilities.": [
                 "Un AUC alto no garantiza buena calibración ni buena bondad de ajuste: un modelo puede discriminar bien y aun así sobreestimar o subestimar las probabilidades reales."
@@ -609,6 +648,9 @@
             ],
             "ADF / KPSS / PP": [
                 "ADF / KPSS / PP"
+            ],
+            "AIC": [
+                "AIC"
             ],
             "AIC / BIC / HQ": [
                 "AIC / BIC / HQ"
@@ -739,11 +781,17 @@
             "All dependent variables have predictors": [
                 "Todas las dependientes poseen predictores"
             ],
+            "All predictors": [
+                "Todos los predictores"
+            ],
             "All valid cases": [
                 "Todos los casos válidos"
             ],
             "All variables form a single connected model.": [
                 "Todas las variables forman un único modelo conectado."
+            ],
+            "Already on the log scale": [
+                "Ya en escala logarítmica"
             ],
             "Alternative empirical-distribution test, sensitive across the whole range of the distribution.": [
                 "Prueba alternativa de distribución empírica, sensible en todo el rango de la distribución."
@@ -754,11 +802,17 @@
             "An AUC below .50 means the predicted probability ranking runs opposite to the event category as coded; reversing the classification rule would give an equivalent discrimination of approximately %s, still close to chance.": [
                 "Un AUC por debajo de .50 significa que el orden de las probabilidades predichas va en sentido opuesto a la categoría de evento tal como está codificada; invertir la regla de clasificación daría una discriminación equivalente de aproximadamente %s, todavía cercana al azar."
             ],
+            "An IRR of 1 indicates no effect; above 1, a higher rate; below 1, a lower rate.": [
+                "Una IRR de 1 indica ausencia de efecto; por encima de 1, una tasa mayor; por debajo de 1, una tasa menor."
+            ],
             "An OR of 1 indicates no effect, values above 1 indicate higher probability of the event, and values below 1 indicate lower probability.": [
                 "Un OR de 1 indica ausencia de efecto, valores mayores a 1 indican mayor probabilidad del evento, y valores menores a 1 indican menor probabilidad."
             ],
             "An influential case should not be removed automatically.": [
                 "Un caso influyente no debe eliminarse automáticamente."
+            ],
+            "An influential case should not be removed automatically. Check whether it is a recording error, a valid but extreme case, or a sign that the model does not represent all subgroups well.": [
+                "Un caso influyente no debe eliminarse automáticamente. Revise si es un error de registro, un caso válido pero extremo, o una señal de que el modelo no representa bien a todos los subgrupos."
             ],
             "An influential case should not be removed automatically; review whether it is a recording error, a valid but extreme case, or a sign the model does not represent all subgroups well. If you do remove or refit without a case, report both versions of the model.": [
                 "Un caso influyente no debe eliminarse automáticamente; revise si es un error de registro, un caso válido pero extremo, o una señal de que el modelo no representa bien a todos los subgrupos. Si elimina un caso o reajusta sin él, reporte ambas versiones del modelo."
@@ -862,8 +916,8 @@
             "AssumptionsLab draws the global plot and every group-level plot that is methodologically viable. To avoid unstable visual interpretations, Q-Q plots require at least 10 valid cases and non-zero variability.": [
                 "AssumptionsLab dibuja el gráfico global y cada gráfico por grupo que sea metodológicamente viable. Para evitar interpretaciones visuales inestables, los Q-Q plots requieren al menos 10 casos válidos y variabilidad mayor que cero."
             ],
-            "AssumptionsLab evaluates the statistical assumptions required for common analytical techniques and pairs every diagnostic with evidence-based methodological guidance, interpretation, and educational support, rather than reporting isolated test statistics. It covers group comparisons (independent and related samples, ANOVA/ANCOVA), regression (linear, logistic, ordinal logistic, multinomial logistic), path analysis and structural validation, and time series, alongside a built-in methodological library. Every method-backed result cites its own source in jamovi's native numbered format, and the complete APA 7th edition bibliography lives in the module's documentation.": [
-                "AssumptionsLab evalúa los supuestos estadísticos requeridos por las técnicas analíticas más comunes y empareja cada diagnóstico con orientación metodológica basada en evidencia, interpretación y apoyo educativo, en vez de solo reportar estadísticos de prueba aislados. Cubre comparaciones de grupos (muestras independientes y relacionadas, ANOVA/ANCOVA), regresión (lineal, logística, logística ordinal, logística multinomial), análisis de rutas y validación estructural, y series temporales, junto con una biblioteca metodológica incorporada. Cada resultado basado en un método cita su propia fuente en el formato numerado nativo de jamovi, y la bibliografía completa en APA 7.ª edición está en la documentación del módulo."
+            "AssumptionsLab evaluates the statistical assumptions required for common analytical techniques and pairs every diagnostic with evidence-based methodological guidance, interpretation, and educational support, rather than reporting isolated test statistics. It covers group comparisons (independent and related samples, ANOVA/ANCOVA), regression (linear, logistic, ordinal logistic, multinomial logistic, Poisson and negative binomial), path analysis and structural validation, and time series, alongside a built-in methodological library. Every method-backed result cites its own source in jamovi's native numbered format, and the complete APA 7th edition bibliography lives in the module's documentation.": [
+                "AssumptionsLab evalúa los supuestos estadísticos requeridos por las técnicas analíticas más comunes y empareja cada diagnóstico con orientación metodológica basada en evidencia, interpretación y apoyo educativo, en vez de solo reportar estadísticos de prueba aislados. Cubre comparaciones de grupos (muestras independientes y relacionadas, ANOVA/ANCOVA), regresión (lineal, logística, logística ordinal, logística multinomial, Poisson y binomial negativa), análisis de rutas y validación estructural, y series temporales, junto con una biblioteca metodológica incorporada. Cada resultado basado en un método cita su propia fuente en el formato numerado nativo de jamovi, y la bibliografía completa en APA 7.ª edición está en la documentación del módulo."
             ],
             "At least 3 valid differences and variability greater than zero are required.": [
                 "Se requieren al menos 3 diferencias válidas y variabilidad mayor que cero."
@@ -873,6 +927,9 @@
             ],
             "At least one goodness-of-fit test is significant, suggesting the model does not reproduce the observed category frequencies well in some region of the predictor space. Consider additional predictors, interactions, or reviewing category coding before trusting model-based predictions.": [
                 "Al menos una prueba de bondad de ajuste es significativa, lo que sugiere que el modelo no reproduce bien las frecuencias de categoría observadas en alguna región del espacio de predictores. Considere predictores adicionales, interacciones, o revisar la codificación de categorías antes de confiar en predicciones basadas en el modelo."
+            ],
+            "At least one numeric predictor is not linear on the log scale (%s); consider a spline, a polynomial or a transformation.": [
+                "Al menos un predictor numérico no es lineal en la escala logarítmica (%s); considere un spline, un polinomio o una transformación."
             ],
             "At least one numeric predictor shows a non-linear relationship with the cumulative logit; consider a transformation or categorization.": [
                 "Al menos un predictor numérico muestra una relación no lineal con el logit acumulativo; considere una transformación o categorización."
@@ -910,6 +967,9 @@
             "Avoids specifications incompatible with the order of integration.": [
                 "Evitar especificaciones incompatibles con el orden de integración."
             ],
+            "BIC": [
+                "BIC"
+            ],
             "Baron and Kenny (1986) popularized the classical framework for distinguishing full from partial mediation in the social sciences and psychology.": [
                 "Baron y Kenny (1986) popularizaron el marco clásico para distinguir mediación total de mediación parcial en ciencias sociales y psicología."
             ],
@@ -918,6 +978,9 @@
             ],
             "Basic": [
                 "Básico"
+            ],
+            "Because %s enters as an offset, each IRR compares rates per unit of exposure, not raw counts.": [
+                "Como %s entra como offset, cada IRR compara tasas por unidad de exposición, no recuentos brutos."
             ],
             "Because Pearson's r only captures linear association while dCor captures both linear and non-linear association, a pair whose dCor is notably larger than its Pearson |r| is a signal (not proof) of a non-linear relationship that a linear path model may be missing.": [
                 "Dado que la r de Pearson solo capta asociación lineal mientras que dCor capta asociación lineal y no lineal por igual, un par cuyo dCor sea notablemente mayor que su |r| de Pearson es una señal (no una prueba) de una relación no lineal que un modelo de ruta lineal podría estar pasando por alto."
@@ -948,6 +1011,9 @@
             ],
             "Before interpreting coefficients, review whether the dependent variable is quantitative, whether predictors are correctly defined and whether the sample size is reasonable for the number of estimated parameters.": [
                 "Antes de interpretar coeficientes, revise si la variable dependiente es cuantitativa, si los predictores están correctamente definidos y si el tamaño muestral es razonable para el número de parámetros estimados."
+            ],
+            "Before interpreting rate ratios, check that the outcome is a non-negative whole number, how many zeros it has, and how its variance compares with its mean.": [
+                "Antes de interpretar las razones de tasas, compruebe que el desenlace es un número entero no negativo, cuántos ceros tiene y cómo se compara su varianza con su media."
             ],
             "Before interpreting the coefficients, check that the ratio of cases per path relationship is sufficient: a common practical reference is at least 10 cases per estimated parameter (Bentler & Chou, 1987).": [
                 "Antes de interpretar los coeficientes, revise que la razón de casos por relación de ruta sea suficiente: como referencia práctica general, al menos 10 casos por parámetro estimado (Bentler & Chou, 1987)."
@@ -1039,6 +1105,12 @@
             "Calibration plots": [
                 "Gráficos de calibración"
             ],
+            "Cameron-Trivedi auxiliary regression": [
+                "Regresión auxiliar de Cameron-Trivedi"
+            ],
+            "Cameron-Trivedi auxiliary regression (z)": [
+                "Regresión auxiliar de Cameron-Trivedi (z)"
+            ],
             "Canova and Hansen (1995) test whether the seasonal pattern is stable over time or changes enough to require seasonal differencing; forecast::nsdiffs() uses this test by default. OCSB (Osborn et al., 1988) evaluates a related hypothesis through an auxiliary regression with simultaneous seasonal and non-seasonal lags. Both tests usually agree on series with clear seasonality; when they differ, it is reasonable to prefer Canova-Hansen's suggestion for the D order in a SARIMA, since it is the one implemented by default in the automatic forecasting literature (Hyndman & Khandakar, 2008), and use OCSB as a cross-check.": [
                 "Canova y Hansen (1995) prueban si el patrón estacional es estable en el tiempo o si cambia lo suficiente como para requerir diferenciación estacional; forecast::nsdiffs() usa esta prueba por defecto. OCSB (Osborn et al., 1988) evalúa una hipótesis relacionada mediante una regresión auxiliar con rezagos estacionales y no estacionales simultáneos. Ambas pruebas suelen coincidir en series con estacionalidad clara; cuando difieren, es razonable preferir la sugerencia de Canova-Hansen para el orden D en un SARIMA, dado que es la implementada por defecto en la literatura de pronóstico automático (Hyndman y Khandakar, 2008), y usar OCSB como verificación cruzada."
             ],
@@ -1063,6 +1135,9 @@
             "Cases excluded for missing data": [
                 "Casos excluidos por datos faltantes"
             ],
+            "Cases flagged by Cook's D > 4/n = %s or leverage > 2p/n = %s; at most 30 are listed, ordered by Cook's D. Case numbers refer to the complete cases.": [
+                "Casos señalados por Cook's D > 4/n = %s o leverage > 2p/n = %s; se listan como máximo 30, ordenados por Cook's D. Los números de caso se refieren a los casos completos."
+            ],
             "Cases per relationship": [
                 "Casos por relación"
             ],
@@ -1077,6 +1152,9 @@
             ],
             "Caution is suggested because the following source(s) require review: %s.": [
                 "Se sugiere cautela porque las siguientes fuentes requieren revisión: %s."
+            ],
+            "Caution: the data are overdispersed and these intervals come from the Poisson model, so they are too narrow and the p-values too small. Prefer the negative binomial model before reporting them.": [
+                "Precaución: los datos están sobredispersos y estos intervalos provienen del modelo de Poisson, así que son demasiado estrechos y los valores p demasiado pequeños. Prefiera el modelo binomial negativo antes de informarlos."
             ],
             "Caveat: the residual-deviance chi-square approximation is only strictly valid when data are grouped (repeated covariate patterns); with individual-level data, as here, it is an approximate reference, not a precise test.": [
                 "Matiz: la aproximación de ji-cuadrado sobre la devianza residual es estrictamente válida solo con datos agrupados (patrones de covariables repetidos); con datos a nivel individual, como aquí, es una referencia aproximada, no una prueba precisa."
@@ -1174,6 +1252,9 @@
             "Cointegration (Johansen, Engle-Granger)": [
                 "Cointegración (Johansen, Engle-Granger)"
             ],
+            "Collinearity is low; it does not compromise the interpretation of individual rate ratios.": [
+                "La colinealidad es baja; no compromete la interpretación de las razones de tasas individuales."
+            ],
             "Color by group": [
                 "Colorear por grupo"
             ],
@@ -1210,6 +1291,12 @@
             "Common error: automatically removing every flagged pair. First check whether the value reflects a data entry error, a genuine and substantively meaningful change for that person, or measurement noise, and compare the conclusion with and without the flagged case(s) before deciding.": [
                 "Error común: eliminar automáticamente todos los pares marcados. Primero verifique si el valor refleja un error de registro, un cambio genuino y sustantivamente relevante para esa persona, o ruido de medición, y compare la conclusión con y sin el o los casos marcados antes de decidir."
             ],
+            "Common error: checking linearity on the raw count scale. The model is linear in log(μ), so a curved scatterplot of the count against the predictor is expected even when the assumption holds; the partial residual plot is the right view.": [
+                "Error frecuente: comprobar la linealidad en la escala bruta del recuento. El modelo es lineal en log(μ), así que un diagrama de dispersión curvo del recuento frente al predictor es esperable aunque el supuesto se cumpla; el gráfico de residuos parciales es la vista adecuada."
+            ],
+            "Common error: choosing a zero-inflated model only because the outcome has many zeros. Many zeros are expected when the mean is small; what matters is whether there are more zeros than the model predicts.": [
+                "Error frecuente: elegir un modelo inflado en ceros solo porque el desenlace tiene muchos ceros. Se esperan muchos ceros cuando la media es pequeña; lo que importa es si hay más ceros de los que predice el modelo."
+            ],
             "Common error: concluding that a significant heteroscedasticity test means the model must be discarded. In most cases, the practical remedy is not a different model but heteroscedasticity-robust standard errors (also called White or Huber-White standard errors).": [
                 "Error común: concluir que una prueba de heterocedasticidad significativa obliga a descartar el modelo. En la mayoría de los casos, el remedio práctico no es otro modelo sino errores estándar robustos a heterocedasticidad (también llamados errores de White o Huber-White)."
             ],
@@ -1231,8 +1318,20 @@
             "Common error: interpreting the OR as if it were a relative risk.": [
                 "Error común: interpretar el OR como si fuera un riesgo relativo."
             ],
+            "Common error: judging a count model with the Q-Q plot of its Pearson or deviance residuals. Those residuals are not normal for counts even when the model is right; use the quantile residuals for that purpose, and the Pearson and deviance residuals to look for patterns against the fitted values.": [
+                "Error frecuente: juzgar un modelo de recuento con el gráfico Q-Q de sus residuos de Pearson o de devianza. Esos residuos no son normales con recuentos aunque el modelo sea correcto; use los residuos cuantílicos para ese fin, y los de Pearson y de devianza para buscar patrones frente a los valores ajustados."
+            ],
+            "Common error: judging overdispersion from the raw variance and mean of the outcome. What matters is the variance conditional on the predictors, which is what the Pearson ratio and the tests measure; predictors can explain part of the raw extra variance.": [
+                "Error frecuente: juzgar la sobredispersión a partir de la varianza y la media brutas del desenlace. Lo que importa es la varianza condicional a los predictores, que es lo que miden el cociente de Pearson y las pruebas; los predictores pueden explicar parte de la varianza adicional bruta."
+            ],
+            "Common error: reading an IRR as a difference in counts. An IRR of 1.5 means a 50% higher rate, whatever the baseline; report the baseline rate too, so the reader can judge the absolute size of the effect.": [
+                "Error frecuente: leer una IRR como una diferencia de recuentos. Una IRR de 1.5 significa una tasa un 50% mayor, sea cual sea la tasa de base; informe también la tasa de base, para que el lector pueda juzgar el tamaño absoluto del efecto."
+            ],
             "Common error: removing every flagged case automatically to 'clean' the model. With cutoffs this permissive, some flags are expected even in well-behaved data; treat this as a shortlist to inspect, not a deletion list.": [
                 "Error común: eliminar automáticamente todos los casos marcados para 'limpiar' el modelo. Con umbrales tan permisivos, es esperable marcar algunos casos incluso en datos bien comportados; trate esto como una lista corta para inspeccionar, no una lista para eliminar."
+            ],
+            "Common error: removing every flagged case automatically. With cutoffs this permissive some flags are expected even in well-behaved data; treat them as a shortlist to inspect, and if you refit without a case, report both models.": [
+                "Error frecuente: eliminar automáticamente todos los casos señalados. Con umbrales tan permisivos se esperan algunas señales incluso en datos bien comportados; trátelos como una lista breve para revisar, y si reajusta sin un caso, informe ambos modelos."
             ],
             "Common error: reporting the odds ratio for a separated predictor as if it were a normal, stable estimate; a coefficient of, say, 8 with a standard error of 4 does not mean a huge, precise effect - it means the algorithm could not find a finite solution.": [
                 "Error común: reportar el odds ratio de un predictor separado como si fuera una estimación estable normal; un coeficiente de, por ejemplo, 8 con un error estándar de 4 no significa un efecto enorme y preciso - significa que el algoritmo no pudo encontrar una solución finita."
@@ -1308,6 +1407,9 @@
             ],
             "Compatible with homogeneous variances": [
                 "Compatible con varianzas homogéneas"
+            ],
+            "Compatible with the distribution the model assumes.": [
+                "Compatible con la distribución que supone el modelo."
             ],
             "Complete": [
                 "Completo"
@@ -1555,6 +1657,15 @@
             "Count": [
                 "Frecuencia"
             ],
+            "Count and Rate Regression": [
+                "Regresión de Recuentos y Tasas"
+            ],
+            "Count data often contain more zeros than a Poisson or negative binomial model expects, for example when part of the population cannot experience the event at all (structural zeros).": [
+                "Los datos de recuento suelen contener más ceros de los que espera un modelo de Poisson o binomial negativo, por ejemplo cuando parte de la población no puede experimentar el evento en absoluto (ceros estructurales)."
+            ],
+            "Count value": [
+                "Valor del recuento"
+            ],
             "Covariance": [
                 "Covarianza"
             ],
@@ -1606,6 +1717,12 @@
             "Date Variable": [
                 "Variable de Fecha"
             ],
+            "Dean-Lawless score test": [
+                "Prueba de puntuación de Dean-Lawless"
+            ],
+            "Dean-Lawless score test (z)": [
+                "Prueba de puntuación de Dean-Lawless (z)"
+            ],
             "Density": [
                 "Densidad"
             ],
@@ -1617,6 +1734,9 @@
             ],
             "Dependent Variable (binary)": [
                 "Variable Dependiente (binaria)"
+            ],
+            "Dependent Variable (count)": [
+                "Variable Dependiente (recuento)"
             ],
             "Dependent Variable (nominal, 3+ levels)": [
                 "Variable Dependiente (nominal, 3+ niveles)"
@@ -1701,6 +1821,12 @@
             ],
             "Determines whether the variance depends on past information.": [
                 "Determinar si la varianza depende de información pasada."
+            ],
+            "Deviance": [
+                "Devianza"
+            ],
+            "Deviance / df (Poisson)": [
+                "Devianza / gl (Poisson)"
             ],
             "Deviance / df ratio: %s. Values well above 1 suggest overdispersion or poor fit, though this ratio is only a rough signal.": [
                 "Razón devianza / gl: %s. Valores muy por encima de 1 sugieren sobredispersión o ajuste pobre, aunque esta razón es solo una señal aproximada."
@@ -1891,8 +2017,14 @@
             "Equation for %s (R² = %.3f, adjusted R² = %.3f): %s.": [
                 "Ecuación de %s (R² = %.3f, R² ajustado = %.3f): %s."
             ],
+            "Equidispersion and Excess Zeros": [
+                "Equidispersión y Exceso de Ceros"
+            ],
             "Error distribution and variance (diagnostic)": [
                 "Distribución y varianza de los errores (diagnóstico)"
+            ],
+            "Error fitting the Poisson model: %s": [
+                "Error al ajustar el modelo de Poisson: %s"
             ],
             "Error fitting the model (check for near-perfect separation or a predictor with an unused level in a subset of the data): %s": [
                 "Error al ajustar el modelo (revise si hay cuasi-separación o un predictor con un nivel no usado en un subconjunto de los datos): %s"
@@ -1945,6 +2077,9 @@
             "Evaluates the assumptions behind comparing paired or repeated measurements on the same subjects: two related measures are diagnosed for a paired t-test/Wilcoxon comparison, while three or more are diagnosed for a repeated-measures ANOVA/Friedman comparison. It checks normality of the paired differences and, for three or more occasions, sphericity, alongside profile plots that show whether subjects move together or diverge across occasions. Use it whenever the same units are measured more than once, to decide whether the standard parametric test or a non-parametric alternative is appropriate before interpreting the comparison.": [
                 "Evalúa los supuestos detrás de comparar mediciones pareadas o repetidas en los mismos sujetos: dos mediciones relacionadas se diagnostican para una comparación de prueba t pareada/Wilcoxon, mientras que tres o más se diagnostican para una comparación de ANOVA de medidas repetidas/Friedman. Verifica la normalidad de las diferencias pareadas y, para tres o más ocasiones, la esfericidad, junto con gráficos de perfil que muestran si los sujetos se mueven juntos o divergen entre ocasiones. Úselo siempre que las mismas unidades se midan más de una vez, para decidir si la prueba paramétrica estándar o una alternativa no paramétrica es apropiada antes de interpretar la comparación."
             ],
+            "Evaluates the assumptions of Poisson and negative binomial regression (MASS::glm.nb) for a count outcome predicted by numeric and/or categorical predictors, with an optional exposure entered as an offset so the model describes rates. It checks overdispersion (Pearson dispersion ratio, Dean-Lawless and Cameron-Trivedi tests, and the Poisson-versus-negative-binomial likelihood ratio test), excess zeros against both models, Pearson, deviance and randomized quantile residuals, linearity of numeric predictors on the log scale, collinearity and case influence, and reports incidence rate ratios. Use it before trusting the rate ratios of a count model, to decide between Poisson and negative binomial and to detect when neither is adequate.": [
+                "Evalúa los supuestos de la regresión de Poisson y binomial negativa (MASS::glm.nb) para un desenlace de recuento predicho por predictores numéricos y/o categóricos, con una exposición opcional introducida como offset para que el modelo describa tasas. Comprueba la sobredispersión (cociente de dispersión de Pearson, pruebas de Dean-Lawless y Cameron-Trivedi, y la prueba de razón de verosimilitudes Poisson frente a binomial negativa), el exceso de ceros frente a ambos modelos, los residuos de Pearson, de devianza y cuantílicos aleatorizados, la linealidad de los predictores numéricos en la escala logarítmica, la colinealidad y la influencia de los casos, e informa las razones de tasas de incidencia. Úselo antes de confiar en las razones de tasas de un modelo de recuento, para decidir entre Poisson y binomial negativa y para detectar cuándo ninguno es adecuado."
+            ],
             "Evaluates the assumptions of a multinomial logit model (nnet::multinom) for an unordered nominal outcome with three or more categories, predicted by numeric and/or categorical predictors. It checks the independence of irrelevant alternatives via a Hausman-McFadden test, linearity in the log-odds for each non-reference category against the reference, multicollinearity, classification accuracy, and case influence through per-case Pearson residuals, warning when a two-level outcome would be better served by the binary Logistic Regression module. Use it whenever a nominal outcome with three or more unordered categories is modeled, to confirm the model's structural assumptions before interpreting its category-specific coefficients.": [
                 "Evalúa los supuestos de un modelo logit multinomial (nnet::multinom) para un desenlace nominal no ordenado con tres o más categorías, predicho por predictores numéricos y/o categóricos. Verifica la independencia de alternativas irrelevantes vía una prueba de Hausman-McFadden, la linealidad en el log-odds de cada categoría no de referencia frente a la de referencia, la multicolinealidad, la precisión de clasificación y la influencia de casos mediante residuos de Pearson por caso, advirtiendo cuando un desenlace de dos niveles estaría mejor servido por el módulo de Regresión Logística binaria. Úselo siempre que se modele un desenlace nominal con tres o más categorías no ordenadas, para confirmar los supuestos estructurales del modelo antes de interpretar sus coeficientes específicos por categoría."
             ],
@@ -1969,6 +2104,9 @@
             "Evaluation": [
                 "Evaluación"
             ],
+            "Even the negative binomial model under-predicts the zeros (observed / expected = %s). Consider a zero-inflated or hurdle model, and justify it substantively: is there a group of cases that cannot experience the event at all?": [
+                "Incluso el modelo binomial negativo predice menos ceros de los observados (observados / esperados = %s). Considere un modelo inflado en ceros o un modelo hurdle, y justifíquelo sustantivamente: ¿hay un grupo de casos que no puede experimentar el evento en absoluto?"
+            ],
             "Events": [
                 "Eventos"
             ],
@@ -1978,11 +2116,17 @@
             "Every diagnostic check above is clean: the model shows no notable outliers, its residuals are compatible with normality and homoscedasticity, there is no relevant multicollinearity, the sample size meets the benchmarks reviewed, and no unexplained non-linear or omitted-path signal was detected. This is a well-behaved OLS-based path model given the checks implemented so far.": [
                 "Todas las verificaciones anteriores están limpias: el modelo no muestra atípicos notables, sus residuos son compatibles con normalidad y homoscedasticidad, no hay multicolinealidad relevante, el tamaño de muestra cumple los referentes revisados, y no se detectó ninguna señal no explicada de no linealidad o de ruta omitida. Este es un modelo de ruta basado en OLS bien comportado, dadas las verificaciones implementadas hasta ahora."
             ],
+            "Every value of the dependent variable is 0, so there is nothing to model.": [
+                "Todos los valores de la variable dependiente son 0, así que no hay nada que modelar."
+            ],
             "Evidence": [
                 "Evidencia"
             ],
             "Evidence considered:": [
                 "Evidencia considerada:"
+            ],
+            "Excess zeros": [
+                "Exceso de ceros"
             ],
             "Excluded percentage": [
                 "Porcentaje excluido"
@@ -2008,8 +2152,14 @@
             "Exogenous variables have no incoming paths in the specified model (no other variable predicts them); endogenous variables are predicted by at least one other variable. Use this list as a sanity check that the model reflects the structure you intended, before reading the rest of the report.": [
                 "Las variables exógenas no tienen rutas entrantes en el modelo especificado (ninguna otra variable las predice); las variables endógenas son predichas por al menos otra variable. Use este listado como chequeo de cordura de que el modelo refleja la estructura que usted pretendía, antes de leer el resto del informe."
             ],
+            "Expected by": [
+                "Esperado por"
+            ],
             "Expected pattern: %s": [
                 "Patrón esperado: %s"
+            ],
+            "Expected zeros": [
+                "Ceros esperados"
             ],
             "Explained Variance (R²)": [
                 "Varianza Explicada (R²)"
@@ -2022,6 +2172,15 @@
             ],
             "Exploratory transformations": [
                 "Transformaciones exploratorias"
+            ],
+            "Exposure (log taken automatically)": [
+                "Exposición (se toma el logaritmo automáticamente)"
+            ],
+            "Exposure (offset)": [
+                "Exposición (offset)"
+            ],
+            "Exposure scale": [
+                "Escala de la exposición"
             ],
             "External Variables": [
                 "Variables Externas"
@@ -2124,6 +2283,15 @@
             ],
             "GARCH assumes the selected series already represents returns (or another approximately mean-stationary series), not raw price levels.": [
                 "GARCH asume que la serie seleccionada ya representa retornos (u otra serie aproximadamente estacionaria en media), no niveles de precio en bruto."
+            ],
+            "GVIF": [
+                "GVIF"
+            ],
+            "GVIF^(1/(2·df))": [
+                "GVIF^(1/(2·gl))"
+            ],
+            "GVIF^(1/(2·df)) above √5 ≈ 2.24 (VIF above 5) is a common warning threshold; above √10 ≈ 3.16, a strong one.": [
+                "Un GVIF^(1/(2·gl)) por encima de √5 ≈ 2.24 (VIF mayor que 5) es un umbral de advertencia habitual; por encima de √10 ≈ 3.16, uno fuerte."
             ],
             "Gap (dCor − |r|)": [
                 "Brecha (dCor − |r|)"
@@ -2254,6 +2422,9 @@
             "HC3 robust standard errors": [
                 "Errores estándar robustos HC3"
             ],
+            "Half the χ²(1) tail, because the Poisson model lies on the boundary of the negative binomial (α = 0).": [
+                "Mitad de la cola de χ²(1), porque el modelo de Poisson está en la frontera de la binomial negativa (α = 0)."
+            ],
             "Hartley Fmax: descriptive variance ratio. High values suggest checking heterogeneity.": [
                 "Hartley Fmax: razón descriptiva de varianzas. Valores altos sugieren revisar heterogeneidad."
             ],
@@ -2365,6 +2536,9 @@
             "IQR rule": [
                 "Regla del IQR"
             ],
+            "IRR": [
+                "IRR"
+            ],
             "Identifies asymmetric departures from normality.": [
                 "Identifica desviaciones asimétricas respecto a la normalidad."
             ],
@@ -2404,6 +2578,9 @@
             "If non-linearity is confirmed, consider adding a quadratic or spline term for that predictor, or categorizing it into meaningful groups.": [
                 "Si se confirma la no linealidad, considere agregar un término cuadrático o spline para ese predictor, o categorizarlo en grupos con sentido."
             ],
+            "If non-linearity is confirmed, keep the predictor as a spline or a polynomial term, or transform it (for example, its logarithm), and report the choice.": [
+                "Si se confirma la no linealidad, mantenga el predictor como spline o término polinómico, o transfórmelo (por ejemplo, su logaritmo), e informe la elección."
+            ],
             "If observations are clustered, repeated or nested, consider mixed, longitudinal or other methods that represent that dependence.": [
                 "Si las observaciones están agrupadas, repetidas o anidadas, considere modelos mixtos, modelos longitudinales o métodos que representen esa dependencia."
             ],
@@ -2415,6 +2592,9 @@
             ],
             "If the 'copent' package is not installed, this section cannot be computed. Install it with install.packages('copent') to enable this advanced diagnostic.": [
                 "Si el paquete 'copent' no está instalado, esta sección no puede calcularse. Instálelo con install.packages('copent') para habilitar este diagnóstico avanzado."
+            ],
+            "If the negative binomial model reproduces the zeros well, a zero-inflated model is usually unnecessary; if it does not, consider a zero-inflated or hurdle model and justify it substantively.": [
+                "Si el modelo binomial negativo reproduce bien los ceros, un modelo inflado en ceros suele ser innecesario; si no, considere un modelo inflado en ceros o un modelo hurdle y justifíquelo sustantivamente."
             ],
             "If the omnibus test is significant but only one or two predictors drive it, consider a partial-proportional-odds model that lets just those predictors vary by cutpoint, rather than abandoning the ordinal approach entirely.": [
                 "Si la prueba ómnibus es significativa pero solo uno o dos predictores la explican, considere un modelo de momios parcialmente proporcionales que deje variar solo esos predictores por punto de corte, en vez de abandonar el enfoque ordinal por completo."
@@ -2463,6 +2643,9 @@
             ],
             "In this situation, Welch's t-test is usually preferable to the classic equal-variance t-test because it adjusts the inference for unequal variances.": [
                 "En esta situación, la t de Welch suele ser preferible a la t clásica con varianzas iguales porque ajusta la inferencia ante varianzas desiguales."
+            ],
+            "Incidence rate ratios": [
+                "Razones de tasas de incidencia"
             ],
             "Independence": [
                 "Independencia"
@@ -2523,6 +2706,9 @@
             ],
             "Influence diagnostics identify cases that may substantially change coefficients, fit or model conclusions.": [
                 "Los diagnósticos de influencia identifican casos que pueden modificar de forma importante los coeficientes, el ajuste o las conclusiones del modelo."
+            ],
+            "Influence diagnostics identify cases that may substantially change the coefficients. In generalized linear models, Cook's distance and leverage come from the weighted hat matrix of the fitted model (Pregibon, 1981; McCullagh & Nelder, 1989).": [
+                "Los diagnósticos de influencia identifican casos que pueden cambiar sustancialmente los coeficientes. En los modelos lineales generalizados, la distancia de Cook y el leverage provienen de la matriz sombrero ponderada del modelo ajustado (Pregibon, 1981; McCullagh & Nelder, 1989)."
             ],
             "Influence plots": [
                 "Gráficos de influencia"
@@ -2599,6 +2785,9 @@
             "Item": [
                 "Elemento"
             ],
+            "Its consequence is serious: coefficients stay roughly unbiased, but standard errors are too small, so confidence intervals are too narrow and p-values too optimistic.": [
+                "Su consecuencia es seria: los coeficientes siguen siendo aproximadamente insesgados, pero los errores estándar son demasiado pequeños, así que los intervalos de confianza son demasiado estrechos y los valores p demasiado optimistas."
+            ],
             "Jackson (2003) — recommended N:q ratio": [
                 "Jackson (2003) — razón N:q recomendada"
             ],
@@ -2653,6 +2842,9 @@
             "LOESS": [
                 "LOESS"
             ],
+            "LOESS curve": [
+                "Curva LOESS"
+            ],
             "Label Cases": [
                 "Etiquetar Casos"
             ],
@@ -2670,6 +2862,9 @@
             ],
             "Large points = mean; bars = 95% CI; diamond = median.": [
                 "Puntos grandes = media; barras = IC 95%; rombo = mediana."
+            ],
+            "Largest adjusted GVIF: %s (%s), equivalent to a VIF of %s (Fox & Monette, 1992; see references).": [
+                "Mayor GVIF ajustado: %s (%s), equivalente a un VIF de %s (Fox & Monette, 1992; ver referencias)."
             ],
             "Layout": [
                 "Disposición"
@@ -2707,6 +2902,12 @@
             "Like all statistical tests, failure to reject independence does not prove independence - it only means the data do not provide strong evidence against it.": [
                 "Como todas las pruebas estadísticas, no rechazar independencia no prueba independencia - solo significa que los datos no proporcionan evidencia fuerte en contra."
             ],
+            "Likelihood ratio test on the boundary": [
+                "Prueba de razón de verosimilitudes en la frontera"
+            ],
+            "Likelihood ratio, Poisson vs negative binomial (χ²)": [
+                "Razón de verosimilitudes, Poisson vs binomial negativa (χ²)"
+            ],
             "Lilliefors (corrected K-S)": [
                 "Lilliefors (K-S corregido)"
             ],
@@ -2718,6 +2919,9 @@
             ],
             "Linear fit and smoothing (individual plot)": [
                 "Ajuste lineal y suavizado (gráfico individual)"
+            ],
+            "Linear predictor (log of the fitted count)": [
+                "Predictor lineal (log del recuento ajustado)"
             ],
             "Linear regression evaluates the relationship between a numeric dependent variable and one or more predictors.": [
                 "La regresión lineal evalúa la relación entre una variable dependiente numérica y uno o más predictores."
@@ -2751,6 +2955,12 @@
             ],
             "Linearity in the multinomial logit (LR test)": [
                 "Linealidad en el logit multinomial (prueba LR)"
+            ],
+            "Linearity on the log scale": [
+                "Linealidad en la escala logarítmica"
+            ],
+            "Linearity on the log scale (spline LR test)": [
+                "Linealidad en la escala logarítmica (prueba LR con spline)"
             ],
             "Linearity plots": [
                 "Gráficos de linealidad"
@@ -2787,6 +2997,9 @@
             ],
             "Locks the specification and enables assumption validation and estimation. While unchecked, the model remains under construction.": [
                 "Bloquea la especificación y habilita la validación de supuestos y la estimación. Mientras esté desmarcado, el modelo permanece en construcción."
+            ],
+            "Log-likelihood": [
+                "Log-verosimilitud"
             ],
             "Logistic Regression": [
                 "Regresión logística"
@@ -2893,6 +3106,9 @@
             "Maximum correlation": [
                 "Correlación máxima"
             ],
+            "Maximum count": [
+                "Recuento máximo"
+            ],
             "McFadden R² = %s; Nagelkerke R² = %s.": [
                 "McFadden R² = %s; Nagelkerke R² = %s."
             ],
@@ -2905,11 +3121,26 @@
             "Mdn difference": [
                 "Mdn diferencia"
             ],
+            "Mean": [
+                "Media"
+            ],
+            "Mean count": [
+                "Recuento medio"
+            ],
+            "Mean count in the group": [
+                "Recuento medio del grupo"
+            ],
             "Mean marker": [
                 "Marca de la media"
             ],
             "Mean predicted probability (decile)": [
                 "Probabilidad predicha media (decil)"
+            ],
+            "Mean-variance plot": [
+                "Gráfico media-varianza"
+            ],
+            "Mean-variance relationship": [
+                "Relación media-varianza"
             ],
             "Measure": [
                 "Medida"
@@ -3037,6 +3268,9 @@
             "Model design": [
                 "Diseño del modelo"
             ],
+            "Model diagnosed": [
+                "Modelo diagnosticado"
+            ],
             "Model fitted with %s cases.": [
                 "Modelo ajustado con %s casos."
             ],
@@ -3058,6 +3292,9 @@
             "Model the interaction or use a regression approach with interaction.": [
                 "Modelar la interacción o usar un enfoque de regresión con interacción."
             ],
+            "Model to diagnose": [
+                "Modelo a diagnosticar"
+            ],
             "Moderate evidence": [
                 "Evidencia moderada"
             ],
@@ -3073,11 +3310,17 @@
             "Multicollinearity evaluates whether predictors carry very redundant information.": [
                 "La multicolinealidad evalúa si los predictores contienen información muy redundante."
             ],
+            "Multicollinearity evaluates whether predictors carry very redundant information. It does not bias the predicted counts, but it makes coefficients unstable and widens their standard errors.": [
+                "La multicolinealidad evalúa si los predictores aportan información muy redundante. No sesga los recuentos predichos, pero vuelve inestables los coeficientes y amplía sus errores estándar."
+            ],
             "Multicollinearity evaluates whether predictors contain highly redundant information.": [
                 "La multicolinealidad evalúa si los predictores contienen información muy redundante."
             ],
             "Multicollinearity evaluates whether the predictors within the same equation carry very redundant information.": [
                 "La multicolinealidad evalúa si los predictores de una misma ecuación contienen información muy redundante entre sí."
+            ],
+            "Multicollinearity needs at least two predictors, so it does not apply to this model.": [
+                "La multicolinealidad necesita al menos dos predictores, así que no aplica a este modelo."
             ],
             "Multicollinearity requires at least two predictors; it does not apply here.": [
                 "La multicolinealidad requiere al menos dos predictores; no aplica en este caso."
@@ -3130,6 +3373,12 @@
             "Nagelkerke's pseudo-R² rescales a related measure so it can reach 1.0, making it more directly comparable across models, but it is not on the same numeric scale as a linear-regression R² and should not be interpreted as \"percent of variance explained\" in that sense.": [
                 "El pseudo-R² de Nagelkerke reescala una medida relacionada para que pueda llegar a 1.0, haciéndolo más directamente comparable entre modelos, pero no está en la misma escala numérica que un R² de regresión lineal y no debería interpretarse como \"porcentaje de varianza explicada\" en ese sentido."
             ],
+            "Negative binomial": [
+                "Binomial negativa"
+            ],
+            "Negative binomial: var = μ + μ²/θ": [
+                "Binomial negativa: var = μ + μ²/θ"
+            ],
             "No": [
                 "No"
             ],
@@ -3144,6 +3393,9 @@
             ],
             "No boxplot was generated. At least one group with 3 valid cases is required.": [
                 "No se generó el boxplot. Se requiere al menos un grupo con 3 casos válidos."
+            ],
+            "No case exceeds the Cook's D or leverage cutoffs.": [
+                "Ningún caso supera los umbrales de Cook's D o de leverage."
             ],
             "No cases exceed the |residual| > 2.5 screening threshold.": [
                 "Ningún caso supera el umbral de cribado |residuo| > 2.5."
@@ -3186,6 +3438,9 @@
             ],
             "No diagnostic plot data are available.": [
                 "No hay datos disponibles para este gráfico diagnóstico."
+            ],
+            "No diagnostic points to a serious problem; the model can be interpreted, reporting the diagnostics.": [
+                "Ningún diagnóstico apunta a un problema serio; el modelo puede interpretarse, informando los diagnósticos."
             ],
             "No diagnostic raised a relevant concern; the ANOVA/ANCOVA model can be interpreted under its standard assumptions.": [
                 "Ningún diagnóstico mostró una alerta relevante; el modelo ANOVA/ANCOVA puede interpretarse bajo sus supuestos estándar."
@@ -3258,6 +3513,9 @@
             ],
             "No numeric predictors were included, so the Box-Tidwell linearity-in-the-logit check does not apply.": [
                 "No se incluyeron predictores numéricos, por lo que la prueba de linealidad en el logit (Box-Tidwell) no aplica."
+            ],
+            "No numeric predictors were included, so the linearity check on the log scale does not apply.": [
+                "No se incluyeron predictores numéricos, así que la comprobación de linealidad en la escala logarítmica no aplica."
             ],
             "No numeric variables are available for boxplots.": [
                 "No hay variables numéricas disponibles para los diagramas de caja."
@@ -3475,6 +3733,21 @@
             "Not computable (the covariance-matrix difference is not invertible - often itself evidence against a genuine IIA violation)": [
                 "No calculable (la diferencia de matrices de covarianza no es invertible - a menudo, en sí misma, evidencia en contra de una violación genuina de la IIA)"
             ],
+            "Not computable: %s": [
+                "No computable: %s"
+            ],
+            "Not computable: the auxiliary regression has no residual variation (too few cases or identical fitted values).": [
+                "No computable: la regresión auxiliar no tiene variación residual (muy pocos casos o valores ajustados idénticos)."
+            ],
+            "Not computable: the model with the spline term could not be fitted.": [
+                "No computable: no se pudo ajustar el modelo con el término spline."
+            ],
+            "Not computable: the negative binomial model could not be fitted (%s).": [
+                "No computable: no se pudo ajustar el modelo binomial negativo (%s)."
+            ],
+            "Not computable: the score test's variance is not positive for these fitted values (usually very few zeros are expected and observed).": [
+                "No computable: la varianza de la prueba de puntuación no es positiva para estos valores ajustados (normalmente se esperan y se observan muy pocos ceros)."
+            ],
             "Not computed": [
                 "No calculado"
             ],
@@ -3493,6 +3766,9 @@
             "Not enough valid cases": [
                 "Casos válidos insuficientes"
             ],
+            "Not enough variation in fitted values to group the cases.": [
+                "No hay suficiente variación en los valores ajustados para agrupar los casos."
+            ],
             "Not enough variation in predicted probabilities to plot calibration.": [
                 "No hay suficiente variación en las probabilidades predichas para graficar la calibración."
             ],
@@ -3507,6 +3783,9 @@
             ],
             "Not tested (non-positive or non-numeric values): ": [
                 "No evaluado (valores no positivos o no numéricos): "
+            ],
+            "Not tested: the predictor has fewer than 5 distinct values, too few for a 3-df spline.": [
+                "No probado: el predictor tiene menos de 5 valores distintos, demasiado pocos para un spline de 3 gl."
             ],
             "Notable": [
                 "Destacable"
@@ -3531,6 +3810,9 @@
             ],
             "Number of Groups (deciles) for Calibration": [
                 "Número de Grupos (deciles) para la Calibración"
+            ],
+            "Number of cases": [
+                "Número de casos"
             ],
             "Number of categories": [
                 "Número de categorías"
@@ -3580,6 +3862,9 @@
             "Observed": [
                 "Observado"
             ],
+            "Observed / expected": [
+                "Observados / esperados"
+            ],
             "Observed category": [
                 "Categoría observada"
             ],
@@ -3613,6 +3898,9 @@
             "Observed values in original scale": [
                 "Valores observados en escala original"
             ],
+            "Observed vs expected frequencies": [
+                "Frecuencias observadas vs esperadas"
+            ],
             "Observed vs predicted": [
                 "Observado vs. predicho"
             ],
@@ -3621,6 +3909,12 @@
             ],
             "Observed vs. theoretical normal curve": [
                 "Curva normal observada vs. teórica"
+            ],
+            "Observed zeros": [
+                "Ceros observados"
+            ],
+            "Observed zeros: %s. The Poisson model expects %s and the negative binomial model expects %s.": [
+                "Ceros observados: %s. El modelo de Poisson espera %s y el modelo binomial negativo espera %s."
             ],
             "Odds Ratios": [
                 "Odds Ratios"
@@ -3678,6 +3972,9 @@
             ],
             "One-way ANOVA, Welch ANOVA, or Kruskal-Wallis depending on the analytic priority": [
                 "ANOVA de un factor, ANOVA de Welch o Kruskal-Wallis según la prioridad analítica"
+            ],
+            "Only %s complete case(s) are available; a count model needs more cases than parameters.": [
+                "Solo hay %s caso(s) completo(s); un modelo de recuento necesita más casos que parámetros."
             ],
             "Only 1 of %d normality tests reached significance. An isolated signal like this, uncorroborated by the rest of the battery, deserves more caution than a result confirmed across multiple tests.": [
                 "Solo 1 de %d pruebas de normalidad resultó significativa. Una señal aislada como esta, no corroborada por el resto de la batería, merece más cautela que un resultado confirmado por varias pruebas."
@@ -3760,6 +4057,18 @@
             "Overall model linearity": [
                 "Linealidad global del modelo"
             ],
+            "Overdispersion": [
+                "Sobredispersión"
+            ],
+            "Overdispersion and count regression": [
+                "Sobredispersión y regresión de recuentos"
+            ],
+            "Overdispersion means the counts vary more than the Poisson model allows. It is the most common problem with Poisson regression in applied data, and it is caused by unmeasured heterogeneity between cases, clustering or contagion between events.": [
+                "La sobredispersión significa que los recuentos varían más de lo que permite el modelo de Poisson. Es el problema más frecuente de la regresión de Poisson con datos aplicados, y se debe a heterogeneidad no medida entre casos, agrupamiento o contagio entre eventos."
+            ],
+            "Overdispersion remains in the negative binomial model; review omitted predictors, clustering of cases, or excess zeros.": [
+                "Queda sobredispersión en el modelo binomial negativo; revise predictores omitidos, agrupamiento de casos o exceso de ceros."
+            ],
             "Package 'brant' not installed": [
                 "Paquete 'brant' no instalado"
             ],
@@ -3814,11 +4123,23 @@
             "Parameter stability (CUSUM, Nyblom)": [
                 "Estabilidad paramétrica (CUSUM, Nyblom)"
             ],
+            "Parameters": [
+                "Parámetros"
+            ],
             "Parameters are not stable over time.": [
                 "Los parámetros no resultan estables en el tiempo."
             ],
             "Partial autocorrelation (PACF)": [
                 "Autocorrelación parcial (PACF)"
+            ],
+            "Partial residual (log scale)": [
+                "Residuo parcial (escala logarítmica)"
+            ],
+            "Partial residual plots": [
+                "Gráficos de residuos parciales"
+            ],
+            "Partial residuals vs predictor": [
+                "Residuos parciales vs predictor"
             ],
             "Path Analysis": [
                 "Análisis de Rutas"
@@ -3844,6 +4165,9 @@
             "Paths": [
                 "Rutas"
             ],
+            "Pearson": [
+                "Pearson"
+            ],
             "Pearson / dCor / Copula Entropy Discordance Analysis": [
                 "Análisis de Discordancia Pearson / dCor / Entropía Copular"
             ],
@@ -3862,14 +4186,29 @@
             "Pearson correlation matrix (APA 7 format)": [
                 "Matriz de correlaciones de Pearson (formato APA 7)"
             ],
+            "Pearson dispersion ratio under the Poisson model: %s (Cameron & Trivedi, 2013; see references). Under the Poisson model it should be close to 1.": [
+                "Cociente de dispersión de Pearson bajo el modelo de Poisson: %s (Cameron & Trivedi, 2013; ver referencias). Bajo el modelo de Poisson debería estar cerca de 1."
+            ],
             "Pearson r": [
                 "Pearson r"
+            ],
+            "Pearson ratio of the negative binomial model: %s. A value close to 1 means its variance function, μ + μ²/θ, describes the data; a value well above 1 means overdispersion remains even after allowing for it.": [
+                "Cociente de Pearson del modelo binomial negativo: %s. Un valor cercano a 1 significa que su función de varianza, μ + μ²/θ, describe los datos; un valor muy por encima de 1 significa que queda sobredispersión incluso después de tenerla en cuenta."
             ],
             "Pearson residual by case": [
                 "Residuo de Pearson por caso"
             ],
+            "Pearson residuals divide the raw residual by the standard deviation the model predicts; deviance residuals measure each case's contribution to the deviance. Both should scatter around 0 with no pattern against the fitted values.": [
+                "Los residuos de Pearson dividen el residuo bruto por la desviación estándar que predice el modelo; los residuos de devianza miden la contribución de cada caso a la devianza. Ambos deberían dispersarse alrededor de 0 sin patrón frente a los valores ajustados."
+            ],
             "Pearson statistic": [
                 "Estadístico de Pearson"
+            ],
+            "Pearson χ² / df (Poisson)": [
+                "χ² de Pearson / gl (Poisson)"
+            ],
+            "Pearson χ² / df (negative binomial)": [
+                "χ² de Pearson / gl (binomial negativa)"
             ],
             "Pearson-type residual": [
                 "Residuo tipo Pearson"
@@ -3940,6 +4279,9 @@
             "Plots: Linearity in the Multinomial Logit": [
                 "Gráficos: Linealidad en el Logit Multinomial"
             ],
+            "Plots: Linearity on the Log Scale": [
+                "Gráficos: Linealidad en la Escala Logarítmica"
+            ],
             "Plots: Normal Curve": [
                 "Gráficos: Curva Normal"
             ],
@@ -3948,6 +4290,9 @@
             ],
             "Plots: Normality (Q-Q)": [
                 "Gráficos: Normalidad (Q-Q)"
+            ],
+            "Plots: Overdispersion and Zeros": [
+                "Gráficos: Sobredispersión y Ceros"
             ],
             "Plots: Path Diagram": [
                 "Gráficos: Diagrama de Ruta"
@@ -3963,6 +4308,21 @@
             ],
             "Points: observed cases": [
                 "Puntos: casos observados"
+            ],
+            "Poisson": [
+                "Poisson"
+            ],
+            "Poisson / Negative Binomial": [
+                "Poisson / Binomial Negativa"
+            ],
+            "Poisson and negative binomial regression model a count (number of events, visits, admissions, errors) as a function of one or more predictors, on the log scale: each coefficient is a log rate ratio.": [
+                "La regresión de Poisson y la binomial negativa modelan un recuento (número de eventos, visitas, ingresos, errores) en función de uno o más predictores, en escala logarítmica: cada coeficiente es el logaritmo de una razón de tasas."
+            ],
+            "Poisson vs negative binomial": [
+                "Poisson vs binomial negativa"
+            ],
+            "Poisson: var = μ": [
+                "Poisson: var = μ"
             ],
             "Polynomial terms, splines, or covariate transformation.": [
                 "Términos polinómicos, splines o transformación de covariable."
@@ -4075,6 +4435,9 @@
             "Q-Q plot confidence band": [
                 "Banda de confianza del Q-Q plot"
             ],
+            "Q-Q plot of randomized quantile residuals": [
+                "Gráfico Q-Q de residuos cuantílicos aleatorizados"
+            ],
             "Q-Q plots": [
                 "Q-Q plots"
             ],
@@ -4104,6 +4467,21 @@
             ],
             "Ramsey RESET: p = %s. Rainbow test: p = %s%s": [
                 "Ramsey RESET: p = %s. Rainbow test: p = %s%s"
+            ],
+            "Randomized quantile": [
+                "Cuantílico aleatorizado"
+            ],
+            "Randomized quantile residuals": [
+                "Residuos cuantílicos aleatorizados"
+            ],
+            "Randomized quantile residuals (Dunn & Smyth, 1996; see references): SD = %s and %s%% of cases beyond ±2, against 1 and about 4.6%% expected under a correct model.": [
+                "Residuos cuantílicos aleatorizados (Dunn & Smyth, 1996; ver referencias): DE = %s y %s%% de los casos más allá de ±2, frente a 1 y alrededor de 4.6%% esperados bajo un modelo correcto."
+            ],
+            "Randomized quantile residuals use a fixed seed (20260704), so the same data always give the same values. Under a correct model they are standard normal: mean 0, SD 1, about 4.6% beyond ±2 and 0.3% beyond ±3.": [
+                "Los residuos cuantílicos aleatorizados usan una semilla fija (20260704), así que los mismos datos dan siempre los mismos valores. Bajo un modelo correcto son normales estándar: media 0, DE 1, alrededor de 4.6% más allá de ±2 y 0.3% más allá de ±3."
+            ],
+            "Ratio": [
+                "Cociente"
             ],
             "Read the confidence interval, not only the point estimate: if it includes 1, the effect is not statistically distinguishable from no association.": [
                 "Lea el intervalo de confianza, no solo el estimador puntual: si incluye 1, el efecto no es estadísticamente distinguible de la ausencia de asociación."
@@ -4231,6 +4609,9 @@
             "Residual normality by transformation": [
                 "Normalidad de residuos por transformación"
             ],
+            "Residual plots": [
+                "Gráficos de residuos"
+            ],
             "Residual serial correlation suggests the current order is insufficient.": [
                 "La correlación serial residual sugiere que el orden actual es insuficiente."
             ],
@@ -4239,6 +4620,9 @@
             ],
             "Residual standard error": [
                 "Error estándar residual"
+            ],
+            "Residual summary": [
+                "Resumen de residuos"
             ],
             "Residuals": [
                 "Residuos"
@@ -4254,6 +4638,9 @@
             ],
             "Residuals vs fitted values": [
                 "Residuos vs valores ajustados"
+            ],
+            "Residuals vs linear predictor": [
+                "Residuos vs predictor lineal"
             ],
             "Resolve the alerts above before finalizing the model.": [
                 "Resuelva las alertas anteriores antes de finalizar el modelo."
@@ -4399,6 +4786,9 @@
             "Sample-size caveat: this threshold is a convention, not a statistical law. With small samples (n < 100; here n = %s), even moderate collinearity can make coefficients quite unstable; with larger samples, a similar VIF is usually more tolerable.": [
                 "Matiz de tamaño de muestra: este umbral es una convención, no una ley estadística. Con muestras pequeñas (n < 100; aquí n = %s), incluso una colinealidad moderada puede volver los coeficientes bastante inestables; con muestras grandes, un VIF similar suele ser más tolerable."
             ],
+            "Sample-size caveat: with %s cases, the tests can flag a trivial excess of variance in large samples and miss a relevant one in small samples; read the ratio and the mean-variance plot, not only the p-values.": [
+                "Advertencia sobre el tamaño muestral: con %s casos, las pruebas pueden señalar un exceso trivial de varianza en muestras grandes y pasar por alto uno relevante en muestras pequeñas; lea el cociente y el gráfico media-varianza, no solo los valores p."
+            ],
             "Sample-size caveat: with %s complete cases, the Box-Tidwell interaction term has less power to detect real curvature than the main effects do; a non-significant result here is weaker evidence of linearity than a non-significant result would be with a much larger sample.": [
                 "Matiz de tamaño de muestra: con %s casos completos, el término de interacción de Box-Tidwell tiene menos poder para detectar curvatura real que los efectos principales; un resultado no significativo aquí es evidencia más débil de linealidad de lo que sería con una muestra mucho más grande."
             ],
@@ -4434,6 +4824,15 @@
             ],
             "Scope of this version": [
                 "Alcance de esta versión"
+            ],
+            "Score test": [
+                "Prueba de puntuación"
+            ],
+            "Score test for zero inflation": [
+                "Prueba de puntuación para inflación de ceros"
+            ],
+            "Score test: van den Broek (1995), zero-inflated Poisson vs Poisson, χ²(1).": [
+                "Prueba de puntuación: van den Broek (1995), Poisson inflado en ceros vs Poisson, χ²(1)."
             ],
             "Scott": [
                 "Scott"
@@ -4543,6 +4942,9 @@
             "Shapiro-Wilk is used because it retains the highest statistical power among common normality tests across nearly the full range of sample sizes (Razali & Wah, 2011; see references). A widespread recommendation to prefer Kolmogorov-Smirnov once n grows is a leftover from old software limitations, not a statistical reason.": [
                 "Se usa Shapiro-Wilk porque mantiene el mayor poder estadístico entre las pruebas de normalidad más comunes para prácticamente todo rango de tamaño muestral (Razali & Wah, 2011; ver referencias). La recomendación extendida de preferir Kolmogorov-Smirnov cuando n crece es un remanente de limitaciones de software antiguo, no una razón estadística."
             ],
+            "Shapiro-Wilk test on these residuals: p %s. %s": [
+                "Prueba de Shapiro-Wilk sobre estos residuos: p %s. %s"
+            ],
             "Show": [
                 "Mostrar"
             ],
@@ -4626,6 +5028,9 @@
             ],
             "Smallest category": [
                 "Categoría más pequeña"
+            ],
+            "Smoother": [
+                "Suavizador"
             ],
             "Smoothing": [
                 "Suavizado"
@@ -4711,8 +5116,14 @@
             "Status": [
                 "Estado"
             ],
+            "Std. deviance residual": [
+                "Residuo de devianza estand."
+            ],
             "Strongest association: ": [
                 "Asociación más fuerte: "
+            ],
+            "Strongest association: %s, IRR = %s (p %s).": [
+                "Asociación más fuerte: %s, IRR = %s (p %s)."
             ],
             "Strongest association: %s, OR = %s.": [
                 "Asociación más fuerte: %s, OR = %s."
@@ -4981,6 +5392,9 @@
             "The Box-Tidwell test could not be computed for the numeric predictors (it requires strictly positive values).": [
                 "No fue posible calcular la prueba de Box-Tidwell para los predictores numéricos (requiere valores estrictamente positivos)."
             ],
+            "The Dean-Lawless and Cameron-Trivedi tests are one-sided (H1: overdispersion of the negative binomial form, var = μ + α·μ²).": [
+                "Las pruebas de Dean-Lawless y Cameron-Trivedi son unilaterales (H1: sobredispersión de la forma binomial negativa, var = μ + α·μ²)."
+            ],
             "The Durbin-Watson test helps review first-order autocorrelation when data have a natural order.": [
                 "La prueba Durbin-Watson ayuda a revisar autocorrelación de primer orden cuando los datos tienen un orden natural."
             ],
@@ -5026,6 +5440,21 @@
             "The OR's confidence interval is more informative than the p-value alone: if it includes 1, the effect is not statistically distinguishable from no association.": [
                 "El intervalo de confianza del OR es más informativo que el valor p aislado: si incluye 1, el efecto no es estadísticamente distinguible de la ausencia de asociación."
             ],
+            "The Pearson dispersion ratio (Pearson chi-square divided by its degrees of freedom) should be close to 1 under the Poisson model; values clearly above 1 indicate overdispersion and values clearly below 1 indicate underdispersion (Cameron & Trivedi, 2013).": [
+                "El cociente de dispersión de Pearson (chi-cuadrado de Pearson dividido por sus grados de libertad) debería estar cerca de 1 bajo el modelo de Poisson; valores claramente mayores que 1 indican sobredispersión y valores claramente menores que 1 indican infradispersión (Cameron & Trivedi, 2013)."
+            ],
+            "The Pearson ratio is clearly below 1, which suggests underdispersion: the counts vary less than the Poisson model expects. Poisson standard errors are then conservative (too wide); the negative binomial model does not help, because it only allows more variance, not less.": [
+                "El cociente de Pearson está claramente por debajo de 1, lo que sugiere infradispersión: los recuentos varían menos de lo que espera el modelo de Poisson. Los errores estándar de Poisson son entonces conservadores (demasiado amplios); el modelo binomial negativo no ayuda, porque solo admite más varianza, no menos."
+            ],
+            "The Poisson model assumes the variance of the count equals its mean (equidispersion); the negative binomial model relaxes this by adding a dispersion parameter, var = mu + mu^2/theta (Hilbe, 2011).": [
+                "El modelo de Poisson supone que la varianza del recuento es igual a su media (equidispersión); el modelo binomial negativo relaja este supuesto añadiendo un parámetro de dispersión, var = mu + mu^2/theta (Hilbe, 2011)."
+            ],
+            "The Poisson model under-predicts the zeros, but the negative binomial model reproduces them: the extra zeros are explained by overdispersion, and a zero-inflated model is usually unnecessary.": [
+                "El modelo de Poisson predice menos ceros de los observados, pero el modelo binomial negativo los reproduce: los ceros de más se explican por la sobredispersión, y un modelo inflado en ceros suele ser innecesario."
+            ],
+            "The Poisson model under-predicts the zeros. The negative binomial model could not be fitted, so it is not possible to tell whether the extra zeros come from overdispersion or from a separate process.": [
+                "El modelo de Poisson predice menos ceros de los observados. No se pudo ajustar el modelo binomial negativo, así que no es posible saber si los ceros de más provienen de la sobredispersión o de un proceso distinto."
+            ],
             "The Pulkstenis-Robinson test needs at least one categorical predictor to partition cases into covariate patterns; it is not shown when only numeric predictors are selected. It also needs at least as many distinct covariate patterns as groups to be valid (Fagerland & Hosmer, 2013; see references) - with very few categorical predictors or very few levels, treat a result from this test with extra caution.": [
                 "La prueba de Pulkstenis-Robinson necesita al menos un predictor categórico para particionar los casos en patrones de covariables; no se muestra cuando solo hay predictores numéricos seleccionados. También necesita al menos tantos patrones de covariables distintos como grupos para ser válida (Fagerland & Hosmer, 2013; ver referencias) - con muy pocos predictores categóricos o muy pocos niveles, trate un resultado de esta prueba con cautela adicional."
             ],
@@ -5034,6 +5463,9 @@
             ],
             "The SARIMA model could not be fitted (auto.arima).": [
                 "No fue posible ajustar el modelo SARIMA (auto.arima)."
+            ],
+            "The Shapiro-Wilk test is not computed on these residuals (it needs between 3 and 5000 cases); use the Q-Q plot.": [
+                "La prueba de Shapiro-Wilk no se calcula sobre estos residuos (necesita entre 3 y 5000 casos); use el gráfico Q-Q."
             ],
             "The Sobel (1982) z-test offers an analytic way to evaluate the significance of a simple indirect effect (a single mediator), though bootstrap confidence intervals are now preferred because they are less sensitive to the non-normality of the product of two coefficients.": [
                 "La prueba z de Sobel (1982) ofrece una forma analítica de evaluar la significancia de un efecto indirecto simple (un solo mediador), aunque hoy se prefieren los intervalos de confianza bootstrap por ser menos sensibles a la falta de normalidad del producto de dos coeficientes."
@@ -5062,6 +5494,12 @@
             "The boxplot keeps the median visible. Optional layers can add violin density, individual observations and the mean marker.": [
                 "El boxplot mantiene visible la mediana. Las capas opcionales pueden añadir densidad tipo violin, observaciones individuales y marca de media."
             ],
+            "The check compares the observed number of zeros with the number each model expects, the sum of each case's fitted probability of a zero.": [
+                "La comprobación compara el número observado de ceros con el número que espera cada modelo, la suma de la probabilidad ajustada de un cero en cada caso."
+            ],
+            "The check replaces each numeric predictor's linear term with a natural cubic spline of 3 degrees of freedom and compares the two fits with a likelihood ratio test on 2 degrees of freedom (Harrell, 2015). A significant result suggests the relationship on the log scale is curved.": [
+                "La comprobación reemplaza el término lineal de cada predictor numérico por un spline cúbico natural de 3 grados de libertad y compara ambos ajustes con una prueba de razón de verosimilitudes de 2 grados de libertad (Harrell, 2015). Un resultado significativo sugiere que la relación en la escala logarítmica es curva."
+            ],
             "The choice should combine statistical evidence, study design and the research question.": [
                 "La elección debe combinar evidencia estadística, diseño del estudio y pregunta de investigación."
             ],
@@ -5071,11 +5509,17 @@
             "The cointegrating VECM could not be converted to its VAR representation (vec2var).": [
                 "No fue posible convertir el VECM cointegrado a su representación VAR (vec2var)."
             ],
+            "The comparison of the negative binomial's expected zeros uses a heuristic (observed at least 15% above expected and at least 5 zeros more), not a formal test.": [
+                "La comparación con los ceros esperados por la binomial negativa usa una heurística (observados al menos un 15% por encima de los esperados y al menos 5 ceros más), no una prueba formal."
+            ],
             "The comparison using %s is methodologically defensible.": [
                 "La comparación mediante %s es metodológicamente defendible."
             ],
             "The conditional mean dynamics may not be well captured.": [
                 "La dinámica de la media condicional puede no estar bien capturada."
+            ],
+            "The confidence intervals shown are Wald intervals from the model being diagnosed. If the data are overdispersed and the Poisson model is used, these intervals are too narrow.": [
+                "Los intervalos de confianza mostrados son intervalos de Wald del modelo diagnosticado. Si los datos están sobredispersos y se usa el modelo de Poisson, estos intervalos son demasiado estrechos."
             ],
             "The copent R package implements this estimator for independence testing.": [
                 "El paquete R copent implementa este estimador para pruebas de independencia."
@@ -5101,6 +5545,12 @@
             "The dependent variable has fewer than 3 categories. Use logCheck for a binary (2-category) dependent variable instead - it gives richer binary-specific diagnostics (ROC/AUC, Hosmer-Lemeshow, odds ratios).": [
                 "La variable dependiente tiene menos de 3 categorías. Use logCheck en cambio para una variable dependiente binaria (2 categorías) - da diagnósticos binarios más ricos (ROC/AUC, Hosmer-Lemeshow, odds ratios)."
             ],
+            "The dependent variable has negative values, and a count cannot be negative. Check how the variable is coded.": [
+                "La variable dependiente tiene valores negativos, y un recuento no puede ser negativo. Revise cómo está codificada la variable."
+            ],
+            "The dependent variable has non-integer values, and Poisson and negative binomial models need whole-number counts. If it is a rate, enter the count as the dependent variable and the time or population at risk as the exposure.": [
+                "La variable dependiente tiene valores no enteros, y los modelos de Poisson y binomial negativo necesitan recuentos enteros. Si se trata de una tasa, introduzca el recuento como variable dependiente y el tiempo o la población en riesgo como exposición."
+            ],
             "The dependent variable is deliberately excluded from this matrix: unlike ordCheck's ordinal outcome, this variable's categories are unordered, so there is no defensible way to integer-code it for a correlation coefficient - its relationship to the predictors is instead reported through the coefficients/odds-ratios table.": [
                 "La variable dependiente se excluye deliberadamente de esta matriz: a diferencia del desenlace ordinal de ordCheck, las categorías de esta variable no están ordenadas, así que no hay una forma defendible de codificarla como entero para un coeficiente de correlación - su relación con los predictores se reporta en cambio mediante la tabla de coeficientes/odds ratios."
             ],
@@ -5112,6 +5562,12 @@
             ],
             "The dependent variable must be numeric.": [
                 "La variable dependiente debe ser numérica."
+            ],
+            "The dependent variable must be numeric: a count of events per case.": [
+                "La variable dependiente debe ser numérica: un recuento de eventos por caso."
+            ],
+            "The dependent variable takes a single value, so there is nothing to model.": [
+                "La variable dependiente toma un único valor, así que no hay nada que modelar."
             ],
             "The diagnostic battery could not complete: %s": [
                 "La batería de diagnóstico no pudo completarse: %s"
@@ -5127,6 +5583,9 @@
             ],
             "The evidence suggests that the equal-variance assumption may not be fully defensible.": [
                 "La evidencia sugiere que el supuesto de igualdad de varianzas puede no ser completamente defendible."
+            ],
+            "The exposure variable has zero or negative values in %s case(s), and its logarithm is not defined. Correct those values, or choose 'Already on the log scale' if the variable is already a logarithm.": [
+                "La variable de exposición tiene valores cero o negativos en %s caso(s), y su logaritmo no está definido. Corrija esos valores, o elija 'Ya en escala logarítmica' si la variable ya es un logaritmo."
             ],
             "The final decision should also consider the study design, measurement scale, sample size, and the consequences of using a parametric or robust strategy.": [
                 "La decisión final también debe considerar el diseño del estudio, la escala de medición, el tamaño muestral y las consecuencias de usar una estrategia paramétrica o robusta."
@@ -5161,6 +5620,9 @@
             "The full explanation of these criteria is in Assumption Library.": [
                 "La explicación completa de estos criterios está en Assumption Library."
             ],
+            "The generalized variance inflation factor (GVIF) is reported, adjusted as GVIF^(1/(2 df)) so that categorical predictors with several levels are comparable with numeric ones; its square is on the usual VIF scale.": [
+                "Se informa el factor de inflación de la varianza generalizado (GVIF), ajustado como GVIF^(1/(2 gl)) para que los predictores categóricos con varios niveles sean comparables con los numéricos; su cuadrado está en la escala habitual del VIF."
+            ],
             "The ggplot2 package is required to draw diagnostic plots.": [
                 "El paquete ggplot2 es necesario para dibujar los gráficos diagnósticos."
             ],
@@ -5182,11 +5644,17 @@
             "The horizontal line at 0 indicates no change.": [
                 "La línea horizontal en 0 indica ausencia de cambio."
             ],
+            "The incidence rate ratio (IRR) is the exponentiated coefficient: it is the factor by which the expected count (or rate, when there is an offset) is multiplied for each one-unit increase in the predictor, or for a category compared with the reference category.": [
+                "La razón de tasas de incidencia (IRR) es el coeficiente exponenciado: es el factor por el que se multiplica el recuento esperado (o la tasa, cuando hay offset) por cada aumento de una unidad en el predictor, o para una categoría frente a la categoría de referencia."
+            ],
             "The independent-samples t-test is defensible for this comparison given the sample size (n = %s) and the homogeneous variances observed; by the central limit theorem, the sampling distribution of the group means is approximately normal at this size even when individual normality tests flag deviations.": [
                 "La t de Student para grupos independientes es defendible para esta comparación dado el tamaño muestral (n = %s) y la homogeneidad de varianzas observada; por el teorema central del límite, la distribución muestral de las medias de grupo es aproximadamente normal a este tamaño, aunque las pruebas individuales de normalidad marquen desviaciones."
             ],
             "The internal state of the difference plot does not contain the expected columns.": [
                 "El estado interno del gráfico de diferencias no contiene las columnas esperadas."
+            ],
+            "The likelihood ratio test compares the Poisson and negative binomial fits directly; because the Poisson model sits on the boundary of the negative binomial (alpha = 0), its p-value is half the usual chi-square tail (Self & Liang, 1987).": [
+                "La prueba de razón de verosimilitudes compara directamente los ajustes de Poisson y binomial negativo; como el modelo de Poisson está en la frontera de la binomial negativa (alfa = 0), su valor p es la mitad de la cola chi-cuadrado habitual (Self & Liang, 1987)."
             ],
             "The linear regression model can be interpreted cautiously, while reviewing the reported diagnostics.": [
                 "El modelo de regresión lineal puede interpretarse con cautela, revisando los diagnósticos reportados."
@@ -5197,6 +5665,9 @@
             "The matrix shows only the conditions relevant to the selected model. Not all of them are strict mathematical requirements: applicability conditions (which must hold for the model to make sense), specification criteria (which guide the choice of parameters such as p, d, q, or the cointegration rank), and post-fit diagnostics (which evaluate whether the already-estimated model adequately captured the structure of the data) are distinguished. Conflating these categories is a common methodological error: for example, residual normality in an ARIMA model is a useful diagnostic, not a strict mathematical requirement for estimation.": [
                 "La matriz muestra únicamente las condiciones relevantes para el modelo seleccionado. No todas son requisitos matemáticos estrictos: se distinguen condiciones de aplicabilidad (deben cumplirse para que el modelo tenga sentido), criterios de especificación (orientan la elección de parámetros como p, d, q o el rango de cointegración) y diagnósticos posteriores al ajuste (evalúan si el modelo ya estimado capturó adecuadamente la estructura de los datos). Confundir estas categorías es un error metodológico frecuente: por ejemplo, la normalidad de los residuos en un ARIMA es un diagnóstico útil, no un requisito matemático estricto para la estimación."
             ],
+            "The model has no predictors, so only the baseline count is estimated.": [
+                "El modelo no tiene predictores, así que solo se estima el recuento de base."
+            ],
             "The model has subgroups of variables with no relation between them.": [
                 "El modelo tiene subgrupos de variables sin relación entre sí."
             ],
@@ -5205,6 +5676,9 @@
             ],
             "The model satisfies all validations and can be finalized.": [
                 "El modelo cumple todas las validaciones y puede finalizarse."
+            ],
+            "The most influential case is case %s, with Cook's D = %s and an observed count of %s against a fitted %s.": [
+                "El caso más influyente es el caso %s, con Cook's D = %s y un recuento observado de %s frente a un ajustado de %s."
             ],
             "The multinomial-logit model assumes the relative odds between any two categories do not depend on which OTHER categories are also available - Independence of Irrelevant Alternatives (IIA), the one assumption unique to this model family.": [
                 "El modelo logit multinomial asume que los momios relativos entre dos categorías cualesquiera no dependen de qué OTRAS categorías también estén disponibles - Independencia de Alternativas Irrelevantes (IIA), el único supuesto propio de esta familia de modelos."
@@ -5215,11 +5689,26 @@
             "The multinomial-logit model treats the dependent variable's categories as unordered, and fits one log-odds equation per non-reference category versus the reference category, all estimated jointly.": [
                 "El modelo logit multinomial trata las categorías de la variable dependiente como no ordenadas, y ajusta una ecuación de log-momios por categoría no-referencia frente a la categoría de referencia, todas estimadas conjuntamente."
             ],
+            "The negative binomial dispersion parameter is shown as theta and as alpha = 1/theta: alpha close to 0 (theta very large) means the negative binomial reduces to the Poisson model.": [
+                "El parámetro de dispersión de la binomial negativa se muestra como theta y como alfa = 1/theta: un alfa cercano a 0 (theta muy grande) significa que la binomial negativa se reduce al modelo de Poisson."
+            ],
+            "The negative binomial model could not be fitted (%s). Choose the Poisson model to see the overdispersion checks.": [
+                "No se pudo ajustar el modelo binomial negativo (%s). Elija el modelo de Poisson para ver las comprobaciones de sobredispersión."
+            ],
+            "The negative binomial model does not improve clearly on the Poisson model (likelihood ratio test not significant); the simpler Poisson model may be enough.": [
+                "El modelo binomial negativo no mejora claramente al de Poisson (prueba de razón de verosimilitudes no significativa); el modelo de Poisson, más simple, puede ser suficiente."
+            ],
+            "The negative binomial model estimates θ = %s (α = 1/θ = %s); AIC is %s for Poisson and %s for the negative binomial.": [
+                "El modelo binomial negativo estima θ = %s (α = 1/θ = %s); el AIC es %s para Poisson y %s para la binomial negativa."
+            ],
             "The normal-curve plot internal state does not contain the expected columns.": [
                 "El estado interno del gráfico de curva normal no contiene las columnas esperadas."
             ],
             "The normality of the differences showed at least one significant signal; review the Q-Q plot and observed distribution before deciding.": [
                 "La normalidad de las diferencias mostró al menos una señal significativa; revise Q-Q plot y distribución observada antes de decidir."
+            ],
+            "The number of zeros is compatible with the model; there is no sign of zero inflation.": [
+                "El número de ceros es compatible con el modelo; no hay señales de inflación de ceros."
             ],
             "The odds ratio (OR) is the exponentiated coefficient; it represents how much the odds of the event are multiplied for each one-unit increase in the predictor (or for belonging to a category versus the reference category).": [
                 "El odds ratio (OR) es el coeficiente exponenciado; representa cuánto se multiplican los momios del evento por cada unidad de aumento en el predictor (o por pertenecer a una categoría frente a la de referencia)."
@@ -5238,6 +5727,9 @@
             ],
             "The parametric analysis may be defensible with caution if the design is truly independent, variances are compatible with homogeneity and normality does not show severe deviations.": [
                 "El análisis paramétrico puede ser defendible con cautela si el diseño realmente es independiente, las varianzas son compatibles con homogeneidad y la normalidad no muestra desviaciones graves."
+            ],
+            "The partial residual plot shows the same thing graphically: the working residuals plus the predictor's linear contribution, against the predictor. A smooth curve that departs from the straight line points to non-linearity.": [
+                "El gráfico de residuos parciales muestra lo mismo de forma gráfica: los residuos de trabajo más la contribución lineal del predictor, frente al predictor. Una curva suavizada que se aparta de la recta apunta a no linealidad."
             ],
             "The plot internal state does not contain the expected columns.": [
                 "El estado interno del gráfico no contiene las columnas esperadas."
@@ -5287,6 +5779,9 @@
             "The sphericity test was significant; interpreting repeated-measures ANOVA without correction is not recommended.": [
                 "La prueba de esfericidad fue significativa; no se recomienda interpretar un ANOVA de medidas repetidas sin corrección."
             ],
+            "The spline test could not be computed for any numeric predictor; use the partial residual plot.": [
+                "La prueba con spline no pudo calcularse para ningún predictor numérico; use el gráfico de residuos parciales."
+            ],
             "The suggested test depends on the number of measurements and assumptions.": [
                 "La prueba sugerida depende del número de mediciones y los supuestos."
             ],
@@ -5295,6 +5790,9 @@
             ],
             "The system is unstable.": [
                 "El sistema resulta inestable."
+            ],
+            "The tests indicate overdispersion: the counts vary more than the Poisson model allows (Dean-Lawless p %s; likelihood ratio p %s). With a Poisson model, standard errors would be about %s times too small.": [
+                "Las pruebas indican sobredispersión: los recuentos varían más de lo que permite el modelo de Poisson (Dean-Lawless p %s; razón de verosimilitudes p %s). Con un modelo de Poisson, los errores estándar serían unas %s veces demasiado pequeños."
             ],
             "The two coincide only when the event is rare; with common events (above 10%), the OR systematically overstates the real relative effect (Zhang & Yu, 1998).": [
                 "Ambos coinciden solo cuando el evento es poco frecuente; con eventos frecuentes (más del 10%), el OR exagera sistemáticamente el efecto relativo real (Zhang & Yu, 1998)."
@@ -5314,6 +5812,9 @@
             "The variance inflation factor (VIF) summarizes this redundancy; values above 5 raise a moderate concern and above 10 are considered a severe problem (Marquardt, 1970).": [
                 "El factor de inflación de varianza (VIF) resume esta redundancia; valores por encima de 5 encienden una alerta moderada y por encima de 10 se consideran un problema severo (Marquardt, 1970)."
             ],
+            "The variance inflation factors could not be computed; this usually means an exact linear dependency among predictors (an aliased coefficient).": [
+                "No se pudieron calcular los factores de inflación de la varianza; esto suele indicar una dependencia lineal exacta entre predictores (un coeficiente confundido)."
+            ],
             "Theoretical normal": [
                 "Normal teórica"
             ],
@@ -5329,8 +5830,17 @@
             "Theoretical quantiles": [
                 "Cuantiles teóricos"
             ],
+            "Theoretical quantiles (standard normal)": [
+                "Cuantiles teóricos (normal estándar)"
+            ],
             "There are cases with a large Pearson-type residual; inspect them before relying on the model's predictions.": [
                 "Hay casos con un residuo tipo Pearson grande; inspecciónelos antes de confiar en las predicciones del modelo."
+            ],
+            "There are many outlying or influential cases; inspect them before making decisions about the model.": [
+                "Hay muchos casos atípicos o influyentes; revíselos antes de tomar decisiones sobre el modelo."
+            ],
+            "There are more zeros than the negative binomial model expects; consider a zero-inflated or hurdle model, with a substantive justification.": [
+                "Hay más ceros de los que espera el modelo binomial negativo; considere un modelo inflado en ceros o un modelo hurdle, con una justificación sustantiva."
             ],
             "There are not enough complete cases to evaluate related groups.": [
                 "No hay suficientes casos completos para evaluar grupos relacionados."
@@ -5359,6 +5869,9 @@
             "There is evidence of nonconstant residual variance; consider robust standard errors, transforming the dependent variable, or using an alternative model.": [
                 "Hay evidencia de varianza residual no constante; considerar errores estándar robustos, transformación de la dependiente o modelo alternativo."
             ],
+            "There is no clear evidence of overdispersion: the variance of the counts is compatible with the Poisson model.": [
+                "No hay evidencia clara de sobredispersión: la varianza de los recuentos es compatible con el modelo de Poisson."
+            ],
             "There is no single ROC curve or AUC once the outcome has more than two ordered categories, so overall model quality is summarized here with pseudo-R² measures instead.": [
                 "No hay una única curva ROC ni AUC una vez que el desenlace tiene más de dos categorías ordenadas, así que aquí la calidad general del modelo se resume con medidas de pseudo-R² en cambio."
             ],
@@ -5368,11 +5881,23 @@
             "There is no single agreed-upon rule for how large a sample a path model needs; the literature offers several complementary heuristics that weigh model complexity differently.": [
                 "No existe una única regla consensuada sobre qué tan grande debe ser la muestra de un modelo de ruta; la literatura ofrece varias heurísticas complementarias que ponderan la complejidad del modelo de forma distinta."
             ],
+            "There is overdispersion: the Poisson standard errors are too small. Prefer the negative binomial model (choose it under 'Model to diagnose'), or at least use robust standard errors.": [
+                "Hay sobredispersión: los errores estándar de Poisson son demasiado pequeños. Prefiera el modelo binomial negativo (elíjalo en 'Modelo a diagnosticar'), o al menos use errores estándar robustos."
+            ],
+            "There is relevant collinearity: the rate ratios of the predictors involved are unstable and their intervals wide. Consider combining or removing redundant predictors.": [
+                "Hay colinealidad relevante: las razones de tasas de los predictores implicados son inestables y sus intervalos amplios. Considere combinar o eliminar predictores redundantes."
+            ],
             "There is relevant multicollinearity among predictors; review redundant predictors before interpreting individual odds ratios.": [
                 "Hay multicolinealidad relevante entre predictores; revisar predictores redundantes antes de interpretar los odds ratios individuales."
             ],
+            "There is relevant multicollinearity; review redundant predictors before interpreting individual rate ratios.": [
+                "Hay multicolinealidad relevante; revise los predictores redundantes antes de interpretar las razones de tasas individuales."
+            ],
             "There is severe multicollinearity; review redundant predictors before interpreting coefficients.": [
                 "Hay multicolinealidad severa; revisar predictores redundantes antes de interpretar coeficientes."
+            ],
+            "There is underdispersion: Poisson standard errors are conservative. Consider a generalized Poisson or Conway-Maxwell-Poisson model if precision matters.": [
+                "Hay infradispersión: los errores estándar de Poisson son conservadores. Considere un modelo de Poisson generalizado o de Conway-Maxwell-Poisson si la precisión importa."
             ],
             "These criteria measure different aspects of the same question: how unusual a case is (leverage), how large its residual is (studentized residual), and how much it would change the model's coefficients if removed (Cook's D, DFFITS). A flagged case is not automatically an error.": [
                 "Estos criterios miden aspectos distintos de la misma pregunta: qué tan inusual es un caso (leverage), qué tan grande es su residuo (residuo studentizado), y cuánto cambiaría los coeficientes del modelo si se eliminara (Cook's D, DFFITS). Un caso marcado no es automáticamente un error."
@@ -5418,6 +5943,9 @@
             ],
             "These two tables show the intercorrelation structure of the measured variables, each in APA 7 format (lower triangle, numbered variables). This is directly relevant to a related-samples design: strong or weak correlations among the measures affect the power and interpretation of within-subject comparisons.": [
                 "Estas dos tablas muestran la estructura de intercorrelación de las variables medidas, cada una en formato APA 7 (triángulo inferior, variables numeradas). Esto es directamente relevante para un diseño de muestras relacionadas: correlaciones fuertes o débiles entre las mediciones afectan la potencia y la interpretación de las comparaciones intrasujeto."
+            ],
+            "They depart from the standard normal distribution, which points to a misspecified distribution (for example, overdispersion or excess zeros) or a misspecified mean.": [
+                "Se apartan de la distribución normal estándar, lo que apunta a una distribución mal especificada (por ejemplo, sobredispersión o exceso de ceros) o a una media mal especificada."
             ],
             "They should not be used only to improve an assumption test; they should make statistical and substantive sense.": [
                 "No deben usarse solo para mejorar una prueba de supuestos; deben tener sentido estadístico y sustantivo."
@@ -5487,6 +6015,9 @@
             ],
             "This single-OR interpretation is only valid to the extent the proportional-odds assumption holds - if the Brant test above flags a predictor, its odds ratio here should not be read as constant across cutpoints.": [
                 "Esta interpretación de OR único solo es válida en la medida en que se sostenga el supuesto de momios proporcionales - si la prueba de Brant de arriba marca un predictor, su odds ratio aquí no debería leerse como constante entre puntos de corte."
+            ],
+            "This table compares the two candidate models fitted to the same cases. A lower AIC or BIC indicates a better balance between fit and complexity.": [
+                "Esta tabla compara los dos modelos candidatos ajustados a los mismos casos. Un AIC o BIC menor indica un mejor equilibrio entre ajuste y complejidad."
             ],
             "This table translates the diagnostics into possible methodological options.": [
                 "Esta tabla traduce los diagnósticos en opciones metodológicas posibles."
@@ -5577,6 +6108,9 @@
             ],
             "Two complementary tests are reported per equation: Shapiro-Wilk, generally the most powerful in small-to-moderate samples, and Anderson-Darling (Anderson & Darling, 1952), which weights the tails of the distribution more heavily (Razali & Wah, 2011).": [
                 "Se reportan dos pruebas complementarias por ecuación: Shapiro-Wilk, generalmente la más potente en muestras pequeñas a moderadas, y Anderson-Darling (Anderson & Darling, 1952), que pondera más las colas de la distribución (Razali & Wah, 2011)."
+            ],
+            "Two formal tests are reported against the negative binomial alternative: the Dean-Lawless score test (Dean & Lawless, 1989) and the Cameron-Trivedi auxiliary regression (Cameron & Trivedi, 1990).": [
+                "Se informan dos pruebas formales frente a la alternativa binomial negativa: la prueba de puntuación de Dean-Lawless (Dean & Lawless, 1989) y la regresión auxiliar de Cameron-Trivedi (Cameron & Trivedi, 1990)."
             ],
             "Two measurements": [
                 "Dos mediciones"
@@ -5773,14 +6307,23 @@
             "Variance": [
                 "Varianza"
             ],
+            "Variance / mean (raw data)": [
+                "Varianza / media (datos brutos)"
+            ],
             "Variance equality": [
                 "Igualdad de varianzas"
             ],
             "Variance homogeneity": [
                 "Homogeneidad de varianzas"
             ],
+            "Variance in the group": [
+                "Varianza del grupo"
+            ],
             "Variance interpretation guide": [
                 "Guía de interpretación de la varianza"
+            ],
+            "Variance of the count": [
+                "Varianza del recuento"
             ],
             "Variance persistence (alpha1 + beta1)": [
                 "Persistencia de la varianza (alpha1 + beta1)"
@@ -5827,6 +6370,9 @@
             "Volatility asymmetry (sign bias, GJR, EGARCH)": [
                 "Asimetría en la volatilidad (sesgo de signo, GJR, EGARCH)"
             ],
+            "Wald 95% confidence intervals. The intercept row is the baseline expected count (or rate, with an offset) when every predictor is 0 or at its reference category.": [
+                "Intervalos de confianza de Wald al 95%. La fila del intercepto es el recuento esperado de base (o la tasa, con offset) cuando cada predictor vale 0 o está en su categoría de referencia."
+            ],
             "Warning sign: %s": [
                 "Señal de alerta: %s"
             ],
@@ -5871,6 +6417,9 @@
             ],
             "When all three diagnostics agree (low Pearson, low dCor, non-significant CE), the evidence for independence between that pair of variables is strong. When they disagree - for example, low Pearson but significant CE - this suggests a non-linear dependence that Pearson does not capture but that information theory does detect.": [
                 "Cuando los tres diagnósticos coinciden (Pearson bajo, dCor bajo, CE no significativa), la evidencia de independencia entre ese par de variables es sólida. Cuando discrepan - por ejemplo, Pearson bajo pero CE significativa - esto sugiere una dependencia no lineal que Pearson no captura pero que la teoría de la información sí detecta."
+            ],
+            "When cases were observed for different lengths of time or represent populations of different sizes, the exposure (person-time, population at risk) enters as an offset, log(exposure), so the model describes rates rather than raw counts.": [
+                "Cuando los casos se observaron durante tiempos distintos o representan poblaciones de distinto tamaño, la exposición (persona-tiempo, población en riesgo) entra como offset, log(exposición), de modo que el modelo describe tasas en vez de recuentos brutos."
             ],
             "When dCor detects dependence that a linear covariate adjustment would miss.": [
                 "Cuando dCor detecta una dependencia que un ajuste lineal por la covariable no captaría."
@@ -5953,8 +6502,20 @@
             "With N = %d complete cases, %d estimated path(s) across %d equation(s) (largest equation has %d predictor(s)), the model meets %d of %d sample-size criteria in the \"Sample-Size Assessment by Model Complexity\" table.": [
                 "Con N = %d casos completos, %d ruta(s) estimada(s) en %d ecuación(es) (la ecuación más grande tiene %d predictor(es)), el modelo cumple %d de %d criterios de la tabla \"Valoración del Tamaño de Muestra según la Complejidad del Modelo\"."
             ],
+            "With count data, a single case with a very large count can dominate the fit, especially under the Poisson model, whose variance is small for large counts.": [
+                "Con datos de recuento, un solo caso con un recuento muy grande puede dominar el ajuste, sobre todo bajo el modelo de Poisson, cuya varianza es pequeña para recuentos grandes."
+            ],
+            "With counts, and above all with small means, neither residual is normally distributed even when the model is right, so their Q-Q plot is hard to read. The randomized quantile residuals of Dunn and Smyth (1996) solve this: when the model is correct they are exactly standard normal.": [
+                "Con recuentos, y sobre todo con medias pequeñas, ninguno de los dos residuos se distribuye normalmente aunque el modelo sea correcto, así que su gráfico Q-Q es difícil de leer. Los residuos cuantílicos aleatorizados de Dunn y Smyth (1996) resuelven esto: cuando el modelo es correcto, son exactamente normales estándar."
+            ],
             "With large samples, normality tests can detect small deviations that may not seriously affect the analysis. With small samples, tests may have low power, so visual inspection and substantive judgment are especially important.": [
                 "Con muestras grandes, las pruebas de normalidad pueden detectar desviaciones pequeñas que quizá no afecten seriamente el análisis. Con muestras pequeñas, las pruebas pueden tener baja potencia, por lo que la inspección visual y el juicio sustantivo son especialmente importantes."
+            ],
+            "With overdispersed data, Poisson residuals are too spread out: a SD clearly above 1 and many cases beyond ±2 are the residual-side view of the overdispersion reported above.": [
+                "Con datos sobredispersos, los residuos de Poisson están demasiado dispersos: una DE claramente mayor que 1 y muchos casos más allá de ±2 son la cara residual de la sobredispersión informada arriba."
+            ],
+            "With overdispersed data, the Poisson spline test rejects linearity too often, because its likelihood ratio assumes the Poisson variance; check linearity again with the negative binomial model before acting on a significant result.": [
+                "Con datos sobredispersos, la prueba con spline bajo Poisson rechaza la linealidad con demasiada frecuencia, porque su razón de verosimilitudes supone la varianza de Poisson; compruebe de nuevo la linealidad con el modelo binomial negativo antes de actuar ante un resultado significativo."
             ],
             "With small samples, the test may lack power to detect real but weak dependencies.": [
                 "Con muestras pequeñas, la prueba puede carecer de poder para detectar dependencias reales pero débiles."
@@ -6003,6 +6564,9 @@
             ],
             "Zero reference line": [
                 "Línea de referencia en cero"
+            ],
+            "Zeros": [
+                "Ceros"
             ],
             "a horizontal band with similar dispersion across the X axis.": [
                 "banda horizontal con dispersión similar a lo largo del eje X."
@@ -6214,6 +6778,9 @@
             "frequency or number of cases.": [
                 "frecuencia o número de casos."
             ],
+            "glm.nb() reported a convergence warning (%s). This usually means θ is growing without bound because the data show little or no overdispersion.": [
+                "glm.nb() emitió una advertencia de convergencia (%s). Suele significar que θ crece sin límite porque los datos muestran poca o ninguna sobredispersión."
+            ],
             "groups / cells defined by the selected factor(s).": [
                 "grupos / celdas definidos por el o los factores seleccionados."
             ],
@@ -6258,6 +6825,9 @@
             ],
             "leverage, or the case distance from the center of the predictor space.": [
                 "leverage, o distancia del caso respecto al centro del espacio de predictores."
+            ],
+            "log(%s)": [
+                "log(%s)"
             ],
             "log(Y)": [
                 "log(Y)"
@@ -6309,6 +6879,9 @@
             ],
             "non-linear covariate dependence": [
                 "dependencia no lineal en covariables"
+            ],
+            "none": [
+                "ninguna"
             ],
             "normality diagnostics": [
                 "diagnósticos de normalidad"
@@ -6517,9 +7090,6 @@
             "studentized residual, which indicates how extreme the case error is.": [
                 "residuo studentizado, que expresa qué tan extremo es el error del caso."
             ],
-            "t": [
-                "t"
-            ],
             "the direct and indirect effects point in opposite directions (a suppression / inconsistent-mediation pattern), so the total effect of %1$s on %2$s is smaller than either path alone would suggest": [
                 "los efectos directo e indirecto apuntan en direcciones opuestas (un patrón de supresión / mediación inconsistente), por lo que el efecto total de %1$s sobre %2$s es menor de lo que cualquiera de las dos rutas por separado sugeriría"
             ],
@@ -6586,6 +7156,12 @@
             "values predicted by the model.": [
                 "valores predichos por el modelo."
             ],
+            "van den Broek's (1995) score test compares the Poisson model with a zero-inflated Poisson model. Overdispersion alone also produces extra zeros, so a significant result must be read together with the zeros expected by the negative binomial model.": [
+                "La prueba de puntuación de van den Broek (1995) compara el modelo de Poisson con un modelo de Poisson inflado en ceros. La sobredispersión por sí sola también produce ceros de más, así que un resultado significativo debe leerse junto con los ceros esperados por el modelo binomial negativo."
+            ],
+            "van den Broek's score test is defined against the Poisson model only; for the negative binomial, compare observed and expected zeros.": [
+                "La prueba de puntuación de van den Broek solo está definida frente al modelo de Poisson; para la binomial negativa, compare los ceros observados y esperados."
+            ],
             "variance homogeneity diagnostics": [
                 "diagnósticos de homogeneidad de varianzas"
             ],
@@ -6609,6 +7185,9 @@
             ],
             "without statistical significance": [
                 "sin significancia estadística"
+            ],
+            "α = 1/θ": [
+                "α = 1/θ"
             ]
         }
     }
