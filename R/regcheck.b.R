@@ -780,7 +780,7 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         ce_res$p
                     )
                 } else {
-                    ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) .("The 'copent' package is not installed.") else .("Could not be computed for this predictor pair (copula entropy needs enough distinct values to estimate a copula density).")
+                    ce_reason <- .("Could not be computed for this predictor pair (copula entropy needs enough distinct values to estimate a copula density).")
                     add_linearity_predictor(
                         xname,
                         .("Copula entropy (copent)"),
@@ -2582,11 +2582,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
-
             # image$state, not private$.plotData, is the export-safe check
             # (see the setState() comment in .run()).
             # ES: image$state, no private$.plotData, es la verificación
@@ -2604,11 +2599,6 @@ regCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
-
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
 
             if (is.null(image$state) || length(image$state$corrPairResults) == 0) {
                 image$setError(.("Not enough numeric variables are available for this plot."))

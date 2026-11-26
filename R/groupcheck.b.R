@@ -1173,7 +1173,7 @@ groupCheckClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 )
             }
 
-            if (length(unique(g_complete)) >= 2 && requireNamespace("car", quietly = TRUE)) {
+            if (length(unique(g_complete)) >= 2) {
 
                 lev_median <- tryCatch(
                     car::leveneTest(y_complete, g_complete, center = median),

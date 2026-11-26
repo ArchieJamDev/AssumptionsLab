@@ -711,9 +711,6 @@
 # de llamada.
 # -----------------------------------------------------------------------------
 .al_copent_test <- function(x, y, B = 199, seed = 20260704) {
-    if (!requireNamespace("copent", quietly = TRUE))
-        return(NULL)
-
     # Same fixed seed as .al_dcor_test(), restored on exit: the estimator
     # and the permutations draw random numbers, and the report must be the
     # same on every run without touching the session's random state.

@@ -362,8 +362,7 @@
         crossEntropyInterpretation = c(
         .("Copula entropy complements the Pearson and dCor matrices with a third perspective on dependence: information theory. While Pearson measures linear association and dCor measures distance-based dependence, copula entropy measures how much information two variables share regardless of the shape of their relationship."),
         .("When all three diagnostics agree (low Pearson, low dCor, non-significant CE), the evidence for independence between that pair of variables is strong. When they disagree - for example, low Pearson but significant CE - this suggests a non-linear dependence that Pearson does not capture but that information theory does detect."),
-        .("Common error: using this table to reverse-engineer the model by adding paths based on the highest CE values. Path relationships should come from theory, not be discovered post-hoc from the data - otherwise the model capitalizes on chance and will not replicate."),
-        .("If the 'copent' package is not installed, this section cannot be computed. Install it with install.packages('copent') to enable this advanced diagnostic."))
+        .("Common error: using this table to reverse-engineer the model by adding paths based on the highest CE values. Path relationships should come from theory, not be discovered post-hoc from the data - otherwise the model capitalizes on chance and will not replicate."))
     ),
     time = list(
         title = .("Time Series"),

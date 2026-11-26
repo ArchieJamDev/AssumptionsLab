@@ -261,14 +261,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 list(statistic = stat, p.value = p)
             }
 
-            require_pkgs <- function(pkgs) {
-                all(vapply(pkgs, function(p) requireNamespace(p, quietly = TRUE), logical(1)))
-            }
-
-            missing_pkgs <- function(pkgs) {
-                pkgs[!vapply(pkgs, function(p) requireNamespace(p, quietly = TRUE), logical(1))]
-            }
-
             # -----------------------------------------------------------------------------
             # Diagnostic row accumulator. Each call classifies one test result into a
             # graded evidence tier and, when the tier is "moderate" or "clear" (or the
@@ -527,24 +519,15 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             # -----------------------------------------------------------------------------
             # Guard: decide whether the diagnostic battery can run at all (enough
-            # series selected, required packages available), before touching any data.
+            # series selected), before touching any data. The model packages are
+            # in Imports, so they are always installed.
             # ES: Guarda: decide si la batería de diagnóstico puede ejecutarse (series
-            # suficientes seleccionadas, paquetes requeridos disponibles), antes de
-            # tocar cualquier dato.
+            # suficientes seleccionadas), antes de tocar cualquier dato. Los paquetes
+            # de los modelos están en Imports, así que siempre están instalados.
             # -----------------------------------------------------------------------------
             n_series <- if (is.null(series)) 0 else length(series)
             needs_multivariate <- model %in% c("var", "vecm")
             min_series_needed <- if (needs_multivariate) 2 else 1
-
-            required_pkgs <- switch(model,
-                arima = c("forecast", "tseries"),
-                sarima = c("forecast", "tseries"),
-                ets = c("forecast", "tseries"),
-                var = c("vars", "tseries", "strucchange"),
-                vecm = c("vars", "urca", "tseries"),
-                garch = c("rugarch", "tseries"),
-                c("forecast", "tseries")
-            )
 
             notice <- NULL
 
@@ -552,14 +535,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 notice <- .("Select at least one time series to run the diagnostics below.")
             } else if (n_series < min_series_needed) {
                 notice <- .("VAR and VECM require at least two series. Add another series or choose a univariate model.")
-            } else {
-                missing <- missing_pkgs(required_pkgs)
-                if (length(missing) > 0) {
-                    notice <- sprintf(
-                        .("This model's diagnostics require the following R package(s), which are not installed: %s. Please install them from R before running this diagnostic battery."),
-                        paste(missing, collapse = ", ")
-                    )
-                }
             }
 
             if (!is.null(notice)) {
@@ -1286,11 +1261,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .computeVar = function(mat, ., push_diag, push_note, arch_lm_test, fmt_stat) {
             . <- .al_lang(self$options)$tr
 
-            if (!requireNamespace("vars", quietly = TRUE)) {
-                push_note(.("The 'vars' package is not installed; VAR diagnostics cannot be computed."))
-                return(invisible(NULL))
-            }
-
             private$.stationarityPerVariable(mat, ., push_diag)
 
             n <- nrow(mat)
@@ -1343,22 +1313,18 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 push_diag(.("Jarque-Bera (multivariate normality)"),
                           norm_mv$jb.mul$JB$statistic, norm_mv$jb.mul$JB$p.value, "low_bad", "jarqueBera")
 
-            if (requireNamespace("strucchange", quietly = TRUE)) {
-                cusum_p <- tryCatch({
-                    ps <- vapply(fit$varresult, function(eq) {
-                        efp_fit <- strucchange::efp(formula(eq), data = eq$model, type = "OLS-CUSUM")
-                        sc <- strucchange::sctest(efp_fit)
-                        sc$p.value
-                    }, numeric(1))
-                    ps
-                }, error = function(e) NULL)
-                if (!is.null(cusum_p) && length(cusum_p) > 0 && !all(is.na(cusum_p))) {
-                    worst_p <- min(cusum_p, na.rm = TRUE)
-                    push_diag(.("OLS-CUSUM (parameter stability, worst equation)"),
-                              NA, worst_p, "low_bad", "cusum")
-                }
-            } else {
-                push_note(.("The 'strucchange' package is not installed; the OLS-CUSUM stability test was skipped."))
+            cusum_p <- tryCatch({
+                ps <- vapply(fit$varresult, function(eq) {
+                    efp_fit <- strucchange::efp(formula(eq), data = eq$model, type = "OLS-CUSUM")
+                    sc <- strucchange::sctest(efp_fit)
+                    sc$p.value
+                }, numeric(1))
+                ps
+            }, error = function(e) NULL)
+            if (!is.null(cusum_p) && length(cusum_p) > 0 && !all(is.na(cusum_p))) {
+                worst_p <- min(cusum_p, na.rm = TRUE)
+                push_diag(.("OLS-CUSUM (parameter stability, worst equation)"),
+                          NA, worst_p, "low_bad", "cusum")
             }
 
             invisible(NULL)
@@ -1379,11 +1345,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # -----------------------------------------------------------------------------
         .computeVecm = function(mat, ., push_diag, push_note, arch_lm_test, fmt_stat) {
             . <- .al_lang(self$options)$tr
-
-            if (!requireNamespace("vars", quietly = TRUE) || !requireNamespace("urca", quietly = TRUE)) {
-                push_note(.("The 'vars' and/or 'urca' packages are not installed; VECM diagnostics cannot be computed."))
-                return(invisible(NULL))
-            }
 
             private$.stationarityPerVariable(mat, ., push_diag)
 
@@ -1521,11 +1482,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                           .("ARCH effects detected — modeling conditional heteroscedasticity is justified.")
                           else
                           .("No clear ARCH effects detected in the raw series."))
-
-            if (!requireNamespace("rugarch", quietly = TRUE)) {
-                push_note(.("The 'rugarch' package is not installed; the GARCH fit and its post-fit diagnostics were skipped."))
-                return(invisible(NULL))
-            }
 
             spec <- tryCatch(rugarch::ugarchspec(
                 variance.model = list(model = "sGARCH", garchOrder = c(1, 1)),
@@ -1716,11 +1672,6 @@ timeCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             . <- .al_lang(self$options)$tr
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
-
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
 
             st <- image$state
             d <- if (is.list(st) && !is.data.frame(st)) st$data else st

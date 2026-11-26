@@ -1242,7 +1242,7 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (!is.null(ce_res)) {
                         add_covlin(cv, .("Copula entropy (copent)"), "CE", ce_res$ce, ce_res$p)
                     } else {
-                        ce_reason <- if (!requireNamespace("copent", quietly = TRUE)) .("The 'copent' package is not installed.") else .("Could not be computed for this covariate (copula entropy needs enough distinct values to estimate a copula density).")
+                        ce_reason <- .("Could not be computed for this covariate (copula entropy needs enough distinct values to estimate a copula density).")
                         add_covlin(cv, .("Copula entropy (copent)"), "CE", NA_real_, NA_real_, reason = ce_reason)
                     }
                 }
@@ -1847,10 +1847,6 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
             # image$state, not private$.plotData: state is what survives into the
             # fresh render context jamovi uses for PDF/image export.
             # ES: image$state, no private$.plotData: el state es lo que
@@ -1868,10 +1864,6 @@ anovaCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!isTRUE(self$options$showPlots))
                 return(FALSE)
 
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
             if (is.null(image$state) || nrow(image$state) == 0) {
                 image$setError(.("No group plot data are available."))
                 return(FALSE)

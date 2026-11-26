@@ -1412,7 +1412,6 @@ pathCheckClass <- R6::R6Class(
             # resultado se reutiliza en las matrices APA, en el análisis de
             # discordancia y en la tabla de entropía copular.
             k <- length(vars)
-            hasCopent <- requireNamespace("copent", quietly = TRUE)
 
             B_perm <- tryCatch(as.integer(self$options$permutations), error = function(e) NA_integer_)
             if (is.na(B_perm) || B_perm < 199) B_perm <- 999
@@ -1433,7 +1432,7 @@ pathCheckClass <- R6::R6Class(
                     x <- covData[[v1]]; y <- covData[[v2]]
                     ct <- tryCatch(stats::cor.test(x, y, method = "pearson"), error = function(e) NULL)
                     dRes <- tryCatch(private$.dCorTest(x, y, B = B_perm), error = function(e) NULL)
-                    ceRes <- if (hasCopent) tryCatch(private$.copentTest(x, y, B = B_perm, seed = seed_perm), error = function(e) NULL) else NULL
+                    ceRes <- tryCatch(private$.copentTest(x, y, B = B_perm, seed = seed_perm), error = function(e) NULL)
                     isConnected <- any(vapply(edges, function(e)
                         (identical(e$pred, v1) && identical(e$dep, v2)) ||
                         (identical(e$pred, v2) && identical(e$dep, v1)), logical(1)))
@@ -1544,41 +1543,36 @@ pathCheckClass <- R6::R6Class(
             ceTable <- self$results$crossEntropyTable
             ceTable$deleteRows()
 
-            if (!hasCopent) {
-                set_html_safe("crossEntropyInterpretation", html_block(NULL,
-                    .("The 'copent' package is not installed; this section could not be computed. Install it with install.packages('copent')."),
-                    paragraphs = FALSE))
-            } else {
-                nCeSig <- 0
-                nCeTotal <- 0
-                connectedSigPairs <- character(0)
-                for (key in names(pairResults)) {
-                    pr <- pairResults[[key]]
-                    if (is.na(pr$ce)) next()
-                    ceTable$addRow(rowKey = key, values = list(
-                        var1      = pr$v1,
-                        var2      = pr$v2,
-                        connected = if (pr$connected) .("Yes") else .("No"),
-                        ce        = pr$ce,
-                        p         = pr$ceP,
-                        pSig      = p_sig_stars(pr$ceP)
-                    ))
-                    nCeTotal <- nCeTotal + 1
-                    if (!is.na(pr$ceP) && pr$ceP < .05) {
-                        nCeSig <- nCeSig + 1
-                        if (!pr$connected) connectedSigPairs <- c(connectedSigPairs, sprintf("%s-%s", pr$v1, pr$v2))
-                    }
-                }
-                unconnNote <- if (length(connectedSigPairs) > 0)
-                    sprintf(.(" Notably, %s show significant dependence despite not being directly connected in the model, which may indicate an omitted path or a common cause not currently included."), paste(connectedSigPairs, collapse = ", "))
-                else ""
-                methodNote <- sprintf(.(" Method: p-values by permutation (B = %d, seed = %d); minimum achievable p = %s (read as p ≤ %s, Monte Carlo)."), B_perm, seed_perm, floor_p_str, floor_p_str)
-                set_html_safe("crossEntropyInterpretation", html_block(
-                    .("Applied Interpretation"),
-                    paste0(sprintf(.("%d of %d variable pair(s) show statistically significant dependence by copula entropy (p < .05)."), nCeSig, nCeTotal), unconnNote, methodNote),
-                    paragraphs = FALSE
+            nCeSig <- 0
+            nCeTotal <- 0
+            connectedSigPairs <- character(0)
+            for (key in names(pairResults)) {
+                pr <- pairResults[[key]]
+                if (is.na(pr$ce)) next()
+                ceTable$addRow(rowKey = key, values = list(
+                    var1      = pr$v1,
+                    var2      = pr$v2,
+                    connected = if (pr$connected) .("Yes") else .("No"),
+                    ce        = pr$ce,
+                    p         = pr$ceP,
+                    pSig      = p_sig_stars(pr$ceP)
                 ))
+                nCeTotal <- nCeTotal + 1
+                if (!is.na(pr$ceP) && pr$ceP < .05) {
+                    nCeSig <- nCeSig + 1
+                    if (!pr$connected) connectedSigPairs <- c(connectedSigPairs, sprintf("%s-%s", pr$v1, pr$v2))
+                }
             }
+            unconnNote <- if (length(connectedSigPairs) > 0)
+                sprintf(.(" Notably, %s show significant dependence despite not being directly connected in the model, which may indicate an omitted path or a common cause not currently included."), paste(connectedSigPairs, collapse = ", "))
+            else ""
+            methodNote <- sprintf(.(" Method: p-values by permutation (B = %d, seed = %d); minimum achievable p = %s (read as p ≤ %s, Monte Carlo)."), B_perm, seed_perm, floor_p_str, floor_p_str)
+            set_html_safe("crossEntropyInterpretation", html_block(
+                .("Applied Interpretation"),
+                paste0(sprintf(.("%d of %d variable pair(s) show statistically significant dependence by copula entropy (p < .05)."), nCeSig, nCeTotal), unconnNote, methodNote),
+                paragraphs = FALSE
+            ))
+        
 
             list(nCeSig = nCeSig, nCeTotal = nCeTotal, connectedSigPairs = connectedSigPairs,
                  flaggedPairs = flaggedPairs, flaggedCeSig = flaggedCeSig)
@@ -1979,11 +1973,6 @@ pathCheckClass <- R6::R6Class(
 
         .plotPathDiagram = function(image, theme, ...) {
             . <- .al_lang(self$options)$tr
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw the path diagram."))
-                return(FALSE)
-            }
-
             vars <- self$options$vars
             if (length(vars) == 0) return(FALSE)
 
@@ -2173,11 +2162,6 @@ pathCheckClass <- R6::R6Class(
 
         .plotResidualHistograms = function(image, ggtheme, theme, ...) {
             . <- .al_lang(self$options)$tr
-            if (!requireNamespace("ggplot2", quietly = TRUE)) {
-                image$setError(.("The ggplot2 package is required to draw diagnostic plots."))
-                return(FALSE)
-            }
-
             # Read from image$state instead of private$.pathFits: see the
             # export-context comment on the equivalent guard in
             # .plotPathDiagram()/at the setState() call site in .run().

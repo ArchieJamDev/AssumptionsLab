@@ -521,35 +521,32 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             hl_test <- NULL
             hl_reason <- NULL
-            if (!requireNamespace("ResourceSelection", quietly = TRUE)) {
-                hl_reason <- .("The 'ResourceSelection' package is not installed.")
-            } else {
-                hl_test <- tryCatch({
-                    ResourceSelection::hoslem.test(model_data_complete$dep_binary, fitted(model), g = 10)
-                }, error = function(e) NULL)
+            hl_test <- tryCatch({
+                ResourceSelection::hoslem.test(model_data_complete$dep_binary, fitted(model), g = 10)
+            }, error = function(e) NULL)
 
-                # hoslem.test() does not always throw on a degenerate input -
-                # when the data cannot support 10 distinct bins it instead
-                # warns ("did not allow for the requested number of bins")
-                # and returns a result with p.value = NA, the same
-                # non-throwing "soft failure" gotcha already found in
-                # tseries/nortest/relatedCheck's manual skewness test - so a
-                # result is only accepted when its p-value is actually
-                # finite, not merely non-NULL.
-                # ES: hoslem.test() no siempre lanza error ante una entrada
-                # degenerada - cuando los datos no soportan 10 bins distintos,
-                # en cambio avisa ("did not allow for the requested number of
-                # bins") y devuelve un resultado con p.value = NA, el mismo
-                # "fallo blando" sin lanzar error ya encontrado en tseries/
-                # nortest/la prueba manual de asimetría de relatedCheck - así
-                # que un resultado solo se acepta cuando su p-valor es
-                # realmente finito, no solo por no ser NULL.
-                if (!is.null(hl_test) && !is.finite(hl_test$p.value))
-                    hl_test <- NULL
+            # hoslem.test() does not always throw on a degenerate input -
+            # when the data cannot support 10 distinct bins it instead
+            # warns ("did not allow for the requested number of bins")
+            # and returns a result with p.value = NA, the same
+            # non-throwing "soft failure" gotcha already found in
+            # tseries/nortest/relatedCheck's manual skewness test - so a
+            # result is only accepted when its p-value is actually
+            # finite, not merely non-NULL.
+            # ES: hoslem.test() no siempre lanza error ante una entrada
+            # degenerada - cuando los datos no soportan 10 bins distintos,
+            # en cambio avisa ("did not allow for the requested number of
+            # bins") y devuelve un resultado con p.value = NA, el mismo
+            # "fallo blando" sin lanzar error ya encontrado en tseries/
+            # nortest/la prueba manual de asimetría de relatedCheck - así
+            # que un resultado solo se acepta cuando su p-valor es
+            # realmente finito, no solo por no ser NULL.
+            if (!is.null(hl_test) && !is.finite(hl_test$p.value))
+                hl_test <- NULL
 
-                if (is.null(hl_test))
-                    hl_reason <- .("Could not be computed - the predicted probabilities are not spread out enough to form 10 distinct groups (too few observations or too little variation in fitted probabilities).")
-            }
+            if (is.null(hl_test))
+                hl_reason <- .("Could not be computed - the predicted probabilities are not spread out enough to form 10 distinct groups (too few observations or too little variation in fitted probabilities).")
+        
 
             self$results$goodnessOfFit$addRow(rowKey = "gof_hl", values = list(
                 test = "Hosmer-Lemeshow",
@@ -592,26 +589,23 @@ logCheckClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             auc_val <- NA_real_
             roc_obj <- NULL
             auc_reason <- NULL
-            if (!requireNamespace("pROC", quietly = TRUE)) {
-                auc_reason <- .("The 'pROC' package is not installed.")
-            } else {
-                roc_obj <- tryCatch({
-                    pROC::roc(model_data_complete$dep_binary, fitted(model), quiet = TRUE)
-                }, error = function(e) NULL)
+            roc_obj <- tryCatch({
+                pROC::roc(model_data_complete$dep_binary, fitted(model), quiet = TRUE)
+            }, error = function(e) NULL)
 
-                if (!is.null(roc_obj))
-                    auc_val <- as.numeric(pROC::auc(roc_obj))
+            if (!is.null(roc_obj))
+                auc_val <- as.numeric(pROC::auc(roc_obj))
 
-                # Same non-throwing "soft failure" gotcha as hoslem.test():
-                # accept a result only when it is actually finite.
-                # ES: mismo "fallo blando" sin lanzar error que
-                # hoslem.test(): un resultado solo se acepta cuando es
-                # realmente finito.
-                if (!is.finite(auc_val)) {
-                    auc_val <- NA_real_
-                    auc_reason <- .("Could not be computed for this model's predicted probabilities.")
-                }
+            # Same non-throwing "soft failure" gotcha as hoslem.test():
+            # accept a result only when it is actually finite.
+            # ES: mismo "fallo blando" sin lanzar error que
+            # hoslem.test(): un resultado solo se acepta cuando es
+            # realmente finito.
+            if (!is.finite(auc_val)) {
+                auc_val <- NA_real_
+                auc_reason <- .("Could not be computed for this model's predicted probabilities.")
             }
+        
             self$results$discrimination$addRow(rowKey = "disc_auc", values = list(metric = "AUC", value = auc_val))
             if (!is.null(auc_reason))
                 tryCatch(
