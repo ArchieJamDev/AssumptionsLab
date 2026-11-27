@@ -9,7 +9,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
   <a href="https://github.com/ArchieJamDev/AssumptionsLab/releases/latest"><img src="https://img.shields.io/github/v/release/ArchieJamDev/AssumptionsLab?sort=semver&display_name=tag&label=release&color=4A86E0" alt="Latest release"></a>
   <a href="https://doi.org/10.5281/zenodo.22209135"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.22209135.svg" alt="DOI (all versions, resolves to the latest)"></a>
-  <img src="https://img.shields.io/badge/jamovi-%E2%89%A5%201.0.8-4A86E0" alt="jamovi ≥ 1.0.8">
+  <img src="https://img.shields.io/badge/jamovi-minApp%2028.3.0-4A86E0" alt="jamovi minApp 28.3.0">
   <a href="https://github.com/ArchieJamDev/AssumptionsLab/actions/workflows/jamovi-check.yml"><img src="https://github.com/ArchieJamDev/AssumptionsLab/actions/workflows/jamovi-check.yml/badge.svg" alt="CI"></a>
   <img src="https://komarev.com/ghpvc/?username=ArchieJamDev-AssumptionsLab&label=views&color=lightgrey&style=flat" alt="Views">
 </p>
@@ -65,7 +65,9 @@ workflow in jamovi's point-and-click interface:
 
 - **Guidance with every table.** A short guide before each result and an
   interpretation after it, in English or Spanish, following jamovi's own
-  language setting.
+  language setting. An **Explanations** checkbox in every analysis hides
+  the fixed guides for a compact report and keeps the interpretation of
+  your own results.
 - **One workflow for every analysis.** Validation, diagnostics,
   interpretation and recommendation, in the same order everywhere, so
   learning one analysis transfers to the next.
@@ -77,7 +79,9 @@ workflow in jamovi's point-and-click interface:
   decimal and p-value settings, and every plot uses the colour palette
   chosen in jamovi's settings.
 - **A built-in Assumption Library.** A glossary of every assumption and test
-  the module uses, filterable by category.
+  the module uses, filterable by category, built from jamovi's own text and
+  table elements, so it takes the results theme and copies like any other
+  jamovi table.
 - **Native citations.** Every method-backed table cites its own source in
   jamovi's numbered reference format; the full APA 7th edition bibliography
   is in [`docs/Bibliography.md`](docs/Bibliography.md).
@@ -152,7 +156,7 @@ inside it carries its own explanation.
 | **Logistic Regression** | Is each predictor linear in the logit (Box-Tidwell), is there multicollinearity, is the model calibrated and does it discriminate (ROC/AUC), and are there influential cases? | ✅ Done |
 | **Ordinal Logistic Regression** | Does the proportional-odds assumption hold (Brant test), is each predictor linear in the cumulative logit, and are there collinear predictors or influential cases? | ✅ Done |
 | **Multinomial Logistic Regression** | Does the independence of irrelevant alternatives hold (Hausman-McFadden), is each predictor linear for every category, how accurate is the classification, and are there collinear predictors or influential cases? | ✅ Done |
-| **Count and Rate Regression** | For Poisson and negative binomial models, with an optional exposure offset: are the counts overdispersed (Pearson ratio, Dean-Lawless, Cameron-Trivedi, likelihood ratio test), are there more zeros than expected, are the residuals well behaved (Pearson, deviance, randomized quantile), is each numeric predictor linear on the log scale, and are there collinear predictors or influential cases? | 🧪 In development |
+| **Count and Rate Regression** | For Poisson and negative binomial models, with an optional exposure offset: are the counts overdispersed (Pearson ratio, Dean-Lawless, Cameron-Trivedi, likelihood ratio test), are there more zeros than expected, are the residuals well behaved (Pearson, deviance, randomized quantile), is each numeric predictor linear on the log scale, and are there collinear predictors or influential cases? | ✅ Done |
 
 ### Structural models and time series
 
@@ -183,6 +187,10 @@ inside it carries its own explanation.
   arrive. A section that does not apply (sphericity with two measurements,
   correlations with a single predictor) stays in place with a "Not
   applicable" row or note instead of appearing and disappearing.
+- **Nothing selected, no error.** Opening an analysis before choosing its
+  variables shows the empty results skeleton, not an error message; errors
+  are kept for real problems such as a wrong variable type or too few
+  cases.
 - **Native notices.** When a diagnostic cannot run (for example a Time
   Series model with too few series, or a missing R package), a jamovi
   notice says why, above the tables it affects.
@@ -215,8 +223,10 @@ inside it carries its own explanation.
 
 ## Installation
 
-AssumptionsLab is not yet in the official jamovi Library: it is being
-prepared for submission. Until then, install it from a release file.
+AssumptionsLab is not yet in the official jamovi Library: version 1.8.0
+has been submitted and is under review. Until it is published there,
+install it from a release file. The module declares `minApp: 28.3.0`, so it
+needs a current jamovi release.
 
 ### From a release (recommended)
 
@@ -268,7 +278,12 @@ what each analysis currently finds on it.
   variables and for regression residuals, a check of the distance
   correlation vs. Pearson linearity heuristic, and a case study on public
   data (`lavaan` and `psychTools`) in which 20 of the module's outputs are
-  compared with independent reference implementations; all 20 match. See
+  compared with independent reference implementations; all 20 match.
+  [`countcheck_verification.R`](validation/countcheck_verification.R)
+  checks Count and Rate Regression against a published negative binomial
+  fit and the closed form of each statistic, and runs a Monte Carlo study
+  of the size and power of its overdispersion, zero-inflation and
+  linearity decisions. See
   [`validation/README.md`](validation/README.md) for the design, scope and
   run time of each script.
 
@@ -305,8 +320,9 @@ testthat::test_dir("tests/testthat")  # run the edge-case suite
 | 7 | Release 1.7.0, with Zenodo DOI [10.5281/zenodo.24390225](https://doi.org/10.5281/zenodo.24390225) | ✅ Done |
 | 7.1 | Release 1.7.1, with Zenodo DOI [10.5281/zenodo.24403336](https://doi.org/10.5281/zenodo.24403336): the Assumption Library cites through jamovi's own references | ✅ Done |
 | 7.2 | Release 1.8.0, with Zenodo DOI [10.5281/zenodo.24571282](https://doi.org/10.5281/zenodo.24571282): count and rate regression, and the second jamovi review (native Library tables and text, Explanations option) | ✅ Done |
-| 8 | Submission to the jamovi Library | 🔄 In progress |
-| 9 | Count and rate regression (Poisson, negative binomial), then Cox regression | 🔄 In progress |
+| 8 | Submission to the jamovi Library: 1.8.0 resubmitted after the second review | 🔄 In progress |
+| 9 | Count and rate regression (Poisson, negative binomial), released in 1.8.0 | ✅ Done |
+| 10 | Cox regression | 🗓 Planned |
 | Next | SEM and PLS-SEM, Bayesian methods, multilevel models, survival analysis, meta-analysis | 🗓 Planned |
 
 See [ARCHITECTURE.md](ARCHITECTURE.md#14-future-expansion) for the design
@@ -359,11 +375,12 @@ Copyright © 2026 Arquímedes De León Chacón Chacón
 estadísticos de los análisis más habituales: comparación de grupos
 independientes y relacionados, ANOVA/ANCOVA, regresión lineal simple y
 múltiple, regresión logística, logística ordinal y logística multinomial,
-análisis de rutas y series temporales (ARIMA, SARIMA, ETS, VAR, VECM y
-GARCH). Para cada supuesto reúne varias pruebas (normalidad, homogeneidad de
+regresión de recuentos y tasas (Poisson y binomial negativa, con exposición
+opcional), análisis de rutas y series temporales (ARIMA, SARIMA, ETS, VAR,
+VECM y GARCH). Para cada supuesto reúne varias pruebas (normalidad, homogeneidad de
 varianzas, linealidad, multicolinealidad, casos influyentes, odds
-proporcionales, independencia de alternativas irrelevantes, estacionariedad,
-autocorrelación, entre otras) y emite una recomendación basada en el
+proporcionales, independencia de alternativas irrelevantes, sobredispersión,
+exceso de ceros, estacionariedad, autocorrelación, entre otras) y emite una recomendación basada en el
 conjunto de la evidencia, no en un único valor *p*. Junto a la correlación
 de Pearson muestra la correlación de distancia y la entropía de cópula, para
 no pasar por alto relaciones no lineales.
@@ -371,14 +388,17 @@ no pasar por alto relaciones no lineales.
 Cada opción del menú incluye un párrafo que explica qué hace y cuándo
 conviene elegirla, y los resultados se acompañan de guías e
 interpretaciones en español o inglés, según el idioma configurado en
-jamovi. Los valores *p*, estadísticos y correlaciones van en columnas
+jamovi; la casilla **Explicaciones** oculta las guías fijas para un informe
+más compacto y conserva la interpretación de los resultados propios. Los valores *p*, estadísticos y correlaciones van en columnas
 numéricas que siguen la configuración de decimales de jamovi, y los
-gráficos usan la paleta de colores elegida en jamovi. Incluye una Biblioteca de Supuestos, un glosario de cada supuesto y
-prueba filtrable por categoría, y cada tabla cita sus fuentes con el formato
-de referencias de jamovi.
+gráficos usan la paleta de colores elegida en jamovi. Incluye una
+Biblioteca de Supuestos, un glosario de cada supuesto y prueba filtrable
+por categoría, construido con los elementos nativos de texto y tabla de
+jamovi, y cada tabla cita sus fuentes con el formato de referencias de
+jamovi.
 
-Aún no está en la Biblioteca oficial de jamovi (se está preparando el
-envío). Para instalarlo, descargue el archivo `.jmo` desde
+Aún no está en la Biblioteca oficial de jamovi: la versión 1.8.0 se envió
+y está en revisión. Para instalarlo, descargue el archivo `.jmo` desde
 [Releases](https://github.com/ArchieJamDev/AssumptionsLab/releases) y, en
 jamovi, use **⋮** → **Modules** → **Install from file**.
 

@@ -845,7 +845,9 @@ Before publishing a new version verify
 
 □ README updated.
 
-□ Version updated.
+□ Version updated in `DESCRIPTION`, `jamovi/0000.yaml`, `CITATION.cff`
+  and `.zenodo.json` (Zenodo takes the version shown on the record from
+  `.zenodo.json`).
 
 □ Tests completed.
 
