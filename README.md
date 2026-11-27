@@ -9,7 +9,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
   <a href="https://github.com/ArchieJamDev/AssumptionsLab/releases"><img src="https://img.shields.io/github/v/release/ArchieJamDev/AssumptionsLab?label=release&color=4A86E0" alt="Release"></a>
   <a href="https://doi.org/10.5281/zenodo.22209135"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.22209135.svg" alt="DOI (all versions, resolves to the latest)"></a>
-  <img src="https://img.shields.io/badge/jamovi-%E2%89%A5%2028.3.0-4A86E0" alt="jamovi ≥ 28.3.0">
+  <img src="https://img.shields.io/badge/jamovi-%E2%89%A5%202.7.41-4A86E0" alt="jamovi ≥ 2.7.41">
   <a href="https://github.com/ArchieJamDev/AssumptionsLab/actions/workflows/jamovi-check.yml"><img src="https://github.com/ArchieJamDev/AssumptionsLab/actions/workflows/jamovi-check.yml/badge.svg" alt="CI"></a>
   <img src="https://komarev.com/ghpvc/?username=ArchieJamDev-AssumptionsLab&label=views&color=lightgrey&style=flat" alt="Views">
 </p>
